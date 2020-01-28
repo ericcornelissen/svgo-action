@@ -1,0 +1,35 @@
+{
+  "name": "svgo-action",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Automatically run SVGO on SVGs in Pull Requests",
+  "license": "MIT",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc && ncc build lib/main.js -m -o lib"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ericcornelissen/svgo-action"
+  },
+  "author": {
+    "name": "Eric Cornelissen",
+    "email": "ericornelissen@gmail.com",
+    "url": "https://ericcornelissen.dev/"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "svgo"
+  ],
+  "dependencies": {
+    "@actions/core": "^1.0.0",
+    "@actions/github": "^1.0.0",
+    "svgo": "^1.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^12.0.4",
+    "@zeit/ncc": "^0.21.0",
+    "typescript": "^3.5.1"
+  }
+}
