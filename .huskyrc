@@ -1,5 +1,5 @@
 {
   "hooks": {
-    "pre-commit": "echo 'Hello world!'"
+    "pre-commit": "npm run build && git add lib/index.js"
   }
 }
