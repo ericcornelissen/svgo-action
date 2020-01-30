@@ -1,0 +1,42 @@
+{
+  "1 SVG added": [
+    {
+      "sha": "8cef761674c705447f0ce449948ac6c0dd76f041",
+      "filename": "test.svg",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg",
+      "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg",
+      "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/test.svg?ref=8b1cce9bdb84047ac090aecaec9810d53975781c",
+      "patch": "@@ -0,0 +1,3 @@\n+<svg role=\"img\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n+  <title>Zeit icon</title><path d=\"M24 22.525H0l12-21.05 12 21.05z\"/>\n+</svg>\n\\ No newline at end of file"
+    }
+  ],
+  "1 SVG added, 1 non-SVG modified": [
+    {
+      "sha": "02064c7f051c46a863a8e5c780bb9661882a8834",
+      "filename": ".github/workflows/main.yml",
+      "status": "modified",
+      "additions": 1,
+      "deletions": 1,
+      "changes": 2,
+      "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/8b1cce9bdb84047ac090aecaec9810d53975781c/.github/workflows/main.yml",
+      "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/8b1cce9bdb84047ac090aecaec9810d53975781c/.github/workflows/main.yml",
+      "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/.github/workflows/main.yml?ref=8b1cce9bdb84047ac090aecaec9810d53975781c",
+      "patch": "@@ -6,6 +6,6 @@ jobs:\n   triage:\n     runs-on: ubuntu-latest\n     steps:\n-    - uses: ericcornelissen/svgo-action@master\n+    - uses: ericcornelissen/svgo-action@develop\n       with:\n         repo-token: \"${{ secrets.GITHUB_TOKEN }}\"'"
+    },
+    {
+      "sha": "8cef761674c705447f0ce449948ac6c0dd76f041",
+      "filename": "test.svg",
+      "status": "added",
+      "additions": 3,
+      "deletions": 0,
+      "changes": 3,
+      "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg",
+      "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg",
+      "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/test.svg?ref=8b1cce9bdb84047ac090aecaec9810d53975781c",
+      "patch": "@@ -0,0 +1,3 @@\n+<svg role=\"img\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n+  <title>Zeit icon</title><path d=\"M24 22.525H0l12-21.05 12 21.05z\"/>\n+</svg>\n\\ No newline at end of file"
+    }
+  ]
+}
