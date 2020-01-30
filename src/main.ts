@@ -1,6 +1,8 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
+import { getChangedFiles } from './github-api'
+
 
 const NOT_FOUND: number = -1;
 
@@ -36,17 +38,5 @@ function getPrNumber(): number {
   return pullRequest.number;
 }
 
-async function getChangedFiles(
-  client: github.GitHub,
-  prNumber: number
-): Promise<any[]> {
-  const listFilesResponse = await client.pulls.listFiles({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    pull_number: prNumber
-  });
-
-  return listFilesResponse.data;
-}
 
 main();

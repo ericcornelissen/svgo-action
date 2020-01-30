@@ -6,7 +6,8 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc && ncc build lib/main.js -m -o lib"
+    "build": "tsc && ncc build lib/main.js -m -o lib",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -30,8 +31,11 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.5",
     "@commitlint/config-conventional": "^8.3.4",
+    "@types/jest": "^25.1.0",
     "@types/node": "^12.0.4",
     "@zeit/ncc": "^0.21.0",
+    "jest": "^25.1.0",
+    "ts-jest": "^25.0.0",
     "husky": "^4.2.1",
     "typescript": "^3.5.1"
   }
