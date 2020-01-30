@@ -1,2 +1,6 @@
 # dependencies directory
 node_modules/
+
+# TypeScript generated files
+lib/**/*.js
+!lib/index.js
