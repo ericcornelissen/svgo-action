@@ -1,5 +1,20 @@
 {
-  "extends": [
+  extends: [
     "config:base"
-  ]
+  ],
+
+  packageRules: [
+    {
+      // Conigure automerge: exclude semver major changes
+      updateTypes: ["minor", "patch", "pin", "digest"],
+      automerge: true,
+    },
+  ],
+
+  // Enable automerging of Renovate Pull Requests
+  automerge: true,
+  automergeType: "pr",
+
+  // Apply the 'dependencies' label to all Pull Requests created by Renovate
+  labels: ["dependencies"],
 }
