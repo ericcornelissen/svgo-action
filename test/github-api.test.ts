@@ -11,7 +11,7 @@ const PR_WITH_NO_CHANGES: number = 1;
 const PR_WITH_ONE_SVG_CHANGED: number = 2;
 
 
-describe("GitHub API::getChangedFiles", () => {
+describe("::getChangedFiles", () => {
 
   const token: string = core.getInput("repo-token", { required: true });
   const client: github.GitHub = new github.GitHub(token);
@@ -25,6 +25,10 @@ describe("GitHub API::getChangedFiles", () => {
     const changedFiles = await getChangedFiles(client, PR_WITH_NO_CHANGES);
     expect(changedFiles).toBeDefined();
   });
+
+});
+
+describe("::getPrNumber", () => {
 
   it.each([1, 2, 5, 46])("returns the correct number for Pull Request #%i", (a: number) => {
     github.context.payload.pull_request = { number: a };
