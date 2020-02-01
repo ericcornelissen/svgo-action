@@ -1,4 +1,5 @@
-const payloads = require("../../fixtures/github-payloads");
+const prPayloads = require("../../fixtures/pull-request-payloads");
+const contentPayloads = require("../../fixtures/contents-payloads");
 
 
 const PR_WITH_NO_CHANGES = 1;
@@ -25,8 +26,13 @@ module.exports = {
           if (pull_number === PR_WITH_NO_CHANGES) {
             return Promise.resolve({ data: [] });
           } else if (pull_number === PR_WITH_ONE_SVG_CHANGED) {
-            return Promise.resolve({ data: payloads["1 SVG added"] });
+            return Promise.resolve({ data: prPayloads["1 SVG added"] });
           }
+        }
+      },
+      repos: {
+        getContents: ({path}) => {
+          return Promise.resolve({ data: contentPayloads[path] });
         }
       }
     };
