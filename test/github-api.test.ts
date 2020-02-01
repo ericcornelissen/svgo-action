@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-jest.mock('@actions/core', () => require('./mocks/@actions/core'));
-jest.mock('@actions/github', () => require('./mocks/@actions/github'));
+jest.mock("@actions/core", () => require("./mocks/@actions/core"));
+jest.mock("@actions/github", () => require("./mocks/@actions/github"));
 
 import {
   PR_NOT_FOUND,
@@ -15,8 +15,8 @@ import {
 } from "../src/github-api";
 
 
-const PR_WITH_NO_CHANGES: number = 1;
-const PR_WITH_ONE_SVG_CHANGED: number = 2;
+const PR_WITH_NO_CHANGES = 1;
+const PR_WITH_ONE_SVG_CHANGED = 2;
 
 
 describe("::getPrFile", () => {

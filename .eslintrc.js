@@ -20,6 +20,8 @@ module.exports = {
     "module": "readonly",
   },
   rules: {
-    "comma-dangle": ["error", "always"],
+    "comma-dangle": ["error", "always-multiline"],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
   },
 };

@@ -10,13 +10,13 @@ module.exports = {
   context: {
     payload: {
       pull_request: {
-        number: 36
-      }
+        number: 36,
+      },
     },
     repo: {
       owner: "pickachu",
-      repo: "svgo-action"
-    }
+      repo: "svgo-action",
+    },
   },
 
   GitHub: jest.fn(() => {
@@ -28,13 +28,13 @@ module.exports = {
           } else if (pull_number === PR_WITH_ONE_SVG_CHANGED) {
             return Promise.resolve({ data: prPayloads["1 SVG added"] });
           }
-        }
+        },
       },
       repos: {
         getContents: ({path}) => {
           return Promise.resolve({ data: contentPayloads[path] });
-        }
-      }
+        },
+      },
     };
   }),
 };
