@@ -7,6 +7,8 @@ jest.mock('@actions/github', () => require('./mocks/@actions/github'));
 import {
   PR_NOT_FOUND,
 
+  FileData,
+
   getPrFile,
   getPrNumber,
   getPrFiles,
@@ -19,12 +21,29 @@ const PR_WITH_ONE_SVG_CHANGED: number = 2;
 
 describe("::getPrFile", () => {
 
+  const EXISTING_FILE_PATH = "test.svg";
+
   const token: string = core.getInput("repo-token", { required: true });
   const client: github.GitHub = new github.GitHub(token);
 
   test("return something when requesting data for an existing file", async () => {
-    const fileData = await getPrFile(client, "test.svg");
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
     expect(fileData).toBeDefined();
+  });
+
+  test("'path' is defined for existing file", async () => {
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+    expect(fileData.path).toBeDefined();
+  });
+
+  test("'content' is defined for existing file", async () => {
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+    expect(fileData.content).toBeDefined();
+  });
+
+  test("'encoding' is defined for existing file", async () => {
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+    expect(fileData.encoding).toBeDefined();
   });
 
 });
