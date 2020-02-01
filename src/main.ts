@@ -4,6 +4,7 @@ import * as github from "@actions/github";
 import {
   PR_NOT_FOUND,
 
+  FileData,
   FileInfo,
 
   getPrFile,
@@ -33,15 +34,13 @@ async function main(): Promise<void> {
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
-    console.log("[info]", prFiles);
 
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
-    console.log("[info]", prSvgs);
-
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetch file contents of '${svgFileInfo.path}'`);
-      const fileContent: any = await getPrFile(client, svgFileInfo.path);
-      console.log("[info]", fileContent);
+      const fileContent: FileData = await getPrFile(client, svgFileInfo.path);
+
+      // TODO: decode, run SVGO, and commit back
     }
   } catch (error) {
     core.error(error);
