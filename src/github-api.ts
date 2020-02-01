@@ -22,3 +22,16 @@ export async function getPullRequestFiles(
     status: details.status,
   }));
 }
+
+export async function getFile(
+  client: github.GitHub,
+  path: string
+): Promise<any> {
+  const fileContents = await client.repos.getContents({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    path: path,
+  });
+
+  return fileContents.data;
+}
