@@ -7,6 +7,7 @@ jest.mock('@actions/github', () => require('./mocks/@actions/github'));
 import {
   PR_NOT_FOUND,
 
+  getFile,
   getPrNumber,
   getPullRequestFiles,
 } from "../src/github-api";
@@ -47,6 +48,18 @@ describe("::getPrNumber", () => {
 
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
+  });
+
+});
+
+describe("::getFile", () => {
+
+  const token: string = core.getInput("repo-token", { required: true });
+  const client: github.GitHub = new github.GitHub(token);
+
+  test("return something when requesting data for an existing file", async () => {
+    const fileData = await getFile(client, "test.svg");
+    expect(fileData).toBeDefined();
   });
 
 });
