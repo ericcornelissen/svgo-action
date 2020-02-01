@@ -16,22 +16,6 @@ export interface FileData {
 }
 
 
-export async function getPrFiles(
-  client: github.GitHub,
-  prNumber: number
-): Promise<FileInfo[]> {
-  const prFilesDetails = await client.pulls.listFiles({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    pull_number: prNumber,
-  });
-
-  return prFilesDetails.data.map(details => ({
-    path: details.filename,
-    status: details.status,
-  }));
-}
-
 export async function getPrFile(
   client: github.GitHub,
   path: string
@@ -49,6 +33,22 @@ export async function getPrFile(
     content: fileDetails.content,
     encoding: fileDetails.encoding,
   };
+}
+
+export async function getPrFiles(
+  client: github.GitHub,
+  prNumber: number
+): Promise<FileInfo[]> {
+  const prFilesDetails = await client.pulls.listFiles({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    pull_number: prNumber,
+  });
+
+  return prFilesDetails.data.map(details => ({
+    path: details.filename,
+    status: details.status,
+  }));
 }
 
 export function getPrNumber(): number {
