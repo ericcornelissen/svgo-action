@@ -9,6 +9,12 @@ export interface FileInfo {
   readonly status: string,
 };
 
+export interface FileData {
+  readonly path: string,
+  readonly content: string,
+  readonly encoding: string,
+}
+
 
 export async function getPrFiles(
   client: github.GitHub,
@@ -29,7 +35,7 @@ export async function getPrFiles(
 export async function getPrFile(
   client: github.GitHub,
   path: string
-): Promise<any> {
+): Promise<FileData> {
   const fileContents = await client.repos.getContents({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -37,7 +43,12 @@ export async function getPrFile(
     ref: github.context.sha,
   });
 
-  return fileContents.data
+  const fileDetails = fileContents.data[0] || fileContents.data;
+  return {
+    path: fileDetails.path,
+    content: fileDetails.content,
+    encoding: fileDetails.encoding,
+  };
 }
 
 export function getPrNumber(): number {
