@@ -6,9 +6,9 @@ import {
 
   FileInfo,
 
-  getFile,
+  getPrFile,
   getPrNumber,
-  getPullRequestFiles,
+  getPrFiles,
 } from './github-api'
 
 
@@ -34,7 +34,7 @@ async function main(): Promise<void> {
     const client: github.GitHub = new github.GitHub(token);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
-    const prFiles: FileInfo[] = await getPullRequestFiles(client, prNumber);
+    const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
     console.log("[info]", prFiles);
 
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
@@ -42,7 +42,7 @@ async function main(): Promise<void> {
 
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetch file contents of '${svgFileInfo.path}'`);
-      const fileContent: any = await getFile(client, svgFileInfo.path);
+      const fileContent: any = await getPrFile(client, svgFileInfo.path);
       console.log("[info]", fileContent);
     }
   } catch (error) {

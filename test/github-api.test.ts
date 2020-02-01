@@ -7,9 +7,9 @@ jest.mock('@actions/github', () => require('./mocks/@actions/github'));
 import {
   PR_NOT_FOUND,
 
-  getFile,
+  getPrFile,
   getPrNumber,
-  getPullRequestFiles,
+  getPrFiles,
 } from "../src/github-api";
 
 
@@ -17,18 +17,30 @@ const PR_WITH_NO_CHANGES: number = 1;
 const PR_WITH_ONE_SVG_CHANGED: number = 2;
 
 
-describe("::getPullRequestFiles", () => {
+describe("::getPrFile", () => {
+
+  const token: string = core.getInput("repo-token", { required: true });
+  const client: github.GitHub = new github.GitHub(token);
+
+  test("return something when requesting data for an existing file", async () => {
+    const fileData = await getPrFile(client, "test.svg");
+    expect(fileData).toBeDefined();
+  });
+
+});
+
+describe("::getPrFiles", () => {
 
   const token: string = core.getInput("repo-token", { required: true });
   const client: github.GitHub = new github.GitHub(token);
 
   test("return correctly for a Pull Request with 1 changed files", async () => {
-    const changedFiles = await getPullRequestFiles(client, PR_WITH_ONE_SVG_CHANGED);
+    const changedFiles = await getPrFiles(client, PR_WITH_ONE_SVG_CHANGED);
     expect(changedFiles).toBeDefined();
   });
 
   test("return correctly for a Pull Request with no changes", async () => {
-    const changedFiles = await getPullRequestFiles(client, PR_WITH_NO_CHANGES);
+    const changedFiles = await getPrFiles(client, PR_WITH_NO_CHANGES);
     expect(changedFiles).toBeDefined();
   });
 
@@ -48,18 +60,6 @@ describe("::getPrNumber", () => {
 
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
-  });
-
-});
-
-describe("::getFile", () => {
-
-  const token: string = core.getInput("repo-token", { required: true });
-  const client: github.GitHub = new github.GitHub(token);
-
-  test("return something when requesting data for an existing file", async () => {
-    const fileData = await getFile(client, "test.svg");
-    expect(fileData).toBeDefined();
   });
 
 });

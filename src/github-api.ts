@@ -10,7 +10,7 @@ export interface FileInfo {
 };
 
 
-export async function getPullRequestFiles(
+export async function getPrFiles(
   client: github.GitHub,
   prNumber: number
 ): Promise<FileInfo[]> {
@@ -26,7 +26,7 @@ export async function getPullRequestFiles(
   }));
 }
 
-export async function getFile(
+export async function getPrFile(
   client: github.GitHub,
   path: string
 ): Promise<any> {
