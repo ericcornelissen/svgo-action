@@ -1,10 +1,12 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { getChangedFiles } from './github-api'
+import { getPullRequestFiles, FileInfo } from './github-api'
 
 
 const NOT_FOUND: number = -1;
+
+const SVG_FILE_EXTENSION = ".svg";
 
 
 async function main(): Promise<void> {
@@ -21,12 +23,19 @@ async function main(): Promise<void> {
     const client: github.GitHub = new github.GitHub(token);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
-    const changedFiles: any[] = await getChangedFiles(client, prNumber);
-    console.log("[info]", changedFiles)
+    const prFiles: FileInfo[] = await getPullRequestFiles(client, prNumber);
+    console.log("[info] all files:", prFiles);
+
+    const prSvgs: FileInfo[] = prFiles.filter(svgFiles);
+    console.log("[info] svgs only:", prSvgs);
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
   }
+}
+
+function svgFiles(fileInfo: FileInfo): boolean {
+  return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
 }
 
 function getPrNumber(): number {
