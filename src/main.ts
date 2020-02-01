@@ -4,7 +4,7 @@ import * as github from "@actions/github";
 import { PR_NOT_FOUND, getChangedFiles, getPrNumber } from './github-api'
 
 
-async function main(): Promise<void> {
+export async function main(): Promise<boolean> {
   try {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
@@ -12,7 +12,7 @@ async function main(): Promise<void> {
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
       console.info("Could not get Pull Request number from context, exiting");
-      return;
+      return false;
     }
 
     const client: github.GitHub = new github.GitHub(token);
@@ -20,9 +20,13 @@ async function main(): Promise<void> {
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const changedFiles: any[] = await getChangedFiles(client, prNumber);
     console.log("[info]", changedFiles)
+
+    return true;
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
+
+    return false;
   }
 }
 
