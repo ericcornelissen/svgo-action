@@ -31,7 +31,8 @@ export async function getFile(
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     path: path,
+    ref: github.context.sha,
   });
 
-  return fileContents.data;
+  return fileContents.data
 }

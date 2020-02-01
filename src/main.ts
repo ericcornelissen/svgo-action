@@ -27,11 +27,14 @@ async function main(): Promise<void> {
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPullRequestFiles(client, prNumber);
-
     console.log("[info]", prFiles);
+
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
+    console.log("[info]", prSvgs);
+
     for (const svgFileInfo of prSvgs) {
-      const fileContent: any = getFile(client, svgFileInfo.path);
+      core.debug(`fetch file contents of '${svgFileInfo.path}'`);
+      const fileContent: any = await getFile(client, svgFileInfo.path);
       console.log("[info]", fileContent);
     }
   } catch (error) {
