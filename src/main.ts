@@ -12,8 +12,6 @@ import {
 } from './github-api'
 
 
-const NOT_FOUND: number = -1;
-
 const SVG_FILE_EXTENSION: string = ".svg";
 
 const STATUS_ADDED: string = "added";
