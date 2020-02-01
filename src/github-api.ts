@@ -1,6 +1,9 @@
 import * as github from "@actions/github";
 
 
+export const PR_NOT_FOUND: number = -1;
+
+
 export interface FileInfo {
   readonly path: string,
   readonly status: string,
@@ -35,4 +38,13 @@ export async function getFile(
   });
 
   return fileContents.data
+}
+
+export function getPrNumber(): number {
+  const pullRequest = github.context.payload.pull_request;
+  if (!pullRequest) {
+    return PR_NOT_FOUND;
+  }
+
+  return pullRequest.number;
 }

@@ -7,6 +7,11 @@ const PR_WITH_ONE_SVG_CHANGED = 2;
 
 module.exports = {
   context: {
+    payload: {
+      pull_request: {
+        number: 36
+      }
+    },
     repo: {
       owner: "pickachu",
       repo: "svgo-action"
