@@ -1,10 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { getChangedFiles } from './github-api'
-
-
-const NOT_FOUND: number = -1;
+import { PR_NOT_FOUND, getChangedFiles, getPrNumber } from './github-api'
 
 
 async function main(): Promise<void> {
@@ -13,7 +10,7 @@ async function main(): Promise<void> {
     const configPath = core.getInput("configuration-path", { required: true });
 
     const prNumber: number = getPrNumber();
-    if (prNumber === NOT_FOUND) {
+    if (prNumber === PR_NOT_FOUND) {
       console.info("Could not get Pull Request number from context, exiting");
       return;
     }
@@ -27,15 +24,6 @@ async function main(): Promise<void> {
     core.error(error);
     core.setFailed(error.message);
   }
-}
-
-function getPrNumber(): number {
-  const pullRequest = github.context.payload.pull_request;
-  if (!pullRequest) {
-    return NOT_FOUND;
-  }
-
-  return pullRequest.number;
 }
 
 
