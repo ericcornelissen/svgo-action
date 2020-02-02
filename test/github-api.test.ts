@@ -4,25 +4,62 @@ import * as github from "@actions/github";
 jest.mock('@actions/core', () => require('./mocks/@actions/core'));
 jest.mock('@actions/github', () => require('./mocks/@actions/github'));
 
-import { getChangedFiles, getPrNumber, PR_NOT_FOUND } from "../src/github-api";
+import {
+  PR_NOT_FOUND,
+
+  FileData,
+
+  getPrFile,
+  getPrNumber,
+  getPrFiles,
+} from "../src/github-api";
 
 
 const PR_WITH_NO_CHANGES: number = 1;
 const PR_WITH_ONE_SVG_CHANGED: number = 2;
 
 
-describe("::getChangedFiles", () => {
+describe("::getPrFile", () => {
+
+  const EXISTING_FILE_PATH = "test.svg";
+
+  const token: string = core.getInput("repo-token", { required: true });
+  const client: github.GitHub = new github.GitHub(token);
+
+  test("return something when requesting data for an existing file", async () => {
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+    expect(fileData).toBeDefined();
+  });
+
+  test("'path' is defined for existing file", async () => {
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+    expect(fileData.path).toBeDefined();
+  });
+
+  test("'content' is defined for existing file", async () => {
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+    expect(fileData.content).toBeDefined();
+  });
+
+  test("'encoding' is defined for existing file", async () => {
+    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+    expect(fileData.encoding).toBeDefined();
+  });
+
+});
+
+describe("::getPrFiles", () => {
 
   const token: string = core.getInput("repo-token", { required: true });
   const client: github.GitHub = new github.GitHub(token);
 
   test("return correctly for a Pull Request with 1 changed files", async () => {
-    const changedFiles = await getChangedFiles(client, PR_WITH_ONE_SVG_CHANGED);
+    const changedFiles = await getPrFiles(client, PR_WITH_ONE_SVG_CHANGED);
     expect(changedFiles).toBeDefined();
   });
 
   test("return correctly for a Pull Request with no changes", async () => {
-    const changedFiles = await getChangedFiles(client, PR_WITH_NO_CHANGES);
+    const changedFiles = await getPrFiles(client, PR_WITH_NO_CHANGES);
     expect(changedFiles).toBeDefined();
   });
 

@@ -4,8 +4,9 @@ import { debug as _debug, error as _error } from "@actions/core";
 import {
   PR_NOT_FOUND,
 
+  getPrFile as _getPrFile,
+  getPrFiles as _getPrFiles,
   getPrNumber as _getPrNumber,
-  getChangedFiles as _getChangedFiles,
 } from "../src/github-api";
 
 jest.mock("@actions/core", () => require("./mocks/@actions/core"));
@@ -17,15 +18,19 @@ import main from "../src/main";
 
 const coreError = mocked(_error, true);
 const coreDebug = mocked(_debug, true);
+
+const getPrFile = mocked(_getPrFile, true);
+const getPrFiles = mocked(_getPrFiles, true);
 const getPrNumber = mocked(_getPrNumber, true);
-const getChangedFiles = mocked(_getChangedFiles, true);
 
 
 beforeEach(() => {
   coreDebug.mockClear();
   coreError.mockClear();
+
+  getPrFile.mockClear();
+  getPrFiles.mockClear();
   getPrNumber.mockClear();
-  getChangedFiles.mockClear();
 });
 
 describe("Return value", () => {
@@ -53,7 +58,12 @@ describe("Function usage", () => {
 
   test("calls a relevant function II", async () => {
     await main();
-    expect(getChangedFiles).toHaveBeenCalledTimes(1);
+    expect(getPrFiles).toHaveBeenCalledTimes(1);
+  });
+
+  test("calls a relevant function III", async () => {
+    await main();
+    expect(getPrFile).toHaveBeenCalledTimes(1);
   });
 
 });
