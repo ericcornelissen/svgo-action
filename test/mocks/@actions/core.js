@@ -2,6 +2,8 @@ module.exports = {
   error: jest.fn(),
   debug: jest.fn(),
 
+  setFailed: jest.fn(),
+
   getInput: jest.fn((key, _) => {
     if (key === "repo-token") {
       return "TOKEN";
