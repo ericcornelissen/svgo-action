@@ -35,7 +35,7 @@
     "@types/node": "12.12.25",
     "@zeit/ncc": "0.21.0",
     "jest": "25.1.0",
-    "ts-jest": "25.1.0",
+    "ts-jest": "25.2.0",
     "husky": "4.2.1",
     "typescript": "3.7.5"
   }
