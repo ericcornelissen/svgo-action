@@ -1,18 +1,18 @@
 import * as github from "@actions/github";
 
 
-export const PR_NOT_FOUND: number = -1;
+export const PR_NOT_FOUND = -1;
 
 
 export interface FileInfo {
-  readonly path: string,
-  readonly status: string,
-};
+  readonly path: string;
+  readonly status: string;
+}
 
 export interface FileData {
-  readonly path: string,
-  readonly content: string,
-  readonly encoding: string,
+  readonly path: string;
+  readonly content: string;
+  readonly encoding: string;
 }
 
 
@@ -42,7 +42,7 @@ export async function getPrFiles(
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber,
+    pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
   return prFilesDetails.data.map(details => ({

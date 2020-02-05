@@ -10,14 +10,23 @@ import {
   getPrFile,
   getPrNumber,
   getPrFiles,
-} from './github-api'
+} from "./github-api";
 
 
-const SVG_FILE_EXTENSION: string = ".svg";
+const SVG_FILE_EXTENSION = ".svg";
 
-const STATUS_ADDED: string = "added";
-const STATUS_MODIFIED: string = "modified";
+const STATUS_ADDED = "added";
+const STATUS_MODIFIED = "modified";
 
+
+function svgFiles(fileInfo: FileInfo): boolean {
+  return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
+}
+
+function existingFiles(fileInfo: FileInfo): boolean {
+  return fileInfo.status === STATUS_MODIFIED
+      || fileInfo.status === STATUS_ADDED;
+}
 
 async function main(): Promise<void> {
   try {
@@ -46,15 +55,6 @@ async function main(): Promise<void> {
     core.error(error);
     core.setFailed(error.message);
   }
-}
-
-function svgFiles(fileInfo: FileInfo): boolean {
-  return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
-}
-
-function existingFiles(fileInfo: FileInfo): boolean {
-  return fileInfo.status === STATUS_MODIFIED
-      || fileInfo.status === STATUS_ADDED;
 }
 
 

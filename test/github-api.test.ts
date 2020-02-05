@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-jest.mock('@actions/core', () => require('./mocks/@actions/core'));
-jest.mock('@actions/github', () => require('./mocks/@actions/github'));
+jest.mock("@actions/core", () => require("./mocks/@actions/core"));
+jest.mock("@actions/github", () => require("./mocks/@actions/github"));
 
 import {
   PR_NOT_FOUND,
@@ -15,8 +15,8 @@ import {
 } from "../src/github-api";
 
 
-const PR_WITH_NO_CHANGES: number = 1;
-const PR_WITH_ONE_SVG_CHANGED: number = 2;
+const PR_WITH_NO_CHANGES = 1;
+const PR_WITH_ONE_SVG_CHANGED = 2;
 
 
 describe("::getPrFile", () => {
@@ -68,14 +68,16 @@ describe("::getPrFiles", () => {
 describe("::getPrNumber", () => {
 
   test.each([1, 2, 5, 42])("return the correct number for Pull Request #%i", (prNumber: number) => {
-    github.context.payload.pull_request = { number: prNumber };
+    github.context.payload.pull_request = { /* eslint-disable-line @typescript-eslint/camelcase */
+      number: prNumber,
+    };
 
     const actual: number = getPrNumber();
     expect(actual).toBe(prNumber);
   });
 
   test(`return PR_NOT_FOUND (${PR_NOT_FOUND}) when there was no Pull Request in the context`, () => {
-    github.context.payload.pull_request = undefined;
+    github.context.payload.pull_request = undefined; /* eslint-disable-line @typescript-eslint/camelcase */
 
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
