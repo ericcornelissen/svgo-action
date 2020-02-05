@@ -42,7 +42,7 @@ export async function getPrFiles(
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber,
+    pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
   return prFilesDetails.data.map(details => ({

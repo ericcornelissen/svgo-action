@@ -19,6 +19,15 @@ const STATUS_ADDED = "added";
 const STATUS_MODIFIED = "modified";
 
 
+function svgFiles(fileInfo: FileInfo): boolean {
+  return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
+}
+
+function existingFiles(fileInfo: FileInfo): boolean {
+  return fileInfo.status === STATUS_MODIFIED
+      || fileInfo.status === STATUS_ADDED;
+}
+
 async function main(): Promise<void> {
   try {
     const token = core.getInput("repo-token", { required: true });
@@ -46,15 +55,6 @@ async function main(): Promise<void> {
     core.error(error);
     core.setFailed(error.message);
   }
-}
-
-function svgFiles(fileInfo: FileInfo): boolean {
-  return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
-}
-
-function existingFiles(fileInfo: FileInfo): boolean {
-  return fileInfo.status === STATUS_MODIFIED
-      || fileInfo.status === STATUS_ADDED;
 }
 
 

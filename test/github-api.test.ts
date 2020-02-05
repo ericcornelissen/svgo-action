@@ -68,14 +68,16 @@ describe("::getPrFiles", () => {
 describe("::getPrNumber", () => {
 
   test.each([1, 2, 5, 42])("return the correct number for Pull Request #%i", (prNumber: number) => {
-    github.context.payload.pull_request = { number: prNumber };
+    github.context.payload.pull_request = { /* eslint-disable-line @typescript-eslint/camelcase */
+      number: prNumber,
+    };
 
     const actual: number = getPrNumber();
     expect(actual).toBe(prNumber);
   });
 
   test(`return PR_NOT_FOUND (${PR_NOT_FOUND}) when there was no Pull Request in the context`, () => {
-    github.context.payload.pull_request = undefined;
+    github.context.payload.pull_request = undefined; /* eslint-disable-line @typescript-eslint/camelcase */
 
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
