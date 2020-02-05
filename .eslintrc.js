@@ -20,6 +20,7 @@ module.exports = {
   },
   rules: {
     "comma-dangle": ["error", "always-multiline"],
+    "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "_+" }],
