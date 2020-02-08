@@ -1,15 +1,12 @@
 import * as core from "./mocks/@actions/core.mock";
+import { PR_WITH_ONE_SVG_CHANGED } from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
-
-import { PR_NOT_FOUND } from "../src/github-api";
 
 jest.mock("@actions/core", () => core);
 jest.mock("../src/github-api", () => githubAPI);
 
+import { PR_NOT_FOUND } from "../src/github-api";
 import main from "../src/main";
-
-
-const PR_WITH_ONE_SVG_CHANGED = 2;
 
 
 beforeEach(() => {
