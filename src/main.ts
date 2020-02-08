@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
+import { decode } from "./encoder";
 import {
   PR_NOT_FOUND,
 
@@ -48,8 +49,10 @@ export default async function main(): Promise<boolean> {
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetch file contents of '${svgFileInfo.path}'`);
       const fileContent: FileData = await getPrFile(client, svgFileInfo.path);
+      const svgData = decode(fileContent.content, fileContent.encoding);
 
-      // TODO: decode, run SVGO, and commit back
+      console.log(svgData);
+      // TODO: run SVGO, and commit back
     }
 
     return true;
