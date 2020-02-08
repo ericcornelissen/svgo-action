@@ -10,5 +10,5 @@ module.exports = {
     } else if (key === "configuration-path") {
       return "./config.yml";
     }
-  })
+  }),
 };
