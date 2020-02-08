@@ -6,10 +6,12 @@
     "rootDir": "./src",
     "strict": true,
     "noImplicitAny": false,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "resolveJsonModule": true
   },
   "exclude": [
     "node_modules",
+    "**/*.mock.ts",
     "**/*.test.ts"
   ]
 }

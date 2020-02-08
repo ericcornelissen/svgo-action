@@ -8,8 +8,8 @@ import {
   FileInfo,
 
   getPrFile,
-  getPrNumber,
   getPrFiles,
+  getPrNumber,
 } from "./github-api";
 
 
@@ -28,15 +28,15 @@ function existingFiles(fileInfo: FileInfo): boolean {
       || fileInfo.status === STATUS_ADDED;
 }
 
-async function main(): Promise<void> {
+export default async function main(): Promise<boolean> {
   try {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
-      console.info("Could not get Pull Request number from context, exiting");
-      return;
+      core.error("Could not get Pull Request number from context, exiting");
+      return false;
     }
 
     const client: github.GitHub = new github.GitHub(token);
@@ -51,9 +51,13 @@ async function main(): Promise<void> {
 
       // TODO: decode, run SVGO, and commit back
     }
+
+    return true;
   } catch (error) {
     core.error(error);
     core.setFailed(error.message);
+
+    return false;
   }
 }
 

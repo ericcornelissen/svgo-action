@@ -27,15 +27,10 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["**/*.js"],
+      // Configuration files
+      files: ["*.js"],
       globals: {
         "module": "readonly",
-        "Promise": "readonly",
-        "require": "readonly",
-      },
-      rules: {
-        "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/no-var-requires": 0,
       },
     },
   ],
