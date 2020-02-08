@@ -23,10 +23,10 @@ module.exports = {
     return {
       pulls: {
         listFiles: ({ pull_number: prNumber }) => {
-          if (prNumber === PR_WITH_NO_CHANGES) {
-            return Promise.resolve({ data: [] });
-          } else if (prNumber === PR_WITH_ONE_SVG_CHANGED) {
+          if (prNumber === PR_WITH_ONE_SVG_CHANGED) {
             return Promise.resolve({ data: prPayloads["1 SVG added"] });
+          } else {
+            return Promise.resolve({ data: [] });
           }
         },
       },

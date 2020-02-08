@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-jest.mock("@actions/core", () => require("./mocks/@actions/core"));
-jest.mock("@actions/github", () => require("./mocks/@actions/github"));
+jest.mock("@actions/core", () => require("./mocks/@actions/core.mock"));
+jest.mock("@actions/github", () => require("./mocks/@actions/github.mock"));
 
 import {
   PR_NOT_FOUND,
