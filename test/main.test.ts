@@ -37,17 +37,17 @@ describe("Return value", () => {
 
 describe("Function usage", () => {
 
-  test("calls a relevant function", async () => {
+  test("gets the Pull Request number", async () => {
     await main();
     expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
   });
 
-  test("calls a relevant function II", async () => {
+  test("gets the changed files in the Pull Request", async () => {
     await main();
     expect(githubAPI.getPrFiles).toHaveBeenCalledTimes(1);
   });
 
-  test("calls a relevant function III", async () => {
+  test("gets the contents of at least one of the files in the Pull Request", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_WITH_ONE_SVG_CHANGED);
 
     await main();
