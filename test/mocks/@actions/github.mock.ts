@@ -36,4 +36,4 @@ export const GitHub = jest.fn(() => {
       },
     },
   };
-});
+}).mockName("github.GitHub");

@@ -1,7 +1,7 @@
-export const error = jest.fn();
-export const debug = jest.fn();
+export const error = jest.fn().mockName("core.error");
+export const debug = jest.fn().mockName("core.debug");
 
-export const setFailed = jest.fn();
+export const setFailed = jest.fn().mockName("core.setFailed");
 
 export const getInput = jest.fn((key, _) => {
   if (key === "repo-token") {
@@ -9,4 +9,4 @@ export const getInput = jest.fn((key, _) => {
   } else if (key === "configuration-path") {
     return "./config.yml";
   }
-});
+}).mockName("core.getInput");
