@@ -1,8 +1,11 @@
+import * as coreMock from "./mocks/@actions/core.mock";
+import * as githubMock from "./mocks/@actions/github.mock";
+
+jest.mock("@actions/core", () => coreMock);
+jest.mock("@actions/github", () => githubMock);
+
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-
-jest.mock("@actions/core", () => require("./mocks/@actions/core"));
-jest.mock("@actions/github", () => require("./mocks/@actions/github"));
 
 import {
   PR_NOT_FOUND,
@@ -13,10 +16,6 @@ import {
   getPrNumber,
   getPrFiles,
 } from "../src/github-api";
-
-
-const PR_WITH_NO_CHANGES = 1;
-const PR_WITH_ONE_SVG_CHANGED = 2;
 
 
 describe("::getPrFile", () => {
@@ -54,12 +53,12 @@ describe("::getPrFiles", () => {
   const client: github.GitHub = new github.GitHub(token);
 
   test("return correctly for a Pull Request with 1 changed files", async () => {
-    const changedFiles = await getPrFiles(client, PR_WITH_ONE_SVG_CHANGED);
+    const changedFiles = await getPrFiles(client, githubMock.PR_WITH_ONE_SVG_CHANGED);
     expect(changedFiles).toBeDefined();
   });
 
   test("return correctly for a Pull Request with no changes", async () => {
-    const changedFiles = await getPrFiles(client, PR_WITH_NO_CHANGES);
+    const changedFiles = await getPrFiles(client, githubMock.PR_WITH_NO_CHANGES);
     expect(changedFiles).toBeDefined();
   });
 
