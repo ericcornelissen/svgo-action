@@ -1,4 +1,7 @@
-const UNKNOWN_ENCODING_MSG = "Unknown file encoding";
+import * as util from "util";
+
+
+const UNKNOWN_ENCODING_MSG = "Unknown file encoding '%s'";
 
 const BASE64 = "base64";
 const UTF8 = "utf-8";
@@ -18,7 +21,8 @@ export function decode(data: string, fileEncoding: string): string {
   if (fileEncoding === BASE64) {
     return decodeBase64(data);
   } else {
-    throw Error(UNKNOWN_ENCODING_MSG);
+    const errorMessage = util.format(UNKNOWN_ENCODING_MSG, fileEncoding);
+    throw Error(errorMessage);
   }
 }
 
@@ -26,6 +30,7 @@ export function encode(data: string, fileEncoding: string): string {
   if (fileEncoding === BASE64) {
     return encodeBase64(data);
   } else {
-    throw Error(UNKNOWN_ENCODING_MSG);
+    const errorMessage = util.format(UNKNOWN_ENCODING_MSG, fileEncoding);
+    throw Error(errorMessage);
   }
 }
