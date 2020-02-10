@@ -1,6 +1,6 @@
 import SVGOptimizer from "../src/svgo";
 
-import * as svgs from "./fixtures/svgs.json";
+import svgs from "./fixtures/svgs.json";
 
 
 describe("constructor", () => {
@@ -17,21 +17,29 @@ describe("constructor", () => {
 
 describe(".optimize", () => {
 
+  const testSvgs = test.each(Object.values(svgs));
+
   let optimizer: SVGOptimizer;
 
   beforeEach(() => {
     optimizer = new SVGOptimizer({});
   });
 
-  test("return a (string) value", async () => {
-    const result = await optimizer.optimize(svgs.simple);
+  testSvgs("return a (string) value", async (svg: string) => {
+    const result = await optimizer.optimize(svg);
     expect(result).toBeDefined();
     expect(typeof result).toBe("string");
   });
 
-  test("change a (not optimized) SVG", async () => {
-    const result = await optimizer.optimize(svgs.simple);
+  testSvgs("change a (not optimized) SVG", async (svg: string) => {
+    const result = await optimizer.optimize(svg);
     expect(result).not.toEqual(svgs.simple);
+  });
+
+  test("return value for a previously optimized SVG", async () => {
+    const optimized = await optimizer.optimize(svgs.simple);
+    const result = await optimizer.optimize(optimized);
+    expect(result).toEqual(optimized);
   });
 
 });
