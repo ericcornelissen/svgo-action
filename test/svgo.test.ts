@@ -1,6 +1,7 @@
 import SVGOptimizer from "../src/svgo";
 
 import svgs from "./fixtures/svgs.json";
+import svgoConfig from "./fixtures/svgo-config.json";
 
 
 describe("constructor", () => {
@@ -11,6 +12,10 @@ describe("constructor", () => {
 
   test("does not throw when given empty configuration", () => {
     expect(() => new SVGOptimizer({})).not.toThrow();
+  });
+
+  test("does not throw when given configuration", () => {
+    expect(() => new SVGOptimizer(svgoConfig)).not.toThrow();
   });
 
 });
@@ -40,6 +45,14 @@ describe(".optimize", () => {
     const optimized = await optimizer.optimize(svgs.simple);
     const result = await optimizer.optimize(optimized);
     expect(result).toEqual(optimized);
+  });
+
+  test("optimizing with different configurations (default vs. fixture)", async () => {
+    const optimizer2: SVGOptimizer = new SVGOptimizer(svgoConfig);
+
+    const optimized1 = await optimizer.optimize(svgs.complex);
+    const optimized2 = await optimizer2.optimize(svgs.complex);
+    expect(optimized1).not.toEqual(optimized2);
   });
 
 });

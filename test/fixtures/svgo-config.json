@@ -1,0 +1,98 @@
+{
+  "multipass": true,
+  "plugins": [
+    {
+      "convertPathData": {
+        "floatPrecision": 3,
+        "noSpaceAfterFlags": false
+      }
+    },
+    {
+      "sortAttrs": {
+        "order": [
+          "role",
+          "viewBox"
+        ],
+        "xmlnsOrder": "end"
+      }
+    },
+    {
+      "convertShapeToPath": {
+        "convertArcs": true
+      }
+    },
+    {
+      "mergePaths": {
+        "force": true,
+        "noSpaceAfterFlags": false
+      }
+    },
+    {
+      "removeTitle": false
+    },
+    {
+      "addAttributesToSVGElement": {
+        "attributes": [
+          {
+            "role": "img"
+          }
+        ]
+      }
+    },
+    {
+      "removeUnknownsAndDefaults": {
+        "keepRoleAttr": true
+      }
+    },
+    {
+      "removeAttrs": {
+        "attrs": [
+          "baseProfile"
+        ]
+      }
+    },
+    {
+      "removeUselessStrokeAndFill": {
+        "removeNone": true
+      }
+    },
+    "removeDoctype",
+    "removeXMLProcInst",
+    "removeComments",
+    "removeMetadata",
+    "removeXMLNS",
+    "removeEditorsNSData",
+    "cleanupAttrs",
+    "inlineStyles",
+    "minifyStyles",
+    "convertStyleToAttrs",
+    "cleanupIDs",
+    "prefixIds",
+    "removeRasterImages",
+    "removeUselessDefs",
+    "cleanupNumericValues",
+    "cleanupListOfValues",
+    "convertColors",
+    "removeNonInheritableGroupAttrs",
+    "removeViewBox",
+    "cleanupEnableBackground",
+    "removeHiddenElems",
+    "removeEmptyText",
+    "moveElemsAttrsToGroup",
+    "moveGroupAttrsToElems",
+    "collapseGroups",
+    "convertTransform",
+    "removeEmptyAttrs",
+    "removeEmptyContainers",
+    "removeUnusedNS",
+    "removeDesc",
+    "removeDimensions",
+    "removeAttributesBySelector",
+    "removeElementsByAttr",
+    "addClassesToSVGElement",
+    "removeStyleElement",
+    "removeScriptElement",
+    "removeOffCanvasPaths",
+    "reusePaths"
+  ]
+}
