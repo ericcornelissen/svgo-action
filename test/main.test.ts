@@ -1,5 +1,5 @@
 import * as core from "./mocks/@actions/core.mock";
-import { PR_ADD_SVG } from "./mocks/@actions/github.mock";
+import { PR_ADD_SVG, PR_ADD_SVG_MODIFY_FILE } from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import SVGOptimizer, { svgo } from "./mocks/svgo.mock";
 import * as encoder from "./mocks/encoder.mock";
@@ -116,7 +116,18 @@ describe("scenarios", () => {
 
   test.skip("Pull Request with 1 new non-SVG", () => true);
 
-  test.skip("Pull Request with 1 new SVG and 1 modified non-SVG", () => true);
+  test("Pull Request with 1 new SVG and 1 modified file", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_SVG_MODIFY_FILE);
+
+    await main();
+
+    const { content, encoding } = contentPayloads["test.svg"];
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
+
+    expect(svgo.optimize).toHaveBeenCalledTimes(1);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+  });
 
   test.skip("Pull Request with 1 optimized SVG", () => true);
 
