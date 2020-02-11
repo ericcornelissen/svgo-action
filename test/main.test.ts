@@ -3,6 +3,7 @@ import {
   PR_ADD_SVG,
   PR_MODIFY_SVG,
   PR_REMOVE_SVG,
+  PR_ADD_MODIFY_REMOVE_SVG,
   PR_ADD_SVG_MODIFY_FILE,
 } from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
@@ -135,7 +136,21 @@ describe("scenarios", () => {
     expect(svgo.optimize).toHaveBeenCalledTimes(0);
   });
 
-  test.skip("Pull Request with 1 new, 1 modified, and 1 removed SVG", () => true);
+  test("Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_MODIFY_REMOVE_SVG);
+
+    await main();
+
+    const { content: content1, encoding: encoding1 } = contentPayloads["foo.svg"];
+    const { content: content2, encoding: encoding2 } = contentPayloads["bar.svg"];
+    expect(encoder.decode).toHaveBeenCalledTimes(2);
+    expect(encoder.decode).toHaveBeenCalledWith(content1, encoding1);
+    expect(encoder.decode).toHaveBeenCalledWith(content2, encoding2);
+
+    expect(svgo.optimize).toHaveBeenCalledTimes(2);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+  });
 
   test.skip("Pull Request with 1 new non-SVG", () => true);
 

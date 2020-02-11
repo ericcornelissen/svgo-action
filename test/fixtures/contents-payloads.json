@@ -1,4 +1,22 @@
 {
+  "bar.svg": {
+    "name": "bar.svg",
+    "path": "bar.svg",
+    "sha": "d63a1399d00cba82d94f864810d4d2a1eff597af",
+    "size": 1774,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/bar.svg?ref=9199acba391dbd22e48a24467b1fb40eaef2495b",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/9199acba391dbd22e48a24467b1fb40eaef2495b/bar.svg",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/d63a1399d00cba82d94f864810d4d2a1eff597af",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/9199acba391dbd22e48a24467b1fb40eaef2495b/bar.svg?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHJvbGU9ImltZyIgdmlld0JveD0iMCAwIDI0IDI0Ij48dGl0bGU+QU1EIGljb248L3RpdGxlPjxwYXRoIGQ9Ik0xOC4zMjQgOS4xMzdsMS41NTkgMS41NmgyLjU1NnYyLjU1N0wyNCAxNC44MTRWOS4xMzd6TTIgOS41MmwtMiA0Ljk2aDEuMzA5bC4zNy0uOTgySDMuOWwuNDA4Ljk4MmgxLjMzOEwzLjQzMiA5LjUyem00LjIwOSAwdjQuOTU1aDEuMjM4di0zLjA5MmwxLjMzOCAxLjU2MmguMTg4bDEuMzM4LTEuNTU2djMuMDkxaDEuMjM4VjkuNTJIMTAuNDdsLTEuNTkyIDEuODQ1TDcuMjg3IDkuNTJ6bTYuMjgzIDB2NC45NmgyLjA1N2MxLjk3OSAwIDIuODgtMS4wNDYgMi44OC0yLjQ3MiAwLTEuMzYtLjkzNy0yLjQ4OC0yLjc0Ny0yLjQ4OHptMS4yMzcuOTFoLjc5MmMxLjE3IDAgMS42My43MTEgMS42MyAxLjU3IDAgLjcyOC0uMzcyIDEuNTcyLTEuNjE2IDEuNTcyaC0uODA2em0tMTAuOTg1LjI3M2wuNzkxIDEuOTMySDIuMDA4em0xNy4xMzcuMzA3bC0xLjYwNCAxLjYwM3YyLjI1aDIuMjQ2bDEuNjA0LTEuNjA3aC0yLjI0NnoiLz48L3N2Zz4=",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/bar.svg?ref=9199acba391dbd22e48a24467b1fb40eaef2495b",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/d63a1399d00cba82d94f864810d4d2a1eff597af",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/9199acba391dbd22e48a24467b1fb40eaef2495b/bar.svg"
+    }
+  },
   "foo.svg": {
     "name": "foo.svg",
     "path": "foo.svg",
