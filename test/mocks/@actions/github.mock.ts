@@ -4,8 +4,9 @@ import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
 
 
-export const PR_WITH_NO_CHANGES = 1;
-export const PR_WITH_ONE_SVG_CHANGED = 2;
+export const PR_NO_CHANGES = 1;
+export const PR_ADD_SVG = 2;
+export const PR_ADD_SVG_MODIFY_FILE = 3;
 
 export const context = {
   payload: {
@@ -23,10 +24,13 @@ export const GitHub = jest.fn(() => {
   return {
     pulls: {
       listFiles: async ({ pull_number: prNumber }) => {
-        if (prNumber === PR_WITH_ONE_SVG_CHANGED) {
-          return { data: prPayloads["1 SVG added"] };
-        } else {
-          return { data: [] };
+        switch (prNumber) {
+          case PR_ADD_SVG:
+            return { data: prPayloads["1 SVG added"] };
+          case PR_ADD_SVG_MODIFY_FILE:
+            return { data: prPayloads["1 SVG added, 1 file modified"] };
+          default:
+            return { data: [] };
         }
       },
     },

@@ -13,7 +13,7 @@
       "patch": "@@ -0,0 +1,3 @@\n+<svg role=\"img\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n+  <title>Zeit icon</title><path d=\"M24 22.525H0l12-21.05 12 21.05z\"/>\n+</svg>\n\\ No newline at end of file"
     }
   ],
-  "1 SVG added, 1 non-SVG modified": [
+  "1 SVG added, 1 file modified": [
     {
       "sha": "02064c7f051c46a863a8e5c780bb9661882a8834",
       "filename": ".github/workflows/main.yml",

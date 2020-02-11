@@ -1,5 +1,5 @@
 import * as core from "./mocks/@actions/core.mock";
-import { PR_WITH_ONE_SVG_CHANGED } from "./mocks/@actions/github.mock";
+import { PR_ADD_SVG } from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import SVGOptimizer, { svgo } from "./mocks/svgo.mock";
 import * as encoder from "./mocks/encoder.mock";
@@ -59,7 +59,7 @@ describe("Function usage", () => {
   });
 
   test("gets the contents of at least one of the files in the Pull Request", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_WITH_ONE_SVG_CHANGED);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_SVG);
 
     await main();
     expect(githubAPI.getPrFile).toHaveBeenCalledTimes(1);
@@ -96,7 +96,7 @@ describe("Logging", () => {
 describe("scenarios", () => {
 
   test("Pull Request with 1 new SVG", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_WITH_ONE_SVG_CHANGED);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_SVG);
 
     await main();
 

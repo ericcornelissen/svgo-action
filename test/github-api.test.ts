@@ -53,12 +53,12 @@ describe("::getPrFiles", () => {
   const client: github.GitHub = new github.GitHub(token);
 
   test("return correctly for a Pull Request with 1 changed files", async () => {
-    const changedFiles = await getPrFiles(client, githubMock.PR_WITH_ONE_SVG_CHANGED);
+    const changedFiles = await getPrFiles(client, githubMock.PR_ADD_SVG);
     expect(changedFiles).toBeDefined();
   });
 
   test("return correctly for a Pull Request with no changes", async () => {
-    const changedFiles = await getPrFiles(client, githubMock.PR_WITH_NO_CHANGES);
+    const changedFiles = await getPrFiles(client, githubMock.PR_NO_CHANGES);
     expect(changedFiles).toBeDefined();
   });
 
