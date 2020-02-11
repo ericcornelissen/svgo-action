@@ -6,7 +6,9 @@ import * as contentPayloads from "../../fixtures/contents-payloads.json";
 
 export const PR_NO_CHANGES = 1;
 export const PR_ADD_SVG = 2;
-export const PR_ADD_SVG_MODIFY_FILE = 3;
+export const PR_MODIFY_SVG = 3;
+export const PR_REMOVE_SVG = 4;
+export const PR_ADD_SVG_MODIFY_FILE = 5;
 
 export const context = {
   payload: {
@@ -27,6 +29,10 @@ export const GitHub = jest.fn(() => {
         switch (prNumber) {
           case PR_ADD_SVG:
             return { data: prPayloads["1 SVG added"] };
+          case PR_MODIFY_SVG:
+            return { data: prPayloads["1 SVG modified"] };
+          case PR_REMOVE_SVG:
+            return { data: prPayloads["1 SVG removed"] };
           case PR_ADD_SVG_MODIFY_FILE:
             return { data: prPayloads["1 SVG added, 1 file modified"] };
           default:
