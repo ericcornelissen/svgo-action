@@ -1,9 +1,16 @@
 import * as core from "./mocks/@actions/core.mock";
 import { PR_WITH_ONE_SVG_CHANGED } from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
+import SVGOptimizer, { svgo } from "./mocks/svgo.mock";
+import * as encoder from "./mocks/encoder.mock";
 
 jest.mock("@actions/core", () => core);
+jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
+jest.mock("../src/svgo", () => SVGOptimizer);
+
+import contentPayloads from "./fixtures/contents-payloads.json";
+import svgs from "./fixtures/svgs.json";
 
 import { PR_NOT_FOUND } from "../src/github-api";
 import main from "../src/main";
@@ -17,6 +24,10 @@ beforeEach(() => {
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
+
+  encoder.decode.mockClear();
+
+  svgo.optimize.mockClear();
 });
 
 describe("Return value", () => {
@@ -79,5 +90,34 @@ describe("Logging", () => {
     await main();
     expect(core.error).toHaveBeenCalled();
   });
+
+});
+
+describe("scenarios", () => {
+
+  test("Pull Request with 1 new SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_WITH_ONE_SVG_CHANGED);
+
+    await main();
+
+    const { content, encoding } = contentPayloads["test.svg"];
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
+
+    expect(svgo.optimize).toHaveBeenCalledTimes(1);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+  });
+
+  test.skip("Pull Request with 1 modified SVG", () => true);
+
+  test.skip("Pull Request with 1 removed SVG", () => true);
+
+  test.skip("Pull Request with 1 new, 1 modified, and 1 removed SVG", () => true);
+
+  test.skip("Pull Request with 1 new non-SVG", () => true);
+
+  test.skip("Pull Request with 1 new SVG and 1 modified non-SVG", () => true);
+
+  test.skip("Pull Request with 1 optimized SVG", () => true);
 
 });
