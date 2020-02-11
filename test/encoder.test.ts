@@ -1,4 +1,7 @@
-import { encode, decode } from "../src/encoder";
+import { decode, encode } from "../src/encoder";
+
+
+const EMPTY_STRING = "";
 
 
 describe("::decode", () => {
@@ -18,10 +21,8 @@ describe("::decode", () => {
     });
 
     test("Decoding an empty base64 string", () => {
-      const emptyString = "";
-
-      const result: string = decode(emptyString, BASE64);
-      expect(result).toBe(emptyString);
+      const result: string = decode(EMPTY_STRING, BASE64);
+      expect(result).toBe(EMPTY_STRING);
     });
 
   });
@@ -49,10 +50,8 @@ describe("::encode", () => {
     });
 
     test("Encoding an empty string to base64", () => {
-      const emptyString = "";
-
-      const result: string = encode(emptyString, BASE64);
-      expect(result).toBe(emptyString);
+      const result: string = encode(EMPTY_STRING, BASE64);
+      expect(result).toBe(EMPTY_STRING);
     });
 
   });
