@@ -8,7 +8,9 @@
   "scripts": {
     "build": "tsc && ncc build lib/main.js -m -o lib",
     "format": "npm run lint -- --fix",
-    "lint": "eslint . --ext .js,.ts",
+    "lint": "npm run lint:js && npm run lint:ws",
+    "lint:js": "eslint . --ext .js,.ts",
+    "lint:ws": "editorconfig-checker",
     "test": "jest"
   },
   "repository": {
@@ -38,6 +40,7 @@
     "@typescript-eslint/eslint-plugin": "2.19.2",
     "@typescript-eslint/parser": "2.19.2",
     "@zeit/ncc": "0.21.1",
+    "editorconfig-checker": "^3.0.3",
     "eslint": "6.8.0",
     "husky": "4.2.3",
     "jest": "25.1.0",
