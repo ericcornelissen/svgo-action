@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import SVGOptimizer from "./svgo";
-import { decode } from "./encoder";
+import { decode, encode } from "./encoder";
 import {
   PR_NOT_FOUND,
 
@@ -12,6 +12,8 @@ import {
   getPrFile,
   getPrFiles,
   getPrNumber,
+
+  commit,
 } from "./github-api";
 
 
@@ -50,17 +52,25 @@ export default async function main(): Promise<boolean> {
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetch file contents of '${svgFileInfo.path}'`);
-      const fileContent: FileData = await getPrFile(client, svgFileInfo.path);
-      const svgData: string = decode(fileContent.content, fileContent.encoding);
-      const optimizedSvg: string = await svgo.optimize(svgData);
-      console.log(optimizedSvg);
-      // TODO: commit back
+      const fileData: FileData = await getPrFile(client, svgFileInfo.path);
+      const originalSvg: string = decode(fileData.content, fileData.encoding);
+      const optimizedSvg: string = await svgo.optimize(originalSvg);
+      const optimizedData: string = encode(optimizedSvg, fileData.encoding);
+
+      await commit(
+        client,
+        fileData.path,
+        optimizedData,
+        fileData.encoding,
+        `Optimize '${fileData.path}' with SVGO`
+      );
     }
 
     return true;
   } catch (error) {
-    core.error(error);
-    core.setFailed(error.message);
+    console.log(error);
+    // core.error(error);
+    // core.setFailed(error.message);
 
     return false;
   }

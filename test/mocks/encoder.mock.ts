@@ -8,3 +8,5 @@ export const decode = jest.fn((data, encoding) => {
         }
     }
 }).mockName("decode");
+
+export const encode = jest.fn().mockName("encode");

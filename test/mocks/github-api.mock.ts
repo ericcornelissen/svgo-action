@@ -4,6 +4,8 @@ import * as github from "./@actions/github.mock";
 const client = new github.GitHub();
 
 
+export const commit = jest.fn().mockName("github-api.commit");
+
 export const getPrFile = jest.fn(async (_, path) => {
   const { data } = await client.repos.getContents({ path });
   return {
