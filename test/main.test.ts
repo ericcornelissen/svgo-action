@@ -4,7 +4,9 @@ import {
   PR_MODIFY_SVG,
   PR_REMOVE_SVG,
   PR_ADD_MODIFY_REMOVE_SVG,
+  PR_ADD_FILE,
   PR_ADD_SVG_MODIFY_FILE,
+  PR_ADD_OPTIMIZED_SVG,
 } from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import SVGOptimizer, { svgo } from "./mocks/svgo.mock";
@@ -152,7 +154,14 @@ describe("scenarios", () => {
     expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
   });
 
-  test.skip("Pull Request with 1 new non-SVG", () => true);
+  test("Pull Request with 1 new non-SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_FILE);
+
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(0);
+    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+  });
 
   test("Pull Request with 1 new SVG and 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_SVG_MODIFY_FILE);
@@ -167,6 +176,17 @@ describe("scenarios", () => {
     expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
   });
 
-  test.skip("Pull Request with 1 optimized SVG", () => true);
+  test("Pull Request with 1 optimized SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_OPTIMIZED_SVG);
+
+    await main();
+
+    const { content, encoding } = contentPayloads["optimized.svg"];
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
+
+    expect(svgo.optimize).toHaveBeenCalledTimes(1);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["optimized.svg"]);
+  });
 
 });

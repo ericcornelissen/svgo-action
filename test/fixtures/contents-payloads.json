@@ -35,6 +35,24 @@
       "html": "https://github.com/ericcornelissen/svgo-action/blob/570afcba391dbd22e48a24467b1fb40eaf233d98/foo.svg"
     }
   },
+  "optimized.svg": {
+    "name": "optimized.svg",
+    "path": "optimized.svg",
+    "sha": "49948ac6c0d705fe321ce449948ac6c0dfdac6c0",
+    "size": 720,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/optimized.svg?ref=786d2c73db84047ac090a32c9810d547a3287e88",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/786d2c73db84047ac090a32c9810d547a3287e88/optimized.svg",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/49948ac6c0d705fe321ce449948ac6c0dfdac6c0",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/786d2c73db84047ac090a32c9810d547a3287e88/optimized.svg?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "PHN2ZyB2aWV3Qm94PSIwIDAgNjQgNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPk9wdGltYWwgaWNvbjwvdGl0bGU+PHBhdGggZD0iTTI0IDIyLjUyNUgwbDEyLTIxLjA1IDEyIDIxLjA1eiIvPjwvc3ZnPg==",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/optimized.svg?ref=786d2c73db84047ac090a32c9810d547a3287e88",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/49948ac6c0d705fe321ce449948ac6c0dfdac6c0",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/786d2c73db84047ac090a32c9810d547a3287e88/optimized.svg"
+    }
+  },
   "test.svg": {
     "name": "test.svg",
     "path": "test.svg",

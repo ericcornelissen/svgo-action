@@ -9,7 +9,9 @@ export const PR_ADD_SVG = 2;
 export const PR_MODIFY_SVG = 3;
 export const PR_REMOVE_SVG = 4;
 export const PR_ADD_MODIFY_REMOVE_SVG = 5;
-export const PR_ADD_SVG_MODIFY_FILE = 6;
+export const PR_ADD_FILE = 6;
+export const PR_ADD_SVG_MODIFY_FILE = 7;
+export const PR_ADD_OPTIMIZED_SVG = 8;
 
 export const context = {
   payload: {
@@ -36,8 +38,12 @@ export const GitHub = jest.fn(() => {
             return { data: prPayloads["1 SVG removed"] };
           case PR_ADD_MODIFY_REMOVE_SVG:
             return { data: prPayloads["1 SVG added, 1 SVG modified, 1 SVG removed"] };
+          case PR_ADD_FILE:
+            return { data: prPayloads["1 file added"] };
           case PR_ADD_SVG_MODIFY_FILE:
             return { data: prPayloads["1 SVG added, 1 file modified"] };
+          case PR_ADD_OPTIMIZED_SVG:
+            return { data: prPayloads["1 optimized SVG added"] };
           default:
             return { data: [] };
         }
