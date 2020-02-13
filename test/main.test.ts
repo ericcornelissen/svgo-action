@@ -155,9 +155,23 @@ describe("Scenarios", () => {
     expect(svgo.optimize).toHaveBeenCalledTimes(0);
   });
 
-  test.skip("Pull Request with 1 modified file", () => true);
+  test("Pull Request with 1 modified file", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_FILE);
 
-  test.skip("Pull Request with 1 removed file", () => true);
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(0);
+    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+  });
+
+  test("Pull Request with 1 removed file", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_FILE);
+
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(0);
+    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+  });
 
   test("Pull Request with 1 new SVG and 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
@@ -172,15 +186,59 @@ describe("Scenarios", () => {
     expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
   });
 
-  test.skip("Pull Request with 1 new file and 1 modified SVG", () => true);
+  test("Pull Request with 1 new file and 1 modified SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_MODIFY_SVG);
 
-  test.skip("Pull Request with 1 new SVG and 1 deleted file", () => true);
+    await main();
 
-  test.skip("Pull Request with 1 new file and 1 deleted SVG", () => true);
+    const { content, encoding } = contentPayloads["test.svg"];
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-  test.skip("Pull Request with 1 new and 1 modified SVG, and 1 new file", () => true);
+    expect(svgo.optimize).toHaveBeenCalledTimes(1);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+  });
 
-  test.skip("Pull Request with multiple SVGs and multiple files", () => true);
+  test("Pull Request with 1 new SVG and 1 deleted file", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_REMOVE_FILE);
+
+    await main();
+
+    const { content, encoding } = contentPayloads["bar.svg"];
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
+
+    expect(svgo.optimize).toHaveBeenCalledTimes(1);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+  });
+
+  test("Pull Request with 1 new file and 1 deleted SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_REMOVE_SVG);
+
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(0);
+    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+  });
+
+  test("Pull Request with multiple SVGs and multiple files", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
+
+    await main();
+
+    const { content: content1, encoding: encoding1 } = contentPayloads["foo.svg"];
+    const { content: content2, encoding: encoding2 } = contentPayloads["bar.svg"];
+    const { content: content3, encoding: encoding3 } = contentPayloads["test.svg"];
+    expect(encoder.decode).toHaveBeenCalledTimes(3);
+    expect(encoder.decode).toHaveBeenCalledWith(content1, encoding1);
+    expect(encoder.decode).toHaveBeenCalledWith(content2, encoding2);
+    expect(encoder.decode).toHaveBeenCalledWith(content3, encoding3);
+
+    expect(svgo.optimize).toHaveBeenCalledTimes(3);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+  });
 
   test("Pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
