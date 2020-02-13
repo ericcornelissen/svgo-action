@@ -15,6 +15,6 @@
       "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/test.svg?ref=8b1cce9bdb84047ac090aecaec9810d53975781c",
       "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/8cef761674c705447f0ce449948ac6c0dd76f041",
       "html": "https://github.com/ericcornelissen/svgo-action/blob/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg"
-   }
+    }
   }
 }

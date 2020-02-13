@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
+import SVGOptimizer from "./svgo";
 import { decode } from "./encoder";
 import {
   PR_NOT_FOUND,
@@ -33,6 +34,7 @@ export default async function main(): Promise<boolean> {
   try {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
+    const svgo = new SVGOptimizer();
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
@@ -49,10 +51,10 @@ export default async function main(): Promise<boolean> {
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetch file contents of '${svgFileInfo.path}'`);
       const fileContent: FileData = await getPrFile(client, svgFileInfo.path);
-      const svgData = decode(fileContent.content, fileContent.encoding);
-
-      console.log(svgData);
-      // TODO: run SVGO, and commit back
+      const svgData: string = decode(fileContent.content, fileContent.encoding);
+      const optimizedSvg: string = await svgo.optimize(svgData);
+      console.log(optimizedSvg);
+      // TODO: commit back
     }
 
     return true;
