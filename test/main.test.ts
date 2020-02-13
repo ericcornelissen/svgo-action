@@ -93,7 +93,7 @@ describe("Logging", () => {
 
 });
 
-describe("scenarios", () => {
+describe("Scenarios", () => {
 
   test("Pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
@@ -146,7 +146,7 @@ describe("scenarios", () => {
     expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
   });
 
-  test("Pull Request with 1 new non-SVG", async () => {
+  test("Pull Request with 1 new file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE);
 
     await main();
@@ -154,6 +154,10 @@ describe("scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(svgo.optimize).toHaveBeenCalledTimes(0);
   });
+
+  test.skip("Pull Request with 1 modified file", () => true);
+
+  test.skip("Pull Request with 1 removed file", () => true);
 
   test("Pull Request with 1 new SVG and 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
@@ -167,6 +171,16 @@ describe("scenarios", () => {
     expect(svgo.optimize).toHaveBeenCalledTimes(1);
     expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
   });
+
+  test.skip("Pull Request with 1 new file and 1 modified SVG", () => true);
+
+  test.skip("Pull Request with 1 new SVG and 1 deleted file", () => true);
+
+  test.skip("Pull Request with 1 new file and 1 deleted SVG", () => true);
+
+  test.skip("Pull Request with 1 new and 1 modified SVG, and 1 new file", () => true);
+
+  test.skip("Pull Request with multiple SVGs and multiple files", () => true);
 
   test("Pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
