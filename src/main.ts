@@ -51,12 +51,19 @@ export default async function main(): Promise<boolean> {
 
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
     for (const svgFileInfo of prSvgs) {
-      core.debug(`fetch file contents of '${svgFileInfo.path}'`);
+      core.debug(`fetching file contents of '${svgFileInfo.path}'`);
       const fileData: FileData = await getPrFile(client, svgFileInfo.path);
+
+      core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
       const originalSvg: string = decode(fileData.content, fileData.encoding);
+
+      core.debug(`optimizing '${svgFileInfo.path}'`);
       const optimizedSvg: string = await svgo.optimize(originalSvg);
+
+      core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
+      core.debug(`commiting optimized '${svgFileInfo.path}'`);
       await commit(
         client,
         fileData.path,
