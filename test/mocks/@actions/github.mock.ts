@@ -4,14 +4,16 @@ import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
 
 
-export const PR_NO_CHANGES = 1;
-export const PR_ADD_SVG = 2;
-export const PR_MODIFY_SVG = 3;
-export const PR_REMOVE_SVG = 4;
-export const PR_ADD_MODIFY_REMOVE_SVG = 5;
-export const PR_ADD_FILE = 6;
-export const PR_ADD_SVG_MODIFY_FILE = 7;
-export const PR_ADD_OPTIMIZED_SVG = 8;
+export enum PR_NUMBER {
+  NO_CHANGES,
+  ADD_SVG,
+  MODIFY_SVG,
+  REMOVE_SVG,
+  ADD_MODIFY_REMOVE_SVG ,
+  ADD_FILE,
+  ADD_SVG_MODIFY_FILE,
+  ADD_OPTIMIZED_SVG,
+}
 
 export const context = {
   payload: {
@@ -30,19 +32,19 @@ export const GitHub = jest.fn(() => {
     pulls: {
       listFiles: async ({ pull_number: prNumber }) => {
         switch (prNumber) {
-          case PR_ADD_SVG:
+          case PR_NUMBER.ADD_SVG:
             return { data: prPayloads["add 1 SVG"] };
-          case PR_MODIFY_SVG:
+          case PR_NUMBER.MODIFY_SVG:
             return { data: prPayloads["modify 1 SVG"] };
-          case PR_REMOVE_SVG:
+          case PR_NUMBER.REMOVE_SVG:
             return { data: prPayloads["remove 1 SVG"] };
-          case PR_ADD_MODIFY_REMOVE_SVG:
+          case PR_NUMBER.ADD_MODIFY_REMOVE_SVG:
             return { data: prPayloads["add 1 SVG, modify 1 SVG, remove 1 SVG"] };
-          case PR_ADD_FILE:
+          case PR_NUMBER.ADD_FILE:
             return { data: prPayloads["add 1 file"] };
-          case PR_ADD_SVG_MODIFY_FILE:
+          case PR_NUMBER.ADD_SVG_MODIFY_FILE:
             return { data: prPayloads["add 1 SVG, modify 1 file"] };
-          case PR_ADD_OPTIMIZED_SVG:
+          case PR_NUMBER.ADD_OPTIMIZED_SVG:
             return { data: prPayloads["add 1 optimized SVG"] };
           default:
             return { data: [] };

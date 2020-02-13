@@ -1,13 +1,5 @@
 import * as core from "./mocks/@actions/core.mock";
-import {
-  PR_ADD_SVG,
-  PR_MODIFY_SVG,
-  PR_REMOVE_SVG,
-  PR_ADD_MODIFY_REMOVE_SVG,
-  PR_ADD_FILE,
-  PR_ADD_SVG_MODIFY_FILE,
-  PR_ADD_OPTIMIZED_SVG,
-} from "./mocks/@actions/github.mock";
+import { PR_NUMBER } from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import SVGOptimizer, { svgo } from "./mocks/svgo.mock";
 import * as encoder from "./mocks/encoder.mock";
@@ -67,7 +59,7 @@ describe("Function usage", () => {
   });
 
   test("gets the contents of at least one of the files in the Pull Request", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_SVG);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
     expect(githubAPI.getPrFile).toHaveBeenCalledTimes(1);
@@ -104,7 +96,7 @@ describe("Logging", () => {
 describe("scenarios", () => {
 
   test("Pull Request with 1 new SVG", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_SVG);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
 
@@ -117,7 +109,7 @@ describe("scenarios", () => {
   });
 
   test("Pull Request with 1 modified SVG", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_MODIFY_SVG);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
 
     await main();
 
@@ -130,7 +122,7 @@ describe("scenarios", () => {
   });
 
   test("Pull Request with 1 removed SVG", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_REMOVE_SVG);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_SVG);
 
     await main();
 
@@ -139,7 +131,7 @@ describe("scenarios", () => {
   });
 
   test("Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_MODIFY_REMOVE_SVG);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_MODIFY_REMOVE_SVG);
 
     await main();
 
@@ -155,7 +147,7 @@ describe("scenarios", () => {
   });
 
   test("Pull Request with 1 new non-SVG", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_FILE);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE);
 
     await main();
 
@@ -164,7 +156,7 @@ describe("scenarios", () => {
   });
 
   test("Pull Request with 1 new SVG and 1 modified file", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_SVG_MODIFY_FILE);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
 
     await main();
 
@@ -177,7 +169,7 @@ describe("scenarios", () => {
   });
 
   test("Pull Request with 1 optimized SVG", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_ADD_OPTIMIZED_SVG);
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
     await main();
 
