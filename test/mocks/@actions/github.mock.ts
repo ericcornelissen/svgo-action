@@ -31,19 +31,19 @@ export const GitHub = jest.fn(() => {
       listFiles: async ({ pull_number: prNumber }) => {
         switch (prNumber) {
           case PR_ADD_SVG:
-            return { data: prPayloads["1 SVG added"] };
+            return { data: prPayloads["add 1 SVG"] };
           case PR_MODIFY_SVG:
-            return { data: prPayloads["1 SVG modified"] };
+            return { data: prPayloads["modify 1 SVG"] };
           case PR_REMOVE_SVG:
-            return { data: prPayloads["1 SVG removed"] };
+            return { data: prPayloads["remove 1 SVG"] };
           case PR_ADD_MODIFY_REMOVE_SVG:
-            return { data: prPayloads["1 SVG added, 1 SVG modified, 1 SVG removed"] };
+            return { data: prPayloads["add 1 SVG, modify 1 SVG, remove 1 SVG"] };
           case PR_ADD_FILE:
-            return { data: prPayloads["1 file added"] };
+            return { data: prPayloads["add 1 file"] };
           case PR_ADD_SVG_MODIFY_FILE:
-            return { data: prPayloads["1 SVG added, 1 file modified"] };
+            return { data: prPayloads["add 1 SVG, modify 1 file"] };
           case PR_ADD_OPTIMIZED_SVG:
-            return { data: prPayloads["1 optimized SVG added"] };
+            return { data: prPayloads["add 1 optimized SVG"] };
           default:
             return { data: [] };
         }
