@@ -110,15 +110,15 @@
   "remove 1 file": [
     {
       "sha": "234a3929ae3929532eee3294234d1960122234aa",
-      "filename": "kappa.txt",
-      "status": "modified",
-      "additions": 1,
+      "filename": "passw.ord",
+      "status": "removed",
+      "additions": 0,
       "deletions": 1,
       "changes": 1,
-      "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/deaa1af312c705fe321ce449948ac6c0dfdd1231/kappa.txt",
-      "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/deaa1af312c705fe321ce449948ac6c0dfdd1231/kappa.txt",
-      "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/kappa.txt?ref=deaa1af312c705fe321ce449948ac6c0dfdd1231",
-      "patch": "@@ -0,0 +1,1 @@\n+Twitch.tv\n\\ No newline at end of file"
+      "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/deaa1af312c705fe321ce449948ac6c0dfdd1231/passw.ord",
+      "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/deaa1af312c705fe321ce449948ac6c0dfdd1231/passw.ord",
+      "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/passw.ord?ref=deaa1af312c705fe321ce449948ac6c0dfdd1231",
+      "patch": "@@ -1,1 +0,0 @@\n+correcthorsebatterystaple\n\\ No newline at end of file"
     }
   ],
   "add 1 SVG, modify 1 file": [
