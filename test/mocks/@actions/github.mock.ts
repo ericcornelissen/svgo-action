@@ -41,7 +41,7 @@ export const GitHub = jest.fn(() => {
           case PR_NUMBER.ADD_SVG:
             return { data: prPayloads["add 1 SVG"] };
           case PR_NUMBER.MANY_CHANGES:
-            return { data: prPayloads["add 1 SVG, modify 2 SVG, remove 1 SVG, add 1 file, modify 1 file"] };
+            return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 file, modify 1 file"] };
           case PR_NUMBER.MODIFY_SVG:
             return { data: prPayloads["modify 1 SVG"] };
           case PR_NUMBER.REMOVE_SVG:

@@ -23,7 +23,7 @@ Suppose there is a entry in _'pull-request-payloads.json'_ where the `filename`
 is "test.svg", then there should be an entry in:
 
 - _'contents-payloads.json'_: keyed by "test.svg" with the corresponding
-  content data from GitHub for that "test.svg".
+  content data from GitHub for the file "test.svg".
 - _'svgs.json'_: keyed by "test.svg" with the raw SVG text.
 
 

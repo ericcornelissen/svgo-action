@@ -1,8 +1,8 @@
 import * as core from "./mocks/@actions/core.mock";
 import { PR_NUMBER } from "./mocks/@actions/github.mock";
-import * as githubAPI from "./mocks/github-api.mock";
-import SVGOptimizer, { svgo } from "./mocks/svgo.mock";
 import * as encoder from "./mocks/encoder.mock";
+import * as githubAPI from "./mocks/github-api.mock";
+import SVGOptimizer, { optimizerInstance } from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("../src/encoder", () => encoder);
@@ -20,14 +20,12 @@ beforeEach(() => {
   core.debug.mockClear();
   core.error.mockClear();
   core.setFailed.mockClear();
-
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
 
   encoder.decode.mockClear();
-
-  svgo.optimize.mockClear();
+  optimizerInstance.optimize.mockClear();
 });
 
 describe("Return value", () => {
@@ -104,8 +102,8 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
   });
 
   test("Pull Request with 1 modified SVG", async () => {
@@ -117,8 +115,8 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
   });
 
   test("Pull Request with 1 removed SVG", async () => {
@@ -127,23 +125,24 @@ describe("Scenarios", () => {
     await main();
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_MODIFY_REMOVE_SVG);
 
+    const fooSvgContent = contentPayloads["foo.svg"];
+    const barSvgContent = contentPayloads["bar.svg"];
+
     await main();
 
-    const { content: content1, encoding: encoding1 } = contentPayloads["foo.svg"];
-    const { content: content2, encoding: encoding2 } = contentPayloads["bar.svg"];
     expect(encoder.decode).toHaveBeenCalledTimes(2);
-    expect(encoder.decode).toHaveBeenCalledWith(content1, encoding1);
-    expect(encoder.decode).toHaveBeenCalledWith(content2, encoding2);
+    expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent.content, fooSvgContent.encoding);
+    expect(encoder.decode).toHaveBeenCalledWith(barSvgContent.content, barSvgContent.encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(2);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(2);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
   });
 
   test("Pull Request with 1 new file", async () => {
@@ -152,7 +151,7 @@ describe("Scenarios", () => {
     await main();
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 modified file", async () => {
@@ -161,7 +160,7 @@ describe("Scenarios", () => {
     await main();
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 removed file", async () => {
@@ -170,7 +169,7 @@ describe("Scenarios", () => {
     await main();
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 new SVG and 1 modified file", async () => {
@@ -182,8 +181,8 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
   });
 
   test("Pull Request with 1 new file and 1 modified SVG", async () => {
@@ -195,8 +194,8 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
   });
 
   test("Pull Request with 1 new SVG and 1 deleted file", async () => {
@@ -208,8 +207,8 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
   });
 
   test("Pull Request with 1 new file and 1 deleted SVG", async () => {
@@ -218,26 +217,27 @@ describe("Scenarios", () => {
     await main();
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimize).toHaveBeenCalledTimes(0);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with multiple SVGs and multiple files", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
+    const fooSvgContent = contentPayloads["foo.svg"];
+    const barSvgContent = contentPayloads["bar.svg"];
+    const testSvgContent = contentPayloads["test.svg"];
+
     await main();
 
-    const { content: content1, encoding: encoding1 } = contentPayloads["foo.svg"];
-    const { content: content2, encoding: encoding2 } = contentPayloads["bar.svg"];
-    const { content: content3, encoding: encoding3 } = contentPayloads["test.svg"];
     expect(encoder.decode).toHaveBeenCalledTimes(3);
-    expect(encoder.decode).toHaveBeenCalledWith(content1, encoding1);
-    expect(encoder.decode).toHaveBeenCalledWith(content2, encoding2);
-    expect(encoder.decode).toHaveBeenCalledWith(content3, encoding3);
+    expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent.content, fooSvgContent.encoding);
+    expect(encoder.decode).toHaveBeenCalledWith(barSvgContent.content, barSvgContent.encoding);
+    expect(encoder.decode).toHaveBeenCalledWith(testSvgContent.content, testSvgContent.encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(3);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(3);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
   });
 
   test("Pull Request with 1 optimized SVG", async () => {
@@ -249,8 +249,8 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    expect(svgo.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimize).toHaveBeenCalledWith(svgs["optimized.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["optimized.svg"]);
   });
 
 });
