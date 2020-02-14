@@ -31,6 +31,20 @@ export async function commit(
   const MODE = "100644";
   const TYPE = "blob";
 
+  const ref = `heads/${getHead()}`;
+
+  const { data: refData } = await client.git.getRef({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    ref: ref,
+  });
+
+  const { data: previousCommit } = await client.git.getCommit({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    commit_sha: refData.object.sha, /* eslint-disable-line @typescript-eslint/camelcase */
+  });
+
   const { data: blobData } = await client.git.createBlob({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -41,6 +55,7 @@ export async function commit(
   const { data: treeData } = await client.git.createTree({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
+    base_tree: previousCommit.tree.sha, /* eslint-disable-line @typescript-eslint/camelcase */
     tree: [
       {
         path: path,
@@ -56,15 +71,13 @@ export async function commit(
     repo: github.context.repo.repo,
     message: commitMessage,
     tree: treeData.sha,
-    parents: [github.context.sha],
+    parents: [refData.object.sha],
   });
 
-  const head = getHead();
-  console.log(head);
   await client.git.updateRef({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    ref: `heads/${head}`,
+    ref: ref,
     sha: commitData.sha,
   });
 }
