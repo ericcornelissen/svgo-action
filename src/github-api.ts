@@ -1,6 +1,25 @@
 import * as github from "@actions/github";
 
 
+function getCommitUrl(commitSha: string): string {
+  const API_URL_START = "https://api.github.com/repos/";
+  const SITE_URL_START = "https://github.com/";
+  const API_URL_END = "/commits{/sha}";
+  const SITE_URL_END = "/commit";
+
+  // https://api.github.com/repos/{user}/{repo}/git/commits{/sha}
+  const apiCommitsUrl: string = github.context.payload.repository?.commits_url;
+
+  // https://github.com/{user}/{repo}/git/commits{/sha}
+  const mixedUrl: string = apiCommitsUrl.replace(API_URL_START, SITE_URL_START);
+
+  // https://github.com/{user}/{repo}/git/commit
+  const baseCommitUrl: string = mixedUrl.replace(API_URL_END, SITE_URL_END);
+
+  // https://github.com/{user}/{repo}/git/commit/{commitSha}
+  return `${baseCommitUrl}/${commitSha}`;
+}
+
 function getHead(): string {
   return github.context.payload.pull_request?.head.ref;
 }
@@ -8,6 +27,11 @@ function getHead(): string {
 
 export const PR_NOT_FOUND = -1;
 
+
+export interface CommitInfo {
+  readonly sha: string;
+  readonly url: string;
+}
 
 export interface FileInfo {
   readonly path: string;
@@ -27,7 +51,7 @@ export async function commit(
   data: string,
   encoding: string,
   commitMessage: string
-): Promise<void> {
+): Promise<CommitInfo> {
   const MODE = "100644";
   const TYPE = "blob";
 
@@ -45,14 +69,14 @@ export async function commit(
     commit_sha: refData.object.sha, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
-  const { data: blobData } = await client.git.createBlob({
+  const { data: fileBlob } = await client.git.createBlob({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     content: data,
     encoding: encoding,
   });
 
-  const { data: treeData } = await client.git.createTree({
+  const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     base_tree: previousCommit.tree.sha, /* eslint-disable-line @typescript-eslint/camelcase */
@@ -61,25 +85,30 @@ export async function commit(
         path: path,
         mode: MODE,
         type: TYPE,
-        sha: blobData.sha,
+        sha: fileBlob.sha,
       },
     ],
   });
 
-  const { data: commitData } = await client.git.createCommit({
+  const { data: newCommit } = await client.git.createCommit({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     message: commitMessage,
-    tree: treeData.sha,
+    tree: newTree.sha,
     parents: [refData.object.sha],
   });
 
-  await client.git.updateRef({
+  const { data: result } = await client.git.updateRef({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     ref: ref,
-    sha: commitData.sha,
+    sha: newCommit.sha,
   });
+
+  return {
+    sha: result.object.sha,
+    url: getCommitUrl(result.object.sha),
+  };
 }
 
 export async function getPrFile(

@@ -6,6 +6,7 @@ import { decode, encode } from "./encoder";
 import {
   PR_NOT_FOUND,
 
+  CommitInfo,
   FileData,
   FileInfo,
 
@@ -36,7 +37,6 @@ export default async function main(): Promise<boolean> {
   try {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
-    const svgo = new SVGOptimizer();
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
@@ -44,12 +44,17 @@ export default async function main(): Promise<boolean> {
       return false;
     }
 
+    const svgo: SVGOptimizer = new SVGOptimizer();
     const client: github.GitHub = new github.GitHub(token);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
+    core.debug(`the pull request contains ${prFiles.length} file(s)`);
 
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
+    core.debug(`the pull request contains ${prSvgs.length} SVG(s)`);
+
+    core.debug(`fetching content of files in pull request #${prNumber}`);
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetching file contents of '${svgFileInfo.path}'`);
       const fileData: FileData = await getPrFile(client, svgFileInfo.path);
@@ -63,14 +68,16 @@ export default async function main(): Promise<boolean> {
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      core.debug(`commiting optimized '${svgFileInfo.path}'`);
-      await commit(
+      core.debug(`committing optimized '${svgFileInfo.path}'`);
+      const commitInfo: CommitInfo = await commit(
         client,
         fileData.path,
         optimizedData,
         fileData.encoding,
         `Optimize '${fileData.path}' with SVGO`
       );
+
+      core.debug(`commit successful (see ${commitInfo.url})`);
     }
 
     return true;
