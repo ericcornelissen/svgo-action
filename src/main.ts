@@ -1,13 +1,15 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
-import { decode } from "./encoder";
+import { decode, encode } from "./encoder";
 import {
   PR_NOT_FOUND,
 
+  CommitInfo,
   FileData,
   FileInfo,
 
+  commitFile,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -35,7 +37,6 @@ export default async function main(): Promise<boolean> {
   try {
     const token = core.getInput("repo-token", { required: true });
     const configPath = core.getInput("configuration-path", { required: true });
-    const svgo = new SVGOptimizer();
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
@@ -44,18 +45,39 @@ export default async function main(): Promise<boolean> {
     }
 
     const client: github.GitHub = new github.GitHub(token);
+    const svgo: SVGOptimizer = new SVGOptimizer();
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
+    core.debug(`the pull request contains ${prFiles.length} file(s)`);
 
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
+    core.debug(`the pull request contains ${prSvgs.length} SVG(s)`);
+
+    core.debug(`fetching content of files in pull request #${prNumber}`);
     for (const svgFileInfo of prSvgs) {
-      core.debug(`fetch file contents of '${svgFileInfo.path}'`);
-      const fileContent: FileData = await getPrFile(client, svgFileInfo.path);
-      const svgData: string = decode(fileContent.content, fileContent.encoding);
-      const optimizedSvg: string = await svgo.optimize(svgData);
-      console.log(optimizedSvg);
-      // TODO: commit back
+      core.debug(`fetching file contents of '${svgFileInfo.path}'`);
+      const fileData: FileData = await getPrFile(client, svgFileInfo.path);
+
+      core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
+      const originalSvg: string = decode(fileData.content, fileData.encoding);
+
+      core.debug(`optimizing '${svgFileInfo.path}'`);
+      const optimizedSvg: string = await svgo.optimize(originalSvg);
+
+      core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
+      const optimizedData: string = encode(optimizedSvg, fileData.encoding);
+
+      core.debug(`committing optimized '${svgFileInfo.path}'`);
+      const commitInfo: CommitInfo = await commitFile(
+        client,
+        fileData.path,
+        optimizedData,
+        fileData.encoding,
+        `Optimize '${fileData.path}' with SVGO`
+      );
+
+      core.debug(`commit successful (see ${commitInfo.url})`);
     }
 
     return true;

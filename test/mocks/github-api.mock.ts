@@ -4,6 +4,13 @@ import * as github from "./@actions/github.mock";
 const client = new github.GitHub();
 
 
+export const commitFile = jest.fn()
+  .mockImplementation(async () => ({
+    sha: "b7d615e1cc52b25023c4bd1cbad1a2ce246009cd",
+    url: "https://github.com/ericcornelissen/svgo-action/commit/b7d615e1cc52b25023c4bd1cbad1a2ce246009cd",
+  }))
+  .mockName("github-api.commitFile");
+
 export const getPrFile = jest.fn()
   .mockImplementation(async (_, path) => {
     const { data } = await client.repos.getContents({ path });
