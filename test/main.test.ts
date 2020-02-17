@@ -389,7 +389,7 @@ describe("Scenarios", () => {
 
     const filePath = "optimized.svg";
     const { content, encoding } = contentPayloads[filePath];
-    const testSvgData = svgs[filePath];
+    const svgData = svgs[filePath];
 
     await main();
 
@@ -397,7 +397,7 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
 
     // TODO: Should not commit, see:
     //   https://github.com/ericcornelissen/svgo-action/issues/45
