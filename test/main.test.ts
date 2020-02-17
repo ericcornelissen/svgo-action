@@ -266,14 +266,28 @@ describe("Scenarios", () => {
   test("Pull Request with 1 new file and 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_MODIFY_SVG);
 
+    const filePath = "test.svg";
+
     await main();
 
-    const { content, encoding } = contentPayloads["test.svg"];
+    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[filePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), encoding);
+
+    expect(githubAPI.commit).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commit).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String), // Optimized SVG
+      encoding,
+      expect.stringContaining(filePath), // Commit message
+    );
   });
 
   test("Pull Request with 1 new SVG and 1 deleted file", async () => {
