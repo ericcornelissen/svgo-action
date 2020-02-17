@@ -16,7 +16,7 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
-import SVGOptimizer from "./svgo";
+import { SVGOptimizer } from "./svgo";
 
 
 const SVG_FILE_EXTENSION = ".svg";

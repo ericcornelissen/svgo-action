@@ -1,4 +1,4 @@
-import SVGOptimizer from "../src/svgo";
+import { SVGOptimizer } from "../src/svgo";
 
 import svgoConfig from "./fixtures/svgo-config.json";
 import svgs from "./fixtures/svgs.json";

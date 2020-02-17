@@ -3,13 +3,13 @@ import * as github from "./mocks/@actions/github.mock";
 import { PR_NUMBER } from "./mocks/@actions/github.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
-import SVGOptimizer, { optimizerInstance } from "./mocks/svgo.mock";
+import { SVGOptimizer, optimizerInstance } from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
-jest.mock("../src/svgo", () => SVGOptimizer);
+jest.mock("../src/svgo", () => ({ SVGOptimizer }));
 
 import contentPayloads from "./fixtures/contents-payloads.json";
 import svgs from "./fixtures/svgs.json";
