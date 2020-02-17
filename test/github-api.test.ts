@@ -1,13 +1,10 @@
-import * as coreMock from "./mocks/@actions/core.mock";
+import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 
-jest.mock("@actions/core", () => coreMock);
+jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 
 import contentPayloads from "./fixtures/contents-payloads.json";
-
-import * as core from "@actions/core";
-// import * as github from "@actions/github";
 
 import {
   PR_NOT_FOUND,
@@ -21,10 +18,11 @@ import {
 } from "../src/github-api";
 
 
-describe("::commitFile", () => {
+const token = core.getInput("repo-token", { required: true });
+const client = new github.GitHub(token);
 
-  const token: string = core.getInput("repo-token", { required: true });
-  const client = new github.GitHub(token);
+
+describe("::commitFile", () => {
 
   const defaultCommitMessage = "Does this commit?";
   const defaultPath = "test.svg";
@@ -99,9 +97,6 @@ describe("::getPrFile", () => {
 
   const EXISTING_FILE_PATH = "test.svg";
 
-  const token: string = core.getInput("repo-token", { required: true });
-  const client = new github.GitHub(token);
-
   test("return something when requesting data for an existing file", async () => {
     const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
     expect(fileData).toBeDefined();
@@ -125,9 +120,6 @@ describe("::getPrFile", () => {
 });
 
 describe("::getPrFiles", () => {
-
-  const token: string = core.getInput("repo-token", { required: true });
-  const client = new github.GitHub(token);
 
   test("return correctly for a Pull Request with 1 changed files", async () => {
     const changedFiles = await getPrFiles(client, github.PR_NUMBER.ADD_SVG);
