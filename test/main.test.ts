@@ -1,10 +1,12 @@
 import * as core from "./mocks/@actions/core.mock";
+import * as github from "./mocks/@actions/github.mock";
 import { PR_NUMBER } from "./mocks/@actions/github.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import SVGOptimizer, { optimizerInstance } from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
+jest.mock("@actions/github", () => github);
 jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/svgo", () => SVGOptimizer);
@@ -20,11 +22,15 @@ beforeEach(() => {
   core.debug.mockClear();
   core.error.mockClear();
   core.setFailed.mockClear();
+
+  githubAPI.commit.mockClear();
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
 
   encoder.decode.mockClear();
+  encoder.encode.mockClear();
+
   optimizerInstance.optimize.mockClear();
 });
 
@@ -95,15 +101,28 @@ describe("Scenarios", () => {
 
   test("Pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    const filePath = "test.svg";
 
     await main();
 
-    const { content, encoding } = contentPayloads["test.svg"];
+    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[filePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), encoding);
+
+    expect(githubAPI.commit).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commit).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String), // Optimized SVG
+      encoding,
+      expect.any(String), // Commit message
+    );
   });
 
   test("Pull Request with 1 modified SVG", async () => {
