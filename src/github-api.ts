@@ -52,8 +52,8 @@ export async function commit(
   encoding: string,
   commitMessage: string
 ): Promise<CommitInfo> {
-  const MODE = "100644";
-  const TYPE = "blob";
+  const COMMIT_MODE_FILE = "100644";
+  const COMMIT_TYPE_BLOB = "blob";
 
   const ref = `heads/${getHead()}`;
 
@@ -83,8 +83,8 @@ export async function commit(
     tree: [
       {
         path: path,
-        mode: MODE,
-        type: TYPE,
+        mode: COMMIT_MODE_FILE,
+        type: COMMIT_TYPE_BLOB,
         sha: fileBlob.sha,
       },
     ],
