@@ -24,9 +24,7 @@ describe(".optimize", () => {
 
   const testSvgs = test.each(Object.values(svgs));
 
-  let optimizer: SVGOptimizer;
-
-  beforeEach(() => optimizer = new SVGOptimizer({}));
+  const optimizer: SVGOptimizer = new SVGOptimizer({});
 
   testSvgs("return a (string) value", async (svg: string) => {
     const result = await optimizer.optimize(svg);

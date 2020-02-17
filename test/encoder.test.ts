@@ -1,14 +1,13 @@
 import { decode, encode } from "../src/encoder";
 
 
+const BASE64 = "base64";
 const EMPTY_STRING = "";
 
 
 describe("::decode", () => {
 
   describe("Base64", () => {
-
-    const BASE64 = "base64";
 
     test.each([
       ["SGVsbG8gd29ybGQh", "Hello world!"],
@@ -36,8 +35,6 @@ describe("::decode", () => {
 describe("::encode", () => {
 
   describe("Base64", () => {
-
-    const BASE64 = "base64";
 
     test.each([
       ["Hello world!", "SGVsbG8gd29ybGQh"],
