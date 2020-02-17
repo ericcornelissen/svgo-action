@@ -9,8 +9,10 @@ import contentPayloads from "./fixtures/contents-payloads.json";
 import {
   PR_NOT_FOUND,
 
+  // Types
   FileData,
 
+  // Functions
   commitFile,
   getPrFile,
   getPrNumber,
@@ -25,9 +27,9 @@ const client = new github.GitHub(token);
 describe("::commitFile", () => {
 
   const defaultCommitMessage = "Does this commit?";
-  const defaultPath = "test.svg";
-  const defaultContent = "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHJvbGU9ImltZyIgdmlld0JveD0iMCAwIDI0IDI0Ij48dGl0bGU";
-  const defaultEncoding = "base64";
+  const defaultPath = contentPayloads["test.svg"].path;
+  const defaultContent = contentPayloads["test.svg"].content;
+  const defaultEncoding = contentPayloads["test.svg"].encoding;
 
   const testVarious = test.each(
     Object.values(contentPayloads)
@@ -46,7 +48,7 @@ describe("::commitFile", () => {
     client.git.updateRef.mockClear();
   });
 
-  testVarious("does not throw for '%s'", (path, content, encoding) => {
+  testVarious("does not throw for '%s'", (path: string, content: string, encoding: string) => {
     return expect(commitFile(
       client,
       path,
@@ -78,7 +80,7 @@ describe("::commitFile", () => {
     expect(client.git.updateRef).toHaveBeenCalledTimes(1);
   });
 
-  testVarious("Custom commit message for '%s'", async (path, content, encoding) => {
+  testVarious("Custom commit message for '%s'", async (path: string, content: string, encoding: string) => {
     const commitMessage = `Commiting ${path}`;
 
     await commitFile(client, path, content, encoding, commitMessage);
