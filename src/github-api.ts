@@ -33,15 +33,15 @@ export interface CommitInfo {
   readonly url: string;
 }
 
-export interface FileInfo {
-  readonly path: string;
-  readonly status: string;
-}
-
 export interface FileData {
   readonly path: string;
   readonly content: string;
   readonly encoding: string;
+}
+
+export interface FileInfo {
+  readonly path: string;
+  readonly status: string;
 }
 
 
