@@ -5,10 +5,12 @@ import { decode, encode } from "./encoder";
 import {
   PR_NOT_FOUND,
 
+  // Types
   CommitInfo,
   FileData,
   FileInfo,
 
+  // Functions
   commitFile,
   getPrFile,
   getPrFiles,
