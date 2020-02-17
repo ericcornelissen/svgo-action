@@ -4,8 +4,22 @@ import * as contentPayloads from "../../fixtures/contents-payloads.json";
 import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 
 
-export const PR_WITH_NO_CHANGES = 1;
-export const PR_WITH_ONE_SVG_CHANGED = 2;
+export enum PR_NUMBER {
+  NO_CHANGES,
+  MANY_CHANGES,
+  ADD_SVG,
+  MODIFY_SVG,
+  REMOVE_SVG,
+  ADD_MODIFY_REMOVE_SVG,
+  ADD_FILE,
+  MODIFY_FILE,
+  REMOVE_FILE,
+  ADD_SVG_MODIFY_FILE,
+  ADD_FILE_MODIFY_SVG,
+  ADD_SVG_REMOVE_FILE,
+  ADD_FILE_REMOVE_SVG,
+  ADD_OPTIMIZED_SVG,
+}
 
 export const context = {
   payload: {
@@ -24,10 +38,35 @@ export const GitHub = jest.fn()
     return {
       pulls: {
         listFiles: async ({ pull_number: prNumber }) => {
-          if (prNumber === PR_WITH_ONE_SVG_CHANGED) {
-            return { data: prPayloads["1 SVG added"] };
-          } else {
-            return { data: [] };
+          switch (prNumber) {
+            case PR_NUMBER.ADD_SVG:
+              return { data: prPayloads["add 1 SVG"] };
+            case PR_NUMBER.MANY_CHANGES:
+              return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 file, modify 1 file"] };
+            case PR_NUMBER.MODIFY_SVG:
+              return { data: prPayloads["modify 1 SVG"] };
+            case PR_NUMBER.REMOVE_SVG:
+              return { data: prPayloads["remove 1 SVG"] };
+            case PR_NUMBER.ADD_MODIFY_REMOVE_SVG:
+              return { data: prPayloads["add 1 SVG, modify 1 SVG, remove 1 SVG"] };
+            case PR_NUMBER.ADD_FILE:
+              return { data: prPayloads["add 1 file"] };
+            case PR_NUMBER.MODIFY_FILE:
+              return { data: prPayloads["modify 1 file"] };
+            case PR_NUMBER.REMOVE_FILE:
+              return { data: prPayloads["remove 1 file"] };
+            case PR_NUMBER.ADD_SVG_MODIFY_FILE:
+              return { data: prPayloads["add 1 SVG, modify 1 file"] };
+            case PR_NUMBER.ADD_FILE_MODIFY_SVG:
+              return { data: prPayloads["add 1 file, modify 1 SVG"] };
+            case PR_NUMBER.ADD_SVG_REMOVE_FILE:
+              return { data: prPayloads["add 1 SVG, remove 1 file"] };
+            case PR_NUMBER.ADD_FILE_REMOVE_SVG:
+              return { data: prPayloads["add 1 file, remove 1 SVG"] };
+            case PR_NUMBER.ADD_OPTIMIZED_SVG:
+              return { data: prPayloads["add 1 optimized SVG"] };
+            default:
+              return { data: [] };
           }
         },
       },

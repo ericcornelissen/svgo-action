@@ -36,11 +36,11 @@ describe(".optimize", () => {
 
   testSvgs("change a (not optimized) SVG", async (svg: string) => {
     const result = await optimizer.optimize(svg);
-    expect(result).not.toEqual(svgs.simple);
+    expect(result).not.toEqual(svg);
   });
 
   test("return value for a previously optimized SVG", async () => {
-    const optimized = await optimizer.optimize(svgs.simple);
+    const optimized = await optimizer.optimize(svgs["test.svg"]);
     const result = await optimizer.optimize(optimized);
     expect(result).toEqual(optimized);
   });
