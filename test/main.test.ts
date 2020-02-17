@@ -120,9 +120,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       filePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       encoding,
-      expect.stringContaining(filePath), // Commit message
+      expect.stringContaining(filePath),
     );
   });
 
@@ -147,9 +147,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       filePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       encoding,
-      expect.stringContaining(filePath), // Commit message
+      expect.stringContaining(filePath),
     );
   });
 
@@ -190,16 +190,16 @@ describe("Scenarios", () => {
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       fooFilePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       fooSvgContent.encoding,
-      expect.stringContaining(fooFilePath), // Commit message
+      expect.stringContaining(fooFilePath),
     );
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       barFilePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       barSvgContent.encoding,
-      expect.stringContaining(barFilePath), // Commit message
+      expect.stringContaining(barFilePath),
     );
   });
 
@@ -257,9 +257,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       filePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       encoding,
-      expect.stringContaining(filePath), // Commit message
+      expect.stringContaining(filePath),
     );
   });
 
@@ -284,9 +284,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       filePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       encoding,
-      expect.stringContaining(filePath), // Commit message
+      expect.stringContaining(filePath),
     );
   });
 
@@ -311,9 +311,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       filePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       encoding,
-      expect.stringContaining(filePath), // Commit message
+      expect.stringContaining(filePath),
     );
   });
 
@@ -354,23 +354,23 @@ describe("Scenarios", () => {
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       fooFilePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       fooSvgContent.encoding,
-      expect.stringContaining(fooFilePath), // Commit message
+      expect.stringContaining(fooFilePath),
     );
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       barFilePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       barSvgContent.encoding,
-      expect.stringContaining(barFilePath), // Commit message
+      expect.stringContaining(barFilePath),
     );
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       testFilePath,
-      expect.any(String), // Optimized SVG
+      expect.any(String),
       testSvgContent.encoding,
-      expect.stringContaining(testFilePath), // Commit message
+      expect.stringContaining(testFilePath),
     );
   });
 
