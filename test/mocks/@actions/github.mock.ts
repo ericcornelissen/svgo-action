@@ -49,7 +49,7 @@ export const GitHubInstance = {
           },
         };
       })
-      .mockName("git.createBlob"),
+      .mockName("GitHub.git.createBlob"),
     createCommit: jest.fn()
       .mockImplementation(async () => {
         return {
@@ -58,7 +58,7 @@ export const GitHubInstance = {
           },
         };
       })
-      .mockName("git.createCommit"),
+      .mockName("GitHub.git.createCommit"),
     createTree: jest.fn()
       .mockImplementation(async () => {
         return {
@@ -67,7 +67,7 @@ export const GitHubInstance = {
           },
         };
       })
-      .mockName("git.createTree"),
+      .mockName("GitHub.git.createTree"),
     getCommit: jest.fn()
       .mockImplementation(async () => {
         return {
@@ -78,7 +78,7 @@ export const GitHubInstance = {
           },
         };
       })
-      .mockName("git.getCommit"),
+      .mockName("GitHub.git.getCommit"),
     getRef: jest.fn()
       .mockImplementation(async () => {
         return {
@@ -89,7 +89,7 @@ export const GitHubInstance = {
           },
         };
       })
-      .mockName("git.getRef"),
+      .mockName("GitHub.git.getRef"),
     updateRef: jest.fn()
       .mockImplementation(async () => {
         return {
@@ -100,7 +100,7 @@ export const GitHubInstance = {
           },
         };
       })
-      .mockName("git.updateRef"),
+      .mockName("GitHub.git.updateRef"),
   },
   pulls: {
     listFiles: async ({ pull_number: prNumber }) => {
