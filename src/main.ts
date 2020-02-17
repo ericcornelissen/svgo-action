@@ -10,11 +10,10 @@ import {
   FileData,
   FileInfo,
 
+  commit,
   getPrFile,
   getPrFiles,
   getPrNumber,
-
-  commit,
 } from "./github-api";
 
 
@@ -44,8 +43,8 @@ export default async function main(): Promise<boolean> {
       return false;
     }
 
-    const svgo: SVGOptimizer = new SVGOptimizer();
     const client: github.GitHub = new github.GitHub(token);
+    const svgo: SVGOptimizer = new SVGOptimizer();
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
