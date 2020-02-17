@@ -14,11 +14,16 @@ export const commitFile = jest.fn()
 export const getPrFile = jest.fn()
   .mockImplementation(async (_, path) => {
     const { data } = await client.repos.getContents({ path });
-    return {
-      path: data.path,
-      content: data.content,
-      encoding: data.encoding,
-    };
+
+    if (data === undefined) {
+      return undefined;
+    } else {
+      return {
+        path: data.path,
+        content: data.content,
+        encoding: data.encoding,
+      };
+    }
   })
   .mockName("github-api.getPrFile");
 

@@ -66,7 +66,7 @@ describe("Function usage", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
-    expect(githubAPI.getPrFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.getPrFile).toHaveBeenCalledTimes(2);
   });
 
 });

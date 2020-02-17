@@ -13,6 +13,7 @@ module.exports = {
   ignorePatterns: [
     "node_modules/", // dependencies directory
     "lib/", // TypeScript generated files
+    "script/", // Utility files
   ],
 
   globals: {

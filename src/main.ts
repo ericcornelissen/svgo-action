@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import * as yaml from "js-yaml";
 
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
@@ -32,7 +33,15 @@ export default async function main(): Promise<boolean> {
     }
 
     const client: github.GitHub = new github.GitHub(token);
-    const svgo: SVGOptimizer = new SVGOptimizer();
+
+    const svgoConfigFileData: FileData = await getPrFile(client, ".svgo.yml");
+    let svgoConfig = {};
+    if (svgoConfigFileData) {
+      const { content, encoding } = svgoConfigFileData;
+      const rawSvgoConfig = decode(content, encoding);
+      svgoConfig = yaml.safeLoad(rawSvgoConfig);
+    }
+    const svgo: SVGOptimizer = new SVGOptimizer(svgoConfig);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
