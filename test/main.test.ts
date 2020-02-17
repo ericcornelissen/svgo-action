@@ -379,3 +379,24 @@ describe("Scenarios", () => {
   });
 
 });
+
+describe("Error scenarios", () => {
+
+  test("The Pull Request files could not be found", async () => {
+    githubAPI.getPrFiles.mockRejectedValueOnce(new Error("Not found"));
+
+    await main();
+
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+  });
+
+  test("A particular file could not be found", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    githubAPI.getPrFile.mockRejectedValueOnce(new Error("Not found"));
+
+    await main();
+
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+  });
+
+});

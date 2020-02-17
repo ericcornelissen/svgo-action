@@ -78,9 +78,7 @@ export default async function main(): Promise<boolean> {
 
     return true;
   } catch (error) {
-    core.error(error);
-    core.setFailed(error.message);
-
+    core.setFailed(`action failed with error '${error}'`);
     return false;
   }
 }

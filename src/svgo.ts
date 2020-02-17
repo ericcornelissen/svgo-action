@@ -3,14 +3,14 @@ import SVGO from "svgo";
 
 export class SVGOptimizer {
 
-  private svg: SVGO;
+  private svgo: SVGO;
 
   constructor(config?: object) {
-    this.svg = new SVGO(config || {});
+    this.svgo = new SVGO(config || {});
   }
 
   async optimize(originalSvg: string): Promise<string> {
-    const { data: optimizedSvg } = await this.svg.optimize(originalSvg);
+    const { data: optimizedSvg } = await this.svgo.optimize(originalSvg);
     return optimizedSvg;
   }
 
