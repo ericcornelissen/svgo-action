@@ -1,7 +1,7 @@
 import SVGOptimizer from "../src/svgo";
 
-import svgs from "./fixtures/svgs.json";
 import svgoConfig from "./fixtures/svgo-config.json";
+import svgs from "./fixtures/svgs.json";
 
 
 describe("constructor", () => {
@@ -26,9 +26,7 @@ describe(".optimize", () => {
 
   let optimizer: SVGOptimizer;
 
-  beforeEach(() => {
-    optimizer = new SVGOptimizer({});
-  });
+  beforeEach(() => optimizer = new SVGOptimizer({}));
 
   testSvgs("return a (string) value", async (svg: string) => {
     const result = await optimizer.optimize(svg);

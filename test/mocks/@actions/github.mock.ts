@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
+import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 
 
 export const PR_WITH_NO_CHANGES = 1;
@@ -19,21 +19,23 @@ export const context = {
   },
 };
 
-export const GitHub = jest.fn(() => {
-  return {
-    pulls: {
-      listFiles: async ({ pull_number: prNumber }) => {
-        if (prNumber === PR_WITH_ONE_SVG_CHANGED) {
-          return { data: prPayloads["1 SVG added"] };
-        } else {
-          return { data: [] };
-        }
+export const GitHub = jest.fn()
+  .mockImplementation(() => {
+    return {
+      pulls: {
+        listFiles: async ({ pull_number: prNumber }) => {
+          if (prNumber === PR_WITH_ONE_SVG_CHANGED) {
+            return { data: prPayloads["1 SVG added"] };
+          } else {
+            return { data: [] };
+          }
+        },
       },
-    },
-    repos: {
-      getContents: async ({ path }) => {
-        return { data: contentPayloads[path] };
+      repos: {
+        getContents: async ({ path }) => {
+          return { data: contentPayloads[path] };
+        },
       },
-    },
-  };
-}).mockName("github.GitHub");
+    };
+  })
+  .mockName("github.GitHub");

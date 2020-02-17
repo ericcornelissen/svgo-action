@@ -6,6 +6,7 @@ const UNKNOWN_ENCODING_MSG = "Unknown file encoding '%s'";
 const BASE64 = "base64";
 const UTF8 = "utf-8";
 
+
 function decodeBase64(data: string): string {
   const dataBuffer = Buffer.from(data, BASE64);
   return dataBuffer.toString(UTF8);
