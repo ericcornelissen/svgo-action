@@ -103,14 +103,14 @@ describe("Scenarios", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     const filePath = "test.svg";
+    const { content, encoding } = contentPayloads[filePath];
+    const svgData = svgs[filePath];
 
     await main();
 
-    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    const svgData = svgs[filePath];
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
 
@@ -131,14 +131,14 @@ describe("Scenarios", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
 
     const filePath = "foo.svg";
+    const { content, encoding } = contentPayloads[filePath];
+    const svgData = svgs[filePath];
 
     await main();
 
-    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    const svgData = svgs[filePath];
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
 
@@ -244,14 +244,14 @@ describe("Scenarios", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
 
     const filePath = "test.svg";
+    const { content, encoding } = contentPayloads[filePath];
+    const svgData = svgs[filePath];
 
     await main();
 
-    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    const svgData = svgs[filePath];
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
 
@@ -272,14 +272,14 @@ describe("Scenarios", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_MODIFY_SVG);
 
     const filePath = "test.svg";
+    const { content, encoding } = contentPayloads[filePath];
+    const svgData = svgs[filePath];
 
     await main();
 
-    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    const svgData = svgs[filePath];
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
 
@@ -300,14 +300,14 @@ describe("Scenarios", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_REMOVE_FILE);
 
     const filePath = "bar.svg";
+    const { content, encoding } = contentPayloads[filePath];
+    const svgData = svgs[filePath];
 
     await main();
 
-    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    const svgData = svgs[filePath];
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
 
@@ -388,14 +388,14 @@ describe("Scenarios", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
     const filePath = "optimized.svg";
+    const { content, encoding } = contentPayloads[filePath];
+    const testSvgData = svgs[filePath];
 
     await main();
 
-    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
-    const testSvgData = svgs[filePath];
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(optimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
 
