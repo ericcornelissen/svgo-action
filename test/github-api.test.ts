@@ -4,6 +4,8 @@ import * as githubMock from "./mocks/@actions/github.mock";
 jest.mock("@actions/core", () => coreMock);
 jest.mock("@actions/github", () => githubMock);
 
+import contentPayloads from "./fixtures/contents-payloads.json";
+
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -24,13 +26,19 @@ describe("::commitFile", () => {
   const token: string = core.getInput("repo-token", { required: true });
   const client: github.GitHub = new github.GitHub(token);
 
-  test("does not throw", async () => {
-    expect(commitFile(
+  const testVarious = test.each(Object.values(contentPayloads).map(data => {
+    return [data.path, data.content, data.encoding];
+  }));
+
+  testVarious("does not throw for '%s'", (path, content, encoding) => {
+    const commitMessage = `Commiting ${path}`;
+
+    return expect(commitFile(
       client,
-      "test.svg",
-      "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHJvbGU9ImltZyIgdmlld0JveD0iMCAwIDI0IDI0Ij48dGl0bGU",
-      "base64",
-      "Does this commit?",
+      path,
+      content,
+      encoding,
+      commitMessage,
     )).resolves.toEqual(expect.any(Object));
   });
 
