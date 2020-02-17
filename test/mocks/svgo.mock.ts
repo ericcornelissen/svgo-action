@@ -1,7 +1,7 @@
 export const optimizerInstance = {
   optimize: jest.fn()
     .mockImplementation(async (originalSvg) => originalSvg)
-    .mockName("optimize"),
+    .mockName("SVGOptimizer.optimize"),
 };
 
 const SVGOptimizer = jest.fn()

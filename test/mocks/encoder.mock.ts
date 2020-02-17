@@ -10,7 +10,7 @@ export const decode = jest.fn()
       }
     }
   })
-  .mockName("decode");
+  .mockName("encoder.decode");
 
 export const encode = jest.fn()
   .mockImplementation((data, _) => {
@@ -20,4 +20,4 @@ export const encode = jest.fn()
       }
     }
   })
-  .mockName("encode");
+  .mockName("encoder.encode");
