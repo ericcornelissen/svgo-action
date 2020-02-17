@@ -12,11 +12,29 @@ import {
 
   FileData,
 
+  commitFile,
   getPrFile,
   getPrNumber,
   getPrFiles,
 } from "../src/github-api";
 
+
+describe("::commitFile", () => {
+
+  const token: string = core.getInput("repo-token", { required: true });
+  const client: github.GitHub = new github.GitHub(token);
+
+  test("does not throw", async () => {
+    expect(commitFile(
+      client,
+      "test.svg",
+      "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHJvbGU9ImltZyIgdmlld0JveD0iMCAwIDI0IDI0Ij48dGl0bGU",
+      "base64",
+      "Does this commit?",
+    )).resolves.toEqual(expect.any(Object));
+  });
+
+});
 
 describe("::getPrFile", () => {
 
