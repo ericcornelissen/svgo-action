@@ -25,7 +25,7 @@ export const context = {
   payload: {
     pull_request: { /* eslint-disable-line @typescript-eslint/camelcase */
       head: {
-        ref: "branch=name",
+        ref: "branch-name",
       },
       number: 36,
     },
@@ -41,54 +41,66 @@ export const context = {
 
 export const GitHubInstance = {
   git: {
-    createBlob: async () => {
-      return {
-        data: {
-          sha: "b23aa12490660754aff4920ff23909dc324cc1dd",
-        },
-      };
-    },
-    createCommit: async () => {
-      return {
-        data: {
-          sha: "8482592589d34923489284f3940776702123aaf3",
-        },
-      };
-    },
-    createTree: async () => {
-      return {
-        data: {
-          sha: "ccaf32432ff32754aff4920ff23909dc33788965",
-        },
-      };
-    },
-    getCommit: async () => {
-      return {
-        data: {
-          tree: {
-            sha: "298affe25970000345fadcc342ccc34234ff23ab",
+    createBlob: jest.fn()
+      .mockImplementation(async () => {
+        return {
+          data: {
+            sha: "b23aa12490660754aff4920ff23909dc324cc1dd",
           },
-        },
-      };
-    },
-    getRef: async () => {
-      return {
-        data: {
-          object: {
-            sha: "b7d615e1cc52b25023c4bd1cbad1a2ce246009cd",
+        };
+      })
+      .mockName("git.createBlob"),
+    createCommit: jest.fn()
+      .mockImplementation(async () => {
+        return {
+          data: {
+            sha: "8482592589d34923489284f3940776702123aaf3",
           },
-        },
-      };
-    },
-    updateRef: async () => {
-      return {
-        data: {
-          object: {
-            sha: "298344829ff134aafdddc342cc324da2334faaaa",
+        };
+      })
+      .mockName("git.createCommit"),
+    createTree: jest.fn()
+      .mockImplementation(async () => {
+        return {
+          data: {
+            sha: "ccaf32432ff32754aff4920ff23909dc33788965",
           },
-        },
-      };
-    },
+        };
+      })
+      .mockName("git.createTree"),
+    getCommit: jest.fn()
+      .mockImplementation(async () => {
+        return {
+          data: {
+            tree: {
+              sha: "298affe25970000345fadcc342ccc34234ff23ab",
+            },
+          },
+        };
+      })
+      .mockName("git.getCommit"),
+    getRef: jest.fn()
+      .mockImplementation(async () => {
+        return {
+          data: {
+            object: {
+              sha: "b7d615e1cc52b25023c4bd1cbad1a2ce246009cd",
+            },
+          },
+        };
+      })
+      .mockName("git.getRef"),
+    updateRef: jest.fn()
+      .mockImplementation(async () => {
+        return {
+          data: {
+            object: {
+              sha: "298344829ff134aafdddc342cc324da2334faaaa",
+            },
+          },
+        };
+      })
+      .mockName("git.updateRef"),
   },
   pulls: {
     listFiles: async ({ pull_number: prNumber }) => {
