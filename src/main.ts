@@ -82,9 +82,8 @@ export default async function main(): Promise<boolean> {
 
     return true;
   } catch (error) {
-    console.log(error);
-    // core.error(error);
-    // core.setFailed(error.message);
+    core.error(error);
+    core.setFailed(error.message);
 
     return false;
   }
