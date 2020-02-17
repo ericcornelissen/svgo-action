@@ -5,5 +5,5 @@ node_modules/
 lib/**/*.js
 !lib/index.js
 
-# Code coverage
-coverage/
+# Static analysis reports
+_reports/
