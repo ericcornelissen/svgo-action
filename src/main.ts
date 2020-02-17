@@ -2,6 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import { decode, encode } from "./encoder";
+import { existingFiles, svgFiles } from "./filters";
 import {
   PR_NOT_FOUND,
 
@@ -17,22 +18,6 @@ import {
   getPrNumber,
 } from "./github-api";
 import { SVGOptimizer } from "./svgo";
-
-
-const SVG_FILE_EXTENSION = ".svg";
-
-const STATUS_ADDED = "added";
-const STATUS_MODIFIED = "modified";
-
-
-function svgFiles(fileInfo: FileInfo): boolean {
-  return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
-}
-
-function existingFiles(fileInfo: FileInfo): boolean {
-  return fileInfo.status === STATUS_MODIFIED
-      || fileInfo.status === STATUS_ADDED;
-}
 
 
 export default async function main(): Promise<boolean> {
