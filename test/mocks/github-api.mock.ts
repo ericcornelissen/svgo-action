@@ -4,6 +4,9 @@ import * as github from "./@actions/github.mock";
 const client = new github.GitHub();
 
 
+export let defaultConfigFlag = false;
+export const enableDefaultConfig = (): void => { defaultConfigFlag = true; };
+
 export const commitFile = jest.fn()
   .mockImplementation(async () => ({
     sha: "b7d615e1cc52b25023c4bd1cbad1a2ce246009cd",
@@ -13,17 +16,17 @@ export const commitFile = jest.fn()
 
 export const getPrFile = jest.fn()
   .mockImplementation(async (_, path) => {
+    if (path === ".svgo.yml" && !defaultConfigFlag) {
+      return undefined;
+    }
+
     const { data } = await client.repos.getContents({ path });
 
-    if (data === undefined) {
-      return undefined;
-    } else {
-      return {
-        path: data.path,
-        content: data.content,
-        encoding: data.encoding,
-      };
-    }
+    return {
+      path: data.path,
+      content: data.content,
+      encoding: data.encoding,
+    };
   })
   .mockName("github-api.getPrFile");
 

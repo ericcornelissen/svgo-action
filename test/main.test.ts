@@ -12,6 +12,7 @@ jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/svgo", () => ({ SVGOptimizer }));
 
 import contentPayloads from "./fixtures/contents-payloads.json";
+import svgoConfig from "./fixtures/svgo-config.json";
 import svgs from "./fixtures/svgs.json";
 
 import { PR_NOT_FOUND } from "../src/github-api";
@@ -32,6 +33,8 @@ beforeEach(() => {
   encoder.encode.mockClear();
 
   optimizerInstance.optimize.mockClear();
+
+  SVGOptimizer.mockClear();
 });
 
 describe("Return value", () => {
@@ -378,6 +381,14 @@ describe("Scenarios", () => {
     //   https://github.com/ericcornelissen/svgo-action/issues/45
   });
 
+  test("Use a configuration file in the repository", async () => {
+    githubAPI.enableDefaultConfig();
+
+    await main();
+
+    expect(SVGOptimizer).toHaveBeenCalledWith(svgoConfig);
+  });
+
 });
 
 describe("Error scenarios", () => {
@@ -397,6 +408,14 @@ describe("Error scenarios", () => {
     await main();
 
     expect(core.setFailed).toHaveBeenCalledTimes(1);
+  });
+
+  test.skip("There is no configuration file in repository", async () => {
+    githubAPI.getPrFile.mockRejectedValueOnce(new Error("Not Found"));
+
+    await main();
+
+    expect(core.setFailed).toHaveBeenCalledTimes(0);
   });
 
 });

@@ -22,7 +22,11 @@ describe("constructor", () => {
 
 describe(".optimize", () => {
 
-  const testSvgs = test.each(Object.values(svgs));
+  const testSvgs = test.each(
+    Object.entries(svgs)
+      .filter(([key, _]) => key.endsWith(".svg"))
+      .map(([_, value]) => value)
+  );
 
   const optimizer: SVGOptimizer = new SVGOptimizer({});
 
