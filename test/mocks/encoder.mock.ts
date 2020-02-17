@@ -8,3 +8,11 @@ export const decode = jest.fn((data, encoding) => {
         }
     }
 }).mockName("decode");
+
+export const encode = jest.fn((data, _) => {
+    for (const [filename, svg] of Object.entries(svgs)) {
+        if (svg === data) {
+            return contentPayloads[filename].content;
+        }
+    }
+}).mockName("encode");
