@@ -10,7 +10,7 @@ import {
   FileData,
   FileInfo,
 
-  commit,
+  commitFile,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -68,7 +68,7 @@ export default async function main(): Promise<boolean> {
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
       core.debug(`committing optimized '${svgFileInfo.path}'`);
-      const commitInfo: CommitInfo = await commit(
+      const commitInfo: CommitInfo = await commitFile(
         client,
         fileData.path,
         optimizedData,

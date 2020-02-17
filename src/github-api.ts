@@ -45,7 +45,7 @@ export interface FileData {
 }
 
 
-export async function commit(
+export async function commitFile(
   client: github.GitHub,
   path: string,
   data: string,
