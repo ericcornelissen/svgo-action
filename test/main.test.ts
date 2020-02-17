@@ -122,7 +122,7 @@ describe("Scenarios", () => {
       filePath,
       expect.any(String), // Optimized SVG
       encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(filePath), // Commit message
     );
   });
 
@@ -149,7 +149,7 @@ describe("Scenarios", () => {
       filePath,
       expect.any(String), // Optimized SVG
       encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(filePath), // Commit message
     );
   });
 
@@ -192,14 +192,14 @@ describe("Scenarios", () => {
       fooFilePath,
       expect.any(String), // Optimized SVG
       fooSvgContent.encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(fooFilePath), // Commit message
     );
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       barFilePath,
       expect.any(String), // Optimized SVG
       barSvgContent.encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(barFilePath), // Commit message
     );
   });
 
@@ -259,7 +259,7 @@ describe("Scenarios", () => {
       filePath,
       expect.any(String), // Optimized SVG
       encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(filePath), // Commit message
     );
   });
 
@@ -299,7 +299,7 @@ describe("Scenarios", () => {
       filePath,
       expect.any(String), // Optimized SVG
       encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(filePath), // Commit message
     );
   });
 
@@ -342,21 +342,21 @@ describe("Scenarios", () => {
       fooFilePath,
       expect.any(String), // Optimized SVG
       fooSvgContent.encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(fooFilePath), // Commit message
     );
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       barFilePath,
       expect.any(String), // Optimized SVG
       barSvgContent.encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(barFilePath), // Commit message
     );
     expect(githubAPI.commit).toHaveBeenCalledWith(
       github.GitHubInstance,
       testFilePath,
       expect.any(String), // Optimized SVG
       testSvgContent.encoding,
-      expect.any(String), // Commit message
+      expect.stringContaining(testFilePath), // Commit message
     );
   });
 
