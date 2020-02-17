@@ -11,7 +11,8 @@
     "lint": "npm run lint:js && npm run lint:ws",
     "lint:js": "eslint . --ext .js,.ts",
     "lint:ws": "editorconfig-checker",
-    "test": "jest"
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
