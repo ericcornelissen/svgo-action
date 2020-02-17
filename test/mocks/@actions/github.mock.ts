@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
-import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
+import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 
 
 export enum PR_NUMBER {
@@ -75,4 +75,6 @@ export const GitHubInstance = {
   },
 };
 
-export const GitHub = jest.fn().mockReturnValue(GitHubInstance).mockName("github.GitHub");
+export const GitHub = jest.fn()
+  .mockReturnValue(GitHubInstance)
+  .mockName("github.GitHub");

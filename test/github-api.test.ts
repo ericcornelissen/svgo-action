@@ -18,12 +18,13 @@ import {
 } from "../src/github-api";
 
 
+const token: string = core.getInput("repo-token", { required: true });
+const client: github.GitHub = new github.GitHub(token);
+
+
 describe("::getPrFile", () => {
 
   const EXISTING_FILE_PATH = "test.svg";
-
-  const token: string = core.getInput("repo-token", { required: true });
-  const client: github.GitHub = new github.GitHub(token);
 
   test("return something when requesting data for an existing file", async () => {
     const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
@@ -48,9 +49,6 @@ describe("::getPrFile", () => {
 });
 
 describe("::getPrFiles", () => {
-
-  const token: string = core.getInput("repo-token", { required: true });
-  const client: github.GitHub = new github.GitHub(token);
 
   test("return correctly for a Pull Request with 1 changed files", async () => {
     const changedFiles = await getPrFiles(client, githubMock.PR_NUMBER.ADD_SVG);

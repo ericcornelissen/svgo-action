@@ -1,7 +1,7 @@
 import SVGO from "svgo";
 
 
-export default class SVGOptimizer {
+export class SVGOptimizer {
 
   private svg: SVGO;
 
