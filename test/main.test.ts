@@ -1,10 +1,12 @@
 import * as core from "./mocks/@actions/core.mock";
+import * as github from "./mocks/@actions/github.mock";
 import { PR_NUMBER } from "./mocks/@actions/github.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import SVGOptimizer, { optimizerInstance } from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
+jest.mock("@actions/github", () => github);
 jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/svgo", () => SVGOptimizer);
@@ -20,11 +22,15 @@ beforeEach(() => {
   core.debug.mockClear();
   core.error.mockClear();
   core.setFailed.mockClear();
+
+  githubAPI.commitFile.mockClear();
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
 
   encoder.decode.mockClear();
+  encoder.encode.mockClear();
+
   optimizerInstance.optimize.mockClear();
 });
 
@@ -96,27 +102,55 @@ describe("Scenarios", () => {
   test("Pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
+    const filePath = "test.svg";
+
     await main();
 
-    const { content, encoding } = contentPayloads["test.svg"];
+    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[filePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), encoding);
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String),
+      encoding,
+      expect.stringContaining(filePath),
+    );
   });
 
   test("Pull Request with 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
 
+    const filePath = "foo.svg";
+
     await main();
 
-    const { content, encoding } = contentPayloads["foo.svg"];
+    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[filePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), encoding);
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String),
+      encoding,
+      expect.stringContaining(filePath),
+    );
   });
 
   test("Pull Request with 1 removed SVG", async () => {
@@ -126,13 +160,17 @@ describe("Scenarios", () => {
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
+    expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_MODIFY_REMOVE_SVG);
 
-    const fooSvgContent = contentPayloads["foo.svg"];
-    const barSvgContent = contentPayloads["bar.svg"];
+    const fooFilePath = "foo.svg";
+    const barFilePath = "bar.svg";
+    const fooSvgContent = contentPayloads[fooFilePath];
+    const barSvgContent = contentPayloads[barFilePath];
 
     await main();
 
@@ -141,8 +179,28 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledWith(barSvgContent.content, barSvgContent.encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(2);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[fooFilePath]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[barFilePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(2);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgContent.encoding);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), barSvgContent.encoding);
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(2);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      fooFilePath,
+      expect.any(String),
+      fooSvgContent.encoding,
+      expect.stringContaining(fooFilePath),
+    );
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      barFilePath,
+      expect.any(String),
+      barSvgContent.encoding,
+      expect.stringContaining(barFilePath),
+    );
   });
 
   test("Pull Request with 1 new file", async () => {
@@ -152,6 +210,8 @@ describe("Scenarios", () => {
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
+    expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 modified file", async () => {
@@ -161,6 +221,8 @@ describe("Scenarios", () => {
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
+    expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 removed file", async () => {
@@ -170,45 +232,89 @@ describe("Scenarios", () => {
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
+    expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with 1 new SVG and 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
 
+    const filePath = "test.svg";
+
     await main();
 
-    const { content, encoding } = contentPayloads["test.svg"];
+    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[filePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), encoding);
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String),
+      encoding,
+      expect.stringContaining(filePath),
+    );
   });
 
   test("Pull Request with 1 new file and 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_MODIFY_SVG);
 
+    const filePath = "test.svg";
+
     await main();
 
-    const { content, encoding } = contentPayloads["test.svg"];
+    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[filePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), encoding);
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String),
+      encoding,
+      expect.stringContaining(filePath),
+    );
   });
 
   test("Pull Request with 1 new SVG and 1 deleted file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_REMOVE_FILE);
 
+    const filePath = "bar.svg";
+
     await main();
 
-    const { content, encoding } = contentPayloads["bar.svg"];
+    const { content, encoding } = contentPayloads[filePath];
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[filePath]);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), encoding);
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String),
+      encoding,
+      expect.stringContaining(filePath),
+    );
   });
 
   test("Pull Request with 1 new file and 1 deleted SVG", async () => {
@@ -218,14 +324,19 @@ describe("Scenarios", () => {
 
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(0);
+    expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
   test("Pull Request with multiple SVGs and multiple files", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
+    const fooFilePath = "foo.svg";
+    const barFilePath = "bar.svg";
+    const testFilePath = "test.svg";
     const fooSvgContent = contentPayloads["foo.svg"];
-    const barSvgContent = contentPayloads["bar.svg"];
-    const testSvgContent = contentPayloads["test.svg"];
+    const barSvgContent = contentPayloads[barFilePath];
+    const testSvgContent = contentPayloads[testFilePath];
 
     await main();
 
@@ -235,9 +346,32 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent.content, testSvgContent.encoding);
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(3);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["foo.svg"]);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["bar.svg"]);
-    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["test.svg"]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[fooFilePath]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[barFilePath]);
+    expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs[testFilePath]);
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(3);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      fooFilePath,
+      expect.any(String),
+      fooSvgContent.encoding,
+      expect.stringContaining(fooFilePath),
+    );
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      barFilePath,
+      expect.any(String),
+      barSvgContent.encoding,
+      expect.stringContaining(barFilePath),
+    );
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      testFilePath,
+      expect.any(String),
+      testSvgContent.encoding,
+      expect.stringContaining(testFilePath),
+    );
   });
 
   test("Pull Request with 1 optimized SVG", async () => {
@@ -251,6 +385,9 @@ describe("Scenarios", () => {
 
     expect(optimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(optimizerInstance.optimize).toHaveBeenCalledWith(svgs["optimized.svg"]);
+
+    // TODO: Should not commit, see:
+    //   https://github.com/ericcornelissen/svgo-action/issues/45
   });
 
 });
