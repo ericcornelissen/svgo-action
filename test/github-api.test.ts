@@ -37,7 +37,7 @@ describe("::commitFile", () => {
       .map(data => {
         return [data.path, data.content, data.encoding];
       })
-      .slice(0, 3)
+      .slice(0, 3),
   );
 
   beforeEach(() => {
@@ -60,7 +60,7 @@ describe("::commitFile", () => {
       expect.objectContaining({
         sha: expect.any(String),
         url: expect.any(String),
-      })
+      }),
     );
   });
 
@@ -70,7 +70,7 @@ describe("::commitFile", () => {
       defaultPath,
       defaultContent,
       defaultEncoding,
-      defaultCommitMessage
+      defaultCommitMessage,
     );
 
     expect(client.git.getRef).toHaveBeenCalledTimes(1);
@@ -90,7 +90,7 @@ describe("::commitFile", () => {
     expect(client.git.createCommit).toHaveBeenCalledWith(
       expect.objectContaining({
         message: commitMessage,
-      })
+      }),
     );
   });
 

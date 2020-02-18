@@ -97,7 +97,7 @@ describe("SVGOptimizer.optimize", () => {
   const testSvgs = test.each(
     Object.entries(files)
       .filter(([key, _]) => key.endsWith(".svg"))
-      .map(([_, value]) => value)
+      .map(([_, value]) => value),
   );
 
   const optimizer: SVGOptimizer = new SVGOptimizer({});

@@ -11,7 +11,7 @@ const DEFAULT_CONFIG_FILE = ".svgo.yml";
 
 
 export async function getDefaultConfig(
-  client: github.GitHub
+  client: github.GitHub,
 ): Promise<SVGO.Options> {
   try {
     const { content, encoding } = await getRepoFile(
