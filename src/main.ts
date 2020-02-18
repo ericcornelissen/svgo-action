@@ -61,7 +61,7 @@ export default async function main(): Promise<boolean> {
         fileData.path,
         optimizedData,
         fileData.encoding,
-        `Optimize '${fileData.path}' with SVGO`
+        `Optimize '${fileData.path}' with SVGO`,
       );
 
       core.debug(`commit successful (see ${commitInfo.url})`);

@@ -50,7 +50,7 @@ export async function commitFile(
   path: string,
   data: string,
   encoding: string,
-  commitMessage: string
+  commitMessage: string,
 ): Promise<CommitInfo> {
   const COMMIT_MODE_FILE = "100644";
   const COMMIT_TYPE_BLOB = "blob";
@@ -113,7 +113,7 @@ export async function commitFile(
 
 export async function getPrFile(
   client: github.GitHub,
-  path: string
+  path: string,
 ): Promise<FileData> {
   const fileContents = await client.repos.getContents({
     owner: github.context.repo.owner,
@@ -132,7 +132,7 @@ export async function getPrFile(
 
 export async function getPrFiles(
   client: github.GitHub,
-  prNumber: number
+  prNumber: number,
 ): Promise<FileInfo[]> {
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
