@@ -12,8 +12,8 @@ import SVGO from "svgo";
 import { SVGOptimizer, getDefaultSvgoOptions } from "../src/svgo";
 
 import contentPayloads from "./fixtures/contents-payloads.json";
-import svgoOptions from "./fixtures/svgo-options.json";
 import files from "./fixtures/file-data.json";
+import svgoOptions from "./fixtures/svgo-options.json";
 
 
 describe("::getDefaultSvgoOptions", () => {

@@ -12,8 +12,8 @@ jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/svgo", () => svgo);
 
 import contentPayloads from "./fixtures/contents-payloads.json";
-import svgoOptions from "./fixtures/svgo-options.json";
 import files from "./fixtures/file-data.json";
+import svgoOptions from "./fixtures/svgo-options.json";
 
 import { PR_NOT_FOUND } from "../src/github-api";
 import main from "../src/main";
