@@ -154,3 +154,10 @@ export function getPrNumber(): number {
 
   return pullRequest.number;
 }
+
+export async function getRepoFile(
+  client: github.GitHub,
+  path: string
+): Promise<FileData> {
+  return await getPrFile(client, path);
+}
