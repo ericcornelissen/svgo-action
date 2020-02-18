@@ -27,7 +27,7 @@ export const context = {
       head: {
         ref: "branch-name",
       },
-      number: 36,
+      number: PR_NUMBER.NO_CHANGES,
     },
     repository: {
       commits_url: "https://api.github.com/repos/ericcornelissen/svgo-action/git/commits{/sha}", /* eslint-disable-line @typescript-eslint/camelcase */
@@ -105,10 +105,12 @@ export const GitHubInstance = {
   pulls: {
     listFiles: async ({ pull_number: prNumber }) => {
       switch (prNumber) {
-        case PR_NUMBER.ADD_SVG:
-          return { data: prPayloads["add 1 SVG"] };
+        case PR_NUMBER.NO_CHANGES:
+          return { data: [ ] };
         case PR_NUMBER.MANY_CHANGES:
           return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 file, modify 1 file"] };
+        case PR_NUMBER.ADD_SVG:
+          return { data: prPayloads["add 1 SVG"] };
         case PR_NUMBER.MODIFY_SVG:
           return { data: prPayloads["modify 1 SVG"] };
         case PR_NUMBER.REMOVE_SVG:
@@ -132,7 +134,7 @@ export const GitHubInstance = {
         case PR_NUMBER.ADD_OPTIMIZED_SVG:
           return { data: prPayloads["add 1 optimized SVG"] };
         default:
-          return { data: [] };
+          return { };
       }
     },
   },

@@ -137,7 +137,12 @@ describe("::getPrFiles", () => {
 
 describe("::getPrNumber", () => {
 
-  test.each([1, 2, 5, 42])("return the correct number for Pull Request #%i", (prNumber: number) => {
+  test.each([
+    github.PR_NUMBER.NO_CHANGES,
+    github.PR_NUMBER.MANY_CHANGES,
+    github.PR_NUMBER.ADD_SVG,
+    github.PR_NUMBER.MODIFY_SVG,
+  ])("return the correct number for Pull Request #%i", (prNumber: number) => {
     github.context.payload.pull_request.number = prNumber; /* eslint-disable-line @typescript-eslint/camelcase */
 
     const actual: number = getPrNumber();
