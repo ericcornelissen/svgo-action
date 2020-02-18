@@ -7,8 +7,18 @@ Versioning].
 
 ## [Unreleased]
 
-- Run SVGO on any SVGs in a Pull Request. ([#13])
+- _No changes yet_
+
+## [0.1.0] - 2020-02-18
+
+- Run SVGO on SVGs in a Pull Request and commit the optimizations back. ([#13])
+- Use SVGO configuration file (`.svgo.yml`) found in the repository. ([#54])
+- Limited error logging on failures. ([#52])
+- Simplistic documentation in the `README.md`. ([#56])
 
 [keep a changelog]: https://keepachangelog.com/en/1.0.0/
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 [#13]: https://github.com/ericcornelissen/svgo-action/issues/13
+[#52]: https://github.com/ericcornelissen/svgo-action/pull/52
+[#54]: https://github.com/ericcornelissen/svgo-action/pull/54
+[#56]: https://github.com/ericcornelissen/svgo-action/pull/56
