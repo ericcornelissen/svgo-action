@@ -15,8 +15,8 @@ import {
   // Functions
   commitFile,
   getPrFile,
-  getPrNumber,
   getPrFiles,
+  getPrNumber,
 } from "../src/github-api";
 
 
