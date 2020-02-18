@@ -19,7 +19,7 @@ describe("::decode", () => {
       expect(result).toBe(utf8String);
     });
 
-    test(`Decoding an empty ${BASE64} string`, () => {
+    test(`decoding an empty ${BASE64} string`, () => {
       const result: string = decode(EMPTY_STRING, BASE64);
       expect(result).toBe(EMPTY_STRING);
     });
@@ -46,7 +46,7 @@ describe("::encode", () => {
       expect(result).toBe(base64String);
     });
 
-    test(`Encoding an empty string to ${BASE64}`, () => {
+    test(`encoding an empty string to ${BASE64}`, () => {
       const result: string = encode(EMPTY_STRING, BASE64);
       expect(result).toBe(EMPTY_STRING);
     });
