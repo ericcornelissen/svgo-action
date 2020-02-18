@@ -13,7 +13,7 @@ jest.mock("../src/svgo", () => ({ SVGOptimizer }));
 
 import contentPayloads from "./fixtures/contents-payloads.json";
 import svgoConfig from "./fixtures/svgo-config.json";
-import svgs from "./fixtures/svgs.json";
+import files from "./fixtures/file-data.json";
 
 import { PR_NOT_FOUND } from "../src/github-api";
 import main from "../src/main";
@@ -110,9 +110,9 @@ describe("Scenarios", () => {
   const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads[barFilePath];
   const { content: testSvgContent, encoding: testSvgEncoding } = contentPayloads[testFilePath];
 
-  const fooSvgData = svgs[fooFilePath];
-  const barSvgData = svgs[barFilePath];
-  const testSvgData = svgs[testFilePath];
+  const fooSvgData = files[fooFilePath];
+  const barSvgData = files[barFilePath];
+  const testSvgData = files[testFilePath];
 
   test("Pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
@@ -367,7 +367,7 @@ describe("Scenarios", () => {
 
     const filePath = "optimized.svg";
     const { content, encoding } = contentPayloads[filePath];
-    const svgData = svgs[filePath];
+    const svgData = files[filePath];
 
     await main();
 

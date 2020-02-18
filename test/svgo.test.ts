@@ -1,7 +1,7 @@
 import { SVGOptimizer } from "../src/svgo";
 
 import svgoConfig from "./fixtures/svgo-config.json";
-import svgs from "./fixtures/svgs.json";
+import files from "./fixtures/file-data.json";
 
 
 describe("constructor", () => {
@@ -23,7 +23,7 @@ describe("constructor", () => {
 describe(".optimize", () => {
 
   const testSvgs = test.each(
-    Object.entries(svgs)
+    Object.entries(files)
       .filter(([key, _]) => key.endsWith(".svg"))
       .map(([_, value]) => value)
   );
@@ -42,7 +42,7 @@ describe(".optimize", () => {
   });
 
   test("return value for a previously optimized SVG", async () => {
-    const optimized = await optimizer.optimize(svgs["test.svg"]);
+    const optimized = await optimizer.optimize(files["test.svg"]);
     const result = await optimizer.optimize(optimized);
     expect(result).toEqual(optimized);
   });
@@ -50,8 +50,8 @@ describe(".optimize", () => {
   test("optimizing with different configurations (default vs. fixture)", async () => {
     const optimizer2: SVGOptimizer = new SVGOptimizer(svgoConfig);
 
-    const optimized1 = await optimizer.optimize(svgs.complex);
-    const optimized2 = await optimizer2.optimize(svgs.complex);
+    const optimized1 = await optimizer.optimize(files.complex);
+    const optimized2 = await optimizer2.optimize(files.complex);
     expect(optimized1).not.toEqual(optimized2);
   });
 
