@@ -409,12 +409,14 @@ describe("Error scenarios", () => {
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
-  test.skip("There is no configuration file in repository", async () => {
-    githubAPI.getPrFile.mockRejectedValueOnce(new Error("Not Found"));
+  test("There is no configuration file in repository", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    svgo.getDefaultSvgoOptions.mockResolvedValueOnce({ });
 
     await main();
 
     expect(core.setFailed).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
   });
 
 });
