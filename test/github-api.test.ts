@@ -270,17 +270,21 @@ describe("::getPrNumber", () => {
     github.PR_NUMBER.ADD_SVG,
     github.PR_NUMBER.MODIFY_SVG,
   ])("return the correct number for Pull Request #%i", (prNumber: number) => {
-    github.context.payload.pull_request.number = prNumber; /* eslint-disable-line @typescript-eslint/camelcase */
+    github.context.payload.pull_request.number = prNumber;
 
     const actual: number = getPrNumber();
     expect(actual).toBe(prNumber);
   });
 
   test(`return PR_NOT_FOUND (${PR_NOT_FOUND}) when there was no Pull Request in the context`, () => {
-    delete github.context.payload.pull_request; /* eslint-disable-line @typescript-eslint/camelcase */
+    const backup = github.context.payload.pull_request;
+    delete github.context.payload.pull_request;
 
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
+
+
+    github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
 });
