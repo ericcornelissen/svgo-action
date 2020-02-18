@@ -68,7 +68,7 @@ describe("::getDefaultSvgoOptions", () => {
       expect(result).toEqual({ });
     });
 
-    test("debug logs that the default config file is missing", async () => {
+    test("debug logs that the default config file was not found", async () => {
       await getDefaultSvgoOptions(client);
       expect(core.debug).toHaveBeenCalledTimes(1);
       expect(core.debug).toHaveBeenCalledWith(expect.stringContaining("not found"));

@@ -14,7 +14,6 @@ export const commitFile = jest.fn()
 export const getPrFile = jest.fn()
   .mockImplementation(async (_, path) => {
     const { data } = await client.repos.getContents({ path });
-
     return {
       path: data.path,
       content: data.content,
@@ -41,5 +40,5 @@ export const getPrNumber = jest.fn()
   .mockName("github-api.getPrNumber");
 
 export const getRepoFile = jest.fn()
-  .mockImplementation(async (_, path) => getPrFile(null, path))
+  .mockImplementation(async (_, path) => getPrFile(_, path))
   .mockName("github-api.getPrFile");
