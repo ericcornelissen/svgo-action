@@ -4,7 +4,7 @@ export const optimizerInstance = {
     .mockName("SVGOptimizer.optimize"),
 };
 
-export const getDefaultConfig = jest.fn()
+export const getDefaultSvgoOptions = jest.fn()
   .mockReturnValue({ })
   .mockName("svgo.getDefaultConfig");
 

@@ -12,7 +12,7 @@ jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/svgo", () => svgo);
 
 import contentPayloads from "./fixtures/contents-payloads.json";
-import svgoConfig from "./fixtures/svgo-config.json";
+import svgoOptions from "./fixtures/svgo-options.json";
 import files from "./fixtures/file-data.json";
 
 import { PR_NOT_FOUND } from "../src/github-api";
@@ -381,11 +381,11 @@ describe("Scenarios", () => {
   });
 
   test("Use a configuration file in the repository", async () => {
-    svgo.getDefaultConfig.mockReturnValueOnce(svgoConfig);
+    svgo.getDefaultSvgoOptions.mockReturnValueOnce(svgoOptions);
 
     await main();
 
-    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoConfig);
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
   });
 
 });

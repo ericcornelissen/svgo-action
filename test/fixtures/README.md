@@ -17,10 +17,10 @@ other files) keyed by the same `filename`.
 > :warning: The encoded file data in _'contents-payloads.json'_ should match,
 > exactly, the UTF-8 version in _'file-data.json'_.
 
-The _'svgo-config.json'_ file has a special relation to the file found under the
-`filename` ".svgo.yml". In _'contents-payloads.json'_ this is a [YAML] file.
+The _'svgo-options.json'_ file has a special relation to the file found under
+the `filename` ".svgo.yml". In _'contents-payloads.json'_ this is a [YAML] file.
 When ".svgo.yml" is converted to JSON it should match, exactly, the JSON data in
-_'svgo-config.json'_ .
+_'svgo-options.json'_ .
 
 ## Example
 

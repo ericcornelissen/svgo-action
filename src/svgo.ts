@@ -10,7 +10,7 @@ import { getRepoFile } from "./github-api";
 const DEFAULT_CONFIG_FILE = ".svgo.yml";
 
 
-export async function getDefaultConfig(
+export async function getDefaultSvgoOptions(
   client: github.GitHub,
 ): Promise<SVGO.Options> {
   try {
@@ -19,12 +19,12 @@ export async function getDefaultConfig(
       DEFAULT_CONFIG_FILE,
     );
 
-    core.debug(`default configuration ${DEFAULT_CONFIG_FILE} found`);
+    core.debug(`default SVGO configuration found ('${DEFAULT_CONFIG_FILE}')`);
 
-    const rawSvgoConfig = decode(content, encoding);
-    return yaml.safeLoad(rawSvgoConfig);
+    const rawSvgoOptions = decode(content, encoding);
+    return yaml.safeLoad(rawSvgoOptions);
   } catch(_) {
-    core.debug("default configuration not found");
+    core.debug("default SVGO configuration not found");
     return { };
   }
 }
@@ -33,8 +33,8 @@ export class SVGOptimizer {
 
   private svgo: SVGO;
 
-  constructor(config?: object) {
-    this.svgo = new SVGO(config || {});
+  constructor(options?: SVGO.Options) {
+    this.svgo = new SVGO(options || {});
   }
 
   async optimize(originalSvg: string): Promise<string> {
