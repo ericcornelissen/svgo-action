@@ -177,6 +177,40 @@ describe("::commitFile", () => {
     ).rejects.toBeDefined();
   });
 
+  test("throw when 'pull_request' is missing from context payload", async () => {
+    const backup = github.context.payload.pull_request;
+    delete github.context.payload.pull_request;
+
+    const result = await expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+
+    github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
+    return result;
+  });
+
+  test("throw when 'repository' is missing from context payload", async () => {
+    const backup = github.context.payload.repository;
+    delete github.context.payload.repository;
+
+    const result = await expect(commitFile(
+      client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+    )).rejects.toBeDefined();
+
+    github.context.payload.repository = backup;
+    return result;
+  });
+
 });
 
 describe("::getPrFile", () => {

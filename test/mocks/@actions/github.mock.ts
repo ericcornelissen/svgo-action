@@ -80,7 +80,9 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.getCommit"),
     getRef: jest.fn()
-      .mockImplementation(async () => {
+      .mockImplementation(async ({ ref }) => {
+        if (ref.endsWith("undefined")) throw new Error("Invalid ref");
+
         return {
           data: {
             object: {
