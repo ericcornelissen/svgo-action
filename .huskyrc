@@ -1,0 +1,6 @@
+{
+  "hooks": {
+    "commit-msg": "commitlint -e",
+    "pre-commit": "npm run format && git update-index --again && npm run build && git add lib/index.js"
+  }
+}

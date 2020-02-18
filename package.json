@@ -6,7 +6,13 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "build": "tsc && ncc build lib/main.js -m -o lib"
+    "build": "tsc && ncc build lib/main.js -m -o lib && node script/fix-svgo-plugins.js",
+    "format": "npm run lint -- --fix",
+    "lint": "npm run lint:js && npm run lint:ws",
+    "lint:js": "eslint . --ext .js,.ts",
+    "lint:ws": "editorconfig-checker",
+    "test": "jest",
+    "test:coverage": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -23,13 +29,29 @@
     "svgo"
   ],
   "dependencies": {
-    "@actions/core": "^1.0.0",
-    "@actions/github": "^1.0.0",
-    "svgo": "^1.3.2"
+    "@actions/core": "1.2.2",
+    "@actions/github": "2.1.0",
+    "js-yaml": "3.13.1",
+    "svgo": "1.3.2"
   },
   "devDependencies": {
-    "@types/node": "^12.0.4",
-    "@zeit/ncc": "^0.21.0",
-    "typescript": "^3.5.1"
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
+    "@types/jest": "25.1.2",
+    "@types/js-yaml": "3.12.2",
+    "@types/node": "12.12.25",
+    "@types/svgo": "1.3.0",
+    "@typescript-eslint/eslint-plugin": "2.20.0",
+    "@typescript-eslint/parser": "2.20.0",
+    "@zeit/ncc": "0.21.1",
+    "editorconfig-checker": "3.0.3",
+    "eslint": "6.8.0",
+    "husky": "4.2.3",
+    "jest": "25.1.0",
+    "ts-jest": "25.2.0",
+    "typescript": "3.7.5"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   }
 }

@@ -1,2 +1,9 @@
 # dependencies directory
 node_modules/
+
+# static analysis reports
+_reports/
+
+# TypeScript generated files
+lib/**/*.js
+!lib/index.js

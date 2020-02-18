@@ -1,0 +1,92 @@
+{
+  ".svgo.yml": {
+    "name": ".svgo.yml",
+    "path": ".svgo.yml",
+    "sha": "555aacba391dbd22e48a24467b1fb40eaef2434c",
+    "size": 1774,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/.svgo.yml?ref=dddf3133f1dbd22e48a24467bfb40eee31387569",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/dddf3133f1dbd22e48a24467bfb40eee31387569/.svgo.yml",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/555aacba391dbd22e48a24467b1fb40eaef2434c",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/dddf3133f1dbd22e48a24467bfb40eee31387569/.svgo.yml?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "bXVsdGlwYXNzOiB0cnVlCgpwbHVnaW5zOgogICMgU2V0IDxwYXRoPiBwcmVjaXNpb24gdG8gMyBkZWNpbWFsIHBsYWNlcwogIC0gY29udmVydFBhdGhEYXRhOgogICAgICBmbG9hdFByZWNpc2lvbjogMwogICAgICBub1NwYWNlQWZ0ZXJGbGFnczogZmFsc2UKCiAgIyBTb3J0IGF0dHJpYnV0ZXMgb24gdGhlIDxTVkc+CiAgLSBzb3J0QXR0cnM6CiAgICAgIG9yZGVyOgogICAgICAgIC0gcm9sZQogICAgICAgIC0gdmlld0JveAogICAgICB4bWxuc09yZGVyOiBlbmQKCiAgIyBDb252ZXJ0IGJhc2ljIHNoYXBlcyAoc3VjaCBhcyA8Y2lyY2xlPikgdG8gPHBhdGg+LCBpbmNsdWRpbmcgPGFyYz4KICAtIGNvbnZlcnRTaGFwZVRvUGF0aDoKICAgICAgY29udmVydEFyY3M6IHRydWUKCiAgIyBDb21wb3VuZCBhbGwgPHBhdGg+cyBpbnRvIG9uZQogIC0gbWVyZ2VQYXRoczoKICAgICAgZm9yY2U6IHRydWUKICAgICAgbm9TcGFjZUFmdGVyRmxhZ3M6IGZhbHNlCgogICMgS2VlcCB0aGUgPHRpdGxlPgogIC0gcmVtb3ZlVGl0bGU6IGZhbHNlCgogICMgRG9uJ3QgcmVtb3ZlIHRoZSByb2xlPSJpbWciIGF0dHJpYnV0ZSBhbmQgYXV0b21hdGljYWxseQogICMgYWRkIGl0IHRvIHRoZSBTVkcgaWYgaXQncyBub3QKICAtIGFkZEF0dHJpYnV0ZXNUb1NWR0VsZW1lbnQ6CiAgICAgIGF0dHJpYnV0ZXM6CiAgICAgICAgLSByb2xlOiBpbWcKCiAgIyByZW1vdmUgYW55IHVubmVjZXNzYXJ5IGF0dHJpYnV0ZXMKICAtIHJlbW92ZVVua25vd25zQW5kRGVmYXVsdHM6CiAgICAgIGtlZXBSb2xlQXR0cjogdHJ1ZQogIC0gcmVtb3ZlQXR0cnM6CiAgICAgIGF0dHJzOgogICAgICAgIC0gYmFzZVByb2ZpbGUKCiAgIyByZW1vdmUgcGF0aHMgd2l0aCBmaWxsPSJub25lIgogIC0gcmVtb3ZlVXNlbGVzc1N0cm9rZUFuZEZpbGw6CiAgICAgIHJlbW92ZU5vbmU6IHRydWUKCiAgIyBFbmFibGUgZXZlcnl0aGluZyBlbHNlCiAgLSByZW1vdmVEb2N0eXBlCiAgLSByZW1vdmVYTUxQcm9jSW5zdAogIC0gcmVtb3ZlQ29tbWVudHMKICAtIHJlbW92ZU1ldGFkYXRhCiAgLSByZW1vdmVYTUxOUwogIC0gcmVtb3ZlRWRpdG9yc05TRGF0YQogIC0gY2xlYW51cEF0dHJzCiAgLSBpbmxpbmVTdHlsZXMKICAtIG1pbmlmeVN0eWxlcwogIC0gY29udmVydFN0eWxlVG9BdHRycwogIC0gY2xlYW51cElEcwogIC0gcHJlZml4SWRzCiAgLSByZW1vdmVSYXN0ZXJJbWFnZXMKICAtIHJlbW92ZVVzZWxlc3NEZWZzCiAgLSBjbGVhbnVwTnVtZXJpY1ZhbHVlcwogIC0gY2xlYW51cExpc3RPZlZhbHVlcwogIC0gY29udmVydENvbG9ycwogIC0gcmVtb3ZlTm9uSW5oZXJpdGFibGVHcm91cEF0dHJzCiAgLSByZW1vdmVWaWV3Qm94CiAgLSBjbGVhbnVwRW5hYmxlQmFja2dyb3VuZAogIC0gcmVtb3ZlSGlkZGVuRWxlbXMKICAtIHJlbW92ZUVtcHR5VGV4dAogIC0gbW92ZUVsZW1zQXR0cnNUb0dyb3VwCiAgLSBtb3ZlR3JvdXBBdHRyc1RvRWxlbXMKICAtIGNvbGxhcHNlR3JvdXBzCiAgLSBjb252ZXJ0VHJhbnNmb3JtCiAgLSByZW1vdmVFbXB0eUF0dHJzCiAgLSByZW1vdmVFbXB0eUNvbnRhaW5lcnMKICAtIHJlbW92ZVVudXNlZE5TCiAgLSByZW1vdmVEZXNjCiAgLSByZW1vdmVEaW1lbnNpb25zCiAgLSByZW1vdmVBdHRyaWJ1dGVzQnlTZWxlY3RvcgogIC0gcmVtb3ZlRWxlbWVudHNCeUF0dHIKICAtIGFkZENsYXNzZXNUb1NWR0VsZW1lbnQKICAtIHJlbW92ZVN0eWxlRWxlbWVudAogIC0gcmVtb3ZlU2NyaXB0RWxlbWVudAogIC0gcmVtb3ZlT2ZmQ2FudmFzUGF0aHMKICAtIHJldXNlUGF0aHM=",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/.svgo.yml?ref=dddf3133f1dbd22e48a24467bfb40eee31387569",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/555aacba391dbd22e48a24467b1fb40eaef2434c",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/dddf3133f1dbd22e48a24467bfb40eee31387569/.svgo.yml"
+    }
+  },
+  "bar.svg": {
+    "name": "bar.svg",
+    "path": "bar.svg",
+    "sha": "d63a1399d00cba82d94f864810d4d2a1eff597af",
+    "size": 1774,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/bar.svg?ref=9199acba391dbd22e48a24467b1fb40eaef2495b",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/9199acba391dbd22e48a24467b1fb40eaef2495b/bar.svg",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/d63a1399d00cba82d94f864810d4d2a1eff597af",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/9199acba391dbd22e48a24467b1fb40eaef2495b/bar.svg?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHJvbGU9ImltZyIgdmlld0JveD0iMCAwIDI0IDI0Ij48dGl0bGU+QU1EIGljb248L3RpdGxlPjxwYXRoIGQ9Ik0xOC4zMjQgOS4xMzdsMS41NTkgMS41NmgyLjU1NnYyLjU1N0wyNCAxNC44MTRWOS4xMzd6TTIgOS41MmwtMiA0Ljk2aDEuMzA5bC4zNy0uOTgySDMuOWwuNDA4Ljk4MmgxLjMzOEwzLjQzMiA5LjUyem00LjIwOSAwdjQuOTU1aDEuMjM4di0zLjA5MmwxLjMzOCAxLjU2MmguMTg4bDEuMzM4LTEuNTU2djMuMDkxaDEuMjM4VjkuNTJIMTAuNDdsLTEuNTkyIDEuODQ1TDcuMjg3IDkuNTJ6bTYuMjgzIDB2NC45NmgyLjA1N2MxLjk3OSAwIDIuODgtMS4wNDYgMi44OC0yLjQ3MiAwLTEuMzYtLjkzNy0yLjQ4OC0yLjc0Ny0yLjQ4OHptMS4yMzcuOTFoLjc5MmMxLjE3IDAgMS42My43MTEgMS42MyAxLjU3IDAgLjcyOC0uMzcyIDEuNTcyLTEuNjE2IDEuNTcyaC0uODA2em0tMTAuOTg1LjI3M2wuNzkxIDEuOTMySDIuMDA4em0xNy4xMzcuMzA3bC0xLjYwNCAxLjYwM3YyLjI1aDIuMjQ2bDEuNjA0LTEuNjA3aC0yLjI0NnoiLz48L3N2Zz4=",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/bar.svg?ref=9199acba391dbd22e48a24467b1fb40eaef2495b",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/d63a1399d00cba82d94f864810d4d2a1eff597af",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/9199acba391dbd22e48a24467b1fb40eaef2495b/bar.svg"
+    }
+  },
+  "foo.svg": {
+    "name": "foo.svg",
+    "path": "foo.svg",
+    "sha": "3ab8f089d00cba82d94f864810d4d2a1ef09cd04",
+    "size": 1839,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/foo.svg?ref=570afcba391dbd22e48a24467b1fb40eaf233d98",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/570afcba391dbd22e48a24467b1fb40eaf233d98/foo.svg",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/3ab8f089d00cba82d94f864810d4d2a1ef09cd04",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/570afcba391dbd22e48a24467b1fb40eaf233d98/foo.svg?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48dGl0bGU+Zm9vIGljb248L3RpdGxlPjxwYXRoIGQ9Ik03LjQzOSA5LjAxQTIuOTk0IDIuOTk0IDAgMCAwIDQuNDQ5IDEyYTIuOTkzIDIuOTkzIDAgMCAwIDIuOTkgMi45OSAyLjk5NCAyLjk5NCAwIDAgMCAyLjk5LTIuOTkgMi45OTMgMi45OTMgMCAwIDAtMi45OS0yLjk5bTAgNS4zNDNjLTEuMjk3IDAtMi4zNTQtMS4wNTYtMi4zNTQtMi4zNTNzMS4wNTctMi4zNTMgMi4zNTQtMi4zNTNTOS43OTIgMTAuNzAzIDkuNzkyIDEycy0xLjA1NiAyLjM1My0yLjM1MyAyLjM1M202LjQ3Mi01LjM0M2EyLjk5NCAyLjk5NCAwIDAgMC0yLjk5IDIuOTkgMi45OTMgMi45OTMgMCAwIDAgMi45OSAyLjk5IDIuOTk0IDIuOTk0IDAgMCAwIDIuOTktMi45OSAyLjk5NCAyLjk5NCAwIDAgMC0yLjk5LTIuOTltMCA1LjM0M2MtMS4yOTggMC0yLjM1My0xLjA1Ni0yLjM1My0yLjM1M3MxLjA1NS0yLjM1MyAyLjM1My0yLjM1M2MxLjI5NyAwIDIuMzUzIDEuMDU2IDIuMzUzIDIuMzUzcy0xLjA1NiAyLjM1My0yLjM1MyAyLjM1M20tMTEuNjEyLTMuNTVhMi4xIDIuMSAwIDAgMC0xLjU5Ni40MjNWOS42NDFIMy4zOWMuMDkzIDAgLjE2LS4wMTcuMTYtLjI5MiAwLS4yNjktLjEwOC0uMjgtLjE4LS4yOEguMzk2Yy0uMTc0IDAtLjI2NS4xNC0uMjY1LjI5NHYyLjYwMmMwIC4xMzYuMDg3LjE4My4yNDcuMjE0LjE0MS4wMjguMjIzLjAxMi4yODUtLjA1N2wuMDA2LS4wMWMuMjgzLS40MDguOS0uODA0IDEuNDg2LS43MzIuNjk5LjA4NiAxLjI2Mi42NDQgMS4zNCAxLjMyN2ExLjUxMiAxLjUxMiAwIDAgMS0xLjUwMSAxLjY4NWMtLjYzNSAwLTEuMTktLjQwOC0xLjQyMS0xLjAwMS0uMDM1LS4wODgtLjA5Mi0uMTUyLS4zNDMtLjA2Mi0uMjI5LjA4My0uMjQzLjE4MS0uMjEyLjI2OGEyLjExIDIuMTEgMCAwIDAgMS45NzYgMS4zODYgMi4xMDIgMi4xMDIgMCAwIDAgLjMwNS00LjE4bTE2LjY0Ni0xLjc2NGMtLjgwNS4wNjItMS40MzQuNzY5LTEuNDM0IDEuNjF2Mi42NjFjMCAuMTU0LjExNy4xODYuMjkzLjE4NnMuMjkzLS4wMzEuMjkzLS4xODZ2LTIuNjY4YzAtLjUyNC4zODItLjk3NC44NjgtMS4wMjRhLjk3Mi45NzIgMCAwIDEgLjc1OC4yNDcuOTg0Ljk4NCAwIDAgMSAuMzIyLjcyOWMwIC4wOC0uMDM5LjM0LS4yMTcuNTgxLS4xMzUuMTgyLS4zOTEuMzk5LS44NDQuMzk5aC0uMDA5Yy0uMTE1IDAtLjIxNS4wMDUtLjIzNC4yOC0uMDEzLjE4Ni0uMDEyLjI2OS4xNDguMjkuMjg2LjA0LjU3Ni0uMDE2Ljg2NS0uMTY2LjQ5Mi0uMjU2LjgyMi0uNzQxLjg2MS0xLjI2N2ExLjU2MiAxLjU2MiAwIDAgMC0uNDUyLTEuMjIyIDEuNTYgMS41NiAwIDAgMC0xLjIxOC0uNDVtMy45MTkgMS41NTlsMS4wODUtMS4wODVjLjA0LS4wMzkuMTMyLS4xMzItLjA1NS0uMzI0LS4wOC0uMDgzLS4xNTMtLjEyNS0uMjE3LS4xMjVoLS4wMDFhLjE2My4xNjMgMCAwIDAtLjEyMS4wNThsLTEuMDg4IDEuMDg4LTEuMDg2LTEuMDkzYy0uMDg4LS4wODgtLjE5LS4wNjctLjMyMi4wNjUtLjEzNS4xMzYtLjE1Ny4yNC0uMDY5LjMyOGwxLjA4NiAxLjA5Mi0xLjA2NCAxLjA2NC0uMDA3LjAwN2MtLjAyNi4wMjUtLjA2NS4wNjMtLjA2NS4xMjUtLjAwMS4wNjMuMDQyLjEzOS4xMjYuMjIzLjA3LjA3MS4xMzguMTA3LjIuMTA3LjA2OSAwIC4xMTQtLjA0NS4xMzktLjA3bDEuMDY4LTEuMDY3IDEuMDkxIDEuMDkyYS4xNjIuMTYyIDAgMCAwIC4xMTQuMDQ1aC4wMDJjLjA2OSAwIC4xNDItLjA0LjIxNy0uMTE4LjEyMi0uMTI5LjE0My0uMjM2LjA2MS0uMzE5bC0xLjA5NC0xLjA5M3oiLz48L3N2Zz4=",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/foo.svg?ref=570afcba391dbd22e48a24467b1fb40eaf233d98",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/3ab8f089d00cba82d94f864810d4d2a1ef09cd04",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/570afcba391dbd22e48a24467b1fb40eaf233d98/foo.svg"
+    }
+  },
+  "optimized.svg": {
+    "name": "optimized.svg",
+    "path": "optimized.svg",
+    "sha": "49948ac6c0d705fe321ce449948ac6c0dfdac6c0",
+    "size": 720,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/optimized.svg?ref=786d2c73db84047ac090a32c9810d547a3287e88",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/786d2c73db84047ac090a32c9810d547a3287e88/optimized.svg",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/49948ac6c0d705fe321ce449948ac6c0dfdac6c0",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/786d2c73db84047ac090a32c9810d547a3287e88/optimized.svg?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "PHN2ZyB2aWV3Qm94PSIwIDAgNjQgNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHRpdGxlPk9wdGltYWwgaWNvbjwvdGl0bGU+PHBhdGggZD0iTTI0IDIyLjUyNUgwbDEyLTIxLjA1IDEyIDIxLjA1eiIvPjwvc3ZnPg==",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/optimized.svg?ref=786d2c73db84047ac090a32c9810d547a3287e88",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/49948ac6c0d705fe321ce449948ac6c0dfdac6c0",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/786d2c73db84047ac090a32c9810d547a3287e88/optimized.svg"
+    }
+  },
+  "test.svg": {
+    "name": "test.svg",
+    "path": "test.svg",
+    "sha": "8cef761674c705447f0ce449948ac6c0dd76f041",
+    "size": 7829,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/test.svg?ref=8b1cce9bdb84047ac090aecaec9810d53975781c",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/8cef761674c705447f0ce449948ac6c0dd76f041",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg?token=AJ7VCKQDL6UCGHRXUZCPIVC6GVJJ7AVPNFXHG5DBNRWGC5DJN5XF62LEZZK6KI3YWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "PHN2ZyByb2xlPSJpbWciIHZpZXdCb3g9IjAgMCAyNCAyNCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDx0aXRsZT5aZWl0IGljb248L3RpdGxlPjxwYXRoIGQ9Ik0yNCAyMi41MjVIMGwxMi0yMS4wNSAxMiAyMS4wNXoiLz4KPC9zdmc+",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/test.svg?ref=8b1cce9bdb84047ac090aecaec9810d53975781c",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/8cef761674c705447f0ce449948ac6c0dd76f041",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg"
+    }
+  }
+}
