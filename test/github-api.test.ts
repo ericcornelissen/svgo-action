@@ -283,7 +283,6 @@ describe("::getPrNumber", () => {
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
 
-
     github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
