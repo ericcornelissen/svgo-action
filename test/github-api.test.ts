@@ -93,6 +93,72 @@ describe("::commitFile", () => {
     );
   });
 
+  test("throw when ref is not found", () => {
+    github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(commitFile(client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+      )).rejects.toBeDefined();
+  });
+
+  test("throw when previous commit is not found", () => {
+    github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(commitFile(client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+      )).rejects.toBeDefined();
+  });
+
+  test("throw when blob could not be created", () => {
+    github.GitHubInstance.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(commitFile(client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+      )).rejects.toBeDefined();
+  });
+
+  test("throw when tree could not be created", () => {
+    github.GitHubInstance.git.createTree.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(commitFile(client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+      )).rejects.toBeDefined();
+  });
+
+  test("throw when commit could not be created", () => {
+    github.GitHubInstance.git.createCommit.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(commitFile(client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+      )).rejects.toBeDefined();
+  });
+
+  test("throw when ref could not be updated", () => {
+    github.GitHubInstance.git.updateRef.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(commitFile(client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+      )).rejects.toBeDefined();
+  });
+
 });
 
 describe("::getPrFile", () => {
@@ -119,6 +185,10 @@ describe("::getPrFile", () => {
     expect(fileData.encoding).toBeDefined();
   });
 
+  test("throw for non-existent file", () => {
+    return expect(getPrFile(client, "foobar")).rejects.toBeDefined();
+  });
+
 });
 
 describe("::getPrFiles", () => {
@@ -131,6 +201,10 @@ describe("::getPrFiles", () => {
   test("return correctly for a Pull Request with no changes", async () => {
     const changedFiles = await getPrFiles(client, github.PR_NUMBER.NO_CHANGES);
     expect(changedFiles).toBeDefined();
+  });
+
+  test("throw for non-existent file", () => {
+    return expect(getPrFiles(client, -1)).rejects.toBeDefined();
   });
 
 });
