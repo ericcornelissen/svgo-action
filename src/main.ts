@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import SVGO from "svgo";
 
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
@@ -17,7 +18,7 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
-import { SVGOptimizer } from "./svgo";
+import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
 export default async function main(): Promise<boolean> {
@@ -32,7 +33,9 @@ export default async function main(): Promise<boolean> {
     }
 
     const client: github.GitHub = new github.GitHub(token);
-    const svgo: SVGOptimizer = new SVGOptimizer();
+
+    const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
+    const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPrFiles(client, prNumber);

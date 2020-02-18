@@ -17,6 +17,7 @@ import {
   getPrFile,
   getPrFiles,
   getPrNumber,
+  getRepoFile,
 } from "../src/github-api";
 
 
@@ -280,6 +281,36 @@ describe("::getPrNumber", () => {
 
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
+  });
+
+});
+
+describe("::getRepoFile", () => {
+
+  const EXISTING_FILE_PATH = ".svgo.yml";
+
+  test("return something when requesting data for an existing file", async () => {
+    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+    expect(fileData).toBeDefined();
+  });
+
+  test("'path' is defined for existing file", async () => {
+    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+    expect(fileData.path).toBeDefined();
+  });
+
+  test("'content' is defined for existing file", async () => {
+    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+    expect(fileData.content).toBeDefined();
+  });
+
+  test("'encoding' is defined for existing file", async () => {
+    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+    expect(fileData.encoding).toBeDefined();
+  });
+
+  test("throw for non-existent file", () => {
+    return expect(getRepoFile(client, "foobar")).rejects.toBeDefined();
   });
 
 });

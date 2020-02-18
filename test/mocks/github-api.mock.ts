@@ -38,3 +38,7 @@ export const getPrFiles = jest.fn()
 export const getPrNumber = jest.fn()
   .mockReturnValue(github.PR_NUMBER.NO_CHANGES)
   .mockName("github-api.getPrNumber");
+
+export const getRepoFile = jest.fn()
+  .mockImplementation(async (_, path) => getPrFile(_, path))
+  .mockName("github-api.getPrFile");
