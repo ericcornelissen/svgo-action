@@ -20,7 +20,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@master
+    - uses: ericcornelissen/svgo-action@v0.1.0
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 ```
