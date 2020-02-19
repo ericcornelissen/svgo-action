@@ -28,6 +28,11 @@ jobs:
       - run: npm run test:coverage
         env:
           CI: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./_reports/coverage/clover.xml
 
   lint:
     runs-on: ubuntu-latest
