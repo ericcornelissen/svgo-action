@@ -1,6 +1,15 @@
+import optimizations from "../fixtures/optimizations.json";
+
+
 export const optimizerInstance = {
   optimize: jest.fn()
-    .mockImplementation(async (originalSvg) => originalSvg)
+    .mockImplementation(async (svg) => {
+      for (const { optimized, original } of optimizations) {
+        if (original === svg) {
+          return optimized;
+        }
+      }
+    })
     .mockName("SVGOptimizer.optimize"),
 };
 
