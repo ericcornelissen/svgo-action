@@ -53,7 +53,7 @@
     "eslint-plugin-mocha": "6.2.2",
     "husky": "4.2.3",
     "jest": "25.1.0",
-    "ts-jest": "25.2.0",
+    "ts-jest": "25.2.1",
     "typescript": "3.7.5"
   },
   "engines": {
