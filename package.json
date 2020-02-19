@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "description": "Automatically run SVGO on SVGs in Pull Requests",
+  "homepage": "https://github.com/marketplace/actions/svgo-action",
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
