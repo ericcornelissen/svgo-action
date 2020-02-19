@@ -8,7 +8,7 @@
 
   packageRules: [
     {
-      // Conigure automerge: exclude semver major changes
+      // Configure automerge: exclude semver major changes
       updateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },
