@@ -1,6 +1,7 @@
 # SVGO action
 
 [![Node.js CI][ci-image]][ci-url]
+[![Coverage Report][coverage-image]][coverage-url]
 
 Automatically run [SVGO] on SVGs in Pull Requests.
 
@@ -60,8 +61,10 @@ jobs:
   ...
 ```
 
-[ci-url]:https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
+[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
+[coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
+[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [SVGO]: https://github.com/svg/svgo
 [Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
 [#17]: https://github.com/ericcornelissen/svgo-action/issues/17
