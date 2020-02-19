@@ -19,6 +19,9 @@
     "type": "git",
     "url": "https://github.com/ericcornelissen/svgo-action"
   },
+  "bugs": {
+    "url" : "https://github.com/ericcornelissen/svgo-action/issues"
+  },
   "author": {
     "name": "Eric Cornelissen",
     "email": "ericornelissen@gmail.com",
