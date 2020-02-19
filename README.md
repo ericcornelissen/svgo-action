@@ -33,6 +33,33 @@ GitHub's rest API_
 > :warning: Configuring the action is not yet supported. See [#17] for progress
 > in this regard.
 
+### Advanced Usage
+
+#### Limit Runs
+
+Even though this action won't do anything if a Pull Request does not touch any
+SVG files, you may want the action to run only when an SVG was actually changed.
+To do this you can change the Workflow file that uses this action to be
+triggered only when SVG files change.
+
+> :warning: This will cause **any** action specified in the Workflow file to be
+> run only when an SVG changes. If there are actions that should run for every
+> Pull Request they must be specified in a separate Workflow file.
+
+To run this action only when SVG files are changed, update the `on:`
+configuration as follows:
+
+```yaml
+name: "Pull Request SVGOptimizer"
+on:
+  pull_request:
+    paths:
+      - '**.svg'
+
+jobs:
+  ...
+```
+
 [ci-url]:https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [SVGO]: https://github.com/svg/svgo
