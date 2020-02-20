@@ -1,6 +1,6 @@
 {
   "name": "svgo-action",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Automatically run SVGO on SVGs in Pull Requests",
   "homepage": "https://github.com/marketplace/actions/svgo-action",
@@ -20,7 +20,7 @@
     "url": "https://github.com/ericcornelissen/svgo-action"
   },
   "bugs": {
-    "url" : "https://github.com/ericcornelissen/svgo-action/issues"
+    "url": "https://github.com/ericcornelissen/svgo-action/issues"
   },
   "author": {
     "name": "Eric Cornelissen",
