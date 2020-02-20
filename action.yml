@@ -1,12 +1,18 @@
 name: 'SVGO action'
 description: 'Automatically run SVGO on SVGs in Pull Requests'
-author: 'Eric Cornelisen'
+author: 'Eric Cornelissen'
+
 inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
   configuration-path:
     description: 'The path for the svgo-action configurations'
     default: '.github/svgo-action.yml'
+
 runs:
   using: 'node12'
   main: 'lib/index.js'
+
+branding:
+  icon: 'crop'
+  color: 'blue'

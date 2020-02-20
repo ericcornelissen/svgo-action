@@ -1,11 +1,14 @@
 {
   extends: [
-    "config:base"
+    "config:base",
+
+    // Explicitly enable semantic commit messages
+    ":semanticCommits",
   ],
 
   packageRules: [
     {
-      // Conigure automerge: exclude semver major changes
+      // Configure automerge: exclude semver major changes
       updateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },

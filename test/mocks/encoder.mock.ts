@@ -1,5 +1,6 @@
 import contentPayloads from "../fixtures/contents-payloads.json";
 import files from "../fixtures/file-data.json";
+import optimizations from "../fixtures/optimizations.json";
 
 
 export const decode = jest.fn()
@@ -17,6 +18,12 @@ export const encode = jest.fn()
     for (const [filename, svg] of Object.entries(files)) {
       if (svg === data) {
         return contentPayloads[filename].content;
+      }
+    }
+
+    for (const { encoding, optimized } of optimizations) {
+      if (optimized === data) {
+        return encoding;
       }
     }
   })

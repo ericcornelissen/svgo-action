@@ -113,7 +113,7 @@ describe("Scenarios", () => {
   const barSvgData = files[barFilePath];
   const testSvgData = files[testFilePath];
 
-  test("Pull Request with 1 new SVG", async () => {
+  test("pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
@@ -137,7 +137,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("Pull Request with 1 modified SVG", async () => {
+  test("pull Request with 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
 
     await main();
@@ -161,7 +161,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("Pull Request with 1 removed SVG", async () => {
+  test("pull Request with 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_SVG);
 
     await main();
@@ -172,7 +172,7 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
-  test("Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
+  test("pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_MODIFY_REMOVE_SVG);
 
     await main();
@@ -206,7 +206,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("Pull Request with 1 new file", async () => {
+  test("pull Request with 1 new file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE);
 
     await main();
@@ -217,7 +217,7 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
-  test("Pull Request with 1 modified file", async () => {
+  test("pull Request with 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_FILE);
 
     await main();
@@ -228,7 +228,7 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
-  test("Pull Request with 1 removed file", async () => {
+  test("pull Request with 1 removed file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_FILE);
 
     await main();
@@ -239,7 +239,7 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
-  test("Pull Request with 1 new SVG and 1 modified file", async () => {
+  test("pull Request with 1 new SVG and 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
 
     await main();
@@ -263,7 +263,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("Pull Request with 1 new file and 1 modified SVG", async () => {
+  test("pull Request with 1 new file and 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_MODIFY_SVG);
 
     await main();
@@ -287,7 +287,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("Pull Request with 1 new SVG and 1 deleted file", async () => {
+  test("pull Request with 1 new SVG and 1 deleted file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_REMOVE_FILE);
 
     await main();
@@ -311,7 +311,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("Pull Request with 1 new file and 1 deleted SVG", async () => {
+  test("pull Request with 1 new file and 1 deleted SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_REMOVE_SVG);
 
     await main();
@@ -322,7 +322,7 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
-  test("Pull Request with multiple SVGs and multiple files", async () => {
+  test("pull Request with multiple SVGs and multiple files", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
     await main();
@@ -361,26 +361,16 @@ describe("Scenarios", () => {
     );
   });
 
-  test("Pull Request with 1 optimized SVG", async () => {
+  test("pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
-
-    const filePath = "optimized.svg";
-    const { content, encoding } = contentPayloads[filePath];
-    const svgData = files[filePath];
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(1);
-    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
-
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
-
-    // TODO: Should not commit, see:
-    //   https://github.com/ericcornelissen/svgo-action/issues/45
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
+    expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
   });
 
-  test("Use a configuration file in the repository", async () => {
+  test("use a configuration file in the repository", async () => {
     svgo.getDefaultSvgoOptions.mockReturnValueOnce(svgoOptions);
 
     await main();
@@ -392,7 +382,7 @@ describe("Scenarios", () => {
 
 describe("Error scenarios", () => {
 
-  test("The Pull Request files could not be found", async () => {
+  test("the Pull Request files could not be found", async () => {
     githubAPI.getPrFiles.mockRejectedValueOnce(new Error("Not found"));
 
     await main();
@@ -400,7 +390,7 @@ describe("Error scenarios", () => {
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
-  test("A particular file could not be found", async () => {
+  test("a particular file could not be found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     githubAPI.getPrFile.mockRejectedValueOnce(new Error("Not found"));
 
@@ -409,7 +399,7 @@ describe("Error scenarios", () => {
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
-  test("There is no configuration file in repository", async () => {
+  test("there is no configuration file in repository", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     svgo.getDefaultSvgoOptions.mockResolvedValueOnce({ });
 
