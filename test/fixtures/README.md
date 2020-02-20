@@ -31,6 +31,5 @@ is "test.svg", then there should be an entry in:
   content data from GitHub for the file "test.svg".
 - _'file-data.json'_: keyed by "test.svg" with the raw file data.
 
-
 [GitHub API docs]: https://developer.github.com/v3/
 [YAML]: https://yaml.org/
