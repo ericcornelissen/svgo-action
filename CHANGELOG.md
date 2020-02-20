@@ -7,7 +7,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Don't commit changes for already optimized SVGs. ([#69])
+- Update Action metadata. ([#61], [#62])
 
 ## [0.1.0] - 2020-02-18
 
@@ -22,3 +23,6 @@ Versioning].
 [#52]: https://github.com/ericcornelissen/svgo-action/pull/52
 [#54]: https://github.com/ericcornelissen/svgo-action/pull/54
 [#56]: https://github.com/ericcornelissen/svgo-action/pull/56
+[#61]: https://github.com/ericcornelissen/svgo-action/pull/61
+[#62]: https://github.com/ericcornelissen/svgo-action/pull/62
+[#69]: https://github.com/ericcornelissen/svgo-action/pull/69
