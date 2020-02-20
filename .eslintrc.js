@@ -3,6 +3,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: [
     "@typescript-eslint",
+    "mocha",
   ],
   extends: [
     "eslint:recommended",
@@ -31,6 +32,10 @@ module.exports = {
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "_+" }],
+    "mocha/valid-test-description": ["error", {
+      pattern: "^((?![A-Z])).*", // Test description should NOT start with a capital letter
+      testNames: ["test"],
+    }],
   },
   overrides: [
     {

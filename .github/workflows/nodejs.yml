@@ -28,6 +28,12 @@ jobs:
       - run: npm run test:coverage
         env:
           CI: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          yml: ./.github/codecov.yml
+          file: ./_reports/coverage/lcov.info
 
   lint:
     runs-on: ubuntu-latest

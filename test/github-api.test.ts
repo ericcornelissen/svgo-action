@@ -15,8 +15,8 @@ import {
   // Functions
   commitFile,
   getPrFile,
-  getPrNumber,
   getPrFiles,
+  getPrNumber,
   getRepoFile,
 } from "../src/github-api";
 
@@ -94,6 +94,124 @@ describe("::commitFile", () => {
     );
   });
 
+  test("throw when ref is not found", () => {
+    github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+  });
+
+  test("throw when previous commit is not found", () => {
+    github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+  });
+
+  test("throw when blob could not be created", () => {
+    github.GitHubInstance.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+  });
+
+  test("throw when tree could not be created", () => {
+    github.GitHubInstance.git.createTree.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+  });
+
+  test("throw when commit could not be created", () => {
+    github.GitHubInstance.git.createCommit.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+  });
+
+  test("throw when ref could not be updated", () => {
+    github.GitHubInstance.git.updateRef.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+  });
+
+  test("throw when 'pull_request' is missing from context payload", async () => {
+    const backup = github.context.payload.pull_request;
+    delete github.context.payload.pull_request;
+
+    const result = await expect(
+      commitFile(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+        defaultCommitMessage,
+      ),
+    ).rejects.toBeDefined();
+
+    github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
+    return result;
+  });
+
+  test("throw when 'repository' is missing from context payload", async () => {
+    const backup = github.context.payload.repository;
+    delete github.context.payload.repository;
+
+    const result = await expect(commitFile(
+      client,
+      defaultPath,
+      defaultContent,
+      defaultEncoding,
+      defaultCommitMessage,
+    )).rejects.toBeDefined();
+
+    github.context.payload.repository = backup;
+    return result;
+  });
+
 });
 
 describe("::getPrFile", () => {
@@ -120,6 +238,10 @@ describe("::getPrFile", () => {
     expect(fileData.encoding).toBeDefined();
   });
 
+  test("throw for non-existent file", () => {
+    return expect(getPrFile(client, "foobar")).rejects.toBeDefined();
+  });
+
 });
 
 describe("::getPrFiles", () => {
@@ -134,22 +256,34 @@ describe("::getPrFiles", () => {
     expect(changedFiles).toBeDefined();
   });
 
+  test("throw for non-existent file", () => {
+    return expect(getPrFiles(client, -1)).rejects.toBeDefined();
+  });
+
 });
 
 describe("::getPrNumber", () => {
 
-  test.each([1, 2, 5, 42])("return the correct number for Pull Request #%i", (prNumber: number) => {
-    github.context.payload.pull_request.number = prNumber; /* eslint-disable-line @typescript-eslint/camelcase */
+  test.each([
+    github.PR_NUMBER.NO_CHANGES,
+    github.PR_NUMBER.MANY_CHANGES,
+    github.PR_NUMBER.ADD_SVG,
+    github.PR_NUMBER.MODIFY_SVG,
+  ])("return the correct number for Pull Request #%i", (prNumber: number) => {
+    github.context.payload.pull_request.number = prNumber;
 
     const actual: number = getPrNumber();
     expect(actual).toBe(prNumber);
   });
 
   test(`return PR_NOT_FOUND (${PR_NOT_FOUND}) when there was no Pull Request in the context`, () => {
-    delete github.context.payload.pull_request; /* eslint-disable-line @typescript-eslint/camelcase */
+    const backup = github.context.payload.pull_request;
+    delete github.context.payload.pull_request;
 
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
+
+    github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
 });

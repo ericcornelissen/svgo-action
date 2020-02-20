@@ -1,0 +1,23 @@
+coverage:
+  precision: 2
+  round: down
+  range: "80...100"
+  status:
+    project:
+      default: false
+      source:
+        paths:
+          - src/
+
+comment:
+  layout: "diff, files"
+  behavior: default  # update, if exists. Otherwise post new.
+  require_changes: true  # only post the comment if coverage changes
+  require_base: no
+  require_head: yes
+  branches: "!master"  # never post comments for releases
+
+ignore:
+  - "lib/*"
+  - "script/*"
+  - "test/**/*"
