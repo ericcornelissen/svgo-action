@@ -364,20 +364,10 @@ describe("Scenarios", () => {
   test("pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
-    const filePath = "optimized.svg";
-    const { content, encoding } = contentPayloads[filePath];
-    const svgData = files[filePath];
-
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(1);
-    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
-
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(svgData);
-
-    // TODO: Should not commit, see:
-    //   https://github.com/ericcornelissen/svgo-action/issues/45
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
+    expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
   });
 
   test("use a configuration file in the repository", async () => {
