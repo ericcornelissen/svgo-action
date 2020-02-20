@@ -8,9 +8,12 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc && ncc build lib/main.js -m -o lib && node script/fix-svgo-plugins.js",
-    "format": "npm run lint -- --fix",
-    "lint": "npm run lint:js && npm run lint:ws",
+    "format": "npm run format:js && npm run format:md",
+    "format:js": "npm run lint:js -- --fix",
+    "format:md": "npm run lint:md -- --fix",
+    "lint": "npm run lint:js && npm run lint:md && npm run lint:ws",
     "lint:js": "eslint . --ext .js,.ts",
+    "lint:md": "markdownlint -c .markdownlintrc.json -i node_modules **/*.md",
     "lint:ws": "editorconfig-checker",
     "test": "jest",
     "test:coverage": "jest --coverage"
@@ -53,6 +56,7 @@
     "eslint-plugin-mocha": "6.3.0",
     "husky": "4.2.3",
     "jest": "25.1.0",
+    "markdownlint-cli": "0.22.0",
     "ts-jest": "25.2.1",
     "typescript": "3.7.5"
   },

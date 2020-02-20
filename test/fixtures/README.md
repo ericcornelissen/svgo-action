@@ -43,6 +43,5 @@ is "test.svg", then there should be an entry in:
 - _'optimizations.json'_: with an `original` string equivalent to the raw file
   data in _'file-data.json'_ and corresponding optimization and encoding.
 
-
 [GitHub API docs]: https://developer.github.com/v3/
 [YAML]: https://yaml.org/
