@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.1.1] - 2020-02-20
+
 - Don't commit changes for already optimized SVGs. ([#69])
 - Update Action metadata. ([#61], [#62])
 
