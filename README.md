@@ -1,5 +1,6 @@
 # SVGO action
 
+[![GitHub Marketplace][marketplace-image]][marketplace-url]
 [![Node.js CI][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 
@@ -61,6 +62,8 @@ jobs:
   ...
 ```
 
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.1.0-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
