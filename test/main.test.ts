@@ -86,7 +86,7 @@ describe("Logging", () => {
     expect(core.info).toHaveBeenCalled();
   });
 
-  test("summary for 1 optimized SVG", async () => {
+  test("summary for a Pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
@@ -94,7 +94,7 @@ describe("Logging", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/1 SVG(s) skipped"));
   });
 
-  test("summary for 1 skipped file", async () => {
+  test("summary for a Pull Request with 1 skipped SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
     await main();
@@ -102,12 +102,12 @@ describe("Logging", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/1 SVG(s) skipped"));
   });
 
-  test("summary for many changes", async () => {
+  test("summary for a Pull Request with many changes", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
     await main();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 3/3 SVG(s)"));
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/3 SVG(s) skipped"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 3/4 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/4 SVG(s) skipped"));
   });
 
   test("don't log an error when everything is fine", async () => {
@@ -360,12 +360,12 @@ describe("Scenarios", () => {
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(3);
+    expect(encoder.decode).toHaveBeenCalledTimes(4);
     expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
 
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(3);
+    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(4);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
