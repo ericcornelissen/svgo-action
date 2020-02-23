@@ -32,8 +32,16 @@ GitHub's rest API_
 
 ### Configure the Action
 
-> :warning: Configuring the action is not yet supported. See [#17] for progress
-> in this regard.
+You can add any of the the options listed below after the `repo-token` in the
+Workflow file to configure the action.
+
+> :warning: In the future the action will have more options. See [#17] for
+> progress in this regard.
+
+- `dry-run`: If enabled, the action doesn't commit changes back.
+  - Possible values: `false`, `true`
+  - Default value: `false`
+  - Example: `dry-run: true`
 
 ### Advanced Usage
 
