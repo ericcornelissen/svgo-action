@@ -90,16 +90,24 @@ describe("Logging", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1 SVG(s)"));
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0 SVG(s) skipped"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1/1 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/1 SVG(s) skipped"));
   });
 
   test("summary for 1 skipped file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
     await main();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0 SVG(s)"));
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1 SVG(s) skipped"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0/1 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/1 SVG(s) skipped"));
+  });
+
+  test("summary for many changes", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 3/3 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/3 SVG(s) skipped"));
   });
 
   test("don't log an error when everything is fine", async () => {

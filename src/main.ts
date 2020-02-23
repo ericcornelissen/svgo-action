@@ -77,7 +77,7 @@ export default async function main(): Promise<boolean> {
       count += 1;
     }
 
-    core.info(`Successfully optimized ${count} SVG(s) (${skipped} SVG(s) skipped)`);
+    core.info(`Successfully optimized ${count}/${prSvgs.length} SVG(s) (${skipped}/${prSvgs.length} SVG(s) skipped)`);
     return true;
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
