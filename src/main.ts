@@ -54,6 +54,10 @@ export default async function main(): Promise<boolean> {
 
       core.debug(`optimizing '${svgFileInfo.path}'`);
       const optimizedSvg: string = await svgo.optimize(originalSvg);
+      if (originalSvg === optimizedSvg) {
+        core.debug(`skipping '${fileData.path}', already optimized`);
+        continue;
+      }
 
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);

@@ -1,6 +1,6 @@
 {
   "name": "svgo-action",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Automatically run SVGO on SVGs in Pull Requests",
   "homepage": "https://github.com/marketplace/actions/svgo-action",
@@ -8,9 +8,12 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc && ncc build lib/main.js -m -o lib && node script/fix-svgo-plugins.js",
-    "format": "npm run lint -- --fix",
-    "lint": "npm run lint:js && npm run lint:ws",
+    "format": "npm run format:js && npm run format:md",
+    "format:js": "npm run lint:js -- --fix",
+    "format:md": "npm run lint:md -- --fix",
+    "lint": "npm run lint:js && npm run lint:md && npm run lint:ws",
     "lint:js": "eslint . --ext .js,.ts",
+    "lint:md": "markdownlint -c .markdownlintrc.json -i node_modules **/*.md",
     "lint:ws": "editorconfig-checker",
     "test": "jest",
     "test:coverage": "jest --coverage"
@@ -20,7 +23,7 @@
     "url": "https://github.com/ericcornelissen/svgo-action"
   },
   "bugs": {
-    "url" : "https://github.com/ericcornelissen/svgo-action/issues"
+    "url": "https://github.com/ericcornelissen/svgo-action/issues"
   },
   "author": {
     "name": "Eric Cornelissen",
@@ -34,14 +37,14 @@
   ],
   "dependencies": {
     "@actions/core": "1.2.2",
-    "@actions/github": "2.1.0",
+    "@actions/github": "2.1.1",
     "js-yaml": "3.13.1",
     "svgo": "1.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "8.3.5",
     "@commitlint/config-conventional": "8.3.4",
-    "@types/jest": "25.1.2",
+    "@types/jest": "25.1.3",
     "@types/js-yaml": "3.12.2",
     "@types/node": "12.12.25",
     "@types/svgo": "1.3.0",
@@ -53,8 +56,9 @@
     "eslint-plugin-mocha": "6.3.0",
     "husky": "4.2.3",
     "jest": "25.1.0",
+    "markdownlint-cli": "0.22.0",
     "ts-jest": "25.2.1",
-    "typescript": "3.7.5"
+    "typescript": "3.8.2"
   },
   "engines": {
     "node": ">=10.0.0"

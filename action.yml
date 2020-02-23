@@ -5,9 +5,11 @@ author: 'Eric Cornelissen'
 inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
+    required: true
   configuration-path:
     description: 'The path for the svgo-action configurations'
     default: '.github/svgo-action.yml'
+    required: true
 
 runs:
   using: 'node12'
