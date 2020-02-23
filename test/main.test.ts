@@ -393,16 +393,6 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFile).not.toHaveBeenCalled();
   });
 
-  test.skip("dry run with unknown value", async () => {
-    inputs.getDryRun.mockReturnValueOnce("foobar");
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-
-    await main();
-
-    expect(core.info).toHaveBeenCalled();
-    expect(githubAPI.commitFile).not.toHaveBeenCalled();
-  });
-
 });
 
 describe("Error scenarios", () => {
