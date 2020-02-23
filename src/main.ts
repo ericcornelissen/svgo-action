@@ -45,6 +45,7 @@ export default async function main(): Promise<boolean> {
     core.debug(`the pull request contains ${prSvgs.length} SVG(s)`);
 
     core.debug(`fetching content of files in pull request #${prNumber}`);
+    let count = 0, skipped = 0;
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetching file contents of '${svgFileInfo.path}'`);
       const fileData: FileData = await getPrFile(client, svgFileInfo.path);
@@ -56,6 +57,7 @@ export default async function main(): Promise<boolean> {
       const optimizedSvg: string = await svgo.optimize(originalSvg);
       if (originalSvg === optimizedSvg) {
         core.debug(`skipping '${fileData.path}', already optimized`);
+        skipped += 1;
         continue;
       }
 
@@ -72,8 +74,10 @@ export default async function main(): Promise<boolean> {
       );
 
       core.debug(`commit successful (see ${commitInfo.url})`);
+      count += 1;
     }
 
+    core.info(`Successfully optimized ${count} SVG(s) (${skipped} SVG(s) skipped)`);
     return true;
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
