@@ -101,16 +101,19 @@ describe("Logging", () => {
 
 describe("Scenarios", () => {
 
-  const fooFilePath = "foo.svg";
   const barFilePath = "bar.svg";
+  const complexFilePath = "complex.svg";
+  const fooFilePath = "foo.svg";
   const testFilePath = "test.svg";
 
-  const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads[fooFilePath];
   const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads[barFilePath];
+  const { content: complexSvgContent, encoding: complexSvgEncoding } = contentPayloads[complexFilePath];
+  const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads[fooFilePath];
   const { content: testSvgContent, encoding: testSvgEncoding } = contentPayloads[testFilePath];
 
-  const fooSvgData = files[fooFilePath];
   const barSvgData = files[barFilePath];
+  const complexSvgData = files[complexFilePath];
+  const fooSvgData = files[fooFilePath];
   const testSvgData = files[testFilePath];
 
   test("pull Request with 1 new SVG", async () => {
@@ -293,21 +296,21 @@ describe("Scenarios", () => {
     await main();
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
-    expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
+    expect(encoder.decode).toHaveBeenCalledWith(complexSvgContent, complexSvgEncoding);
 
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(complexSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(1);
-    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), barSvgEncoding);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), complexSvgEncoding);
 
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFile).toHaveBeenCalledWith(
       github.GitHubInstance,
-      barFilePath,
+      complexFilePath,
       expect.any(String),
-      barSvgEncoding,
-      expect.stringContaining(barFilePath),
+      complexSvgEncoding,
+      expect.stringContaining(complexFilePath),
     );
   });
 
