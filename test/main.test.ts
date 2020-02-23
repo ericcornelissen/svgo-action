@@ -3,12 +3,14 @@ import * as github from "./mocks/@actions/github.mock";
 import { PR_NUMBER } from "./mocks/@actions/github.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
+import * as inputs from "./mocks/inputs.mock";
 import * as svgo from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
+jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
 
 import contentPayloads from "./fixtures/contents-payloads.json";
@@ -383,21 +385,19 @@ describe("Scenarios", () => {
     PR_NUMBER.MODIFY_SVG,
     PR_NUMBER.REMOVE_SVG,
   ])("dry run enabled (#%i)", async (prNumber) => {
-    core.setDryRun("true");
+    inputs.getDryRun.mockReturnValueOnce(true);
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
 
     await main();
-    core.setDryRun("false");
 
     expect(githubAPI.commitFile).not.toHaveBeenCalled();
   });
 
-  test("dry run with unknown value", async () => {
-    core.setDryRun("foobar");
+  test.skip("dry run with unknown value", async () => {
+    inputs.getDryRun.mockReturnValueOnce("foobar");
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
-    core.setDryRun("false");
 
     expect(core.info).toHaveBeenCalled();
     expect(githubAPI.commitFile).not.toHaveBeenCalled();
