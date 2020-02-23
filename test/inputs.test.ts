@@ -30,7 +30,7 @@ describe("::getDryRun", () => {
 
   test("dry-run is 'true'", () => {
     core.getInput.mockReturnValueOnce("true");
-    
+
     const actual = getDryRun();
     expect(actual).toBeTruthy();
   });
