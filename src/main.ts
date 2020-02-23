@@ -24,6 +24,7 @@ import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 export default async function main(): Promise<boolean> {
   try {
     const token = core.getInput("repo-token", { required: true });
+    const dryRun = core.getInput("dry-run", { required: false });
     const configPath = core.getInput("configuration-path", { required: true });
 
     const prNumber: number = getPrNumber();
@@ -62,16 +63,18 @@ export default async function main(): Promise<boolean> {
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      core.debug(`committing optimized '${svgFileInfo.path}'`);
-      const commitInfo: CommitInfo = await commitFile(
-        client,
-        fileData.path,
-        optimizedData,
-        fileData.encoding,
-        `Optimize '${fileData.path}' with SVGO`,
-      );
+      if (!dryRun) {
+        core.debug(`committing optimized '${svgFileInfo.path}'`);
+        const commitInfo: CommitInfo = await commitFile(
+          client,
+          fileData.path,
+          optimizedData,
+          fileData.encoding,
+          `Optimize '${fileData.path}' with SVGO`,
+        );
 
-      core.debug(`commit successful (see ${commitInfo.url})`);
+        core.debug(`commit successful (see ${commitInfo.url})`);
+      }
     }
 
     return true;

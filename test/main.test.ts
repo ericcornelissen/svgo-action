@@ -378,6 +378,20 @@ describe("Scenarios", () => {
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
   });
 
+  test.each([
+    PR_NUMBER.ADD_SVG,
+    PR_NUMBER.MODIFY_SVG,
+    PR_NUMBER.REMOVE_SVG,
+  ])("dry run enabled (#%i)", async (prNumber) => {
+    core.setDryRun(true);
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+
+    await main();
+    core.setDryRun(false);
+
+    expect(githubAPI.commitFile).not.toHaveBeenCalled();
+  });
+
 });
 
 describe("Error scenarios", () => {
