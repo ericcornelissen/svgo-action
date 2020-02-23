@@ -18,14 +18,15 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
+import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
 export default async function main(): Promise<boolean> {
   try {
-    const token = core.getInput("repo-token", { required: true });
-    const dryRun = core.getInput("dry-run", { required: false });
-    const configPath = core.getInput("configuration-path", { required: true });
+    const configPath = getConfigurationPath();
+    const dryRun = getDryRun();
+    const token = getRepoToken();
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
