@@ -86,6 +86,22 @@ describe("Logging", () => {
     expect(core.info).toHaveBeenCalled();
   });
 
+  test("summary for 1 optimized SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0 SVG(s) skipped"));
+  });
+
+  test("summary for 1 skipped file", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1 SVG(s) skipped"));
+  });
+
   test("don't log an error when everything is fine", async () => {
     await main();
     expect(core.error).not.toHaveBeenCalled();
