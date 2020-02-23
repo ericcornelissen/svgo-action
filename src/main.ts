@@ -44,7 +44,7 @@ export default async function main(): Promise<boolean> {
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
     core.debug(`the pull request contains ${prSvgs.length} SVG(s)`);
 
-    core.debug(`fetching content of files in pull request #${prNumber}`);
+    core.debug(`fetching content of SVGs in pull request #${prNumber}`);
     let count = 0, skipped = 0;
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetching file contents of '${svgFileInfo.path}'`);
