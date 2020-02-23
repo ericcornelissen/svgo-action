@@ -22,6 +22,7 @@ import main from "../src/main";
 beforeEach(() => {
   core.debug.mockClear();
   core.error.mockClear();
+  core.info.mockClear();
   core.setFailed.mockClear();
 
   githubAPI.commitFile.mockClear();
@@ -78,6 +79,11 @@ describe("Logging", () => {
   test("does some debug logging", async () => {
     await main();
     expect(core.debug).toHaveBeenCalled();
+  });
+
+  test("summary when everything is fine", async () => {
+    await main();
+    expect(core.info).toHaveBeenCalled();
   });
 
   test("don't log an error when everything is fine", async () => {
