@@ -10,6 +10,8 @@
     "build": "run-s build:compile build:bundle",
     "build:bundle": "ncc build lib/main.js -m -o lib && node script/fix-svgo-plugins.js",
     "build:compile": "tsc",
+    "clean": "run-p clean:reports",
+    "clean:reports": "rimraf ./_reports",
     "format": "run-p format:js format:md",
     "format:js": "npm run lint:js -- --fix",
     "format:md": "npm run lint:md -- --fix",
@@ -60,6 +62,7 @@
     "jest": "25.1.0",
     "markdownlint-cli": "0.22.0",
     "npm-run-all": "4.1.5",
+    "rimraf": "3.0.2",
     "ts-jest": "25.2.1",
     "typescript": "3.8.2"
   },
