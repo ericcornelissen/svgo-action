@@ -392,6 +392,17 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFile).not.toHaveBeenCalled();
   });
 
+  test("dry run with unknown value", async () => {
+    core.setDryRun("foobar");
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+    core.setDryRun("false");
+
+    expect(core.info).toHaveBeenCalled();
+    expect(githubAPI.commitFile).not.toHaveBeenCalled();
+  });
+
 });
 
 describe("Error scenarios", () => {
