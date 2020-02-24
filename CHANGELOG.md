@@ -7,8 +7,9 @@ Versioning].
 
 ## [Unreleased]
 
-- Add `dry-run` option for the action.  ([#77])
+- Add `dry-run` option for the action. ([#77])
 - Specify `required` for action inputs. ([#78])
+- Commit all optimization in a single commit. ([#84])
 
 ## [0.1.1] - 2020-02-20
 
@@ -33,3 +34,4 @@ Versioning].
 [#69]: https://github.com/ericcornelissen/svgo-action/pull/69
 [#77]: https://github.com/ericcornelissen/svgo-action/pull/77
 [#78]: https://github.com/ericcornelissen/svgo-action/pull/78
+[#84]: https://github.com/ericcornelissen/svgo-action/pull/84
