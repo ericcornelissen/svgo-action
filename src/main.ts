@@ -18,13 +18,15 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
+import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
 export default async function main(): Promise<boolean> {
   try {
-    const token = core.getInput("repo-token", { required: true });
-    const configPath = core.getInput("configuration-path", { required: true });
+    const configPath = getConfigurationPath();
+    const dryRun = getDryRun();
+    const token = getRepoToken();
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
@@ -62,16 +64,20 @@ export default async function main(): Promise<boolean> {
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      core.debug(`committing optimized '${svgFileInfo.path}'`);
-      const commitInfo: CommitInfo = await commitFile(
-        client,
-        fileData.path,
-        optimizedData,
-        fileData.encoding,
-        `Optimize '${fileData.path}' with SVGO`,
-      );
+      if (dryRun) {
+        core.info(`Dry mode enabled, not commiting for '${svgFileInfo.path}'`);
+      } else {
+        core.debug(`committing optimized '${svgFileInfo.path}'`);
+        const commitInfo: CommitInfo = await commitFile(
+          client,
+          fileData.path,
+          optimizedData,
+          fileData.encoding,
+          `Optimize '${fileData.path}' with SVGO`,
+        );
 
-      core.debug(`commit successful (see ${commitInfo.url})`);
+        core.debug(`commit successful (see ${commitInfo.url})`);
+      }
     }
 
     return true;

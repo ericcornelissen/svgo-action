@@ -3,12 +3,14 @@ import * as github from "./mocks/@actions/github.mock";
 import { PR_NUMBER } from "./mocks/@actions/github.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
+import * as inputs from "./mocks/inputs.mock";
 import * as svgo from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
+jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
 
 import contentPayloads from "./fixtures/contents-payloads.json";
@@ -379,6 +381,20 @@ describe("Scenarios", () => {
     await main();
 
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
+  });
+
+  test.each([
+    PR_NUMBER.ADD_SVG,
+    PR_NUMBER.MODIFY_SVG,
+    PR_NUMBER.REMOVE_SVG,
+  ])("dry run enabled (#%i)", async (prNumber) => {
+    inputs.getDryRun.mockReturnValueOnce(true);
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+
+    await main();
+
+    expect(githubAPI.commitFile).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
 });
