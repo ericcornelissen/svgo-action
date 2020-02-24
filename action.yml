@@ -6,6 +6,10 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
+  dry-run:
+    description: 'Run the action in dry mode (i.e. do not commit)'
+    default: false
+    required: false
   configuration-path:
     description: 'The path for the svgo-action configurations'
     default: '.github/svgo-action.yml'

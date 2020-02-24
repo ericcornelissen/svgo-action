@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Add `dry-run` option for the action.  ([#77])
 - Specify `required` for action inputs. ([#78])
 
 ## [0.1.1] - 2020-02-20
@@ -30,4 +31,5 @@ Versioning].
 [#61]: https://github.com/ericcornelissen/svgo-action/pull/61
 [#62]: https://github.com/ericcornelissen/svgo-action/pull/62
 [#69]: https://github.com/ericcornelissen/svgo-action/pull/69
+[#77]: https://github.com/ericcornelissen/svgo-action/pull/77
 [#78]: https://github.com/ericcornelissen/svgo-action/pull/78

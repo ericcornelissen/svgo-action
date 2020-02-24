@@ -10,6 +10,8 @@ export const getInput = jest.fn()
       return "TOKEN";
     } else if (key === "configuration-path") {
       return "./config.yml";
+    } else if (key === "dry-run") {
+      return "false";
     }
   })
   .mockName("core.getInput");
