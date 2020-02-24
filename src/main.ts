@@ -11,9 +11,11 @@ import {
   CommitInfo,
   FileData,
   FileInfo,
+  GitBlob,
 
   // Functions
   commitFile,
+  createBlob,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -68,11 +70,16 @@ export default async function main(): Promise<boolean> {
         core.info(`Dry mode enabled, not commiting for '${svgFileInfo.path}'`);
       } else {
         core.debug(`committing optimized '${svgFileInfo.path}'`);
-        const commitInfo: CommitInfo = await commitFile(
+        const svgBlob: GitBlob = await createBlob(
           client,
           fileData.path,
           optimizedData,
           fileData.encoding,
+        );
+
+        const commitInfo: CommitInfo = await commitFile(
+          client,
+          svgBlob,
           `Optimize '${fileData.path}' with SVGO`,
         );
 

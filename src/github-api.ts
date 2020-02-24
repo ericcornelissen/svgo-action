@@ -1,4 +1,5 @@
 import * as github from "@actions/github";
+import { Octokit } from "@octokit/rest";
 
 
 function getCommitUrl(commitSha: string): string {
@@ -44,17 +45,14 @@ export interface FileInfo {
   readonly status: string;
 }
 
+export type GitBlob = Octokit.GitCreateTreeParamsTree;
+
 
 export async function commitFile(
   client: github.GitHub,
-  path: string,
-  data: string,
-  encoding: string,
+  blob: GitBlob,
   commitMessage: string,
 ): Promise<CommitInfo> {
-  const COMMIT_MODE_FILE = "100644";
-  const COMMIT_TYPE_BLOB = "blob";
-
   const ref = `heads/${getHead()}`;
 
   const { data: refData } = await client.git.getRef({
@@ -69,25 +67,11 @@ export async function commitFile(
     commit_sha: refData.object.sha, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
-  const { data: fileBlob } = await client.git.createBlob({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    content: data,
-    encoding: encoding,
-  });
-
   const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     base_tree: previousCommit.tree.sha, /* eslint-disable-line @typescript-eslint/camelcase */
-    tree: [
-      {
-        path: path,
-        mode: COMMIT_MODE_FILE,
-        type: COMMIT_TYPE_BLOB,
-        sha: fileBlob.sha,
-      },
-    ],
+    tree: [blob],
   });
 
   const { data: newCommit } = await client.git.createCommit({
@@ -108,6 +92,30 @@ export async function commitFile(
   return {
     sha: result.object.sha,
     url: getCommitUrl(result.object.sha),
+  };
+}
+
+export async function createBlob(
+  client: github.GitHub,
+  path: string,
+  data: string,
+  encoding: string,
+): Promise<GitBlob> {
+  const COMMIT_MODE_FILE = "100644";
+  const COMMIT_TYPE_BLOB = "blob";
+
+  const { data: fileBlob } = await client.git.createBlob({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    content: data,
+    encoding: encoding,
+  });
+
+  return {
+    path: path,
+    mode: COMMIT_MODE_FILE,
+    type: COMMIT_TYPE_BLOB,
+    sha: fileBlob.sha,
   };
 }
 
