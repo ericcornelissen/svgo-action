@@ -18,13 +18,19 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
+import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
 export default async function main(): Promise<boolean> {
   try {
-    const token = core.getInput("repo-token", { required: true });
-    const configPath = core.getInput("configuration-path", { required: true });
+    const configPath = getConfigurationPath();
+    const token = getRepoToken();
+
+    const dryRun = getDryRun();
+    if (dryRun) {
+      core.info("Dry mode is enabled, no changes will be committed");
+    }
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
@@ -39,12 +45,17 @@ export default async function main(): Promise<boolean> {
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
     const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
-    core.debug(`the pull request contains ${prFiles.length} file(s)`);
+    const filesCount = prFiles.length;
+    core.debug(`the pull request contains ${filesCount} file(s)`);
 
     const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
-    core.debug(`the pull request contains ${prSvgs.length} SVG(s)`);
+    const svgCount = prSvgs.length;
+    core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-    core.debug(`fetching content of files in pull request #${prNumber}`);
+    core.info(`Found ${svgCount} new/changed SVGs (out of ${filesCount} files), optimizing...`);
+
+    core.debug(`fetching content of SVGs in pull request #${prNumber}`);
+    let optimized = 0, skipped = 0;
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetching file contents of '${svgFileInfo.path}'`);
       const fileData: FileData = await getPrFile(client, svgFileInfo.path);
@@ -56,24 +67,31 @@ export default async function main(): Promise<boolean> {
       const optimizedSvg: string = await svgo.optimize(originalSvg);
       if (originalSvg === optimizedSvg) {
         core.debug(`skipping '${fileData.path}', already optimized`);
+        skipped += 1;
         continue;
       }
 
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      core.debug(`committing optimized '${svgFileInfo.path}'`);
-      const commitInfo: CommitInfo = await commitFile(
-        client,
-        fileData.path,
-        optimizedData,
-        fileData.encoding,
-        `Optimize '${fileData.path}' with SVGO`,
-      );
+      if (dryRun) {
+        core.info(`Dry mode enabled, not committing for '${svgFileInfo.path}'`);
+      } else {
+        core.debug(`committing optimized '${svgFileInfo.path}'`);
+        const commitInfo: CommitInfo = await commitFile(
+          client,
+          fileData.path,
+          optimizedData,
+          fileData.encoding,
+          `Optimize '${fileData.path}' with SVGO`,
+        );
 
-      core.debug(`commit successful (see ${commitInfo.url})`);
+        core.debug(`commit successful (see ${commitInfo.url})`);
+        optimized += 1;
+      }
     }
 
+    core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
     return true;
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);

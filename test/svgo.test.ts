@@ -124,8 +124,8 @@ describe("SVGOptimizer.optimize", () => {
   test("optimizing with different configurations (default vs. fixture)", async () => {
     const optimizer2: SVGOptimizer = new SVGOptimizer(svgoOptions as SVGO.Options);
 
-    const optimized1 = await optimizer.optimize(files.complex);
-    const optimized2 = await optimizer2.optimize(files.complex);
+    const optimized1 = await optimizer.optimize(files["complex.svg"]);
+    const optimized2 = await optimizer2.optimize(files["complex.svg"]);
     expect(optimized1).not.toEqual(optimized2);
   });
 
