@@ -25,14 +25,14 @@ describe("::getDryRun", () => {
     core.getInput.mockReturnValueOnce("false");
 
     const result = getDryRun();
-    expect(result).toBeFalsy();
+    expect(result).toBe(false);
   });
 
   test("dry-run is 'true'", () => {
     core.getInput.mockReturnValueOnce("true");
 
     const result = getDryRun();
-    expect(result).toBeTruthy();
+    expect(result).toBe(true);
   });
 
   test.each([
@@ -43,7 +43,7 @@ describe("::getDryRun", () => {
     core.getInput.mockReturnValueOnce(value);
 
     const result = getDryRun();
-    expect(result).toBeTruthy();
+    expect(result).toBe(true);
     expect(core.info).toHaveBeenCalledTimes(1);
   });
 
