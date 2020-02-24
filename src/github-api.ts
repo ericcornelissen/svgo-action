@@ -29,18 +29,18 @@ function getHead(): string {
 export const PR_NOT_FOUND = -1;
 
 
-export interface CommitInfo {
+export type CommitInfo = {
   readonly sha: string;
   readonly url: string;
 }
 
-export interface FileData {
+export type FileData = {
   readonly path: string;
   readonly content: string;
   readonly encoding: string;
 }
 
-export interface FileInfo {
+export type FileInfo = {
   readonly path: string;
   readonly status: string;
 }

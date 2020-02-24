@@ -24,6 +24,7 @@ import main from "../src/main";
 beforeEach(() => {
   core.debug.mockClear();
   core.error.mockClear();
+  core.info.mockClear();
   core.setFailed.mockClear();
 
   githubAPI.commitFiles.mockClear();
@@ -43,14 +44,14 @@ describe("Return value", () => {
 
   test("return success if everything is OK", async () => {
     const result: boolean = await main();
-    expect(result).toBeTruthy();
+    expect(result).toBe(true);
   });
 
   test("return failure when Pull Request number as not found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
 
     const result: boolean = await main();
-    expect(result).toBeFalsy();
+    expect(result).toBe(false);
   });
 
 });
@@ -81,6 +82,35 @@ describe("Logging", () => {
   test("does some debug logging", async () => {
     await main();
     expect(core.debug).toHaveBeenCalled();
+  });
+
+  test("summary when everything is fine", async () => {
+    await main();
+    expect(core.info).toHaveBeenCalled();
+  });
+
+  test("summary for a Pull Request with 1 optimized SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1/1 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/1 SVG(s) skipped"));
+  });
+
+  test("summary for a Pull Request with 1 skipped SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0/1 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/1 SVG(s) skipped"));
+  });
+
+  test("summary for a Pull Request with many changes", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 3/4 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/4 SVG(s) skipped"));
   });
 
   test("don't log an error when everything is fine", async () => {
@@ -119,7 +149,7 @@ describe("Scenarios", () => {
   const fooSvgData = files[fooFilePath];
   const testSvgData = files[testFilePath];
 
-  test("pull Request with 1 new SVG", async () => {
+  test("a Pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
@@ -149,7 +179,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("pull Request with 1 modified SVG", async () => {
+  test("a Pull Request with 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
 
     await main();
@@ -179,19 +209,19 @@ describe("Scenarios", () => {
     );
   });
 
-  test("pull Request with 1 removed SVG", async () => {
+  test("a Pull Request with 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_SVG);
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
-    expect(encoder.encode).toHaveBeenCalledTimes(0);
-    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgo.optimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
+  test("a Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_MODIFY_REMOVE_SVG);
 
     await main();
@@ -230,43 +260,43 @@ describe("Scenarios", () => {
     );
   });
 
-  test("pull Request with 1 new file", async () => {
+  test("a Pull Request with 1 new file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE);
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
-    expect(encoder.encode).toHaveBeenCalledTimes(0);
-    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgo.optimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("pull Request with 1 modified file", async () => {
+  test("a Pull Request with 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_FILE);
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
-    expect(encoder.encode).toHaveBeenCalledTimes(0);
-    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgo.optimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("pull Request with 1 removed file", async () => {
+  test("a Pull Request with 1 removed file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_FILE);
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
-    expect(encoder.encode).toHaveBeenCalledTimes(0);
-    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgo.optimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("pull Request with 1 new SVG and 1 modified file", async () => {
+  test("a Pull Request with 1 new SVG and 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
 
     await main();
@@ -296,7 +326,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("pull Request with 1 new file and 1 modified SVG", async () => {
+  test("a Pull Request with 1 new file and 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_MODIFY_SVG);
 
     await main();
@@ -326,7 +356,7 @@ describe("Scenarios", () => {
     );
   });
 
-  test("pull Request with 1 new SVG and 1 deleted file", async () => {
+  test("a Pull Request with 1 new SVG and 1 deleted file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_REMOVE_FILE);
 
     await main();
@@ -356,29 +386,29 @@ describe("Scenarios", () => {
     );
   });
 
-  test("pull Request with 1 new file and 1 deleted SVG", async () => {
+  test("a Pull Request with 1 new file and 1 deleted SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_REMOVE_SVG);
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(0);
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
-    expect(encoder.encode).toHaveBeenCalledTimes(0);
-    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgo.optimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("pull Request with multiple SVGs and multiple files", async () => {
+  test("a Pull Request with multiple SVGs and multiple files", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(3);
+    expect(encoder.decode).toHaveBeenCalledTimes(4);
     expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
 
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(3);
+    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(4);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
@@ -411,12 +441,12 @@ describe("Scenarios", () => {
     );
   });
 
-  test("pull Request with 1 optimized SVG", async () => {
+  test("a Pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
     await main();
 
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
   });
 
@@ -431,7 +461,7 @@ describe("Scenarios", () => {
   test.each([
     PR_NUMBER.ADD_SVG,
     PR_NUMBER.MODIFY_SVG,
-    PR_NUMBER.REMOVE_SVG,
+    PR_NUMBER.MANY_CHANGES,
   ])("dry run enabled (#%i)", async (prNumber) => {
     inputs.getDryRun.mockReturnValueOnce(true);
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
@@ -469,7 +499,7 @@ describe("Error scenarios", () => {
 
     await main();
 
-    expect(core.setFailed).toHaveBeenCalledTimes(0);
+    expect(core.setFailed).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
   });
 
