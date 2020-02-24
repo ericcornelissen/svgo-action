@@ -15,7 +15,6 @@ export function getConfigurationPath(): string {
 
 export function getDryRun(): boolean {
   const value = core.getInput(INPUT_NAME_DRY_RUN, { required: false });
-
   if (value === FALSE) {
     return false;
   } else if (value === TRUE) {

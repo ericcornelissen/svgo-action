@@ -9,8 +9,8 @@ describe("::getConfigurationPath", () => {
 
   test("return what core returns", () => {
     const expected = core.getInput("configuration-path");
-    const actual = getConfigurationPath();
-    expect(actual).toEqual(expected);
+    const result = getConfigurationPath();
+    expect(result).toEqual(expected);
   });
 
 });
@@ -24,15 +24,15 @@ describe("::getDryRun", () => {
   test("dry-run is 'false'", () => {
     core.getInput.mockReturnValueOnce("false");
 
-    const actual = getDryRun();
-    expect(actual).toBeFalsy();
+    const result = getDryRun();
+    expect(result).toBeFalsy();
   });
 
   test("dry-run is 'true'", () => {
     core.getInput.mockReturnValueOnce("true");
 
-    const actual = getDryRun();
-    expect(actual).toBeTruthy();
+    const result = getDryRun();
+    expect(result).toBeTruthy();
   });
 
   test.each([
@@ -42,8 +42,8 @@ describe("::getDryRun", () => {
   ])("dry run is '%s'", async (value) => {
     core.getInput.mockReturnValueOnce(value);
 
-    const actual = getDryRun();
-    expect(actual).toBeTruthy();
+    const result = getDryRun();
+    expect(result).toBeTruthy();
     expect(core.info).toHaveBeenCalledTimes(1);
   });
 
@@ -53,8 +53,8 @@ describe("::getRepoToken", () => {
 
   test("return what core returns", () => {
     const expected = core.getInput("repo-token");
-    const actual = getRepoToken();
-    expect(actual).toEqual(expected);
+    const result = getRepoToken();
+    expect(result).toEqual(expected);
   });
 
 });
