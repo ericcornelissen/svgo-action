@@ -14,7 +14,7 @@ import {
   GitBlob,
 
   // Functions
-  commitFile,
+  commitFiles,
   createBlob,
   getPrFile,
   getPrFiles,
@@ -49,6 +49,7 @@ export default async function main(): Promise<boolean> {
     core.debug(`the pull request contains ${prSvgs.length} SVG(s)`);
 
     core.debug(`fetching content of files in pull request #${prNumber}`);
+    const blobs: GitBlob[] = [];
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetching file contents of '${svgFileInfo.path}'`);
       const fileData: FileData = await getPrFile(client, svgFileInfo.path);
@@ -66,25 +67,27 @@ export default async function main(): Promise<boolean> {
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      if (dryRun) {
-        core.info(`Dry mode enabled, not commiting for '${svgFileInfo.path}'`);
-      } else {
-        core.debug(`committing optimized '${svgFileInfo.path}'`);
-        const svgBlob: GitBlob = await createBlob(
-          client,
-          fileData.path,
-          optimizedData,
-          fileData.encoding,
-        );
+      core.debug(`create blob to commit for optimized '${svgFileInfo.path}'`);
+      const svgBlob: GitBlob = await createBlob(
+        client,
+        fileData.path,
+        optimizedData,
+        fileData.encoding,
+      );
 
-        const commitInfo: CommitInfo = await commitFile(
-          client,
-          svgBlob,
-          `Optimize '${fileData.path}' with SVGO`,
-        );
+      blobs.push(svgBlob);
+    }
 
-        core.debug(`commit successful (see ${commitInfo.url})`);
-      }
+    if (dryRun) {
+      core.info("Dry mode enabled, not commiting");
+    } else if (blobs.length > 0) {
+      const commitInfo: CommitInfo = await commitFiles(
+        client,
+        blobs,
+        "Optimize SVGs with SVGO",
+      );
+
+      core.debug(`commit successful (see ${commitInfo.url})`);
     }
 
     return true;

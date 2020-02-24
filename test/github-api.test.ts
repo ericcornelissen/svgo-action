@@ -13,7 +13,7 @@ import {
   FileData,
 
   // Functions
-  commitFile,
+  commitFiles,
   createBlob,
   getPrFile,
   getPrFiles,
@@ -26,7 +26,7 @@ const token = core.getInput("repo-token", { required: true });
 const client = new github.GitHub(token);
 
 
-describe("::commitFile", () => {
+describe("::commitFiles", () => {
 
   const defaultCommitMessage = "Does this commit?";
   const defaultPath = contentPayloads["test.svg"].path;
@@ -51,9 +51,9 @@ describe("::commitFile", () => {
   });
 
   testVarious("does not throw for '%s'", (path: string, content: string, encoding: string) => {
-    return expect(commitFile(
+    return expect(commitFiles(
       client,
-      {},
+      [],
       defaultCommitMessage,
     )).resolves.toEqual(
       expect.objectContaining({
@@ -64,9 +64,9 @@ describe("::commitFile", () => {
   });
 
   test("calls functions to create a commit", async () => {
-    await commitFile(
+    await commitFiles(
       client,
-      {},
+      [],
       defaultCommitMessage,
     );
 
@@ -80,7 +80,7 @@ describe("::commitFile", () => {
   testVarious("Custom commit message for '%s'", async (path: string, content: string, encoding: string) => {
     const commitMessage = `Commiting ${path}`;
 
-    await commitFile(client, {}, commitMessage);
+    await commitFiles(client, [], commitMessage);
 
     expect(client.git.createCommit).toHaveBeenCalledTimes(1);
     expect(client.git.createCommit).toHaveBeenCalledWith(
@@ -94,9 +94,9 @@ describe("::commitFile", () => {
     github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
 
     return expect(
-      commitFile(
+      commitFiles(
         client,
-        {},
+        [],
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -106,9 +106,9 @@ describe("::commitFile", () => {
     github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
     return expect(
-      commitFile(
+      commitFiles(
         client,
-        {},
+        [],
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -118,9 +118,9 @@ describe("::commitFile", () => {
     github.GitHubInstance.git.createTree.mockRejectedValueOnce(new Error("Not found"));
 
     return expect(
-      commitFile(
+      commitFiles(
         client,
-        {},
+        [],
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -130,9 +130,9 @@ describe("::commitFile", () => {
     github.GitHubInstance.git.createCommit.mockRejectedValueOnce(new Error("Not found"));
 
     return expect(
-      commitFile(
+      commitFiles(
         client,
-        {},
+        [],
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -142,9 +142,9 @@ describe("::commitFile", () => {
     github.GitHubInstance.git.updateRef.mockRejectedValueOnce(new Error("Not found"));
 
     return expect(
-      commitFile(
+      commitFiles(
         client,
-        {},
+        [],
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -155,9 +155,9 @@ describe("::commitFile", () => {
     delete github.context.payload.pull_request;
 
     const result = await expect(
-      commitFile(
+      commitFiles(
         client,
-        {},
+        [],
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -170,9 +170,9 @@ describe("::commitFile", () => {
     const backup = github.context.payload.repository;
     delete github.context.payload.repository;
 
-    const result = await expect(commitFile(
+    const result = await expect(commitFiles(
       client,
-      {},
+      [],
       defaultCommitMessage,
     )).rejects.toBeDefined();
 

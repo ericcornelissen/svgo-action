@@ -48,9 +48,9 @@ export interface FileInfo {
 export type GitBlob = Octokit.GitCreateTreeParamsTree;
 
 
-export async function commitFile(
+export async function commitFiles(
   client: github.GitHub,
-  blob: GitBlob,
+  blobs: GitBlob[],
   commitMessage: string,
 ): Promise<CommitInfo> {
   const ref = `heads/${getHead()}`;
@@ -71,7 +71,7 @@ export async function commitFile(
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     base_tree: previousCommit.tree.sha, /* eslint-disable-line @typescript-eslint/camelcase */
-    tree: [blob],
+    tree: blobs,
   });
 
   const { data: newCommit } = await client.git.createCommit({
