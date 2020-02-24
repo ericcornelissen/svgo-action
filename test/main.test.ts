@@ -40,14 +40,14 @@ describe("Return value", () => {
 
   test("return success if everything is OK", async () => {
     const result: boolean = await main();
-    expect(result).toBeTruthy();
+    expect(result).toBe(true);
   });
 
   test("return failure when Pull Request number as not found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
 
     const result: boolean = await main();
-    expect(result).toBeFalsy();
+    expect(result).toBe(false);
   });
 
 });
