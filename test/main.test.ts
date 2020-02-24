@@ -27,6 +27,7 @@ beforeEach(() => {
   core.setFailed.mockClear();
 
   githubAPI.commitFile.mockClear();
+  githubAPI.createBlob.mockClear();
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
@@ -132,12 +133,18 @@ describe("Scenarios", () => {
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
 
-    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       testFilePath,
       expect.any(String),
       testSvgEncoding,
+    );
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
       expect.stringContaining(testFilePath),
     );
   });
@@ -156,12 +163,18 @@ describe("Scenarios", () => {
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
 
-    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       fooFilePath,
       expect.any(String),
       fooSvgEncoding,
+    );
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
       expect.stringContaining(fooFilePath),
     );
   });
@@ -174,6 +187,7 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
     expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
@@ -194,19 +208,29 @@ describe("Scenarios", () => {
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), barSvgEncoding);
 
-    expect(githubAPI.commitFile).toHaveBeenCalledTimes(2);
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(2);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       fooFilePath,
       expect.any(String),
       fooSvgEncoding,
-      expect.stringContaining(fooFilePath),
     );
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       barFilePath,
       expect.any(String),
       barSvgEncoding,
+    );
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(2);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
+      expect.stringContaining(fooFilePath),
+    );
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
       expect.stringContaining(barFilePath),
     );
   });
@@ -219,6 +243,7 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
     expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
@@ -230,6 +255,7 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
     expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
@@ -241,6 +267,7 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
     expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
@@ -258,12 +285,18 @@ describe("Scenarios", () => {
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
 
-    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       testFilePath,
       expect.any(String),
       testSvgEncoding,
+    );
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
       expect.stringContaining(testFilePath),
     );
   });
@@ -282,12 +315,18 @@ describe("Scenarios", () => {
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
 
-    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       testFilePath,
       expect.any(String),
       testSvgEncoding,
+    );
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
       expect.stringContaining(testFilePath),
     );
   });
@@ -306,12 +345,18 @@ describe("Scenarios", () => {
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), complexSvgEncoding);
 
-    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       complexFilePath,
       expect.any(String),
       complexSvgEncoding,
+    );
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
       expect.stringContaining(complexFilePath),
     );
   });
@@ -324,6 +369,7 @@ describe("Scenarios", () => {
     expect(encoder.decode).toHaveBeenCalledTimes(0);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(0);
     expect(encoder.encode).toHaveBeenCalledTimes(0);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
     expect(githubAPI.commitFile).toHaveBeenCalledTimes(0);
   });
 
@@ -342,26 +388,40 @@ describe("Scenarios", () => {
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
 
-    expect(githubAPI.commitFile).toHaveBeenCalledTimes(3);
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(3);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       fooFilePath,
       expect.any(String),
       fooSvgEncoding,
-      expect.stringContaining(fooFilePath),
     );
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       barFilePath,
       expect.any(String),
       barSvgEncoding,
-      expect.stringContaining(barFilePath),
     );
-    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
       testFilePath,
       expect.any(String),
       testSvgEncoding,
+    );
+
+    expect(githubAPI.commitFile).toHaveBeenCalledTimes(3);
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
+      expect.stringContaining(fooFilePath),
+    );
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
+      expect.stringContaining(barFilePath),
+    );
+    expect(githubAPI.commitFile).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.any(Object),
       expect.stringContaining(testFilePath),
     );
   });
@@ -393,6 +453,7 @@ describe("Scenarios", () => {
 
     await main();
 
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
     expect(githubAPI.commitFile).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });

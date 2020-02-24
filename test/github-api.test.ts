@@ -14,6 +14,7 @@ import {
 
   // Functions
   commitFile,
+  createBlob,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -52,9 +53,7 @@ describe("::commitFile", () => {
   testVarious("does not throw for '%s'", (path: string, content: string, encoding: string) => {
     return expect(commitFile(
       client,
-      path,
-      content,
-      encoding,
+      {},
       defaultCommitMessage,
     )).resolves.toEqual(
       expect.objectContaining({
@@ -67,16 +66,13 @@ describe("::commitFile", () => {
   test("calls functions to create a commit", async () => {
     await commitFile(
       client,
-      defaultPath,
-      defaultContent,
-      defaultEncoding,
+      {},
       defaultCommitMessage,
     );
 
     expect(client.git.getRef).toHaveBeenCalledTimes(1);
     expect(client.git.getCommit).toHaveBeenCalledTimes(1);
-    expect(client.git.createBlob).toHaveBeenCalled();
-    expect(client.git.createTree).toHaveBeenCalled();
+    expect(client.git.createTree).toHaveBeenCalledTimes(1);
     expect(client.git.createCommit).toHaveBeenCalledTimes(1);
     expect(client.git.updateRef).toHaveBeenCalledTimes(1);
   });
@@ -84,7 +80,7 @@ describe("::commitFile", () => {
   testVarious("Custom commit message for '%s'", async (path: string, content: string, encoding: string) => {
     const commitMessage = `Commiting ${path}`;
 
-    await commitFile(client, path, content, encoding, commitMessage);
+    await commitFile(client, {}, commitMessage);
 
     expect(client.git.createCommit).toHaveBeenCalledTimes(1);
     expect(client.git.createCommit).toHaveBeenCalledWith(
@@ -100,9 +96,7 @@ describe("::commitFile", () => {
     return expect(
       commitFile(
         client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
+        {},
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -114,23 +108,7 @@ describe("::commitFile", () => {
     return expect(
       commitFile(
         client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
-        defaultCommitMessage,
-      ),
-    ).rejects.toBeDefined();
-  });
-
-  test("throw when blob could not be created", () => {
-    github.GitHubInstance.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
-
-    return expect(
-      commitFile(
-        client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
+        {},
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -142,9 +120,7 @@ describe("::commitFile", () => {
     return expect(
       commitFile(
         client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
+        {},
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -156,9 +132,7 @@ describe("::commitFile", () => {
     return expect(
       commitFile(
         client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
+        {},
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -170,9 +144,7 @@ describe("::commitFile", () => {
     return expect(
       commitFile(
         client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
+        {},
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -185,9 +157,7 @@ describe("::commitFile", () => {
     const result = await expect(
       commitFile(
         client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
+        {},
         defaultCommitMessage,
       ),
     ).rejects.toBeDefined();
@@ -202,14 +172,33 @@ describe("::commitFile", () => {
 
     const result = await expect(commitFile(
       client,
-      defaultPath,
-      defaultContent,
-      defaultEncoding,
+      {},
       defaultCommitMessage,
     )).rejects.toBeDefined();
 
     github.context.payload.repository = backup;
     return result;
+  });
+
+});
+
+describe("::createBlob", () => {
+
+  const defaultPath = contentPayloads["test.svg"].path;
+  const defaultContent = contentPayloads["test.svg"].content;
+  const defaultEncoding = contentPayloads["test.svg"].encoding;
+
+  test("throw when blob could not be created", () => {
+    github.GitHubInstance.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
+
+    return expect(
+      createBlob(
+        client,
+        defaultPath,
+        defaultContent,
+        defaultEncoding,
+      ),
+    ).rejects.toBeDefined();
   });
 
 });
