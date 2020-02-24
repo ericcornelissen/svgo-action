@@ -64,7 +64,9 @@ export default async function main(): Promise<boolean> {
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      if (!dryRun) {
+      if (dryRun) {
+        core.info(`Dry mode enabled, not commiting for '${svgFileInfo.path}'`);
+      } else {
         core.debug(`committing optimized '${svgFileInfo.path}'`);
         const commitInfo: CommitInfo = await commitFile(
           client,

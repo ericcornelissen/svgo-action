@@ -391,6 +391,7 @@ describe("Scenarios", () => {
     await main();
 
     expect(githubAPI.commitFile).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
 });
