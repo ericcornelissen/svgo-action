@@ -24,6 +24,7 @@ import main from "../src/main";
 beforeEach(() => {
   core.debug.mockClear();
   core.error.mockClear();
+  core.info.mockClear();
   core.setFailed.mockClear();
 
   githubAPI.commitFile.mockClear();
@@ -80,6 +81,35 @@ describe("Logging", () => {
   test("does some debug logging", async () => {
     await main();
     expect(core.debug).toHaveBeenCalled();
+  });
+
+  test("summary when everything is fine", async () => {
+    await main();
+    expect(core.info).toHaveBeenCalled();
+  });
+
+  test("summary for a Pull Request with 1 optimized SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1/1 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/1 SVG(s) skipped"));
+  });
+
+  test("summary for a Pull Request with 1 skipped SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0/1 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/1 SVG(s) skipped"));
+  });
+
+  test("summary for a Pull Request with many changes", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 3/4 SVG(s)"));
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/4 SVG(s) skipped"));
   });
 
   test("don't log an error when everything is fine", async () => {
@@ -332,12 +362,12 @@ describe("Scenarios", () => {
 
     await main();
 
-    expect(encoder.decode).toHaveBeenCalledTimes(3);
+    expect(encoder.decode).toHaveBeenCalledTimes(4);
     expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
 
-    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(3);
+    expect(svgo.optimizerInstance.optimize).toHaveBeenCalledTimes(4);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
     expect(svgo.optimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
@@ -386,7 +416,7 @@ describe("Scenarios", () => {
   test.each([
     PR_NUMBER.ADD_SVG,
     PR_NUMBER.MODIFY_SVG,
-    PR_NUMBER.REMOVE_SVG,
+    PR_NUMBER.MANY_CHANGES,
   ])("dry run enabled (#%i)", async (prNumber) => {
     inputs.getDryRun.mockReturnValueOnce(true);
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
