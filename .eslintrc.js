@@ -23,7 +23,7 @@ module.exports = {
     "jest": "readonly",
   },
   rules: {
-    // ESLint
+    // ESLint (https://eslint.org/docs/rules/)
     "comma-dangle": ["error", {
       arrays: "always-multiline",
       objects: "always-multiline",
@@ -35,10 +35,10 @@ module.exports = {
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
 
-    // @typescript-eslint
+    // @typescript-eslint (https://github.com/typescript-eslint/typescript-eslint#readme)
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "_+" }],
 
-    // jest
+    // eslint-plugin-jest (https://github.com/jest-community/eslint-plugin-jest#readme)
     "jest/consistent-test-it": ["error", {
       fn: "test",
       withinDescribe: "test",
@@ -53,7 +53,7 @@ module.exports = {
     "jest/prefer-to-have-length": ["error"],
     "jest/prefer-todo": ["error"],
 
-    // mocha
+    // eslint-plugin-mocha (https://github.com/lo1tuma/eslint-plugin-mocha)
     "mocha/valid-test-description": ["error", {
       pattern: "^((?![A-Z])).*", // Test description should NOT start with a capital letter
       testNames: ["test"],
