@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Commit all optimization in a single commit. ([#84])
 
 ## [0.1.2] - 2020-02-24
 
@@ -39,3 +39,4 @@ Versioning].
 [#77]: https://github.com/ericcornelissen/svgo-action/pull/77
 [#78]: https://github.com/ericcornelissen/svgo-action/pull/78
 [#81]: https://github.com/ericcornelissen/svgo-action/pull/81
+[#84]: https://github.com/ericcornelissen/svgo-action/pull/84
