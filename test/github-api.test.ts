@@ -101,7 +101,7 @@ describe("::commitFiles", () => {
   });
 
   test("empty list of blobs", () => {
-    const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
+    const promise = commitFiles(client, [/* empty list of blobs */], defaultCommitMessage);
     return expect(promise).resolves.toBeDefined();
   });
 

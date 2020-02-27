@@ -75,7 +75,7 @@ export default async function main(): Promise<boolean> {
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      core.debug(`create blob to commit for optimized '${svgFileInfo.path}'`);
+      core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
       const svgBlob: GitBlob = await createBlob(
         client,
         fileData.path,
@@ -87,7 +87,7 @@ export default async function main(): Promise<boolean> {
     }
 
     if (dryRun) {
-      core.info("Dry mode enabled, not commiting");
+      core.info("Dry mode enabled, not committing");
     } else if (blobs.length > 0) {
       const commitInfo: CommitInfo = await commitFiles(
         client,
