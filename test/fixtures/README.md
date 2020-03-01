@@ -27,10 +27,15 @@ encoded in _'contents-payloads.json'_.
 > :warning: The encoded file data in _'coptimizations.json'_ should match,
 > exactly, the optimized file data in the same file.
 
-The _'svgo-options.json'_ file has a special relation to the file found under
-the `filename` ".svgo.yml". In _'contents-payloads.json'_ this is a [YAML] file.
-When ".svgo.yml" is converted to JSON it should match, exactly, the JSON data in
-_'svgo-options.json'_ .
+The _'svgo-action.json'_ file has a special relation to the file found under
+the `filename` "svgo-action.yml". In _'contents-payloads.json'_ this is a [YAML]
+file. When "svgo-action.yml" is converted to JSON it should match, exactly, the
+JSON data in _'svgo-action.json'_ .
+
+Similarly, the _'svgo-options.json'_ file has a special relation to the file
+found under the `filename` ".svgo.yml". In _'contents-payloads.json'_ this is a
+[YAML] file. When ".svgo.yml" is converted to JSON it should match, exactly, the
+JSON data in _'svgo-options.json'_ .
 
 ## Example
 
