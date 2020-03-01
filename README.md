@@ -36,8 +36,8 @@ There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
 configuration file]. Below you can find the available options.
 
-> :warning: In the future the action will have more options. See [#17] for
-> progress in this regard.
+> :information_source: In the future the action will have more options. See
+> [#17] for progress in this regard.
 
 - `dry-run`: If enabled, the action doesn't commit changes back.
   - Possible values: `false`, `true`
