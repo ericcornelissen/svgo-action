@@ -17,6 +17,7 @@ jest.mock("../src/svgo", () => svgo);
 
 import contentPayloads from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
+import actionOptions from "./fixtures/svgo-action.json";
 import svgoOptions from "./fixtures/svgo-options.json";
 
 import { PR_NOT_FOUND } from "../src/github-api";
@@ -74,7 +75,7 @@ describe("Function usage", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main();
-    expect(githubAPI.getPrFile).toHaveBeenCalled();
+    expect(githubAPI.getPrFile).toHaveBeenCalledTimes(1);
   });
 
 });
@@ -499,6 +500,7 @@ describe("Scenarios", () => {
 
     const { content, encoding } = contentPayloads[actionConfigFilePath];
     expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
+    expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
   });
 
 });
