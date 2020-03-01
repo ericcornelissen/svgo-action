@@ -11,9 +11,11 @@ import {
   CommitInfo,
   FileData,
   FileInfo,
+  GitBlob,
 
   // Functions
-  commitFile,
+  commitFiles,
+  createBlob,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -55,7 +57,7 @@ export default async function main(): Promise<boolean> {
     core.info(`Found ${svgCount} new/changed SVGs (out of ${filesCount} files), optimizing...`);
 
     core.debug(`fetching content of SVGs in pull request #${prNumber}`);
-    let optimized = 0, skipped = 0;
+    const blobs: GitBlob[] = [];
     for (const svgFileInfo of prSvgs) {
       core.debug(`fetching file contents of '${svgFileInfo.path}'`);
       const fileData: FileData = await getPrFile(client, svgFileInfo.path);
@@ -67,31 +69,39 @@ export default async function main(): Promise<boolean> {
       const optimizedSvg: string = await svgo.optimize(originalSvg);
       if (originalSvg === optimizedSvg) {
         core.debug(`skipping '${fileData.path}', already optimized`);
-        skipped += 1;
         continue;
       }
 
       core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
       const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-      if (dryRun) {
-        core.info(`Dry mode enabled, not committing for '${svgFileInfo.path}'`);
-      } else {
-        core.debug(`committing optimized '${svgFileInfo.path}'`);
-        const commitInfo: CommitInfo = await commitFile(
-          client,
-          fileData.path,
-          optimizedData,
-          fileData.encoding,
-          `Optimize '${fileData.path}' with SVGO`,
-        );
+      core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
+      const svgBlob: GitBlob = await createBlob(
+        client,
+        fileData.path,
+        optimizedData,
+        fileData.encoding,
+      );
 
-        core.debug(`commit successful (see ${commitInfo.url})`);
-        optimized += 1;
-      }
+      blobs.push(svgBlob);
     }
 
+    if (dryRun) {
+      core.info("Dry mode enabled, not committing");
+    } else if (blobs.length > 0) {
+      const commitInfo: CommitInfo = await commitFiles(
+        client,
+        blobs,
+        "Optimize SVGs with SVGO",
+      );
+
+      core.debug(`commit successful (see ${commitInfo.url})`);
+    }
+
+    const optimized = blobs.length;
+    const skipped = svgCount - blobs.length;
     core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+
     return true;
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
