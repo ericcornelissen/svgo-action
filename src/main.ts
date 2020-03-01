@@ -35,13 +35,13 @@ import {
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
-const disablePattern = /disable-svgo-action/;
+const DISABLE_PATTERN = /disable-svgo-action/;
 
 async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
   const configFilePath = getConfigFilePath();
   try {
-    const configFileData = await getRepoFile(client, configFilePath);
-    const rawActionConfig = decode(configFileData.content, configFileData.encoding);
+    const { content, encoding } = await getRepoFile(client, configFilePath);
+    const rawActionConfig = decode(content, encoding);
     return yaml.safeLoad(rawActionConfig);
   } catch(_) {
     return { };
@@ -51,14 +51,14 @@ async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> 
 
 export default async function main(): Promise<boolean> {
   try {
-    const token = getRepoToken();
+    const token: string = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
 
     const rawConfig: RawActionConfig = await getConfigInRepo(client);
     const config: ActionConfig = new ActionConfig(rawConfig);
 
-    const commitMessage = await getCommitMessage(client);
-    if (disablePattern.test(commitMessage)) {
+    const commitMessage: string = await getCommitMessage(client);
+    if (DISABLE_PATTERN.test(commitMessage)) {
       core.info("Action disabled from commit message");
       return true;
     }
