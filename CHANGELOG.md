@@ -10,6 +10,7 @@ Versioning].
 - Disable the action from a commit message. ([#91])
 - Add support for a separate configuration file. ([#92])
 - Improve the default commit message. ([#97])
+- Fix `required` value for "configuration-path" input. ([#100])
 
 ## [0.2.0] - 2020-03-01
 
@@ -49,3 +50,4 @@ Versioning].
 [#91]: https://github.com/ericcornelissen/svgo-action/pull/91
 [#92]: https://github.com/ericcornelissen/svgo-action/pull/92
 [#97]: https://github.com/ericcornelissen/svgo-action/pull/97
+[#100]: https://github.com/ericcornelissen/svgo-action/pull/100
