@@ -3,18 +3,21 @@ import * as core from "./mocks/@actions/core.mock";
 jest.mock("@actions/core", () => core);
 
 import {
+  // Types
+  RawActionConfig,
+
+  // Functionality
   ActionConfig,
-  ConfigObject,
-  getConfigurationPath,
+  getConfigFilePath,
   getRepoToken,
 } from "../src/inputs";
 
 
-describe("::getConfigurationPath", () => {
+describe("::getConfigFilePath", () => {
 
   test("return what core returns", () => {
     const expected = core.getInput("configuration-path");
-    const result = getConfigurationPath();
+    const result = getConfigFilePath();
     expect(result).toEqual(expected);
   });
 
@@ -43,7 +46,7 @@ describe("ActionConfig", () => {
     });
 
     test("construct with object specifying dry-run", () => {
-      const config: ConfigObject = { "dry-run": "true" };
+      const config: RawActionConfig = { "dry-run": "true" };
       expect(() => new ActionConfig(config)).not.toThrow();
     });
 

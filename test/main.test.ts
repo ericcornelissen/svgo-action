@@ -465,10 +465,11 @@ describe("Scenarios", () => {
     PR_NUMBER.MODIFY_SVG,
     PR_NUMBER.MANY_CHANGES,
   ])("dry run enabled (#%i)", async (prNumber) => {
-    inputs.ActionConfigInstance.isDryRun.mockReturnValueOnce(true);
+    inputs.ActionConfigInstance.isDryRun.mockReturnValue(true);
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
 
     await main();
+    inputs.ActionConfigInstance.isDryRun.mockReturnValue(false);
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
@@ -492,7 +493,7 @@ describe("Scenarios", () => {
 
   test("custom configuration file usage", async () => {
     const actionConfigFilePath = "svgo-action.yml";
-    inputs.getConfigurationPath.mockReturnValueOnce(actionConfigFilePath);
+    inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
 
     await main();
 
@@ -533,7 +534,7 @@ describe("Error scenarios", () => {
 
   test("custom configuration file does not exist", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.getConfigurationPath.mockReturnValueOnce("this file doesn't exist");
+    inputs.getConfigFilePath.mockReturnValueOnce("this file doesn't exist");
 
     await main();
 

@@ -9,16 +9,16 @@ const FALSE = "false";
 const TRUE = "true";
 
 
-export type ConfigObject = {
+export type RawActionConfig = {
   readonly "dry-run"?: string;
 }
 
 
 export class ActionConfig {
 
-  private readonly config: ConfigObject;
+  private readonly config: RawActionConfig;
 
-  constructor(config?: ConfigObject) {
+  constructor(config?: RawActionConfig) {
     this.config = config || { };
   }
 
@@ -38,7 +38,7 @@ export class ActionConfig {
 
 }
 
-export function getConfigurationPath(): string {
+export function getConfigFilePath(): string {
   return core.getInput(INPUT_NAME_CONFIG_PATH, { required: true });
 }
 

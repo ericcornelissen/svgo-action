@@ -14,7 +14,7 @@ import {
   FileInfo,
   GitBlob,
 
-  // Functions
+  // Functionality
   commitFiles,
   createBlob,
   getCommitMessage,
@@ -24,9 +24,12 @@ import {
   getRepoFile,
 } from "./github-api";
 import {
+  // Types
+  RawActionConfig,
+
+  // Functionality
   ActionConfig,
-  ConfigObject,
-  getConfigurationPath,
+  getConfigFilePath,
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
@@ -34,12 +37,10 @@ import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 const disablePattern = /disable-svgo-action/;
 
-async function getConfigurationFile(
-  client: github.GitHub,
-  configPath: string,
-): Promise<ConfigObject> {
+async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
+  const configFilePath = getConfigFilePath();
   try {
-    const configFileData = await getRepoFile(client, configPath);
+    const configFileData = await getRepoFile(client, configFilePath);
     const rawActionConfig = decode(configFileData.content, configFileData.encoding);
     return yaml.safeLoad(rawActionConfig);
   } catch(_) {
@@ -53,9 +54,8 @@ export default async function main(): Promise<boolean> {
     const token = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
 
-    const configFilePath = getConfigurationPath();
-    const configFileObject = await getConfigurationFile(client, configFilePath);
-    const config: ActionConfig = new ActionConfig(configFileObject);
+    const rawConfig: RawActionConfig = await getConfigInRepo(client);
+    const config: ActionConfig = new ActionConfig(rawConfig);
 
     const commitMessage = await getCommitMessage(client);
     if (disablePattern.test(commitMessage)) {
@@ -63,8 +63,7 @@ export default async function main(): Promise<boolean> {
       return true;
     }
 
-    const dryRun = config.isDryRun();
-    if (dryRun) {
+    if (config.isDryRun()) {
       core.info("Dry mode is enabled, no changes will be committed");
     }
 
@@ -118,7 +117,7 @@ export default async function main(): Promise<boolean> {
       blobs.push(svgBlob);
     }
 
-    if (dryRun) {
+    if (config.isDryRun()) {
       core.info("Dry mode enabled, not committing");
     } else if (blobs.length > 0) {
       const commitInfo: CommitInfo = await commitFiles(

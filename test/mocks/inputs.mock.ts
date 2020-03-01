@@ -8,9 +8,9 @@ export const ActionConfig = jest.fn()
   .mockReturnValue(ActionConfigInstance)
   .mockName("inputs.ActionConfig");
 
-export const getConfigurationPath = jest.fn()
+export const getConfigFilePath = jest.fn()
   .mockReturnValue(".github/svgo-action.yml")
-  .mockReturnValue("inputs.getConfigurationPath");
+  .mockReturnValue("inputs.getConfigFilePath");
 
 export const getRepoToken = jest.fn()
   .mockReturnValue("TOKEN")
