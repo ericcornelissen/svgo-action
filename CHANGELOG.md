@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Disable the action from a commit message. ([#91])
 
 ## [0.2.0] - 2020-03-01
 
@@ -44,3 +44,4 @@ Versioning].
 [#78]: https://github.com/ericcornelissen/svgo-action/pull/78
 [#81]: https://github.com/ericcornelissen/svgo-action/pull/81
 [#84]: https://github.com/ericcornelissen/svgo-action/pull/84
+[#91]: https://github.com/ericcornelissen/svgo-action/pull/91

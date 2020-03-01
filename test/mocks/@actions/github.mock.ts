@@ -72,6 +72,7 @@ export const GitHubInstance = {
       .mockImplementation(async () => {
         return {
           data: {
+            message: "This is a commit message",
             tree: {
               sha: "298affe25970000345fadcc342ccc34234ff23ab",
             },

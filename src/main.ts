@@ -17,6 +17,7 @@ import {
   // Functions
   commitFiles,
   createBlob,
+  getCommitMessage,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -26,9 +27,29 @@ import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
+const disablePattern = /disable-svgo-action/;
+
+
 export default async function main(): Promise<boolean> {
   try {
     const token = getRepoToken();
+    const client: github.GitHub = new github.GitHub(token);
+
+    const commitMessage = await getCommitMessage(client);
+    if (disablePattern.test(commitMessage)) {
+      core.info("Action disabled from commit message");
+      return true;
+    }
+
+    const configPath = getConfigurationPath();
+    try {
+      const configFileData = await getRepoFile(client, configPath);
+      const rawActionConfig = decode(configFileData.content, configFileData.encoding);
+      const actionConfig = yaml.safeLoad(rawActionConfig);
+      console.log(actionConfig);
+    } catch(_) {
+      // continue regardless of error
+    }
 
     const dryRun = getDryRun();
     if (dryRun) {
@@ -39,18 +60,6 @@ export default async function main(): Promise<boolean> {
     if (prNumber === PR_NOT_FOUND) {
       core.error("Could not get Pull Request number from context, exiting");
       return false;
-    }
-
-    const client: github.GitHub = new github.GitHub(token);
-
-    const configPath = getConfigurationPath();
-    try {
-      const configFileData = await getRepoFile(client, configPath);
-      const rawActionConfig = decode(configFileData.content, configFileData.encoding);
-      const actionConfig = yaml.safeLoad(rawActionConfig);
-      console.log(actionConfig);
-    } catch(_) {
-      // continue regardless of error
     }
 
     const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
