@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Disable the action from a commit message. ([#91])
+- Add support for a separate configuration file. ([#92])
 
 ## [0.2.0] - 2020-03-01
 
@@ -45,3 +46,4 @@ Versioning].
 [#81]: https://github.com/ericcornelissen/svgo-action/pull/81
 [#84]: https://github.com/ericcornelissen/svgo-action/pull/84
 [#91]: https://github.com/ericcornelissen/svgo-action/pull/91
+[#92]: https://github.com/ericcornelissen/svgo-action/pull/92

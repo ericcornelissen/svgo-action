@@ -17,6 +17,7 @@ jest.mock("../src/svgo", () => svgo);
 
 import contentPayloads from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
+import actionOptions from "./fixtures/svgo-action.json";
 import svgoOptions from "./fixtures/svgo-options.json";
 
 import { PR_NOT_FOUND } from "../src/github-api";
@@ -452,7 +453,7 @@ describe("Scenarios", () => {
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
   });
 
-  test("use a configuration file in the repository", async () => {
+  test("use a SVGO configuration file in the repository", async () => {
     svgo.getDefaultSvgoOptions.mockReturnValueOnce(svgoOptions);
 
     await main();
@@ -465,10 +466,11 @@ describe("Scenarios", () => {
     PR_NUMBER.MODIFY_SVG,
     PR_NUMBER.MANY_CHANGES,
   ])("dry run enabled (#%i)", async (prNumber) => {
-    inputs.getDryRun.mockReturnValueOnce(true);
+    inputs.ActionConfigInstance.isDryRun.mockReturnValue(true);
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
 
     await main();
+    inputs.ActionConfigInstance.isDryRun.mockReturnValue(false);
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
@@ -488,6 +490,17 @@ describe("Scenarios", () => {
     expect(result).toBe(true);
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("custom configuration file usage", async () => {
+    const actionConfigFilePath = "svgo-action.yml";
+    inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
+
+    await main();
+
+    const { content, encoding } = contentPayloads[actionConfigFilePath];
+    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
+    expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
   });
 
 });
@@ -511,9 +524,19 @@ describe("Error scenarios", () => {
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
-  test("there is no configuration file in repository", async () => {
+  test("there is no SVGO configuration file in repository", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     svgo.getDefaultSvgoOptions.mockResolvedValueOnce({ });
+
+    await main();
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+  });
+
+  test("custom configuration file does not exist", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.getConfigFilePath.mockReturnValueOnce("this file doesn't exist");
 
     await main();
 

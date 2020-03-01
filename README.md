@@ -32,8 +32,9 @@ GitHub's rest API_
 
 ### Configure the Action
 
-You can add any of the the options listed below after the `repo-token` in the
-Workflow file to configure the action.
+There are a couple of ways for you to configure the Action. You can configure it
+[in the Workflow file], [in `.github/svgo-action.yml`], or [in another
+configuration file]. Below you can find the available options.
 
 > :warning: In the future the action will have more options. See [#17] for
 > progress in this regard.
@@ -42,6 +43,41 @@ Workflow file to configure the action.
   - Possible values: `false`, `true`
   - Default value: `false`
   - Example: `dry-run: true`
+
+#### In the Workflow file
+
+The first way to configure the action is inside the Workflow file, after the
+`repo-token`. For example:
+
+```yaml
+with:
+  repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  dry-run: true
+```
+
+#### In `.github/svgo-action.yml`
+
+If you prefer to separate the Action configuration from the Workflow file you
+can add a file called `svgo-action.yml` inside the `.github` directory. Then,
+you can configure the Action inside this file. For example:
+
+```yaml
+- dry-run: true
+```
+
+#### In Another Configuration File
+
+Lastly, if you prefer to use a different file from `.github/svgo-action.yml`,
+it is possible to specify a `configuration-path` in the Workflow file. This
+value should point to the configuration file you want to use. For example:
+
+> :warning: The configuration file must always be a valid YAML file.
+
+```yaml
+with:
+  repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  configuration-path: "path/to/configuration/file.yml"
+```
 
 ### Advanced Usage
 
@@ -87,4 +123,7 @@ jobs:
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [SVGO]: https://github.com/svg/svgo
 [Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
+[in the Workflow file]: #in-the-workflow-file
+[in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
+[in another configuration file]: #in-another-configuration-file
 [#17]: https://github.com/ericcornelissen/svgo-action/issues/17
