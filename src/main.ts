@@ -23,7 +23,12 @@ import {
   getPrNumber,
   getRepoFile,
 } from "./github-api";
-import { getConfigurationPath, getRepoToken, ActionConfig, ConfigObject } from "./inputs";
+import {
+  ActionConfig,
+  ConfigObject,
+  getConfigurationPath,
+  getRepoToken,
+} from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
@@ -58,7 +63,7 @@ export default async function main(): Promise<boolean> {
       return true;
     }
 
-    const dryRun = config.getDryRun();
+    const dryRun = config.isDryRun();
     if (dryRun) {
       core.info("Dry mode is enabled, no changes will be committed");
     }

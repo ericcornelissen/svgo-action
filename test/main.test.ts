@@ -465,7 +465,7 @@ describe("Scenarios", () => {
     PR_NUMBER.MODIFY_SVG,
     PR_NUMBER.MANY_CHANGES,
   ])("dry run enabled (#%i)", async (prNumber) => {
-    inputs.getDryRun.mockReturnValueOnce(true);
+    inputs.ActionConfigInstance.isDryRun.mockReturnValueOnce(true);
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
 
     await main();
