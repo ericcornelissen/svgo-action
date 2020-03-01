@@ -1,3 +1,5 @@
+import { format as strFormat } from "util";
+
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 import { PR_NUMBER } from "./mocks/@actions/github.mock";
@@ -470,6 +472,22 @@ describe("Scenarios", () => {
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
+  });
+
+  test.each([
+    "This is the commit title\n\nAnd this the message (%s)",
+    "chore: make some changes\n\n- This isn't tennis\n- Praise the sun\n\n%s",
+    "Added some SVGs to the website\n\n%s",
+    "Double rainbow\n\nwhat does it %s mean?",
+  ])("disabled from commit message", async (baseCommitMessage) => {
+    const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
+    githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
+
+    const result = await main();
+
+    expect(result).toBe(true);
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
 });
