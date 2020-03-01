@@ -2,6 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 import SVGO from "svgo";
+import { format as strFormat } from "util";
 
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
@@ -36,6 +37,7 @@ import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
 const disablePattern = /disable-svgo-action/;
+const messageTemplate = "Optimize %s SVGs with SVGO\n\nOptimized SVGs:\n%s";
 
 async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
   const configFilePath = getConfigFilePath();
@@ -123,7 +125,11 @@ export default async function main(): Promise<boolean> {
       const commitInfo: CommitInfo = await commitFiles(
         client,
         blobs,
-        "Optimize SVGs with SVGO",
+        strFormat(
+          messageTemplate,
+          blobs.length,
+          "- " + blobs.map(blob => blob.path).join("\n- "),
+        ),
       );
 
       core.debug(`commit successful (see ${commitInfo.url})`);
