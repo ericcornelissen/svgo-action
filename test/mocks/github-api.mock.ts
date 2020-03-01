@@ -22,8 +22,8 @@ export const commitFiles = jest.fn()
   .mockName("github-api.commitFiles");
 
 export const createBlob = jest.fn()
-  .mockImplementation(async () => ({
-    path: "test.svg",
+  .mockImplementation(async (_, path) => ({
+    path: path,
     mode: "100644",
     type: "blob",
     sha: "8cef761674c705447f0ce449948ac6c0dd76f041",
