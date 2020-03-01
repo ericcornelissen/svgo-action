@@ -212,9 +212,34 @@ describe("::createBlob", () => {
 
 describe("::getCommitMessage", () => {
 
-  test("works", async () => {
-    const commitMessage = await getCommitMessage(client);
-    expect(commitMessage).toBeDefined();
+  test("return a string", async () => {
+    const result = await getCommitMessage(client);
+    expect(result).toBeDefined();
+  });
+
+  test.each([
+    "The cake is a lie",
+    "These are not the droids you're looking for",
+    "Another one bites de_dust",
+  ])("return the commit message (%s)", async (commitMessage) => {
+    github.GitHubInstance.git.getCommit.mockReturnValueOnce({ data: { message: commitMessage } });
+
+    const result = await getCommitMessage(client);
+    expect(result).toBeDefined();
+  });
+
+  test("ref is not found", () => {
+    github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getCommitMessage(client);
+    return expect(promise).rejects.toBeDefined();
+  });
+
+  test("commit is not found", () => {
+    github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getCommitMessage(client);
+    return expect(promise).rejects.toBeDefined();
   });
 
 });
