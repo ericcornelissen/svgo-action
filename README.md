@@ -45,6 +45,15 @@ Workflow file to configure the action.
 
 ### Advanced Usage
 
+#### Manually Disabling the Action
+
+It is possible to manually disable the action from a commit message. This can be
+achieved by including the string "_disable-svgo-action_" anywhere in the commit
+message.
+
+> :warning: This will only stop the action from optimizing SVGs in the build
+> corresonding to the commit whose commit message contains the string.
+
 #### Limit Runs
 
 Even though this action won't do anything if a Pull Request does not touch any
