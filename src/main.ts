@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import * as yaml from "js-yaml";
 import SVGO from "svgo";
 
 import { decode, encode } from "./encoder";
@@ -19,6 +20,7 @@ import {
   getPrFile,
   getPrFiles,
   getPrNumber,
+  getRepoFile,
 } from "./github-api";
 import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
@@ -26,7 +28,6 @@ import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 export default async function main(): Promise<boolean> {
   try {
-    const configPath = getConfigurationPath();
     const token = getRepoToken();
 
     const dryRun = getDryRun();
@@ -41,6 +42,16 @@ export default async function main(): Promise<boolean> {
     }
 
     const client: github.GitHub = new github.GitHub(token);
+
+    const configPath = getConfigurationPath();
+    try {
+      const configFileData = await getRepoFile(client, configPath);
+      const rawActionConfig = decode(configFileData.content, configFileData.encoding);
+      const actionConfig = yaml.safeLoad(rawActionConfig);
+      console.log(actionConfig);
+    } catch(_) {
+      // continue regardless of error
+    }
 
     const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
