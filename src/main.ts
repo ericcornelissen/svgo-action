@@ -35,15 +35,15 @@ export default async function main(): Promise<boolean> {
 
     const client: github.GitHub = new github.GitHub(token);
 
-    const dryRun = getDryRun();
-    if (dryRun) {
-      core.info("Dry mode is enabled, no changes will be committed");
-    }
-
     const commitMessage = await getCommitMessage(client);
     if (disablePattern.test(commitMessage)) {
       core.info("Action disabled from commit message");
       return true;
+    }
+
+    const dryRun = getDryRun();
+    if (dryRun) {
+      core.info("Dry mode is enabled, no changes will be committed");
     }
 
     const prNumber: number = getPrNumber();

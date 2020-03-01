@@ -16,11 +16,11 @@ import {
   // Functions
   commitFiles,
   createBlob,
+  getCommitMessage,
   getPrFile,
   getPrFiles,
   getPrNumber,
   getRepoFile,
-  getCommitMessage,
 } from "../src/github-api";
 
 
