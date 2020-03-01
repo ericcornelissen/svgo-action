@@ -33,23 +33,23 @@ export default async function main(): Promise<boolean> {
     const configPath = getConfigurationPath();
     const token = getRepoToken();
 
+    const client: github.GitHub = new github.GitHub(token);
+
     const dryRun = getDryRun();
     if (dryRun) {
       core.info("Dry mode is enabled, no changes will be committed");
+    }
+
+    const commitMessage = await getCommitMessage(client);
+    if (disablePattern.test(commitMessage)) {
+      core.info("Action disabled from commit message");
+      return true;
     }
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
       core.error("Could not get Pull Request number from context, exiting");
       return false;
-    }
-
-    const client: github.GitHub = new github.GitHub(token);
-
-    const commitMessage = await getCommitMessage(client);
-    if (disablePattern.test(commitMessage)) {
-      core.info("Action disabled from commit message");
-      return true;
     }
 
     const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
