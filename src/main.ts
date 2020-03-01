@@ -16,6 +16,7 @@ import {
   // Functions
   commitFiles,
   createBlob,
+  getCommitMessage,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -41,6 +42,9 @@ export default async function main(): Promise<boolean> {
     }
 
     const client: github.GitHub = new github.GitHub(token);
+
+    const commitMessage = await getCommitMessage(client);
+    console.log(commitMessage);
 
     const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);

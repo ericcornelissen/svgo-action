@@ -2,6 +2,31 @@ import * as github from "@actions/github";
 import { Octokit } from "@octokit/rest";
 
 
+type GitCommit = Octokit.GitGetCommitResponse;
+
+
+function getHead(): string {
+  return github.context.payload.pull_request?.head.ref;
+}
+
+async function getCommit(client: github.GitHub): Promise<GitCommit> {
+  const ref = `heads/${getHead()}`;
+
+  const { data: refData } = await client.git.getRef({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    ref: ref,
+  });
+
+  const { data: commit } = await client.git.getCommit({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    commit_sha: refData.object.sha, /* eslint-disable-line @typescript-eslint/camelcase */
+  });
+
+  return commit;
+}
+
 function getCommitUrl(commitSha: string): string {
   const API_URL_START = "https://api.github.com/repos/";
   const SITE_URL_START = "https://github.com/";
@@ -19,10 +44,6 @@ function getCommitUrl(commitSha: string): string {
 
   // https://github.com/{user}/{repo}/git/commit/{commitSha}
   return `${baseCommitUrl}/${commitSha}`;
-}
-
-function getHead(): string {
-  return github.context.payload.pull_request?.head.ref;
 }
 
 
@@ -54,18 +75,7 @@ export async function commitFiles(
   commitMessage: string,
 ): Promise<CommitInfo> {
   const ref = `heads/${getHead()}`;
-
-  const { data: refData } = await client.git.getRef({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    ref: ref,
-  });
-
-  const { data: previousCommit } = await client.git.getCommit({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    commit_sha: refData.object.sha, /* eslint-disable-line @typescript-eslint/camelcase */
-  });
+  const previousCommit = await getCommit(client);
 
   const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
@@ -79,7 +89,7 @@ export async function commitFiles(
     repo: github.context.repo.repo,
     message: commitMessage,
     tree: newTree.sha,
-    parents: [refData.object.sha],
+    parents: [previousCommit.sha],
   });
 
   const { data: result } = await client.git.updateRef({
@@ -117,6 +127,11 @@ export async function createBlob(
     type: COMMIT_TYPE_BLOB,
     sha: fileBlob.sha,
   };
+}
+
+export async function getCommitMessage(client: github.GitHub): Promise<string> {
+  const commit = await getCommit(client);
+  return commit.message;
 }
 
 export async function getPrFile(

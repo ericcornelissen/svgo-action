@@ -20,6 +20,7 @@ import {
   getPrFiles,
   getPrNumber,
   getRepoFile,
+  getCommitMessage,
 } from "../src/github-api";
 
 
@@ -205,6 +206,15 @@ describe("::createBlob", () => {
         defaultEncoding,
       ),
     ).rejects.toBeDefined();
+  });
+
+});
+
+describe("::getCommitMessage", () => {
+
+  test("works", async () => {
+    const commitMessage = await getCommitMessage(client);
+    expect(commitMessage).toBeDefined();
   });
 
 });
