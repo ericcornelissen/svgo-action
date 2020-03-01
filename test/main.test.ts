@@ -177,7 +177,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFiles).toHaveBeenCalledWith(
       github.GitHubInstance,
-      expect.any(Object),
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
       expect.any(String),
     );
   });
@@ -207,7 +209,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFiles).toHaveBeenCalledWith(
       github.GitHubInstance,
-      expect.any(Object),
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+      ]),
       expect.any(String),
     );
   });
@@ -258,7 +262,10 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFiles).toHaveBeenCalledWith(
       github.GitHubInstance,
-      expect.any(Object),
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: barFilePath }),
+      ]),
       expect.any(String),
     );
   });
@@ -324,7 +331,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFiles).toHaveBeenCalledWith(
       github.GitHubInstance,
-      expect.any(Object),
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
       expect.any(String),
     );
   });
@@ -354,7 +363,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFiles).toHaveBeenCalledWith(
       github.GitHubInstance,
-      expect.any(Object),
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
       expect.any(String),
     );
   });
@@ -384,7 +395,9 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFiles).toHaveBeenCalledWith(
       github.GitHubInstance,
-      expect.any(Object),
+      expect.arrayContaining([
+        expect.objectContaining({ path: complexFilePath }),
+      ]),
       expect.any(String),
     );
   });
@@ -439,7 +452,11 @@ describe("Scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(githubAPI.commitFiles).toHaveBeenCalledWith(
       github.GitHubInstance,
-      expect.any(Object),
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: barFilePath }),
+        expect.objectContaining({ path: testFilePath }),
+      ]),
       expect.any(String),
     );
   });
