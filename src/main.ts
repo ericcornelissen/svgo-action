@@ -25,6 +25,9 @@ import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
+const disablePattern = /disable-svgo-action/;
+
+
 export default async function main(): Promise<boolean> {
   try {
     const configPath = getConfigurationPath();
@@ -44,7 +47,10 @@ export default async function main(): Promise<boolean> {
     const client: github.GitHub = new github.GitHub(token);
 
     const commitMessage = await getCommitMessage(client);
-    console.log(commitMessage);
+    if (disablePattern.test(commitMessage)) {
+      core.info("Action disabled from commit message");
+      return true;
+    }
 
     const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
