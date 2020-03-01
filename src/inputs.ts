@@ -24,6 +24,11 @@ export class ActionConfig {
     this.config = config || { };
   }
 
+  public getSvgoOptionsPath(): string {
+    return this.config["svgo-options"]
+      || core.getInput(INPUT_NAME_SVGO_OPTIONS, { required: false });
+  }
+
   public isDryRun(): boolean {
     const value: string = this.config["dry-run"]
       || core.getInput(INPUT_NAME_DRY_RUN, { required: false });
@@ -36,11 +41,6 @@ export class ActionConfig {
       core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
       return true;
     }
-  }
-
-  public getSvgoOptionsPath(): string {
-    return this.config["svgo-options"]
-      || core.getInput(INPUT_NAME_SVGO_OPTIONS, { required: false });
   }
 
 }
