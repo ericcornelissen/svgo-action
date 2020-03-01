@@ -43,11 +43,11 @@ configuration file]. Below you can find the available options.
   - Possible values: `false`, `true`
   - Default value: `false`
   - Example: `dry-run: true`
-- `svgo-config`: Specify the path of the file in the repository that should be
+- `svgo-options`: Specify the path of the file in the repository that should be
   used as configuration for [SVGO].
   - Possible values: _Any file path_
   - Default value: `".svgo.yml"`
-  - Example: `"path/to/svgo-config.yml"`
+  - Example: `"path/to/svgo-options.yml"`
 
 #### In the Workflow file
 
@@ -58,7 +58,7 @@ The first way to configure the action is inside the Workflow file, after the
 with:
   repo-token: "${{ secrets.GITHUB_TOKEN }}"
   dry-run: true
-  svgo-config: "path/to/svgo-config.yml"
+  svgo-options: "path/to/svgo-options.yml"
 ```
 
 #### In `.github/svgo-action.yml`
@@ -69,7 +69,7 @@ you can configure the Action inside this file. For example:
 
 ```yaml
 - dry-run: true
-- svgo-config: "path/to/svgo-config.yml"
+- svgo-options: "path/to/svgo-options.yml"
 ```
 
 #### In Another Configuration File
