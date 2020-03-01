@@ -37,7 +37,7 @@ import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
 const disablePattern = /disable-svgo-action/;
-const messageTemplate = "Optimize %s SVGs with SVGO\n\nOptimized SVGs:\n%s";
+const messageTemplate = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
 
 async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
   const configFilePath = getConfigFilePath();
