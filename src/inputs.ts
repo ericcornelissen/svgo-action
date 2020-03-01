@@ -9,6 +9,10 @@ const FALSE = "false";
 const TRUE = "true";
 
 
+export type ConfigObject = {
+  readonly "dry-run"?: boolean;
+}
+
 export function getConfigurationPath(): string {
   return core.getInput(INPUT_NAME_CONFIG_PATH, { required: true });
 }
@@ -27,4 +31,18 @@ export function getDryRun(): boolean {
 
 export function getRepoToken(): string {
   return core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
+}
+
+export class ActionConfig {
+
+  private readonly config: ConfigObject;
+
+  constructor(config?: ConfigObject) {
+    this.config = config || { };
+  }
+
+  public getDryRun(): boolean {
+    return this.config["dry-run"] || getDryRun();
+  }
+
 }

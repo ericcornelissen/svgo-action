@@ -23,11 +23,24 @@ import {
   getPrNumber,
   getRepoFile,
 } from "./github-api";
-import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
+import { getConfigurationPath, getRepoToken, ActionConfig, ConfigObject } from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
 
 
 const disablePattern = /disable-svgo-action/;
+
+async function getConfigurationFile(
+  client: github.GitHub,
+  configPath: string,
+): Promise<ConfigObject> {
+  try {
+    const configFileData = await getRepoFile(client, configPath);
+    const rawActionConfig = decode(configFileData.content, configFileData.encoding);
+    return yaml.safeLoad(rawActionConfig);
+  } catch(_) {
+    return { };
+  }
+}
 
 
 export default async function main(): Promise<boolean> {
@@ -35,23 +48,17 @@ export default async function main(): Promise<boolean> {
     const token = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
 
+    const configFilePath = getConfigurationPath();
+    const configFileObject = await getConfigurationFile(client, configFilePath);
+    const config: ActionConfig = new ActionConfig(configFileObject);
+
     const commitMessage = await getCommitMessage(client);
     if (disablePattern.test(commitMessage)) {
       core.info("Action disabled from commit message");
       return true;
     }
 
-    const configPath = getConfigurationPath();
-    try {
-      const configFileData = await getRepoFile(client, configPath);
-      const rawActionConfig = decode(configFileData.content, configFileData.encoding);
-      const actionConfig = yaml.safeLoad(rawActionConfig);
-      console.log(actionConfig);
-    } catch(_) {
-      // continue regardless of error
-    }
-
-    const dryRun = getDryRun();
+    const dryRun = config.getDryRun();
     if (dryRun) {
       core.info("Dry mode is enabled, no changes will be committed");
     }

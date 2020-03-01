@@ -9,3 +9,14 @@ export const getDryRun = jest.fn()
 export const getRepoToken = jest.fn()
   .mockReturnValue("TOKEN")
   .mockName("inputs.getRepoToken");
+
+
+const ActionConfigInstance = {
+  getDryRun: jest.fn()
+    .mockImplementation(() => getDryRun())
+    .mockName("ActionConfig.getDryRun"),
+};
+
+export const ActionConfig = jest.fn()
+  .mockReturnValue(ActionConfigInstance)
+  .mockName("inputs.ActionConfig");
