@@ -180,7 +180,14 @@ describe("Scenarios", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.any(String),
+      expect.stringContaining("1"),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      expect.stringContaining(`- ${testFilePath}`),
     );
   });
 
@@ -212,7 +219,14 @@ describe("Scenarios", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: fooFilePath }),
       ]),
-      expect.any(String),
+      expect.stringContaining("1"),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+      ]),
+      expect.stringContaining(`- ${fooFilePath}`),
     );
   });
 
@@ -266,7 +280,23 @@ describe("Scenarios", () => {
         expect.objectContaining({ path: fooFilePath }),
         expect.objectContaining({ path: barFilePath }),
       ]),
-      expect.any(String),
+      expect.stringContaining("2"),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: barFilePath }),
+      ]),
+      expect.stringContaining(`- ${fooFilePath}`),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: barFilePath }),
+      ]),
+      expect.stringContaining(`- ${barFilePath}`),
     );
   });
 
@@ -334,7 +364,14 @@ describe("Scenarios", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.any(String),
+      expect.stringContaining("1"),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      expect.stringContaining(`- ${testFilePath}`),
     );
   });
 
@@ -366,7 +403,14 @@ describe("Scenarios", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.any(String),
+      expect.stringContaining("1"),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      expect.stringContaining(`- ${testFilePath}`),
     );
   });
 
@@ -398,7 +442,14 @@ describe("Scenarios", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: complexFilePath }),
       ]),
-      expect.any(String),
+      expect.stringContaining("1"),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: complexFilePath }),
+      ]),
+      expect.stringContaining(`- ${complexFilePath}`),
     );
   });
 
@@ -457,7 +508,34 @@ describe("Scenarios", () => {
         expect.objectContaining({ path: barFilePath }),
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.any(String),
+      expect.stringContaining("3"),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: barFilePath }),
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      expect.stringContaining(`- ${fooFilePath}`),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: barFilePath }),
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      expect.stringContaining(`- ${barFilePath}`),
+    );
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: barFilePath }),
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      expect.stringContaining(`- ${testFilePath}`),
     );
   });
 
@@ -471,7 +549,7 @@ describe("Scenarios", () => {
   });
 
   test("use a SVGO configuration file in the repository", async () => {
-    svgo.getDefaultSvgoOptions.mockReturnValueOnce(svgoOptions);
+    svgo.getSvgoOptions.mockReturnValueOnce(svgoOptions);
 
     await main();
 
@@ -543,7 +621,7 @@ describe("Error scenarios", () => {
 
   test("there is no SVGO configuration file in repository", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    svgo.getDefaultSvgoOptions.mockResolvedValueOnce({ });
+    svgo.getSvgoOptions.mockResolvedValueOnce({ });
 
     await main();
 

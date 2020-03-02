@@ -22,7 +22,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.2.0
+    - uses: ericcornelissen/svgo-action@v0.2.1
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 ```
@@ -43,6 +43,11 @@ configuration file]. Below you can find the available options.
   - Possible values: `false`, `true`
   - Default value: `false`
   - Example: `dry-run: true`
+- `svgo-options`: Specify the path of the file in the repository that should be
+  used as configuration for [SVGO].
+  - Possible values: _Any file path_
+  - Default value: `".svgo.yml"`
+  - Example: `svgo-options: "path/to/svgo-options.yml"`
 
 #### In the Workflow file
 
@@ -53,6 +58,7 @@ The first way to configure the action is inside the Workflow file, after the
 with:
   repo-token: "${{ secrets.GITHUB_TOKEN }}"
   dry-run: true
+  svgo-options: "path/to/svgo-options.yml"
 ```
 
 #### In `.github/svgo-action.yml`
@@ -63,6 +69,7 @@ you can configure the Action inside this file. For example:
 
 ```yaml
 - dry-run: true
+- svgo-options: "path/to/svgo-options.yml"
 ```
 
 #### In Another Configuration File
@@ -115,7 +122,7 @@ jobs:
   ...
 ```
 
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.0-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.1-undefined.svg?logo=github&logoColor=white&style=flat
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
