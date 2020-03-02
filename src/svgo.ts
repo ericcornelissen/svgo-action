@@ -7,24 +7,18 @@ import { decode } from "./encoder";
 import { getRepoFile } from "./github-api";
 
 
-const DEFAULT_CONFIG_FILE = ".svgo.yml";
-
-
-export async function getDefaultSvgoOptions(
+export async function getSvgoOptions(
   client: github.GitHub,
+  path: string,
 ): Promise<SVGO.Options> {
   try {
-    const { content, encoding } = await getRepoFile(
-      client,
-      DEFAULT_CONFIG_FILE,
-    );
-
-    core.debug(`default SVGO configuration found ('${DEFAULT_CONFIG_FILE}')`);
+    const { content, encoding } = await getRepoFile(client, path);
+    core.debug(`options file for SVGO found ('${path}')`);
 
     const rawSvgoOptions = decode(content, encoding);
     return yaml.safeLoad(rawSvgoOptions);
   } catch(_) {
-    core.debug("default SVGO configuration not found");
+    core.debug(`options file for SVGO not found ('${path}')`);
     return { };
   }
 }

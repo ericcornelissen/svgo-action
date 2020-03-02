@@ -9,17 +9,19 @@ jest.mock("../src/github-api", () => githubAPI);
 
 import SVGO from "svgo";
 
-import { SVGOptimizer, getDefaultSvgoOptions } from "../src/svgo";
+import { SVGOptimizer, getSvgoOptions } from "../src/svgo";
 
 import contentPayloads from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
 import svgoOptions from "./fixtures/svgo-options.json";
 
 
-describe("::getDefaultSvgoOptions", () => {
+describe("::getSvgoOptions", () => {
 
   const token = core.getInput("repo-token", { required: true });
   const client = new github.GitHub(token);
+
+  const optionsPath = ".svgo.yml";
 
   beforeEach(() => {
     core.debug.mockClear();
@@ -28,12 +30,12 @@ describe("::getDefaultSvgoOptions", () => {
   describe("default configuration file exists", () => {
 
     test("the return value is defined", async () => {
-      const result = await getDefaultSvgoOptions(client);
+      const result = await getSvgoOptions(client, optionsPath);
       expect(result).toBeDefined();
     });
 
     test("the return value is based on the file in the repository", async () => {
-      const svgoOptionsContent = contentPayloads[".svgo.yml"];
+      const svgoOptionsContent = contentPayloads[optionsPath];
       const fileData = {
         path: svgoOptionsContent.path,
         content: svgoOptionsContent.content,
@@ -42,12 +44,12 @@ describe("::getDefaultSvgoOptions", () => {
 
       githubAPI.getRepoFile.mockResolvedValueOnce(fileData);
 
-      const result = await getDefaultSvgoOptions(client);
+      const result = await getSvgoOptions(client, optionsPath);
       expect(result).toEqual(svgoOptions);
     });
 
     test("debug logs that the default config file was found", async () => {
-      await getDefaultSvgoOptions(client);
+      await getSvgoOptions(client, optionsPath);
       expect(core.debug).toHaveBeenCalledTimes(1);
       expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/((?!not)) found/));
     });
@@ -59,17 +61,17 @@ describe("::getDefaultSvgoOptions", () => {
     beforeEach(() => githubAPI.getRepoFile.mockRejectedValueOnce(new Error("Not found")));
 
     test("the return value is defined", async () => {
-      const result = await getDefaultSvgoOptions(client);
+      const result = await getSvgoOptions(client, optionsPath);
       expect(result).toBeDefined();
     });
 
     test("the return value is an empty object", async () => {
-      const result = await getDefaultSvgoOptions(client);
+      const result = await getSvgoOptions(client, optionsPath);
       expect(result).toEqual({ });
     });
 
     test("debug logs that the default config file was not found", async () => {
-      await getDefaultSvgoOptions(client);
+      await getSvgoOptions(client, optionsPath);
       expect(core.debug).toHaveBeenCalledTimes(1);
       expect(core.debug).toHaveBeenCalledWith(expect.stringContaining("not found"));
     });
