@@ -46,7 +46,7 @@ export class ActionConfig {
 }
 
 export function getConfigFilePath(): string {
-  return core.getInput(INPUT_NAME_CONFIG_PATH, { required: true });
+  return core.getInput(INPUT_NAME_CONFIG_PATH, { required: false });
 }
 
 export function getRepoToken(): string {
