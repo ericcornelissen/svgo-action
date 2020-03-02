@@ -134,6 +134,27 @@ export async function getCommitMessage(client: github.GitHub): Promise<string> {
   return commit.message;
 }
 
+export async function getPrComments(
+  client: github.GitHub,
+  prNumber: number,
+): Promise<string[]> {
+  const { data } = await client.pulls.get({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+  });
+  console.log("number of comments:", data.comments);
+
+  const { data: comments } = await client.issues.listComments({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+    per_page: 100, /* eslint-disable-line @typescript-eslint/camelcase */
+  });
+
+  return comments.map(comment => comment.body);
+}
+
 export async function getPrFile(
   client: github.GitHub,
   path: string,

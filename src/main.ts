@@ -19,6 +19,7 @@ import {
   commitFiles,
   createBlob,
   getCommitMessage,
+  getPrComments,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -74,6 +75,9 @@ export default async function main(): Promise<boolean> {
       core.error("Could not get Pull Request number from context, exiting");
       return false;
     }
+
+    const comments: string[] = await getPrComments(client, prNumber);
+    console.log(comments);
 
     const svgoOptionsPath: string = config.getSvgoOptionsPath();
     core.debug(`fetching SVGO options (at ${svgoOptionsPath})`);
