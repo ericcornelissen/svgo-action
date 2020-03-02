@@ -6,12 +6,13 @@ const INPUT_NAME_DRY_RUN = "dry-run";
 const INPUT_NAME_REPO_TOKEN = "repo-token";
 const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
+const BOOLEAN = "boolean";
 const FALSE = "false";
 const TRUE = "true";
 
 
 export type RawActionConfig = {
-  readonly "dry-run"?: string;
+  readonly "dry-run"?: boolean;
   readonly "svgo-options"?: string;
 }
 
@@ -30,17 +31,20 @@ export class ActionConfig {
   }
 
   public isDryRun(): boolean {
-    const value: string = this.config["dry-run"]
-      || core.getInput(INPUT_NAME_DRY_RUN, { required: false });
+    const value = (this.config["dry-run"] !== undefined)
+      ? this.config["dry-run"]
+      : core.getInput(INPUT_NAME_DRY_RUN, { required: false });
 
-    if (value === FALSE) {
-      return false;
-    } else if (value === TRUE) {
-      return true;
-    } else {
-      core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
-      return true;
-    }
+      if (typeof value === BOOLEAN) {
+        return value as boolean;
+      } else if (value === FALSE) {
+        return false;
+      } else if (value === TRUE) {
+        return true;
+      } else {
+        core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
+        return true;
+      }
   }
 
 }
