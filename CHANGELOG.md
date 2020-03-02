@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix `required` value for "configuration-path" input. ([#100])
 
 ## [0.2.1] - 2020-03-02
 
@@ -53,3 +53,4 @@ Versioning].
 [#91]: https://github.com/ericcornelissen/svgo-action/pull/91
 [#92]: https://github.com/ericcornelissen/svgo-action/pull/92
 [#97]: https://github.com/ericcornelissen/svgo-action/pull/97
+[#100]: https://github.com/ericcornelissen/svgo-action/pull/100
