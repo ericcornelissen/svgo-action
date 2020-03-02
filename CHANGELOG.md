@@ -7,10 +7,13 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix `required` value for "configuration-path" input. ([#100])
+
+## [0.2.1] - 2020-03-02
+
 - Disable the action from a commit message. ([#91])
 - Add support for a separate configuration file. ([#92])
 - Improve the default commit message. ([#97])
-- Fix `required` value for "configuration-path" input. ([#100])
 
 ## [0.2.0] - 2020-03-01
 
