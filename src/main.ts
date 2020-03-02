@@ -33,7 +33,7 @@ import {
   getConfigFilePath,
   getRepoToken,
 } from "./inputs";
-import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
+import { SVGOptimizer, getSvgoOptions } from "./svgo";
 
 
 const disablePattern = /disable-svgo-action/;
@@ -75,7 +75,9 @@ export default async function main(): Promise<boolean> {
       return false;
     }
 
-    const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
+    const svgoOptionsPath: string = config.getSvgoOptionsPath();
+    core.debug(`fetching SVGO options (at ${svgoOptionsPath})`);
+    const svgoOptions: SVGO.Options = await getSvgoOptions(client, svgoOptionsPath);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);

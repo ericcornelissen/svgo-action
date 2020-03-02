@@ -50,6 +50,30 @@ describe("ActionConfig::constructor", () => {
 
 });
 
+describe("ActionConfig.getSvgoOptionsPath", () => {
+
+  const testPaths = test.each([".svgo.yml", "foo.yml", "in/folder/config.yml"]);
+
+  testPaths("svgo-options is set (to '%s') in the workflow file", (path) => {
+    const instance: ActionConfig = new ActionConfig();
+    core.getInput.mockReturnValueOnce(path);
+
+    const result = instance.getSvgoOptionsPath();
+    expect(result).toBe(path);
+  });
+
+  testPaths("svgo-options is set (to '%s') in the config object", (path) => {
+    const instance: ActionConfig = new ActionConfig({ "svgo-options": path });
+    core.getInput.mockReturnValueOnce(`dir/${path}`);
+
+    const result = instance.getSvgoOptionsPath();
+    expect(result).toBe(path);
+  });
+
+  afterAll(core.getInput.mockReset);
+
+});
+
 describe("ActionConfig.isDryRun", () => {
 
   const testNonBoolean = test.each(["foobar", "treu", "fals"]);
@@ -107,5 +131,7 @@ describe("ActionConfig.isDryRun", () => {
     expect(result).toBe(true);
     expect(core.info).toHaveBeenCalledTimes(1);
   });
+
+  afterAll(core.getInput.mockReset);
 
 });
