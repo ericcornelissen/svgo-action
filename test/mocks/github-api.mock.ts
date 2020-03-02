@@ -1,7 +1,17 @@
 import * as github from "./@actions/github.mock";
+import { FileData } from "../../src/github-api";
 
 
 const client = new github.GitHub();
+
+async function getContents(path: string): Promise<FileData> {
+  const { data } = await client.repos.getContents({ path });
+  return {
+    path: data.path,
+    content: data.content,
+    encoding: data.encoding,
+  };
+}
 
 
 export const commitFiles = jest.fn()
@@ -12,23 +22,20 @@ export const commitFiles = jest.fn()
   .mockName("github-api.commitFiles");
 
 export const createBlob = jest.fn()
-  .mockImplementation(async () => ({
-    path: "test.svg",
+  .mockImplementation(async (_, path) => ({
+    path: path,
     mode: "100644",
     type: "blob",
     sha: "8cef761674c705447f0ce449948ac6c0dd76f041",
   }))
   .mockName("github-api.createBlob");
 
+  export const getCommitMessage = jest.fn()
+    .mockImplementation(async () => "This is a commit message")
+    .mockName("github-api.getCommitMessage");
+
 export const getPrFile = jest.fn()
-  .mockImplementation(async (_, path) => {
-    const { data } = await client.repos.getContents({ path });
-    return {
-      path: data.path,
-      content: data.content,
-      encoding: data.encoding,
-    };
-  })
+  .mockImplementation(async (_, path) => await getContents(path))
   .mockName("github-api.getPrFile");
 
 export const getPrFiles = jest.fn()
@@ -49,5 +56,5 @@ export const getPrNumber = jest.fn()
   .mockName("github-api.getPrNumber");
 
 export const getRepoFile = jest.fn()
-  .mockImplementation(async (_, path) => getPrFile(_, path))
+  .mockImplementation(async (_, path) => await getContents(path))
   .mockName("github-api.getPrFile");

@@ -22,7 +22,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.2.0
+    - uses: ericcornelissen/svgo-action@v0.2.1
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 ```
@@ -32,18 +32,63 @@ GitHub's rest API_
 
 ### Configure the Action
 
-You can add any of the the options listed below after the `repo-token` in the
-Workflow file to configure the action.
+There are a couple of ways for you to configure the Action. You can configure it
+[in the Workflow file], [in `.github/svgo-action.yml`], or [in another
+configuration file]. Below you can find the available options.
 
-> :warning: In the future the action will have more options. See [#17] for
-> progress in this regard.
+> :information_source: In the future the action will have more options. See
+> [#17] for progress in this regard.
 
 - `dry-run`: If enabled, the action doesn't commit changes back.
   - Possible values: `false`, `true`
   - Default value: `false`
   - Example: `dry-run: true`
 
+#### In the Workflow file
+
+The first way to configure the action is inside the Workflow file, after the
+`repo-token`. For example:
+
+```yaml
+with:
+  repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  dry-run: true
+```
+
+#### In `.github/svgo-action.yml`
+
+If you prefer to separate the Action configuration from the Workflow file you
+can add a file called `svgo-action.yml` inside the `.github` directory. Then,
+you can configure the Action inside this file. For example:
+
+```yaml
+- dry-run: true
+```
+
+#### In Another Configuration File
+
+Lastly, if you prefer to use a different file from `.github/svgo-action.yml`,
+it is possible to specify a `configuration-path` in the Workflow file. This
+value should point to the configuration file you want to use. For example:
+
+> :warning: The configuration file must always be a valid YAML file.
+
+```yaml
+with:
+  repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  configuration-path: "path/to/configuration/file.yml"
+```
+
 ### Advanced Usage
+
+#### Manually Disabling the Action
+
+It is possible to manually disable the action from a commit message. This can be
+achieved by including the string "_disable-svgo-action_" anywhere in the commit
+message.
+
+> :warning: This will only stop the action from optimizing SVGs in the build
+> corresonding to the commit whose commit message contains the string.
 
 #### Limit Runs
 
@@ -70,7 +115,7 @@ jobs:
   ...
 ```
 
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.0-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.1-undefined.svg?logo=github&logoColor=white&style=flat
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
@@ -78,4 +123,7 @@ jobs:
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [SVGO]: https://github.com/svg/svgo
 [Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
+[in the Workflow file]: #in-the-workflow-file
+[in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
+[in another configuration file]: #in-another-configuration-file
 [#17]: https://github.com/ericcornelissen/svgo-action/issues/17

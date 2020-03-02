@@ -1,6 +1,8 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import * as yaml from "js-yaml";
 import SVGO from "svgo";
+import { format as strFormat } from "util";
 
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
@@ -13,24 +15,57 @@ import {
   FileInfo,
   GitBlob,
 
-  // Functions
+  // Functionality
   commitFiles,
   createBlob,
+  getCommitMessage,
   getPrFile,
   getPrFiles,
   getPrNumber,
+  getRepoFile,
 } from "./github-api";
-import { getConfigurationPath, getDryRun, getRepoToken } from "./inputs";
+import {
+  // Types
+  RawActionConfig,
+
+  // Functionality
+  ActionConfig,
+  getConfigFilePath,
+  getRepoToken,
+} from "./inputs";
 import { SVGOptimizer, getDefaultSvgoOptions } from "./svgo";
+
+
+const disablePattern = /disable-svgo-action/;
+const messageTemplate = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
+
+async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
+  const configFilePath = getConfigFilePath();
+  try {
+    const configFileData = await getRepoFile(client, configFilePath);
+    const rawActionConfig = decode(configFileData.content, configFileData.encoding);
+    return yaml.safeLoad(rawActionConfig);
+  } catch(_) {
+    return { };
+  }
+}
 
 
 export default async function main(): Promise<boolean> {
   try {
-    const configPath = getConfigurationPath();
     const token = getRepoToken();
+    const client: github.GitHub = new github.GitHub(token);
 
-    const dryRun = getDryRun();
-    if (dryRun) {
+    const rawConfig: RawActionConfig = await getConfigInRepo(client);
+    const config: ActionConfig = new ActionConfig(rawConfig);
+
+    const commitMessage = await getCommitMessage(client);
+    if (disablePattern.test(commitMessage)) {
+      core.info("Action disabled from commit message");
+      return true;
+    }
+
+    if (config.isDryRun()) {
       core.info("Dry mode is enabled, no changes will be committed");
     }
 
@@ -39,8 +74,6 @@ export default async function main(): Promise<boolean> {
       core.error("Could not get Pull Request number from context, exiting");
       return false;
     }
-
-    const client: github.GitHub = new github.GitHub(token);
 
     const svgoOptions: SVGO.Options = await getDefaultSvgoOptions(client);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
@@ -86,13 +119,17 @@ export default async function main(): Promise<boolean> {
       blobs.push(svgBlob);
     }
 
-    if (dryRun) {
+    if (config.isDryRun()) {
       core.info("Dry mode enabled, not committing");
     } else if (blobs.length > 0) {
       const commitInfo: CommitInfo = await commitFiles(
         client,
         blobs,
-        "Optimize SVGs with SVGO",
+        strFormat(
+          messageTemplate,
+          blobs.length,
+          "- " + blobs.map(blob => blob.path).join("\n- "),
+        ),
       );
 
       core.debug(`commit successful (see ${commitInfo.url})`);

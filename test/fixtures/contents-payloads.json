@@ -89,6 +89,24 @@
       "html": "https://github.com/ericcornelissen/svgo-action/blob/786d2c73db84047ac090a32c9810d547a3287e88/optimized.svg"
     }
   },
+  "svgo-action.yml": {
+    "name": "svgo-action.yml",
+    "path": "svgo-action.yml",
+    "sha": "95029340293affedd301d391a311d8660dde313b",
+    "size": 128,
+    "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/svgo-action.yml?ref=2d3423d29303bbe45af320923cd3240249996dd",
+    "html_url": "https://github.com/ericcornelissen/svgo-action/blob/2d3423d29303bbe45af320923cd3240249996dd/svgo-action.yml",
+    "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/95029340293affedd301d391a311d8660dde313b",
+    "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/2d3423d29303bbe45af320923cd3240249996dd/svgo-action.yml?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+    "type": "file",
+    "content": "ZHJ5LXJ1bjogdHJ1ZQo=",
+    "encoding": "base64",
+    "_links": {
+      "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/svgo-action.yml?ref=2d3423d29303bbe45af320923cd3240249996dd",
+      "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/95029340293affedd301d391a311d8660dde313b",
+      "html": "https://github.com/ericcornelissen/svgo-action/blob/2d3423d29303bbe45af320923cd3240249996dd/svgo-action.yml"
+    }
+  },
   "test.svg": {
     "name": "test.svg",
     "path": "test.svg",
