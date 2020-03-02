@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.2.1] - 2020-03-02
+
 - Disable the action from a commit message. ([#91])
 - Add support for a separate configuration file. ([#92])
 - Improve the default commit message. ([#97])
