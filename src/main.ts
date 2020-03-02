@@ -77,7 +77,10 @@ export default async function main(): Promise<boolean> {
     }
 
     const comments: string[] = await getPrComments(client, prNumber);
-    console.log(comments);
+    if (comments.find((comment) => disablePattern.test(comment))) {
+      core.info("Action disabled from Pull Request");
+      return true;
+    }
 
     const svgoOptionsPath: string = config.getSvgoOptionsPath();
     core.debug(`fetching SVGO options (at ${svgoOptionsPath})`);
