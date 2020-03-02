@@ -34,6 +34,10 @@ export const createBlob = jest.fn()
     .mockImplementation(async () => "This is a commit message")
     .mockName("github-api.getCommitMessage");
 
+export const getPrComments = jest.fn()
+  .mockImplementation(async () => [])
+  .mockName("github-api.getPrFile");
+
 export const getPrFile = jest.fn()
   .mockImplementation(async (_, path) => await getContents(path))
   .mockName("github-api.getPrFile");

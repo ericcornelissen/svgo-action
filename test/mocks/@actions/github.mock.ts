@@ -19,6 +19,9 @@ export enum PR_NUMBER {
   ADD_SVG_REMOVE_FILE,
   ADD_FILE_REMOVE_SVG,
   ADD_OPTIMIZED_SVG,
+
+  NO_COMMENTS,
+  ONE_COMMENT,
 }
 
 export const context = {
@@ -105,7 +108,29 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.updateRef"),
   },
+  issues: {
+    listComments: async ({ issue_number: prNumber }) => {
+      switch (prNumber) {
+        case PR_NUMBER.NO_COMMENTS:
+          return { data: [ ] };
+        case PR_NUMBER.ONE_COMMENT:
+          return { data: [{ body: "foobar" }] };
+        default:
+          return { };
+      }
+    },
+  },
   pulls: {
+    get: async ({ pull_number: prNumber }) => {
+      switch (prNumber) {
+        case PR_NUMBER.NO_COMMENTS:
+          return { data: { comments: 0 } };
+        case PR_NUMBER.ONE_COMMENT:
+          return { data: { comments: 0 } };
+        default:
+          return { };
+      }
+    },
     listFiles: async ({ pull_number: prNumber }) => {
       switch (prNumber) {
         case PR_NUMBER.NO_CHANGES:

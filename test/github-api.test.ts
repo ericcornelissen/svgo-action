@@ -17,6 +17,7 @@ import {
   commitFiles,
   createBlob,
   getCommitMessage,
+  getPrComments,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -240,6 +241,20 @@ describe("::getCommitMessage", () => {
 
     const promise = getCommitMessage(client);
     return expect(promise).rejects.toBeDefined();
+  });
+
+});
+
+describe("::getPrComments", () => {
+
+  test("no comments", async () => {
+    const result: string[] = await getPrComments(client, github.PR_NUMBER.NO_COMMENTS);
+    expect(result).toHaveLength(0);
+  });
+
+  test("one comment", async () => {
+    const result: string[] = await getPrComments(client, github.PR_NUMBER.ONE_COMMENT);
+    expect(result).toHaveLength(1);
   });
 
 });
