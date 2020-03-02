@@ -135,7 +135,61 @@ describe("Logging", () => {
 
 });
 
-describe("Scenarios", () => {
+describe("Configuration", () => {
+
+  test("use a SVGO configuration file in the repository", async () => {
+    svgo.getSvgoOptions.mockReturnValueOnce(svgoOptions);
+
+    await main();
+
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
+  });
+
+  test.each([
+    PR_NUMBER.ADD_SVG,
+    PR_NUMBER.MODIFY_SVG,
+    PR_NUMBER.MANY_CHANGES,
+  ])("dry run enabled (#%i)", async (prNumber) => {
+    inputs.ActionConfigInstance.isDryRun.mockReturnValue(true);
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+
+    await main();
+    inputs.ActionConfigInstance.isDryRun.mockReturnValue(false);
+
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
+  });
+
+  test.each([
+    "This is the commit title\n\nAnd this the message (%s)",
+    "chore: make some changes\n\n- This isn't tennis\n- Praise the sun\n\n%s",
+    "Added some SVGs to the website\n\n%s",
+    "Double rainbow\n\nwhat does it %s mean?",
+  ])("disabled from commit message", async (baseCommitMessage) => {
+    const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
+    githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
+
+    const result = await main();
+
+    expect(result).toBe(true);
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("custom configuration file usage", async () => {
+    const actionConfigFilePath = "svgo-action.yml";
+    inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
+
+    await main();
+
+    const { content, encoding } = contentPayloads[actionConfigFilePath];
+    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
+    expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
+  });
+
+});
+
+describe("Payloads", () => {
 
   const barFilePath = "bar.svg";
   const complexFilePath = "complex.svg";
@@ -182,13 +236,6 @@ describe("Scenarios", () => {
       ]),
       expect.stringContaining("1"),
     );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: testFilePath }),
-      ]),
-      expect.stringContaining(`- ${testFilePath}`),
-    );
   });
 
   test("a Pull Request with 1 modified SVG", async () => {
@@ -220,13 +267,6 @@ describe("Scenarios", () => {
         expect.objectContaining({ path: fooFilePath }),
       ]),
       expect.stringContaining("1"),
-    );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: fooFilePath }),
-      ]),
-      expect.stringContaining(`- ${fooFilePath}`),
     );
   });
 
@@ -280,23 +320,7 @@ describe("Scenarios", () => {
         expect.objectContaining({ path: fooFilePath }),
         expect.objectContaining({ path: barFilePath }),
       ]),
-      expect.stringContaining("2"),
-    );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: fooFilePath }),
-        expect.objectContaining({ path: barFilePath }),
-      ]),
-      expect.stringContaining(`- ${fooFilePath}`),
-    );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: fooFilePath }),
-        expect.objectContaining({ path: barFilePath }),
-      ]),
-      expect.stringContaining(`- ${barFilePath}`),
+      expect.stringMatching("2"),
     );
   });
 
@@ -366,13 +390,6 @@ describe("Scenarios", () => {
       ]),
       expect.stringContaining("1"),
     );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: testFilePath }),
-      ]),
-      expect.stringContaining(`- ${testFilePath}`),
-    );
   });
 
   test("a Pull Request with 1 new file and 1 modified SVG", async () => {
@@ -405,13 +422,6 @@ describe("Scenarios", () => {
       ]),
       expect.stringContaining("1"),
     );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: testFilePath }),
-      ]),
-      expect.stringContaining(`- ${testFilePath}`),
-    );
   });
 
   test("a Pull Request with 1 new SVG and 1 deleted file", async () => {
@@ -443,13 +453,6 @@ describe("Scenarios", () => {
         expect.objectContaining({ path: complexFilePath }),
       ]),
       expect.stringContaining("1"),
-    );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: complexFilePath }),
-      ]),
-      expect.stringContaining(`- ${complexFilePath}`),
     );
   });
 
@@ -510,33 +513,6 @@ describe("Scenarios", () => {
       ]),
       expect.stringContaining("3"),
     );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: fooFilePath }),
-        expect.objectContaining({ path: barFilePath }),
-        expect.objectContaining({ path: testFilePath }),
-      ]),
-      expect.stringContaining(`- ${fooFilePath}`),
-    );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: fooFilePath }),
-        expect.objectContaining({ path: barFilePath }),
-        expect.objectContaining({ path: testFilePath }),
-      ]),
-      expect.stringContaining(`- ${barFilePath}`),
-    );
-    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
-      github.GitHubInstance,
-      expect.arrayContaining([
-        expect.objectContaining({ path: fooFilePath }),
-        expect.objectContaining({ path: barFilePath }),
-        expect.objectContaining({ path: testFilePath }),
-      ]),
-      expect.stringContaining(`- ${testFilePath}`),
-    );
   });
 
   test("a Pull Request with 1 optimized SVG", async () => {
@@ -546,56 +522,6 @@ describe("Scenarios", () => {
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
-  });
-
-  test("use a SVGO configuration file in the repository", async () => {
-    svgo.getSvgoOptions.mockReturnValueOnce(svgoOptions);
-
-    await main();
-
-    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
-  });
-
-  test.each([
-    PR_NUMBER.ADD_SVG,
-    PR_NUMBER.MODIFY_SVG,
-    PR_NUMBER.MANY_CHANGES,
-  ])("dry run enabled (#%i)", async (prNumber) => {
-    inputs.ActionConfigInstance.isDryRun.mockReturnValue(true);
-    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
-
-    await main();
-    inputs.ActionConfigInstance.isDryRun.mockReturnValue(false);
-
-    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
-  });
-
-  test.each([
-    "This is the commit title\n\nAnd this the message (%s)",
-    "chore: make some changes\n\n- This isn't tennis\n- Praise the sun\n\n%s",
-    "Added some SVGs to the website\n\n%s",
-    "Double rainbow\n\nwhat does it %s mean?",
-  ])("disabled from commit message", async (baseCommitMessage) => {
-    const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
-    githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
-
-    const result = await main();
-
-    expect(result).toBe(true);
-    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
-  });
-
-  test("custom configuration file usage", async () => {
-    const actionConfigFilePath = "svgo-action.yml";
-    inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
-
-    await main();
-
-    const { content, encoding } = contentPayloads[actionConfigFilePath];
-    expect(encoder.decode).toHaveBeenCalledWith(content, encoding);
-    expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
   });
 
 });
