@@ -68,8 +68,8 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
-- dry-run: true
-- svgo-options: "path/to/svgo-options.yml"
+dry-run: true
+svgo-options: "path/to/svgo-options.yml"
 ```
 
 #### In Another Configuration File
