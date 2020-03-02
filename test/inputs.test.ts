@@ -1,8 +1,8 @@
+import * as yaml from "js-yaml";
+
 import * as core from "./mocks/@actions/core.mock";
 
 jest.mock("@actions/core", () => core);
-
-import * as yaml from "js-yaml";
 
 import {
   // Types
