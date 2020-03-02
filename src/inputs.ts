@@ -4,13 +4,16 @@ import * as core from "@actions/core";
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
 const INPUT_NAME_DRY_RUN = "dry-run";
 const INPUT_NAME_REPO_TOKEN = "repo-token";
+const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
+const BOOLEAN = "boolean";
 const FALSE = "false";
 const TRUE = "true";
 
 
 export type RawActionConfig = {
-  readonly "dry-run"?: string;
+  readonly "dry-run"?: boolean;
+  readonly "svgo-options"?: string;
 }
 
 
@@ -22,24 +25,32 @@ export class ActionConfig {
     this.config = config || { };
   }
 
-  public isDryRun(): boolean {
-    const value: string = this.config["dry-run"]
-      || core.getInput(INPUT_NAME_DRY_RUN, { required: false });
+  public getSvgoOptionsPath(): string {
+    return this.config["svgo-options"]
+      || core.getInput(INPUT_NAME_SVGO_OPTIONS, { required: false });
+  }
 
-    if (value === FALSE) {
-      return false;
-    } else if (value === TRUE) {
-      return true;
-    } else {
-      core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
-      return true;
-    }
+  public isDryRun(): boolean {
+    const value = (this.config["dry-run"] !== undefined)
+      ? this.config["dry-run"]
+      : core.getInput(INPUT_NAME_DRY_RUN, { required: false });
+
+      if (typeof value === BOOLEAN) {
+        return value as boolean;
+      } else if (value === FALSE) {
+        return false;
+      } else if (value === TRUE) {
+        return true;
+      } else {
+        core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
+        return true;
+      }
   }
 
 }
 
 export function getConfigFilePath(): string {
-  return core.getInput(INPUT_NAME_CONFIG_PATH, { required: true });
+  return core.getInput(INPUT_NAME_CONFIG_PATH, { required: false });
 }
 
 export function getRepoToken(): string {

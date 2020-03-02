@@ -9,6 +9,13 @@ Versioning].
 
 - _No changes yet_
 
+## [0.2.2] - 2020-03-02
+
+- Configure the SVGO options file. ([#99])
+- Fix `required` value for "configuration-path" input. ([#100])
+- Fix interpretation of "dry-run" input in config file. ([#103])
+- Fix documentation for configuration in config file. ([#108])
+
 ## [0.2.1] - 2020-03-02
 
 - Disable the action from a commit message. ([#91])
@@ -53,3 +60,7 @@ Versioning].
 [#91]: https://github.com/ericcornelissen/svgo-action/pull/91
 [#92]: https://github.com/ericcornelissen/svgo-action/pull/92
 [#97]: https://github.com/ericcornelissen/svgo-action/pull/97
+[#99]: https://github.com/ericcornelissen/svgo-action/pull/99
+[#100]: https://github.com/ericcornelissen/svgo-action/pull/100
+[#103]: https://github.com/ericcornelissen/svgo-action/pull/103
+[#108]: https://github.com/ericcornelissen/svgo-action/pull/108
