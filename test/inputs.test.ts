@@ -2,6 +2,8 @@ import * as core from "./mocks/@actions/core.mock";
 
 jest.mock("@actions/core", () => core);
 
+import * as yaml from "js-yaml";
+
 import {
   // Types
   RawActionConfig,
@@ -84,7 +86,8 @@ describe("ActionConfig.isDryRun", () => {
   });
 
   test("dry-run is `false` in the config object", () => {
-    const instance: ActionConfig = new ActionConfig({ "dry-run": "false" });
+    const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: false");
+    const instance: ActionConfig = new ActionConfig(rawConfig);
     core.getInput.mockReturnValueOnce("true");
 
     const result = instance.isDryRun();
@@ -92,6 +95,23 @@ describe("ActionConfig.isDryRun", () => {
   });
 
   test("dry-run is `true` in the config object", () => {
+    const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: true");
+    const instance: ActionConfig = new ActionConfig(rawConfig);
+    core.getInput.mockReturnValueOnce("false");
+
+    const result = instance.isDryRun();
+    expect(result).toBe(true);
+  });
+
+  test("dry-run is `'false'` in the config object", () => {
+    const instance: ActionConfig = new ActionConfig({ "dry-run": "false" });
+    core.getInput.mockReturnValueOnce("true");
+
+    const result = instance.isDryRun();
+    expect(result).toBe(false);
+  });
+
+  test("dry-run is `'true'` in the config object", () => {
     const instance: ActionConfig = new ActionConfig({ "dry-run": "true" });
     core.getInput.mockReturnValueOnce("false");
 
