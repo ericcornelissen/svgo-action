@@ -163,7 +163,7 @@ export async function getPrFiles(
     pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
-  return prFilesDetails.data.map(details => ({
+  return prFilesDetails.data.map((details) => ({
     path: details.filename,
     status: details.status,
   }));

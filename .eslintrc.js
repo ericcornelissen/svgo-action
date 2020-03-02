@@ -24,6 +24,7 @@ module.exports = {
   },
   rules: {
     // ESLint (https://eslint.org/docs/rules/)
+    "arrow-parens": ["error", "always"],
     "comma-dangle": ["error", {
       arrays: "always-multiline",
       objects: "always-multiline",
@@ -60,8 +61,7 @@ module.exports = {
     }],
   },
   overrides: [
-    {
-      // Configuration files
+    { // Configuration files
       files: ["*.js"],
       globals: {
         "module": "readonly",

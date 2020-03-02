@@ -130,7 +130,7 @@ export default async function main(): Promise<boolean> {
         strFormat(
           COMMIT_MESSAGE_TEMPLATE,
           blobs.length,
-          "- " + blobs.map(blob => blob.path).join("\n- "),
+          "- " + blobs.map((blob) => blob.path).join("\n- "),
         ),
       );
 

@@ -45,7 +45,7 @@ export const getPrFiles = jest.fn()
       pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
     });
 
-    return data.map(details => ({
+    return data.map((details) => ({
       path: details.filename,
       status: details.status,
     }));
