@@ -47,7 +47,7 @@ configuration file]. Below you can find the available options.
   used as configuration for [SVGO].
   - Possible values: _Any file path_
   - Default value: `".svgo.yml"`
-  - Example: `"path/to/svgo-options.yml"`
+  - Example: `svgo-options: "path/to/svgo-options.yml"`
 
 #### In the Workflow file
 
