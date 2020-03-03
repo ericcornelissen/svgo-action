@@ -176,6 +176,34 @@ describe("Configuration", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
+  test.each([
+    ["Let's disable the action! (%s)"],
+    ["Hello world!", "%s"],
+    ["foo", "foo %s bar", "bar"],
+    ["%s", "Yip Yip!", "%s"],
+  ])("disabled from Pull Request comments (%s)", async (...baseComments) => {
+    githubAPI.getPrComments.mockImplementationOnce(() => ({
+      [Symbol.asyncIterator](): unknown {
+        return {
+          async next(): Promise<unknown> {
+            const comment = baseComments.pop();
+            if (comment) {
+              return { done: false, value: strFormat(comment, "disable-svgo-action") };
+            } else {
+              return { done: true };
+            }
+          },
+        };
+      },
+    }));
+
+    const result = await main();
+
+    expect(result).toBe(true);
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
   test("custom configuration file usage", async () => {
     const actionConfigFilePath = "svgo-action.yml";
     inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);

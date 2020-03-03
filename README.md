@@ -22,7 +22,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.2.1
+    - uses: ericcornelissen/svgo-action@v0.2.2
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 ```
@@ -68,8 +68,8 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
-- dry-run: true
-- svgo-options: "path/to/svgo-options.yml"
+dry-run: true
+svgo-options: "path/to/svgo-options.yml"
 ```
 
 #### In Another Configuration File
@@ -90,12 +90,20 @@ with:
 
 #### Manually Disabling the Action
 
-It is possible to manually disable the action from a commit message. This can be
+It is possible to manually disable the Action from a commit message. This can be
 achieved by including the string "_disable-svgo-action_" anywhere in the commit
 message.
 
-> :warning: This will only stop the action from optimizing SVGs in the build
+> :warning: This will only stop the Action from optimizing SVGs in the build
 > corresonding to the commit whose commit message contains the string.
+
+Another possiblity is to disable the Action from a Pull Request comment. This
+can be achieved by including the string "_disable-svgo-action_" anywhere in any
+comment on the Pull Request.
+
+> :warning: This will stop the Action from optimizing SVGs in any subsequent
+> build for that Pull Request. To revert the effect the comment must be modified
+> or removed.
 
 #### Limit Runs
 
@@ -122,7 +130,7 @@ jobs:
   ...
 ```
 
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.1-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.2-undefined.svg?logo=github&logoColor=white&style=flat
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg

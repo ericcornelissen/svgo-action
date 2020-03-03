@@ -19,6 +19,7 @@ import {
   commitFiles,
   createBlob,
   getCommitMessage,
+  getPrComments,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -56,6 +57,12 @@ export default async function main(): Promise<boolean> {
     const token: string = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
 
+    const prNumber: number = getPrNumber();
+    if (prNumber === PR_NOT_FOUND) {
+      core.error("Could not get Pull Request number from context, exiting");
+      return false;
+    }
+
     const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
     const config: ActionConfig = new ActionConfig(rawConfig);
 
@@ -65,14 +72,15 @@ export default async function main(): Promise<boolean> {
       return true;
     }
 
-    if (config.isDryRun()) {
-      core.info("Dry mode is enabled, no changes will be committed");
+    for await (const comment of getPrComments(client, prNumber)) {
+      if (DISABLE_PATTERN.test(comment)) {
+        core.info("Action disabled from commit message");
+        return true;
+      }
     }
 
-    const prNumber: number = getPrNumber();
-    if (prNumber === PR_NOT_FOUND) {
-      core.error("Could not get Pull Request number from context, exiting");
-      return false;
+    if (config.isDryRun()) {
+      core.info("Dry mode is enabled, no changes will be committed");
     }
 
     const svgoOptionsPath: string = config.getSvgoOptionsPath();
