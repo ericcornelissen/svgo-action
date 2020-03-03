@@ -7,7 +7,7 @@ import { decode } from "./encoder";
 import { getRepoFile } from "./github-api";
 
 
-export async function getSvgoOptions(
+export async function fetchSvgoOptions(
   client: github.GitHub,
   path: string,
 ): Promise<SVGO.Options> {

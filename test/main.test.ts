@@ -138,7 +138,7 @@ describe("Logging", () => {
 describe("Configuration", () => {
 
   test("use a SVGO configuration file in the repository", async () => {
-    svgo.getSvgoOptions.mockReturnValueOnce(svgoOptions);
+    svgo.fetchSvgoOptions.mockReturnValueOnce(svgoOptions);
 
     await main();
 
@@ -547,7 +547,7 @@ describe("Error scenarios", () => {
 
   test("there is no SVGO configuration file in repository", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    svgo.getSvgoOptions.mockResolvedValueOnce({ });
+    svgo.fetchSvgoOptions.mockResolvedValueOnce({ });
 
     await main();
 

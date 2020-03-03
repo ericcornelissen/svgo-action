@@ -33,13 +33,13 @@ import {
   getConfigFilePath,
   getRepoToken,
 } from "./inputs";
-import { SVGOptimizer, getSvgoOptions } from "./svgo";
+import { fetchSvgoOptions, SVGOptimizer } from "./svgo";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
 const COMMIT_MESSAGE_TEMPLATE = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
 
-async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
+async function fetchConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
   const configFilePath = getConfigFilePath();
   try {
     const { content, encoding } = await getRepoFile(client, configFilePath);
@@ -56,7 +56,7 @@ export default async function main(): Promise<boolean> {
     const token: string = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
 
-    const rawConfig: RawActionConfig = await getConfigInRepo(client);
+    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
     const config: ActionConfig = new ActionConfig(rawConfig);
 
     const commitMessage: string = await getCommitMessage(client);
@@ -77,7 +77,7 @@ export default async function main(): Promise<boolean> {
 
     const svgoOptionsPath: string = config.getSvgoOptionsPath();
     core.debug(`fetching SVGO options (at ${svgoOptionsPath})`);
-    const svgoOptions: SVGO.Options = await getSvgoOptions(client, svgoOptionsPath);
+    const svgoOptions: SVGO.Options = await fetchSvgoOptions(client, svgoOptionsPath);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
