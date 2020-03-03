@@ -57,6 +57,12 @@ export default async function main(): Promise<boolean> {
     const token = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
 
+    const prNumber: number = getPrNumber();
+    if (prNumber === PR_NOT_FOUND) {
+      core.error("Could not get Pull Request number from context, exiting");
+      return false;
+    }
+
     const rawConfig: RawActionConfig = await getConfigInRepo(client);
     const config: ActionConfig = new ActionConfig(rawConfig);
 
@@ -66,20 +72,14 @@ export default async function main(): Promise<boolean> {
       return true;
     }
 
-    if (config.isDryRun()) {
-      core.info("Dry mode is enabled, no changes will be committed");
-    }
-
-    const prNumber: number = getPrNumber();
-    if (prNumber === PR_NOT_FOUND) {
-      core.error("Could not get Pull Request number from context, exiting");
-      return false;
-    }
-
     const comments: string[] = await getPrComments(client, prNumber);
     if (comments.find((comment) => disablePattern.test(comment))) {
       core.info("Action disabled from Pull Request");
       return true;
+    }
+
+    if (config.isDryRun()) {
+      core.info("Dry mode is enabled, no changes will be committed");
     }
 
     const svgoOptionsPath: string = config.getSvgoOptionsPath();
