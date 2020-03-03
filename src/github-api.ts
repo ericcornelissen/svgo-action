@@ -134,10 +134,10 @@ export async function getCommitMessage(client: github.GitHub): Promise<string> {
   return commit.message;
 }
 
-export async function getPrComments(
+export async function* getPrComments(
   client: github.GitHub,
   prNumber: number,
-): Promise<string[]> {
+): AsyncGenerator<string> {
   const PER_PAGE = 10;
 
   const { data } = await client.pulls.get({
@@ -146,9 +146,8 @@ export async function getPrComments(
     pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
-  const comments: string[] = [];
   for (let i = 0; i < Math.ceil(data.comments / PER_PAGE); i++) {
-    const { data } = await client.issues.listComments({
+    const { data: comments } = await client.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
       issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
@@ -156,10 +155,10 @@ export async function getPrComments(
       page: i,
     });
 
-    comments.push(...data.map(comment => comment.body));
+    for (const comment of comments) {
+      yield comment.body;
+    }
   }
-
-  return comments;
 }
 
 export async function getPrFile(

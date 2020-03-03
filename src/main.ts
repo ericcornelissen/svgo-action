@@ -72,10 +72,11 @@ export default async function main(): Promise<boolean> {
       return true;
     }
 
-    const comments: string[] = await getPrComments(client, prNumber);
-    if (comments.find((comment) => disablePattern.test(comment))) {
-      core.info("Action disabled from Pull Request");
-      return true;
+    for await (const comment of getPrComments(client, prNumber)) {
+      if (disablePattern.test(comment)) {
+        core.info("Action disabled from commit message");
+        return true;
+      }
     }
 
     if (config.isDryRun()) {
