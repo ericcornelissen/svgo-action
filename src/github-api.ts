@@ -138,21 +138,28 @@ export async function getPrComments(
   client: github.GitHub,
   prNumber: number,
 ): Promise<string[]> {
+  const PER_PAGE = 10;
+
   const { data } = await client.pulls.get({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
   });
-  console.log("number of comments:", data.comments);
 
-  const { data: comments } = await client.issues.listComments({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
-    per_page: 100, /* eslint-disable-line @typescript-eslint/camelcase */
-  });
+  const comments: string[] = [];
+  for (let i = 0; i < Math.ceil(data.comments / PER_PAGE); i++) {
+    const { data } = await client.issues.listComments({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+      per_page: PER_PAGE, /* eslint-disable-line @typescript-eslint/camelcase */
+      page: i,
+    });
 
-  return comments.map(comment => comment.body);
+    comments.push(...data.map(comment => comment.body));
+  }
+
+  return comments;
 }
 
 export async function getPrFile(
