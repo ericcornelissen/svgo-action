@@ -90,12 +90,20 @@ with:
 
 #### Manually Disabling the Action
 
-It is possible to manually disable the action from a commit message. This can be
+It is possible to manually disable the Action from a commit message. This can be
 achieved by including the string "_disable-svgo-action_" anywhere in the commit
 message.
 
-> :warning: This will only stop the action from optimizing SVGs in the build
+> :warning: This will only stop the Action from optimizing SVGs in the build
 > corresonding to the commit whose commit message contains the string.
+
+Another possiblity is to disable the Action from a Pull Request comment. This
+can be achieved by including the string "_disable-svgo-action_" anywhere in any
+comment on the Pull Request.
+
+> :warning: This will stop the Action from optimizing SVGs in any subsequent
+> build for that Pull Request. To revert the effect the comment must be modified
+> or removed.
 
 #### Limit Runs
 
