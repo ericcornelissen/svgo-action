@@ -68,13 +68,13 @@ export default async function main(): Promise<boolean> {
 
     const commitMessage: string = await getCommitMessage(client);
     if (DISABLE_PATTERN.test(commitMessage)) {
-      core.info("Action disabled from commit message");
+      core.info("Action disabled from commit message, exiting");
       return true;
     }
 
     for await (const comment of getPrComments(client, prNumber)) {
       if (DISABLE_PATTERN.test(comment)) {
-        core.info("Action disabled from commit message");
+        core.info("Action disabled from Pull Request, exiting");
         return true;
       }
     }
