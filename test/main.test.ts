@@ -160,50 +160,6 @@ describe("Configuration", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
-  test.each([
-    "This is the commit title\n\nAnd this the message (%s)",
-    "chore: make some changes\n\n- This isn't tennis\n- Praise the sun\n\n%s",
-    "Added some SVGs to the website\n\n%s",
-    "Double rainbow\n\nwhat does it %s mean?",
-  ])("disabled from commit message", async (baseCommitMessage) => {
-    const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
-    githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
-
-    const result = await main();
-
-    expect(result).toBe(true);
-    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
-  });
-
-  test.each([
-    ["Let's disable the action! (%s)"],
-    ["Hello world!", "%s"],
-    ["foo", "foo %s bar", "bar"],
-    ["%s", "Yip Yip!", "%s"],
-  ])("disabled from Pull Request comments (%s)", async (...baseComments) => {
-    githubAPI.getPrComments.mockImplementationOnce(() => ({
-      [Symbol.asyncIterator](): unknown {
-        return {
-          async next(): Promise<unknown> {
-            const comment = baseComments.pop();
-            if (comment) {
-              return { done: false, value: strFormat(comment, "disable-svgo-action") };
-            } else {
-              return { done: true };
-            }
-          },
-        };
-      },
-    }));
-
-    const result = await main();
-
-    expect(result).toBe(true);
-    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
-  });
-
   test("custom configuration file usage", async () => {
     const actionConfigFilePath = "svgo-action.yml";
     inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
@@ -550,6 +506,74 @@ describe("Payloads", () => {
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
+  });
+
+  test.each([
+    ["But why is the rum gone"],
+    ["Asiimov", "It's dangerous to go alone!", "Praise the sun"],
+    ["The Spanish Inquisition", "No this is Patrick!"],
+  ])("comments on the Pull Request that don't disable the Action", async (...comments) => {
+    githubAPI.getPrComments.mockImplementationOnce(() => ({
+      [Symbol.asyncIterator](): unknown {
+        return {
+          async next(): Promise<unknown> {
+            const comment = comments.pop();
+            if (comment) {
+              return { done: false, value: comment };
+            } else {
+              return { done: true };
+            }
+          },
+        };
+      },
+    }));
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test.each([
+    ["Let's disable the action! (%s)"],
+    ["Hello world!", "%s"],
+    ["foo", "foo %s bar", "bar"],
+    ["%s", "Yip Yip!", "%s"],
+  ])("comments on the Pull Request that do disable the Action", async (...baseComments) => {
+    githubAPI.getPrComments.mockImplementationOnce(() => ({
+      [Symbol.asyncIterator](): unknown {
+        return {
+          async next(): Promise<unknown> {
+            const comment = baseComments.pop();
+            if (comment) {
+              return { done: false, value: strFormat(comment, "disable-svgo-action") };
+            } else {
+              return { done: true };
+            }
+          },
+        };
+      },
+    }));
+
+    const result = await main();
+
+    expect(result).toBe(true);
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test.each([
+    "This is the commit title\n\nAnd this the message (%s)",
+    "chore: make some changes\n\n- This isn't tennis\n- Praise the sun\n\n%s",
+    "Added some SVGs to the website\n\n%s",
+    "Double rainbow\n\nwhat does it %s mean?",
+  ])("dcommit message that disables the Action", async (baseCommitMessage) => {
+    const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
+    githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
+
+    const result = await main();
+
+    expect(result).toBe(true);
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
 });
