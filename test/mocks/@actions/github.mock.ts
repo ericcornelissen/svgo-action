@@ -22,6 +22,10 @@ export enum PR_NUMBER {
 
   NO_COMMENTS,
   ONE_COMMENT,
+  TEN_COMMENTS,
+  ELEVEN_COMMENTS,
+  SEVENTEEN_COMMENTS,
+  ONE_HUNDERD_AND_THREE_COMMENTS,
 }
 
 export const context = {
@@ -109,15 +113,36 @@ export const GitHubInstance = {
       .mockName("GitHub.git.updateRef"),
   },
   issues: {
-    listComments: async ({ issue_number: prNumber }) => {
+    listComments: async ({ issue_number: prNumber, per_page: perPage, page }) => {
+      const generateComments = (length) => Array.from({ length }).map((_, i) => ({ body: `${i}` }));
+
+      let allComments: unknown[];
       switch (prNumber) {
         case PR_NUMBER.NO_COMMENTS:
-          return { data: [ ] };
+          allComments = [ ];
+          break;
         case PR_NUMBER.ONE_COMMENT:
-          return { data: [{ body: "foobar" }] };
+          allComments = generateComments(1);
+          break;
+        case PR_NUMBER.TEN_COMMENTS:
+          allComments = generateComments(10);
+          break;
+        case PR_NUMBER.ELEVEN_COMMENTS:
+          allComments = generateComments(11);
+          break;
+        case PR_NUMBER.SEVENTEEN_COMMENTS:
+          allComments = generateComments(17);
+          break;
+        case PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS:
+          allComments = generateComments(103);
+          break;
         default:
           return { };
       }
+
+      const sliceStart = page * perPage;
+      const sliceEnd = (page + 1) * perPage;
+      return { data: allComments.slice(sliceStart, sliceEnd) };
     },
   },
   pulls: {
@@ -126,7 +151,15 @@ export const GitHubInstance = {
         case PR_NUMBER.NO_COMMENTS:
           return { data: { comments: 0 } };
         case PR_NUMBER.ONE_COMMENT:
-          return { data: { comments: 0 } };
+          return { data: { comments: 1 } };
+        case PR_NUMBER.TEN_COMMENTS:
+          return { data: { comments: 10 } };
+        case PR_NUMBER.ELEVEN_COMMENTS:
+          return { data: { comments: 11 } };
+        case PR_NUMBER.SEVENTEEN_COMMENTS:
+          return { data: { comments: 17 } };
+        case PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS:
+          return { data: { comments: 103 } };
         default:
           return { };
       }

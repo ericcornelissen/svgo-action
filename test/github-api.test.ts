@@ -252,9 +252,29 @@ describe("::getPrComments", () => {
     expect(result).toHaveLength(0);
   });
 
-  test("one comment", async () => {
+  test("1 comment", async () => {
     const result: string[] = await getPrComments(client, github.PR_NUMBER.ONE_COMMENT);
     expect(result).toHaveLength(1);
+  });
+
+  test("10 comments", async () => {
+    const result: string[] = await getPrComments(client, github.PR_NUMBER.TEN_COMMENTS);
+    expect(result).toHaveLength(10);
+  });
+
+  test("11 comments", async () => {
+    const result: string[] = await getPrComments(client, github.PR_NUMBER.ELEVEN_COMMENTS);
+    expect(result).toHaveLength(11);
+  });
+
+  test("17 comments", async () => {
+    const result: string[] = await getPrComments(client, github.PR_NUMBER.SEVENTEEN_COMMENTS);
+    expect(result).toHaveLength(17);
+  });
+
+  test("10. comments", async () => {
+    const result: string[] = await getPrComments(client, github.PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS);
+    expect(result).toHaveLength(103);
   });
 
 });
