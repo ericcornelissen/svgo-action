@@ -1,4 +1,5 @@
 import * as github from "./@actions/github.mock";
+
 import { FileData } from "../../src/github-api";
 
 
@@ -30,9 +31,9 @@ export const createBlob = jest.fn()
   }))
   .mockName("github-api.createBlob");
 
-  export const getCommitMessage = jest.fn()
-    .mockImplementation(async () => "This is a commit message")
-    .mockName("github-api.getCommitMessage");
+export const getCommitMessage = jest.fn()
+  .mockImplementation(async () => "This is a commit message")
+  .mockName("github-api.getCommitMessage");
 
 export const getPrComments = jest.fn()
   .mockImplementation(() => ({
@@ -56,7 +57,7 @@ export const getPrFiles = jest.fn()
       pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
     });
 
-    return data.map(details => ({
+    return data.map((details) => ({
       path: details.filename,
       status: details.status,
     }));

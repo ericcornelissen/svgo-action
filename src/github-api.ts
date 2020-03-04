@@ -130,8 +130,8 @@ export async function createBlob(
 }
 
 export async function getCommitMessage(client: github.GitHub): Promise<string> {
-  const commit = await getCommit(client);
-  return commit.message;
+  const { message } = await getCommit(client);
+  return message;
 }
 
 export async function* getPrComments(
@@ -190,7 +190,7 @@ export async function getPrFiles(
     pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
-  return prFilesDetails.data.map(details => ({
+  return prFilesDetails.data.map((details) => ({
     path: details.filename,
     status: details.status,
   }));
