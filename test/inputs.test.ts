@@ -54,30 +54,6 @@ describe("ActionConfig", () => {
 
   });
 
-  describe(".getSvgoOptionsPath", () => {
-
-    const testPaths = test.each([".svgo.yml", "foo.yml", "in/folder/config.yml"]);
-
-    testPaths("svgo-options is set (to '%s') in the workflow file", (path) => {
-      const instance: ActionConfig = new ActionConfig();
-      core.getInput.mockReturnValueOnce(path);
-
-      const result = instance.getSvgoOptionsPath();
-      expect(result).toBe(path);
-    });
-
-    testPaths("svgo-options is set (to '%s') in the config object", (path) => {
-      const instance: ActionConfig = new ActionConfig({ "svgo-options": path });
-      core.getInput.mockReturnValueOnce(`dir/${path}`);
-
-      const result = instance.getSvgoOptionsPath();
-      expect(result).toBe(path);
-    });
-
-    afterAll(core.getInput.mockReset);
-
-  });
-
   describe(".isDryRun", () => {
 
     const testNonBoolean = test.each(["foobar", "treu", "fals"]);
@@ -87,76 +63,87 @@ describe("ActionConfig", () => {
     });
 
     test("dry-run is `false` in the workflow file", () => {
-      const instance: ActionConfig = new ActionConfig();
       core.getInput.mockReturnValueOnce("false");
 
-      const result = instance.isDryRun();
-      expect(result).toBe(false);
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.isDryRun).toBe(false);
     });
 
     test("dry-run is `true` in the workflow file", () => {
-      const instance: ActionConfig = new ActionConfig();
       core.getInput.mockReturnValueOnce("true");
 
-      const result = instance.isDryRun();
-      expect(result).toBe(true);
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.isDryRun).toBe(true);
     });
 
     testNonBoolean("dry run is `'%s'` in the workflow file", async (value) => {
-      const instance: ActionConfig = new ActionConfig();
       core.getInput.mockReturnValueOnce(value);
 
-      const result = instance.isDryRun();
-      expect(result).toBe(true);
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.isDryRun).toBe(true);
       expect(core.info).toHaveBeenCalledTimes(1);
     });
 
     test("dry-run is `false` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: false");
-      const instance: ActionConfig = new ActionConfig(rawConfig);
       core.getInput.mockReturnValueOnce("true");
 
-      const result = instance.isDryRun();
-      expect(result).toBe(false);
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.isDryRun).toBe(false);
     });
 
     test("dry-run is `true` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: true");
-      const instance: ActionConfig = new ActionConfig(rawConfig);
       core.getInput.mockReturnValueOnce("false");
 
-      const result = instance.isDryRun();
-      expect(result).toBe(true);
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.isDryRun).toBe(true);
     });
 
     test("dry-run is `'false'` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: 'false'");
-      const instance: ActionConfig = new ActionConfig(rawConfig);
       core.getInput.mockReturnValueOnce("true");
 
-      const result = instance.isDryRun();
-      expect(result).toBe(false);
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.isDryRun).toBe(false);
     });
 
     test("dry-run is `'true'` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: 'true'");
-      const instance: ActionConfig = new ActionConfig(rawConfig);
       core.getInput.mockReturnValueOnce("false");
 
-      const result = instance.isDryRun();
-      expect(result).toBe(true);
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.isDryRun).toBe(true);
     });
 
     testNonBoolean("dry run is `'%s'` in the config object", async (value) => {
       const rawConfig: RawActionConfig = yaml.safeLoad(`dry-run: '${value}'`);
-      const instance: ActionConfig = new ActionConfig(rawConfig);
       core.getInput.mockReturnValueOnce("false");
 
-      const result = instance.isDryRun();
-      expect(result).toBe(true);
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.isDryRun).toBe(true);
+      expect(core.info).toHaveBeenCalledTimes(1);
     });
 
-    afterAll(core.getInput.mockReset);
+  });
+
+  describe(".svgoOptionsPath", () => {
+
+    const testPaths = test.each([".svgo.yml", "foo.yml", "in/folder/config.yml"]);
+
+    testPaths("svgo-options is set (to '%s') in the workflow file", (path) => {
+      core.getInput.mockReturnValue(path);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.svgoOptionsPath).toBe(path);
+    });
+
+    testPaths("svgo-options is set (to '%s') in the config object", (path) => {
+      core.getInput.mockReturnValue(path);
+
+      const instance: ActionConfig = new ActionConfig({ "svgo-options": path });
+      expect(instance.svgoOptionsPath).toBe(path);
+    });
 
   });
 

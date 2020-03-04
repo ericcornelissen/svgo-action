@@ -79,13 +79,15 @@ export default async function main(): Promise<boolean> {
       }
     }
 
-    if (config.isDryRun()) {
+    if (config.isDryRun) {
       core.info("Dry mode is enabled, no changes will be committed");
     }
 
-    const svgoOptionsPath: string = config.getSvgoOptionsPath();
-    core.debug(`fetching SVGO options (at ${svgoOptionsPath})`);
-    const svgoOptions: SVGO.Options = await fetchSvgoOptions(client, svgoOptionsPath);
+    core.debug(`fetching SVGO options (at ${config.svgoOptionsPath})`);
+    const svgoOptions: SVGO.Options = await fetchSvgoOptions(
+      client,
+      config.svgoOptionsPath,
+    );
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
@@ -129,7 +131,7 @@ export default async function main(): Promise<boolean> {
       blobs.push(svgBlob);
     }
 
-    if (config.isDryRun()) {
+    if (config.isDryRun) {
       core.info("Dry mode enabled, not committing");
     } else if (blobs.length > 0) {
       const commitInfo: CommitInfo = await commitFiles(

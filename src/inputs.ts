@@ -6,9 +6,8 @@ const INPUT_NAME_DRY_RUN = "dry-run";
 const INPUT_NAME_REPO_TOKEN = "repo-token";
 const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
-const BOOLEAN = "boolean";
-const FALSE = "false";
-const TRUE = "true";
+const REQUIRED = { required: true };
+const NOT_REQUIRED = { required: false };
 
 
 export type RawActionConfig = {
@@ -19,40 +18,43 @@ export type RawActionConfig = {
 
 export class ActionConfig {
 
-  private readonly config: RawActionConfig;
+  public readonly isDryRun: boolean;
+  public readonly svgoOptionsPath: string;
 
-  constructor(config?: RawActionConfig) {
-    this.config = config || { };
+  constructor(config: RawActionConfig = { }) {
+    this.isDryRun = ActionConfig.getDryRunValue(config);
+    this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
 
-  public getSvgoOptionsPath(): string {
-    return this.config["svgo-options"]
-      || core.getInput(INPUT_NAME_SVGO_OPTIONS, { required: false });
+  private static getSvgoOptionsPath(config: RawActionConfig): string {
+    return config["svgo-options"]
+      || core.getInput(INPUT_NAME_SVGO_OPTIONS, NOT_REQUIRED);
   }
 
-  public isDryRun(): boolean {
-    const value = (this.config["dry-run"] !== undefined)
-      ? this.config["dry-run"]
-      : core.getInput(INPUT_NAME_DRY_RUN, { required: false });
+  private static getDryRunValue(config: RawActionConfig): boolean {
+    const BOOLEAN = "boolean", FALSE = "false", TRUE = "true";
 
-      if (typeof value === BOOLEAN) {
-        return value as boolean;
-      } else if (value === FALSE) {
-        return false;
-      } else if (value === TRUE) {
-        return true;
-      } else {
-        core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
-        return true;
-      }
+    const value = (config["dry-run"] !== undefined)
+      ? config["dry-run"] : core.getInput(INPUT_NAME_DRY_RUN, NOT_REQUIRED);
+
+    if (typeof value === BOOLEAN) {
+      return value as boolean;
+    } else if (value === FALSE) {
+      return false;
+    } else if (value === TRUE) {
+      return true;
+    } else {
+      core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
+      return true;
+    }
   }
 
 }
 
 export function getConfigFilePath(): string {
-  return core.getInput(INPUT_NAME_CONFIG_PATH, { required: false });
+  return core.getInput(INPUT_NAME_CONFIG_PATH, NOT_REQUIRED);
 }
 
 export function getRepoToken(): string {
-  return core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
+  return core.getInput(INPUT_NAME_REPO_TOKEN, REQUIRED);
 }

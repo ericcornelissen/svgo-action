@@ -150,11 +150,13 @@ describe("Configuration", () => {
     PR_NUMBER.MODIFY_SVG,
     PR_NUMBER.MANY_CHANGES,
   ])("dry run enabled (#%i)", async (prNumber) => {
-    inputs.ActionConfigInstance.isDryRun.mockReturnValue(true);
+    const exampleConfig = new inputs.ActionConfig();
+    const dryRunConfig = Object.assign({ }, exampleConfig, { isDryRun: true });
+
+    inputs.ActionConfig.mockReturnValueOnce(dryRunConfig);
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
 
     await main();
-    inputs.ActionConfigInstance.isDryRun.mockReturnValue(false);
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
