@@ -1,3 +1,6 @@
+import files from "./fixtures/file-data.json";
+import svgoOptions from "./fixtures/svgo-options.json";
+
 import * as core from "./mocks/@actions/core.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
@@ -7,9 +10,6 @@ jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 
 import { SVGOptimizer, SVGOptions } from "../src/svgo";
-
-import files from "./fixtures/file-data.json";
-import svgoOptions from "./fixtures/svgo-options.json";
 
 
 describe("SVGOptimizer", () => {
@@ -21,7 +21,7 @@ describe("SVGOptimizer", () => {
     });
 
     test("does not throw when given empty configuration", () => {
-      expect(() => new SVGOptimizer({})).not.toThrow();
+      expect(() => new SVGOptimizer({ })).not.toThrow();
     });
 
     test("does not throw when given configuration", () => {
@@ -35,10 +35,11 @@ describe("SVGOptimizer", () => {
     const testSvgs = test.each(
       Object.entries(files)
         .filter(([key, _]) => key.endsWith(".svg"))
-        .map(([_, value]) => value),
+        .map(([_, value]) => value)
+        .slice(0, 4),
     );
 
-    const optimizer: SVGOptimizer = new SVGOptimizer({});
+    const optimizer: SVGOptimizer = new SVGOptimizer({ });
 
     testSvgs("return a (string) value", async (svg: string) => {
       const result = await optimizer.optimize(svg);

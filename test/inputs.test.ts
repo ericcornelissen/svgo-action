@@ -62,14 +62,14 @@ describe("ActionConfig", () => {
       core.info.mockClear();
     });
 
-    test("dry-run is `false` in the workflow file", () => {
+    test("dry-run is `'false'` in the workflow file", () => {
       core.getInput.mockReturnValueOnce("false");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.isDryRun).toBe(false);
     });
 
-    test("dry-run is `true` in the workflow file", () => {
+    test("dry-run is `'true'` in the workflow file", () => {
       core.getInput.mockReturnValueOnce("true");
 
       const instance: ActionConfig = new ActionConfig();

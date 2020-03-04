@@ -39,8 +39,11 @@ import { SVGOptimizer, SVGOptions } from "./svgo";
 const COMMIT_MESSAGE_TEMPLATE = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
 const DISABLE_PATTERN = /disable-svgo-action/;
 
-async function fetchConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
-  const configFilePath = getConfigFilePath();
+
+async function fetchConfigInRepo(
+  client: github.GitHub,
+): Promise<RawActionConfig> {
+  const configFilePath: string = getConfigFilePath();
   try {
     const { content, encoding } = await getRepoFile(client, configFilePath);
     core.debug(`configuration file for Action found ('${configFilePath}')`);
@@ -81,9 +84,6 @@ export default async function main(): Promise<boolean> {
       return false;
     }
 
-    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
-    const config: ActionConfig = new ActionConfig(rawConfig);
-
     const commitMessage: string = await getCommitMessage(client);
     if (DISABLE_PATTERN.test(commitMessage)) {
       core.info("Action disabled from commit message, exiting");
@@ -96,6 +96,9 @@ export default async function main(): Promise<boolean> {
         return true;
       }
     }
+
+    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
+    const config: ActionConfig = new ActionConfig(rawConfig);
 
     if (config.isDryRun) {
       core.info("Dry mode is enabled, no changes will be committed");
