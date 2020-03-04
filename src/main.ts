@@ -1,7 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
-import SVGO from "svgo";
 import { format as strFormat } from "util";
 
 import { decode, encode } from "./encoder";
@@ -34,19 +33,38 @@ import {
   getConfigFilePath,
   getRepoToken,
 } from "./inputs";
-import { fetchSvgoOptions, SVGOptimizer } from "./svgo";
+import { SVGOptimizer, SVGOptions } from "./svgo";
 
 
-const DISABLE_PATTERN = /disable-svgo-action/;
 const COMMIT_MESSAGE_TEMPLATE = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
+const DISABLE_PATTERN = /disable-svgo-action/;
 
 async function fetchConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
   const configFilePath = getConfigFilePath();
   try {
     const { content, encoding } = await getRepoFile(client, configFilePath);
-    const rawActionConfig = decode(content, encoding);
+    core.debug(`configuration file for Action found ('${configFilePath}')`);
+
+    const rawActionConfig: string = decode(content, encoding);
     return yaml.safeLoad(rawActionConfig);
   } catch(_) {
+    core.debug(`configuration file for Action not found ('${configFilePath}')`);
+    return { };
+  }
+}
+
+async function fetchSvgoOptions(
+  client: github.GitHub,
+  optionsFilePath: string,
+): Promise<SVGOptions> {
+  try {
+    const { content, encoding } = await getRepoFile(client, optionsFilePath);
+    core.debug(`options file for SVGO found ('${optionsFilePath}')`);
+
+    const rawSvgoOptions: string = decode(content, encoding);
+    return yaml.safeLoad(rawSvgoOptions);
+  } catch(_) {
+    core.debug(`options file for SVGO not found ('${optionsFilePath}')`);
     return { };
   }
 }
@@ -84,7 +102,7 @@ export default async function main(): Promise<boolean> {
     }
 
     core.debug(`fetching SVGO options (at ${config.svgoOptionsPath})`);
-    const svgoOptions: SVGO.Options = await fetchSvgoOptions(
+    const svgoOptions: SVGOptions = await fetchSvgoOptions(
       client,
       config.svgoOptionsPath,
     );

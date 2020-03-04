@@ -1,5 +1,4 @@
 import * as core from "./mocks/@actions/core.mock";
-import * as github from "./mocks/@actions/github.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 
@@ -7,78 +6,11 @@ jest.mock("@actions/core", () => core);
 jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 
-import SVGO from "svgo";
+import { SVGOptimizer, SVGOptions } from "../src/svgo";
 
-import { fetchSvgoOptions, SVGOptimizer } from "../src/svgo";
-
-import contentPayloads from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
 import svgoOptions from "./fixtures/svgo-options.json";
 
-
-describe("::fetchSvgoOptions", () => {
-
-  const token = core.getInput("repo-token", { required: true });
-  const client = new github.GitHub(token);
-
-  const optionsPath = ".svgo.yml";
-
-  beforeEach(() => {
-    core.debug.mockClear();
-  });
-
-  describe("default configuration file exists", () => {
-
-    test("the return value is defined", async () => {
-      const result = await fetchSvgoOptions(client, optionsPath);
-      expect(result).toBeDefined();
-    });
-
-    test("the return value is based on the file in the repository", async () => {
-      const svgoOptionsContent = contentPayloads[optionsPath];
-      const fileData = {
-        path: svgoOptionsContent.path,
-        content: svgoOptionsContent.content,
-        encoding: svgoOptionsContent.encoding,
-      };
-
-      githubAPI.getRepoFile.mockResolvedValueOnce(fileData);
-
-      const result = await fetchSvgoOptions(client, optionsPath);
-      expect(result).toEqual(svgoOptions);
-    });
-
-    test("debug logs that the default config file was found", async () => {
-      await fetchSvgoOptions(client, optionsPath);
-      expect(core.debug).toHaveBeenCalledTimes(1);
-      expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/((?!not)) found/));
-    });
-
-  });
-
-  describe("default configuration file doesn't exists", () => {
-
-    beforeEach(() => githubAPI.getRepoFile.mockRejectedValueOnce(new Error("Not found")));
-
-    test("the return value is defined", async () => {
-      const result = await fetchSvgoOptions(client, optionsPath);
-      expect(result).toBeDefined();
-    });
-
-    test("the return value is an empty object", async () => {
-      const result = await fetchSvgoOptions(client, optionsPath);
-      expect(result).toEqual({ });
-    });
-
-    test("debug logs that the default config file was not found", async () => {
-      await fetchSvgoOptions(client, optionsPath);
-      expect(core.debug).toHaveBeenCalledTimes(1);
-      expect(core.debug).toHaveBeenCalledWith(expect.stringContaining("not found"));
-    });
-
-  });
-
-});
 
 describe("SVGOptimizer", () => {
 
@@ -93,7 +25,7 @@ describe("SVGOptimizer", () => {
     });
 
     test("does not throw when given configuration", () => {
-      expect(() => new SVGOptimizer(svgoOptions as SVGO.Options)).not.toThrow();
+      expect(() => new SVGOptimizer(svgoOptions as SVGOptions)).not.toThrow();
     });
 
   });
@@ -126,7 +58,7 @@ describe("SVGOptimizer", () => {
     });
 
     test("optimizing with different configurations (default vs. fixture)", async () => {
-      const optimizer2: SVGOptimizer = new SVGOptimizer(svgoOptions as SVGO.Options);
+      const optimizer2: SVGOptimizer = new SVGOptimizer(svgoOptions as SVGOptions);
 
       const optimized1 = await optimizer.optimize(files["complex.svg"]);
       const optimized2 = await optimizer2.optimize(files["complex.svg"]);
