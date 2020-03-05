@@ -38,5 +38,5 @@ export function formatTemplate(
 ): string {
   const title: string = formatAll(titleTemplate, data, ["filePaths"]);
   const message: string = formatAll(messageTemplate, data);
-  return `${title}\n\n${message}`;
+  return `${title}\n\n${message}`.trimRight();
 }

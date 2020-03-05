@@ -69,7 +69,10 @@ describe("::formatTemplate", () => {
 
   describe("Message Templates", () => {
 
-    test.todo("empty template string");
+    test("empty template string", () => {
+      const result = formatTemplate(defaultTitleTemplate, "", defaultData);
+      expect(result).toEqual(defaultTitleTemplate);
+    });
 
     test.each([
       "there is no templating value in here",
