@@ -36,7 +36,8 @@ import {
 import { SVGOptimizer, SVGOptions } from "./svgo";
 
 
-const COMMIT_MESSAGE_TEMPLATE = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
+const COMMIT_MESSAGE_TEMPLATE = "Optimized SVGs:\n%s";
+const COMMIT_TITLE_TEMPLATE = "Optimize %s SVG(s) with SVGO";
 const DISABLE_PATTERN = /disable-svgo-action/;
 
 
@@ -160,6 +161,7 @@ export default async function main(): Promise<boolean> {
           client,
           blobs,
           formatTemplate(
+            COMMIT_TITLE_TEMPLATE,
             COMMIT_MESSAGE_TEMPLATE,
             {
               optimizedCount: blobs.length,

@@ -7,11 +7,15 @@ export type CommitData = {
 }
 
 
-export function formatTemplate(template: string, data: CommitData): string {
+export function formatTemplate(
+  titleTemplate: string,
+  messageTemplate: string,
+  data: CommitData,
+): string {
   const { filePaths, optimizedCount } = data;
-  return strFormat(
-    template,
-    optimizedCount,
-    "- " + filePaths.join("\n- "),
-  );
+
+  const title = strFormat(titleTemplate, optimizedCount);
+  const message = strFormat(messageTemplate, "- " + filePaths.join("\n- "));
+
+  return `${title}\n\n${message}`;
 }
