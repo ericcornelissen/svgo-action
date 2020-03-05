@@ -165,7 +165,7 @@ export default async function main(): Promise<boolean> {
             COMMIT_MESSAGE_TEMPLATE,
             {
               optimizedCount: blobs.length,
-              filePaths: blobs.map((blob) => blob.path || ""),
+              filePaths: blobs.map((blob) => blob.path),
             },
           ),
         );

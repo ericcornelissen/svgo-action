@@ -20,7 +20,7 @@ function formatAll(template: string, data: CommitData): string {
 
 
 export type CommitData = {
-  filePaths: string[];
+  filePaths: (string | undefined)[];
   optimizedCount: number;
 }
 
