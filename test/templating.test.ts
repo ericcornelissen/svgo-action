@@ -52,6 +52,19 @@ describe("::formatTemplate", () => {
       expect(resultTitle).toEqual(`Optimized ${optimizedCount} SVG(s)`);
     });
 
+    test.each([
+      "Optimized SVG(s):\n{{filesList}}",
+      "This commit contains optimization for the following SVGs:\n{{ filesList }}",
+      "WeIrD DoEs{{filesList}}NoT mEaN iNcOrReCt!",
+      "{{ filesList }}",
+    ])("ignore '{{filesList}}'", (templateString) => {
+      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).toEqual(expect.stringMatching(/\{\{\s*filesList\s*\}\}/));
+    });
+
   });
 
   describe("Message Templates", () => {

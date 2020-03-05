@@ -10,9 +10,15 @@ const format = {
   },
 };
 
-function formatAll(template: string, data: CommitData): string {
+function formatAll(
+  template: string,
+  data: CommitData,
+  exclude: string[] = [],
+): string {
   for (const [key, value] of Object.entries(data)) {
-    template = format[key](template, value);
+    if (!exclude.includes(key)) {
+      template = format[key](template, value);
+    }
   }
 
   return template;
@@ -30,7 +36,7 @@ export function formatTemplate(
   messageTemplate: string,
   data: CommitData,
 ): string {
-  const title: string = formatAll(titleTemplate, data);
+  const title: string = formatAll(titleTemplate, data, ["filePaths"]);
   const message: string = formatAll(messageTemplate, data);
   return `${title}\n\n${message}`;
 }
