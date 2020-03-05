@@ -137,6 +137,7 @@ describe("Configuration", () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.isDryRun = true;
 
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
     await main();
@@ -580,6 +581,19 @@ describe("Payloads", () => {
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
+  });
+
+  test.each([
+    PR_NUMBER.NO_CHANGES,
+    PR_NUMBER.REMOVE_SVG,
+    PR_NUMBER.ADD_FILE,
+    PR_NUMBER.MODIFY_FILE,
+  ])("no new or changed SVGs (#%i)", async (prNumber) => {
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+
+    await main();
+
+    expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Found 0/.+ new or changed SVGs"));
   });
 
 });

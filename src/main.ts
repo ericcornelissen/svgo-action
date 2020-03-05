@@ -120,57 +120,61 @@ export default async function main(): Promise<boolean> {
     const svgCount = prSvgs.length;
     core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-    core.info(`Found ${svgCount} new/changed SVGs (out of ${filesCount} files), optimizing...`);
+    if (svgCount > 0) {
+      core.info(`Found ${svgCount} new/changed SVGs (out of ${filesCount} files), optimizing...`);
 
-    core.debug(`fetching content of SVGs in pull request #${prNumber}`);
-    const blobs: GitBlob[] = [];
-    for (const svgFileInfo of prSvgs) {
-      core.debug(`fetching file contents of '${svgFileInfo.path}'`);
-      const fileData: FileData = await getPrFile(client, svgFileInfo.path);
+      core.debug(`fetching content of SVGs in pull request #${prNumber}`);
+      const blobs: GitBlob[] = [];
+      for (const svgFileInfo of prSvgs) {
+        core.debug(`fetching file contents of '${svgFileInfo.path}'`);
+        const fileData: FileData = await getPrFile(client, svgFileInfo.path);
 
-      core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
-      const originalSvg: string = decode(fileData.content, fileData.encoding);
+        core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
+        const originalSvg: string = decode(fileData.content, fileData.encoding);
 
-      core.debug(`optimizing '${svgFileInfo.path}'`);
-      const optimizedSvg: string = await svgo.optimize(originalSvg);
-      if (originalSvg === optimizedSvg) {
-        core.debug(`skipping '${fileData.path}', already optimized`);
-        continue;
+        core.debug(`optimizing '${svgFileInfo.path}'`);
+        const optimizedSvg: string = await svgo.optimize(originalSvg);
+        if (originalSvg === optimizedSvg) {
+          core.debug(`skipping '${fileData.path}', already optimized`);
+          continue;
+        }
+
+        core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
+        const optimizedData: string = encode(optimizedSvg, fileData.encoding);
+
+        core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
+        const svgBlob: GitBlob = await createBlob(
+          client,
+          fileData.path,
+          optimizedData,
+          fileData.encoding,
+        );
+
+        blobs.push(svgBlob);
       }
 
-      core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
-      const optimizedData: string = encode(optimizedSvg, fileData.encoding);
+      if (config.isDryRun) {
+        core.info("Dry mode enabled, not committing");
+      } else if (blobs.length > 0) {
+        const commitInfo: CommitInfo = await commitFiles(
+          client,
+          blobs,
+          strFormat(
+            COMMIT_MESSAGE_TEMPLATE,
+            blobs.length,
+            "- " + blobs.map((blob) => blob.path).join("\n- "),
+          ),
+        );
 
-      core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
-      const svgBlob: GitBlob = await createBlob(
-        client,
-        fileData.path,
-        optimizedData,
-        fileData.encoding,
-      );
+        core.debug(`commit successful (see ${commitInfo.url})`);
+      }
 
-      blobs.push(svgBlob);
+      const optimized = blobs.length;
+      const skipped = svgCount - blobs.length;
+      core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+    } else {
+      core.info(`Found 0/${filesCount} new or changed SVGs, exiting`);
     }
-
-    if (config.isDryRun) {
-      core.info("Dry mode enabled, not committing");
-    } else if (blobs.length > 0) {
-      const commitInfo: CommitInfo = await commitFiles(
-        client,
-        blobs,
-        strFormat(
-          COMMIT_MESSAGE_TEMPLATE,
-          blobs.length,
-          "- " + blobs.map((blob) => blob.path).join("\n- "),
-        ),
-      );
-
-      core.debug(`commit successful (see ${commitInfo.url})`);
-    }
-
-    const optimized = blobs.length;
-    const skipped = svgCount - blobs.length;
-    core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
 
     return true;
   } catch (error) {
