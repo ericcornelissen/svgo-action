@@ -2,7 +2,6 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
 
-import { formatTemplate } from "./templating";
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
 import {
@@ -34,6 +33,7 @@ import {
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
+import { formatTemplate } from "./templating";
 
 
 const COMMIT_MESSAGE_TEMPLATE = "Optimized SVGs:\n{{fileList}}";
