@@ -1,14 +1,8 @@
-export const ActionConfigInstance = {
-  getSvgoOptionsPath: jest.fn()
-    .mockReturnValue(".svgo.yml")
-    .mockName("ActionConfig.getSvgoOptionsPath"),
-  isDryRun: jest.fn()
-    .mockReturnValue(false)
-    .mockName("ActionConfig.isDryRun"),
-};
-
 export const ActionConfig = jest.fn()
-  .mockReturnValue(ActionConfigInstance)
+  .mockImplementation(() => ({
+    svgoOptionsPath: "404",
+    isDryRun: false,
+  }))
   .mockName("inputs.ActionConfig");
 
 export const getConfigFilePath = jest.fn()

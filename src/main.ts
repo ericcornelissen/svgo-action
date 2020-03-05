@@ -1,7 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
-import SVGO from "svgo";
 import { format as strFormat } from "util";
 
 import { decode, encode } from "./encoder";
@@ -34,19 +33,41 @@ import {
   getConfigFilePath,
   getRepoToken,
 } from "./inputs";
-import { SVGOptimizer, getSvgoOptions } from "./svgo";
+import { SVGOptimizer, SVGOptions } from "./svgo";
 
 
-const disablePattern = /disable-svgo-action/;
-const messageTemplate = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
+const COMMIT_MESSAGE_TEMPLATE = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
+const DISABLE_PATTERN = /disable-svgo-action/;
 
-async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
-  const configFilePath = getConfigFilePath();
+
+async function fetchConfigInRepo(
+  client: github.GitHub,
+): Promise<RawActionConfig> {
+  const configFilePath: string = getConfigFilePath();
   try {
-    const configFileData = await getRepoFile(client, configFilePath);
-    const rawActionConfig = decode(configFileData.content, configFileData.encoding);
+    const { content, encoding } = await getRepoFile(client, configFilePath);
+    core.debug(`configuration file for Action found ('${configFilePath}')`);
+
+    const rawActionConfig: string = decode(content, encoding);
     return yaml.safeLoad(rawActionConfig);
   } catch(_) {
+    core.debug(`configuration file for Action not found ('${configFilePath}')`);
+    return { };
+  }
+}
+
+async function fetchSvgoOptions(
+  client: github.GitHub,
+  optionsFilePath: string,
+): Promise<SVGOptions> {
+  try {
+    const { content, encoding } = await getRepoFile(client, optionsFilePath);
+    core.debug(`options file for SVGO found ('${optionsFilePath}')`);
+
+    const rawSvgoOptions: string = decode(content, encoding);
+    return yaml.safeLoad(rawSvgoOptions);
+  } catch(_) {
+    core.debug(`options file for SVGO not found ('${optionsFilePath}')`);
     return { };
   }
 }
@@ -54,7 +75,7 @@ async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> 
 
 export default async function main(): Promise<boolean> {
   try {
-    const token = getRepoToken();
+    const token: string = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
 
     const prNumber: number = getPrNumber();
@@ -63,29 +84,31 @@ export default async function main(): Promise<boolean> {
       return false;
     }
 
-    const rawConfig: RawActionConfig = await getConfigInRepo(client);
-    const config: ActionConfig = new ActionConfig(rawConfig);
-
-    const commitMessage = await getCommitMessage(client);
-    if (disablePattern.test(commitMessage)) {
-      core.info("Action disabled from commit message");
+    const commitMessage: string = await getCommitMessage(client);
+    if (DISABLE_PATTERN.test(commitMessage)) {
+      core.info("Action disabled from commit message, exiting");
       return true;
     }
 
     for await (const comment of getPrComments(client, prNumber)) {
-      if (disablePattern.test(comment)) {
-        core.info("Action disabled from commit message");
+      if (DISABLE_PATTERN.test(comment)) {
+        core.info("Action disabled from Pull Request, exiting");
         return true;
       }
     }
 
-    if (config.isDryRun()) {
+    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
+    const config: ActionConfig = new ActionConfig(rawConfig);
+
+    if (config.isDryRun) {
       core.info("Dry mode is enabled, no changes will be committed");
     }
 
-    const svgoOptionsPath: string = config.getSvgoOptionsPath();
-    core.debug(`fetching SVGO options (at ${svgoOptionsPath})`);
-    const svgoOptions: SVGO.Options = await getSvgoOptions(client, svgoOptionsPath);
+    core.debug(`fetching SVGO options (at ${config.svgoOptionsPath})`);
+    const svgoOptions: SVGOptions = await fetchSvgoOptions(
+      client,
+      config.svgoOptionsPath,
+    );
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
@@ -130,16 +153,16 @@ export default async function main(): Promise<boolean> {
         blobs.push(svgBlob);
       }
 
-      if (config.isDryRun()) {
+      if (config.isDryRun) {
         core.info("Dry mode enabled, not committing");
       } else if (blobs.length > 0) {
         const commitInfo: CommitInfo = await commitFiles(
           client,
           blobs,
           strFormat(
-            messageTemplate,
+            COMMIT_MESSAGE_TEMPLATE,
             blobs.length,
-            "- " + blobs.map(blob => blob.path).join("\n- "),
+            "- " + blobs.map((blob) => blob.path).join("\n- "),
           ),
         );
 
