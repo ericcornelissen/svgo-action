@@ -1,8 +1,8 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
-import { format as strFormat } from "util";
 
+import { formatTemplate } from "./templating";
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
 import {
@@ -159,10 +159,12 @@ export default async function main(): Promise<boolean> {
         const commitInfo: CommitInfo = await commitFiles(
           client,
           blobs,
-          strFormat(
+          formatTemplate(
             COMMIT_MESSAGE_TEMPLATE,
-            blobs.length,
-            "- " + blobs.map((blob) => blob.path).join("\n- "),
+            {
+              optimizedCount: blobs.length,
+              filePaths: blobs.map((blob) => blob.path || ""),
+            },
           ),
         );
 
