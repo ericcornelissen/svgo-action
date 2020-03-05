@@ -36,8 +36,8 @@ import {
 import { SVGOptimizer, SVGOptions } from "./svgo";
 
 
-const COMMIT_MESSAGE_TEMPLATE = "Optimized SVGs:\n%s";
-const COMMIT_TITLE_TEMPLATE = "Optimize %s SVG(s) with SVGO";
+const COMMIT_MESSAGE_TEMPLATE = "Optimized SVGs:\n{{fileList}}";
+const COMMIT_TITLE_TEMPLATE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
 const DISABLE_PATTERN = /disable-svgo-action/;
 
 

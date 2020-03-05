@@ -1,4 +1,22 @@
-import { format as strFormat } from "util";
+const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
+const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
+
+const format = {
+  filePaths: (template: string, value: string[]): string => {
+    return template.replace(FILES_LIST_EXP, "- " + value.join("\n- "));
+  },
+  optimizedCount: (template: string, value: number): string => {
+    return template.replace(OPTIMIZED_COUNT_EXP, value.toString());
+  },
+};
+
+function formatAll(template: string, data: CommitData): string {
+  for (const [key, value] of Object.entries(data)) {
+    template = format[key](template, value);
+  }
+
+  return template;
+}
 
 
 export type CommitData = {
@@ -12,10 +30,7 @@ export function formatTemplate(
   messageTemplate: string,
   data: CommitData,
 ): string {
-  const { filePaths, optimizedCount } = data;
-
-  const title = strFormat(titleTemplate, optimizedCount);
-  const message = strFormat(messageTemplate, "- " + filePaths.join("\n- "));
-
+  const title: string = formatAll(titleTemplate, data);
+  const message: string = formatAll(messageTemplate, data);
   return `${title}\n\n${message}`;
 }
