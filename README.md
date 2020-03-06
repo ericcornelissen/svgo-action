@@ -3,6 +3,7 @@
 [![GitHub Marketplace][marketplace-image]][marketplace-url]
 [![Node.js CI][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
+[![Maintainability][maintainability-image]][maintainability-url]
 
 Automatically run [SVGO] on SVGs in Pull Requests.
 
@@ -136,6 +137,8 @@ jobs:
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
+[maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
+[maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [SVGO]: https://github.com/svg/svgo
 [Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
 [in the Workflow file]: #in-the-workflow-file
