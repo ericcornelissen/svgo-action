@@ -82,7 +82,11 @@ describe("ActionConfig", () => {
       expect(instance.commitDescription).toEqual(description);
     });
 
-    test.todo("commit description is an empty string in the config object");
+    test("commit description is an empty string in the config object", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { description: "" } });
+      expect(instance.commitDescription).toBeDefined();
+      expect(instance.commitDescription).not.toEqual("");
+    });
 
   });
 
@@ -107,7 +111,11 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toEqual(title);
     });
 
-    test.todo("commit title is an empty string in the config object");
+    test("commit title is an empty string in the config object", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { title: "" } });
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+    });
 
   });
 
