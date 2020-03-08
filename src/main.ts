@@ -1,7 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
-import { format as strFormat } from "util";
 
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
@@ -34,9 +33,9 @@ import {
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
+import { formatTemplate } from "./templating";
 
 
-const COMMIT_MESSAGE_TEMPLATE = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
 const DISABLE_PATTERN = /disable-svgo-action/;
 
 
@@ -159,10 +158,13 @@ export default async function main(): Promise<boolean> {
         const commitInfo: CommitInfo = await commitFiles(
           client,
           blobs,
-          strFormat(
-            COMMIT_MESSAGE_TEMPLATE,
-            blobs.length,
-            "- " + blobs.map((blob) => blob.path).join("\n- "),
+          formatTemplate(
+            config.commitTitle,
+            config.commitDescription,
+            {
+              optimizedCount: blobs.length,
+              filePaths: blobs.map((blob) => blob.path),
+            },
           ),
         );
 

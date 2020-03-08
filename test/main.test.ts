@@ -13,6 +13,7 @@ import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
 import * as svgo from "./mocks/svgo.mock";
+import * as templating from "./mocks/templating.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
@@ -20,6 +21,7 @@ jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
+jest.mock("../src/templating", () => templating);
 
 import { PR_NOT_FOUND } from "../src/github-api";
 import main from "../src/main";
@@ -44,6 +46,8 @@ beforeEach(() => {
 
   svgo.SVGOptimizer.mockClear();
   svgo.OptimizerInstance.optimize.mockClear();
+
+  templating.formatTemplate.mockClear();
 });
 
 describe("Function usage", () => {
@@ -174,6 +178,46 @@ describe("Configuration", () => {
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
   });
 
+  test.each([
+    "This should be a commit title",
+    "Why not Zoidberg",
+    "A templated commit title? {{optimizedCount}}",
+  ])("custom commit title (%s)", async (commitTitle) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commitTitle = commitTitle;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(templating.formatTemplate).toHaveBeenCalledWith(
+      commitTitle,
+      expect.any(String),
+      expect.any(Object),
+    );
+  });
+
+  test.each([
+    "This should be a commit desciption",
+    "Shut up and take my money",
+    "A templated commit title? {{filesList}}",
+  ])("custom commit description (%s)", async (commitDescription) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commitDescription = commitDescription;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(templating.formatTemplate).toHaveBeenCalledWith(
+      expect.any(String),
+      commitDescription,
+      expect.any(Object),
+    );
+  });
+
 });
 
 describe("Manipulation", () => {
@@ -293,7 +337,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.stringContaining("1"),
+      expect.any(String),
     );
   });
 
@@ -325,7 +369,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: fooFilePath }),
       ]),
-      expect.stringContaining("1"),
+      expect.any(String),
     );
   });
 
@@ -379,7 +423,7 @@ describe("Payloads", () => {
         expect.objectContaining({ path: fooFilePath }),
         expect.objectContaining({ path: barFilePath }),
       ]),
-      expect.stringMatching("2"),
+      expect.any(String),
     );
   });
 
@@ -447,7 +491,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.stringContaining("1"),
+      expect.any(String),
     );
   });
 
@@ -479,7 +523,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.stringContaining("1"),
+      expect.any(String),
     );
   });
 
@@ -511,7 +555,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: complexFilePath }),
       ]),
-      expect.stringContaining("1"),
+      expect.any(String),
     );
   });
 
@@ -570,7 +614,7 @@ describe("Payloads", () => {
         expect.objectContaining({ path: barFilePath }),
         expect.objectContaining({ path: testFilePath }),
       ]),
-      expect.stringContaining("3"),
+      expect.any(String),
     );
   });
 

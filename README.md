@@ -40,6 +40,8 @@ configuration file]. Below you can find the available options.
 > :information_source: In the future the action will have more options. See
 > [#17] for progress in this regard.
 
+- `commit`: configure the commit message for the Action.
+  - [Full documentation](docs/configuring-the-commit.md)
 - `dry-run`: If enabled, the action doesn't commit changes back.
   - Possible values: `false`, `true`
   - Default value: `false`
@@ -71,6 +73,9 @@ you can configure the Action inside this file. For example:
 ```yaml
 dry-run: true
 svgo-options: "path/to/svgo-options.yml"
+commit:
+  title: "Optimized {{optimizedCount}} SVG(s)"
+  description: "Namely:\n{{filesList}}"
 ```
 
 #### In Another Configuration File

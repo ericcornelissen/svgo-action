@@ -61,6 +61,64 @@ describe("ActionConfig", () => {
 
   });
 
+  describe(".commitDescription", () => {
+
+    test("commit is not defined in the config object", () => {
+      const instance: ActionConfig = new ActionConfig({ });
+      expect(instance.commitDescription).toBeDefined();
+    });
+
+    test("commit is defined in the config object, but the description isn't", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { } });
+      expect(instance.commitDescription).toBeDefined();
+    });
+
+    test.each([
+      "This is a commit description",
+      "This is templated commit description {{optimizedCount}}",
+      "These are not the droids you're looking for",
+    ])("commit description is defined in the config object", (description) => {
+      const instance: ActionConfig = new ActionConfig({ commit: { description } });
+      expect(instance.commitDescription).toEqual(description);
+    });
+
+    test("commit description is an empty string in the config object", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { description: "" } });
+      expect(instance.commitDescription).toBeDefined();
+      expect(instance.commitDescription).not.toEqual("");
+    });
+
+  });
+
+  describe(".commitTitle", () => {
+
+    test("commit is not defined in the config object", () => {
+      const instance: ActionConfig = new ActionConfig({ });
+      expect(instance.commitTitle).toBeDefined();
+    });
+
+    test("commit is defined in the config object, but the title isn't", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { } });
+      expect(instance.commitTitle).toBeDefined();
+    });
+
+    test.each([
+      "This is a commit title",
+      "This is templated commit title {{optimizedCount}}",
+      "If you see a rat the size of a car, you're playing the wrong game",
+    ])("commit title is defined in the config object", (title) => {
+      const instance: ActionConfig = new ActionConfig({ commit: { title } });
+      expect(instance.commitTitle).toEqual(title);
+    });
+
+    test("commit title is an empty string in the config object", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { title: "" } });
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+    });
+
+  });
+
   describe(".isDryRun", () => {
 
     const inputName = "dry-run";
