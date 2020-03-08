@@ -53,6 +53,30 @@ Optimize 42 SVG(s) with SVGO
 This will be the commit message description
 ```
 
+### Conventional Commits
+
+If you want to use [conventional commit] messages, you can use `conventional`
+key as shown below. This still allows you to configure the commit message
+`description`. The `title` value will be ignored.
+
+> :information_source: This option is also available from the Workflow file
+> through the `conventional-commit` option.
+
+```yaml
+commit:
+  conventional: true
+  title: "This will be ignored"
+  description: "You can still configure the commit description"
+```
+
+This will result in commit messages that look like:
+
+```git
+fix: optimize {{optimizedCount}} SVG(s)
+
+You can still configure the commit description
+```
+
 ## Commit Message Templating
 
 The Action provides a simple, [Handlebars]-inspired, templating language to
@@ -86,4 +110,5 @@ Namely:
 ```
 
 [commit message templating]: #commit-message-templating
+[conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/
 [handlebars]: https://handlebarsjs.com/

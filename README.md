@@ -42,6 +42,10 @@ configuration file]. Below you can find the available options.
 
 - `commit`: configure the commit message for the Action.
   - [Full documentation](docs/configuring-the-commit.md)
+- `conventional-commits`: Use [conventional commit] message titles for commits.
+  - Possible values: `false`, `true`
+  - Default value: `false`
+  - Example: `conventional-commits: true`
 - `dry-run`: If enabled, the action doesn't commit changes back.
   - Possible values: `false`, `true`
   - Default value: `false`
@@ -60,6 +64,7 @@ The first way to configure the action is inside the Workflow file, after the
 ```yaml
 with:
   repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  conventional-commits: true
   dry-run: true
   svgo-options: "path/to/svgo-options.yml"
 ```
@@ -74,6 +79,7 @@ you can configure the Action inside this file. For example:
 dry-run: true
 svgo-options: "path/to/svgo-options.yml"
 commit:
+  conventional: false
   title: "Optimized {{optimizedCount}} SVG(s)"
   description: "Namely:\n{{filesList}}"
 ```
@@ -150,3 +156,4 @@ jobs:
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
 [#17]: https://github.com/ericcornelissen/svgo-action/issues/17
+[conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/
