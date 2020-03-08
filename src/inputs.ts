@@ -9,8 +9,15 @@ const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 const NOT_REQUIRED = { required: false };
 const REQUIRED = { required: true };
 
+const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVGs:\n{{fileList}}";
+const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
+
 
 export type RawActionConfig = {
+  readonly commit?: {
+    readonly title?: string;
+    readonly description?: string;
+  };
   readonly "dry-run"?: boolean | string;
   readonly "svgo-options"?: string;
 }
@@ -26,12 +33,24 @@ export function getRepoToken(): string {
 
 export class ActionConfig {
 
+  public readonly commitDescription: string;
+  public readonly commitTitle: string;
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
 
   constructor(config: RawActionConfig = { }) {
+    this.commitDescription = ActionConfig.getCommitDescription(config);
+    this.commitTitle = ActionConfig.getCommitTitle(config);
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
+  }
+
+  private static getCommitDescription(config: RawActionConfig): string {
+    return config.commit?.description || DEFAULT_COMMIT_DESCRIPTION;
+  }
+
+  private static getCommitTitle(config: RawActionConfig): string {
+    return config.commit?.title || DEFAULT_COMMIT_TITLE;
   }
 
   private static getSvgoOptionsPath(config: RawActionConfig): string {

@@ -54,6 +54,26 @@ describe("ActionConfig", () => {
 
   });
 
+  describe(".commitDescription", () => {
+
+    test.todo("commit is defined in the config object, but the description isn't");
+
+    test.todo("commit description is defined in the config object");
+
+    test.todo("commit description is an empty string in the config object");
+
+  });
+
+  describe(".commitTitle", () => {
+
+    test.todo("commit is defined in the config object, but the title isn't");
+
+    test.todo("commit title is defined in the config object");
+
+    test.todo("commit title is an empty string in the config object");
+
+  });
+
   describe(".isDryRun", () => {
 
     const testNonBoolean = test.each(["foobar", "treu", "fals"]);
