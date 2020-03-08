@@ -69,7 +69,7 @@ async function fetchSvgoOptions(
   }
 }
 
-function getContext(): [GitHub, number] {
+function getContext(): { client: GitHub; prNumber: number } {
   const token: string = getRepoToken();
   const client: GitHub = new GitHub(token);
 
@@ -78,31 +78,31 @@ function getContext(): [GitHub, number] {
     throw new Error("Could not get Pull Request number from context");
   }
 
-  return [client, prNumber];
+  return { client, prNumber };
 }
 
 async function checkIfActionIsDisabled(
   client: GitHub,
   prNumber: number,
-): Promise<[boolean, string]> {
+): Promise<{ isDisabled: boolean; disabledFrom: string }> {
   const commitMessage: string = await getCommitMessage(client);
   if (DISABLE_PATTERN.test(commitMessage)) {
-    return [true, "commit message"];
+    return { isDisabled: true, disabledFrom: "commit message" };
   }
 
   for await (const comment of getPrComments(client, prNumber)) {
     if (DISABLE_PATTERN.test(comment)) {
-      return [true, "Pull Request"];
+      return { isDisabled: true, disabledFrom: "Pull Request" };
     }
   }
 
-  return [false, ""];
+  return { isDisabled: false, disabledFrom: "" };
 }
 
 async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
-): Promise<[FileInfo[], number]> {
+): Promise<{ prSvgs: FileInfo[]; svgCount: number }> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
   const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
   const filesCount = prFiles.length;
@@ -118,7 +118,7 @@ async function getSvgsInPR(
     core.info(`Found 0/${filesCount} new or changed SVGs, exiting`);
   }
 
-  return [prSvgs, svgCount];
+  return { prSvgs, svgCount };
 }
 
 async function doOptimizeSvgs(
@@ -188,8 +188,8 @@ async function doCommitChanges(
 
 export default async function main(): Promise<boolean> {
   try {
-    const [client, prNumber] = getContext();
-    const [isDisabled, disabledFrom] = await checkIfActionIsDisabled(client, prNumber);
+    const { client, prNumber } = getContext();
+    const { isDisabled, disabledFrom } = await checkIfActionIsDisabled(client, prNumber);
     if (isDisabled) {
       core.info(`Action disabled from ${disabledFrom}, exiting`);
       return true;
@@ -201,7 +201,7 @@ export default async function main(): Promise<boolean> {
       core.info("Dry mode enabled, no changes will be committed");
     }
 
-    const [prSvgs, svgCount] = await getSvgsInPR(client, prNumber);
+    const { prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
     if (svgCount > 0) {
       const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
       const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
