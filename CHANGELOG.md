@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add `svgCount` as templating variable. ([#122])
 
 ## [0.3.0] - 2020-03-08
 
@@ -73,3 +73,4 @@ Versioning].
 [#108]: https://github.com/ericcornelissen/svgo-action/pull/108
 [#111]: https://github.com/ericcornelissen/svgo-action/pull/111
 [#112]: https://github.com/ericcornelissen/svgo-action/pull/112
+[#122]: https://github.com/ericcornelissen/svgo-action/pull/122
