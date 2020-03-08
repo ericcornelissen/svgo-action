@@ -117,7 +117,7 @@ describe("Logging", () => {
     expect(core.setFailed).not.toHaveBeenCalled();
   });
 
-  test("log an error when Pull Request number could not be found", async () => {
+  test.skip("log an error when Pull Request number could not be found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
 
     await main();
