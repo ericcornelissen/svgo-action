@@ -161,20 +161,10 @@ async function doOptimizeSvgs(
 
 async function doCommitChanges(
   client: GitHub,
-  commitTitle: string,
-  commitDescription: string,
+  commitMessage: string,
   blobs: GitBlob[],
 ): Promise<void> {
   if (blobs.length > 0) {
-    const commitMessage: string = formatTemplate(
-      commitTitle,
-      commitDescription,
-      {
-        optimizedCount: blobs.length,
-        filePaths: blobs.map((blob) => blob.path),
-      },
-    );
-
     const commitInfo: CommitInfo = await commitFiles(
       client,
       blobs,
@@ -207,7 +197,16 @@ export default async function main(): Promise<boolean> {
       const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
       const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
       if (!config.isDryRun) {
-        await doCommitChanges( client, config.commitTitle, config.commitDescription, blobs);
+        const commitMessage: string = formatTemplate(
+          config.commitTitle,
+          config.commitDescription,
+          {
+            filePaths: blobs.map((blob) => blob.path),
+            optimizedCount: blobs.length,
+            svgCount: svgCount,
+          },
+        );
+        await doCommitChanges(client, commitMessage, blobs);
       }
 
       const optimized = blobs.length;
