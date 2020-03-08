@@ -3,6 +3,7 @@
 [![GitHub Marketplace][marketplace-image]][marketplace-url]
 [![Node.js CI][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
+[![Maintainability][maintainability-image]][maintainability-url]
 
 Automatically run [SVGO] on SVGs in Pull Requests.
 
@@ -22,7 +23,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.2.2
+    - uses: ericcornelissen/svgo-action@v0.3.0
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 ```
@@ -39,6 +40,8 @@ configuration file]. Below you can find the available options.
 > :information_source: In the future the action will have more options. See
 > [#17] for progress in this regard.
 
+- `commit`: configure the commit message for the Action.
+  - [Full documentation](docs/configuring-the-commit.md)
 - `dry-run`: If enabled, the action doesn't commit changes back.
   - Possible values: `false`, `true`
   - Default value: `false`
@@ -70,6 +73,9 @@ you can configure the Action inside this file. For example:
 ```yaml
 dry-run: true
 svgo-options: "path/to/svgo-options.yml"
+commit:
+  title: "Optimized {{optimizedCount}} SVG(s)"
+  description: "Namely:\n{{filesList}}"
 ```
 
 #### In Another Configuration File
@@ -90,12 +96,20 @@ with:
 
 #### Manually Disabling the Action
 
-It is possible to manually disable the action from a commit message. This can be
+It is possible to manually disable the Action from a commit message. This can be
 achieved by including the string "_disable-svgo-action_" anywhere in the commit
 message.
 
-> :warning: This will only stop the action from optimizing SVGs in the build
+> :warning: This will only stop the Action from optimizing SVGs in the build
 > corresonding to the commit whose commit message contains the string.
+
+Another possiblity is to disable the Action from a Pull Request comment. This
+can be achieved by including the string "_disable-svgo-action_" anywhere in any
+comment on the Pull Request.
+
+> :warning: This will stop the Action from optimizing SVGs in any subsequent
+> build for that Pull Request. To revert the effect the comment must be modified
+> or removed.
 
 #### Limit Runs
 
@@ -122,12 +136,14 @@ jobs:
   ...
 ```
 
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.2-undefined.svg?logo=github&logoColor=white&style=flat
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.3.0-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
+[maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
+[maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 [SVGO]: https://github.com/svg/svgo
 [Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
 [in the Workflow file]: #in-the-workflow-file

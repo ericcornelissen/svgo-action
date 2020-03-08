@@ -130,8 +130,35 @@ export async function createBlob(
 }
 
 export async function getCommitMessage(client: github.GitHub): Promise<string> {
-  const commit = await getCommit(client);
-  return commit.message;
+  const { message } = await getCommit(client);
+  return message;
+}
+
+export async function* getPrComments(
+  client: github.GitHub,
+  prNumber: number,
+): AsyncGenerator<string> {
+  const PER_PAGE = 10;
+
+  const { data } = await client.pulls.get({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+  });
+
+  for (let i = 0; i < Math.ceil(data.comments / PER_PAGE); i++) {
+    const { data: comments } = await client.issues.listComments({
+      owner: github.context.repo.owner,
+      repo: github.context.repo.repo,
+      issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+      per_page: PER_PAGE, /* eslint-disable-line @typescript-eslint/camelcase */
+      page: i,
+    });
+
+    for (const comment of comments) {
+      yield comment.body;
+    }
+  }
 }
 
 export async function getPrFile(
@@ -163,7 +190,7 @@ export async function getPrFiles(
     pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
   });
 
-  return prFilesDetails.data.map(details => ({
+  return prFilesDetails.data.map((details) => ({
     path: details.filename,
     status: details.status,
   }));

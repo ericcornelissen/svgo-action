@@ -1,7 +1,7 @@
 import optimizations from "../fixtures/optimizations.json";
 
 
-export const optimizerInstance = {
+export const OptimizerInstance = {
   optimize: jest.fn()
     .mockImplementation(async (svg) => {
       for (const { optimized, original } of optimizations) {
@@ -13,10 +13,6 @@ export const optimizerInstance = {
     .mockName("SVGOptimizer.optimize"),
 };
 
-export const getSvgoOptions = jest.fn()
-  .mockReturnValue({ })
-  .mockName("svgo.getSvgoOptions");
-
 export const SVGOptimizer = jest.fn()
-  .mockReturnValue(optimizerInstance)
+  .mockReturnValue(OptimizerInstance)
   .mockName("SVGOptimizer");

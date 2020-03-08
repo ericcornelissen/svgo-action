@@ -19,6 +19,13 @@ export enum PR_NUMBER {
   ADD_SVG_REMOVE_FILE,
   ADD_FILE_REMOVE_SVG,
   ADD_OPTIMIZED_SVG,
+
+  NO_COMMENTS,
+  ONE_COMMENT,
+  TEN_COMMENTS,
+  ELEVEN_COMMENTS,
+  SEVENTEEN_COMMENTS,
+  ONE_HUNDERD_AND_THREE_COMMENTS,
 }
 
 export const context = {
@@ -105,46 +112,105 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.updateRef"),
   },
+  issues: {
+    listComments: jest.fn()
+      .mockImplementation(async ({ issue_number: prNumber, per_page: perPage, page }) => {
+        const generateComments = (length) => Array.from({ length }).map((_, i) => ({ body: `${i}` }));
+
+        let allComments: unknown[];
+        switch (prNumber) {
+          case PR_NUMBER.NO_COMMENTS:
+            allComments = [ ];
+            break;
+          case PR_NUMBER.ONE_COMMENT:
+            allComments = generateComments(1);
+            break;
+          case PR_NUMBER.TEN_COMMENTS:
+            allComments = generateComments(10);
+            break;
+          case PR_NUMBER.ELEVEN_COMMENTS:
+            allComments = generateComments(11);
+            break;
+          case PR_NUMBER.SEVENTEEN_COMMENTS:
+            allComments = generateComments(17);
+            break;
+          case PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS:
+            allComments = generateComments(103);
+            break;
+          default:
+            return { };
+        }
+
+        const sliceStart = page * perPage;
+        const sliceEnd = (page + 1) * perPage;
+        return { data: allComments.slice(sliceStart, sliceEnd) };
+      })
+      .mockName("GitHub.issues.listComments"),
+  },
   pulls: {
-    listFiles: async ({ pull_number: prNumber }) => {
-      switch (prNumber) {
-        case PR_NUMBER.NO_CHANGES:
-          return { data: [ ] };
-        case PR_NUMBER.MANY_CHANGES:
-          return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 optimized SVG, add 1 file, modify 1 file"] };
-        case PR_NUMBER.ADD_SVG:
-          return { data: prPayloads["add 1 SVG"] };
-        case PR_NUMBER.MODIFY_SVG:
-          return { data: prPayloads["modify 1 SVG"] };
-        case PR_NUMBER.REMOVE_SVG:
-          return { data: prPayloads["remove 1 SVG"] };
-        case PR_NUMBER.ADD_MODIFY_REMOVE_SVG:
-          return { data: prPayloads["add 1 SVG, modify 1 SVG, remove 1 SVG"] };
-        case PR_NUMBER.ADD_FILE:
-          return { data: prPayloads["add 1 file"] };
-        case PR_NUMBER.MODIFY_FILE:
-          return { data: prPayloads["modify 1 file"] };
-        case PR_NUMBER.REMOVE_FILE:
-          return { data: prPayloads["remove 1 file"] };
-        case PR_NUMBER.ADD_SVG_MODIFY_FILE:
-          return { data: prPayloads["add 1 SVG, modify 1 file"] };
-        case PR_NUMBER.ADD_FILE_MODIFY_SVG:
-          return { data: prPayloads["add 1 file, modify 1 SVG"] };
-        case PR_NUMBER.ADD_SVG_REMOVE_FILE:
-          return { data: prPayloads["add 1 SVG, remove 1 file"] };
-        case PR_NUMBER.ADD_FILE_REMOVE_SVG:
-          return { data: prPayloads["add 1 file, remove 1 SVG"] };
-        case PR_NUMBER.ADD_OPTIMIZED_SVG:
-          return { data: prPayloads["add 1 optimized SVG"] };
-        default:
-          return { };
-      }
-    },
+    get: jest.fn()
+      .mockImplementation(async ({ pull_number: prNumber }) => {
+        switch (prNumber) {
+          case PR_NUMBER.NO_COMMENTS:
+            return { data: { comments: 0 } };
+          case PR_NUMBER.ONE_COMMENT:
+            return { data: { comments: 1 } };
+          case PR_NUMBER.TEN_COMMENTS:
+            return { data: { comments: 10 } };
+          case PR_NUMBER.ELEVEN_COMMENTS:
+            return { data: { comments: 11 } };
+          case PR_NUMBER.SEVENTEEN_COMMENTS:
+            return { data: { comments: 17 } };
+          case PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS:
+            return { data: { comments: 103 } };
+          default:
+            return { };
+        }
+      })
+      .mockName("GitHub.pulls.get"),
+    listFiles: jest.fn()
+      .mockImplementation(async ({ pull_number: prNumber }) => {
+        switch (prNumber) {
+          case PR_NUMBER.NO_CHANGES:
+            return { data: [ ] };
+          case PR_NUMBER.MANY_CHANGES:
+            return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 optimized SVG, add 1 file, modify 1 file"] };
+          case PR_NUMBER.ADD_SVG:
+            return { data: prPayloads["add 1 SVG"] };
+          case PR_NUMBER.MODIFY_SVG:
+            return { data: prPayloads["modify 1 SVG"] };
+          case PR_NUMBER.REMOVE_SVG:
+            return { data: prPayloads["remove 1 SVG"] };
+          case PR_NUMBER.ADD_MODIFY_REMOVE_SVG:
+            return { data: prPayloads["add 1 SVG, modify 1 SVG, remove 1 SVG"] };
+          case PR_NUMBER.ADD_FILE:
+            return { data: prPayloads["add 1 file"] };
+          case PR_NUMBER.MODIFY_FILE:
+            return { data: prPayloads["modify 1 file"] };
+          case PR_NUMBER.REMOVE_FILE:
+            return { data: prPayloads["remove 1 file"] };
+          case PR_NUMBER.ADD_SVG_MODIFY_FILE:
+            return { data: prPayloads["add 1 SVG, modify 1 file"] };
+          case PR_NUMBER.ADD_FILE_MODIFY_SVG:
+            return { data: prPayloads["add 1 file, modify 1 SVG"] };
+          case PR_NUMBER.ADD_SVG_REMOVE_FILE:
+            return { data: prPayloads["add 1 SVG, remove 1 file"] };
+          case PR_NUMBER.ADD_FILE_REMOVE_SVG:
+            return { data: prPayloads["add 1 file, remove 1 SVG"] };
+          case PR_NUMBER.ADD_OPTIMIZED_SVG:
+            return { data: prPayloads["add 1 optimized SVG"] };
+          default:
+            return { };
+        }
+      })
+      .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
-    getContents: async ({ path }) => {
-      return { data: contentPayloads[path] };
-    },
+    getContents: jest.fn()
+      .mockImplementation(async ({ path }) => {
+        return { data: contentPayloads[path] };
+      })
+      .mockName("GitHub.repos.getContents"),
   },
 };
 

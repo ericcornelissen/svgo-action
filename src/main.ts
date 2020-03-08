@@ -1,8 +1,6 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import * as yaml from "js-yaml";
-import SVGO from "svgo";
-import { format as strFormat } from "util";
 
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
@@ -19,6 +17,7 @@ import {
   commitFiles,
   createBlob,
   getCommitMessage,
+  getPrComments,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -33,19 +32,41 @@ import {
   getConfigFilePath,
   getRepoToken,
 } from "./inputs";
-import { SVGOptimizer, getSvgoOptions } from "./svgo";
+import { SVGOptimizer, SVGOptions } from "./svgo";
+import { formatTemplate } from "./templating";
 
 
-const disablePattern = /disable-svgo-action/;
-const messageTemplate = "Optimize %s SVG(s) with SVGO\n\nOptimized SVGs:\n%s";
+const DISABLE_PATTERN = /disable-svgo-action/;
 
-async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> {
-  const configFilePath = getConfigFilePath();
+
+async function fetchConfigInRepo(
+  client: github.GitHub,
+): Promise<RawActionConfig> {
+  const configFilePath: string = getConfigFilePath();
   try {
-    const configFileData = await getRepoFile(client, configFilePath);
-    const rawActionConfig = decode(configFileData.content, configFileData.encoding);
+    const { content, encoding } = await getRepoFile(client, configFilePath);
+    core.debug(`configuration file for Action found ('${configFilePath}')`);
+
+    const rawActionConfig: string = decode(content, encoding);
     return yaml.safeLoad(rawActionConfig);
   } catch(_) {
+    core.debug(`configuration file for Action not found ('${configFilePath}')`);
+    return { };
+  }
+}
+
+async function fetchSvgoOptions(
+  client: github.GitHub,
+  optionsFilePath: string,
+): Promise<SVGOptions> {
+  try {
+    const { content, encoding } = await getRepoFile(client, optionsFilePath);
+    core.debug(`options file for SVGO found ('${optionsFilePath}')`);
+
+    const rawSvgoOptions: string = decode(content, encoding);
+    return yaml.safeLoad(rawSvgoOptions);
+  } catch(_) {
+    core.debug(`options file for SVGO not found ('${optionsFilePath}')`);
     return { };
   }
 }
@@ -53,21 +74,8 @@ async function getConfigInRepo(client: github.GitHub): Promise<RawActionConfig> 
 
 export default async function main(): Promise<boolean> {
   try {
-    const token = getRepoToken();
+    const token: string = getRepoToken();
     const client: github.GitHub = new github.GitHub(token);
-
-    const rawConfig: RawActionConfig = await getConfigInRepo(client);
-    const config: ActionConfig = new ActionConfig(rawConfig);
-
-    const commitMessage = await getCommitMessage(client);
-    if (disablePattern.test(commitMessage)) {
-      core.info("Action disabled from commit message");
-      return true;
-    }
-
-    if (config.isDryRun()) {
-      core.info("Dry mode is enabled, no changes will be committed");
-    }
 
     const prNumber: number = getPrNumber();
     if (prNumber === PR_NOT_FOUND) {
@@ -75,9 +83,31 @@ export default async function main(): Promise<boolean> {
       return false;
     }
 
-    const svgoOptionsPath: string = config.getSvgoOptionsPath();
-    core.debug(`fetching SVGO options (at ${svgoOptionsPath})`);
-    const svgoOptions: SVGO.Options = await getSvgoOptions(client, svgoOptionsPath);
+    const commitMessage: string = await getCommitMessage(client);
+    if (DISABLE_PATTERN.test(commitMessage)) {
+      core.info("Action disabled from commit message, exiting");
+      return true;
+    }
+
+    for await (const comment of getPrComments(client, prNumber)) {
+      if (DISABLE_PATTERN.test(comment)) {
+        core.info("Action disabled from Pull Request, exiting");
+        return true;
+      }
+    }
+
+    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
+    const config: ActionConfig = new ActionConfig(rawConfig);
+
+    if (config.isDryRun) {
+      core.info("Dry mode is enabled, no changes will be committed");
+    }
+
+    core.debug(`fetching SVGO options (at ${config.svgoOptionsPath})`);
+    const svgoOptions: SVGOptions = await fetchSvgoOptions(
+      client,
+      config.svgoOptionsPath,
+    );
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     core.debug(`fetching changed files for pull request #${prNumber}`);
@@ -89,57 +119,64 @@ export default async function main(): Promise<boolean> {
     const svgCount = prSvgs.length;
     core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-    core.info(`Found ${svgCount} new/changed SVGs (out of ${filesCount} files), optimizing...`);
+    if (svgCount > 0) {
+      core.info(`Found ${svgCount} new/changed SVGs (out of ${filesCount} files), optimizing...`);
 
-    core.debug(`fetching content of SVGs in pull request #${prNumber}`);
-    const blobs: GitBlob[] = [];
-    for (const svgFileInfo of prSvgs) {
-      core.debug(`fetching file contents of '${svgFileInfo.path}'`);
-      const fileData: FileData = await getPrFile(client, svgFileInfo.path);
+      core.debug(`fetching content of SVGs in pull request #${prNumber}`);
+      const blobs: GitBlob[] = [];
+      for (const svgFileInfo of prSvgs) {
+        core.debug(`fetching file contents of '${svgFileInfo.path}'`);
+        const fileData: FileData = await getPrFile(client, svgFileInfo.path);
 
-      core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
-      const originalSvg: string = decode(fileData.content, fileData.encoding);
+        core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
+        const originalSvg: string = decode(fileData.content, fileData.encoding);
 
-      core.debug(`optimizing '${svgFileInfo.path}'`);
-      const optimizedSvg: string = await svgo.optimize(originalSvg);
-      if (originalSvg === optimizedSvg) {
-        core.debug(`skipping '${fileData.path}', already optimized`);
-        continue;
+        core.debug(`optimizing '${svgFileInfo.path}'`);
+        const optimizedSvg: string = await svgo.optimize(originalSvg);
+        if (originalSvg === optimizedSvg) {
+          core.debug(`skipping '${fileData.path}', already optimized`);
+          continue;
+        }
+
+        core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
+        const optimizedData: string = encode(optimizedSvg, fileData.encoding);
+
+        core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
+        const svgBlob: GitBlob = await createBlob(
+          client,
+          fileData.path,
+          optimizedData,
+          fileData.encoding,
+        );
+
+        blobs.push(svgBlob);
       }
 
-      core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
-      const optimizedData: string = encode(optimizedSvg, fileData.encoding);
+      if (config.isDryRun) {
+        core.info("Dry mode enabled, not committing");
+      } else if (blobs.length > 0) {
+        const commitInfo: CommitInfo = await commitFiles(
+          client,
+          blobs,
+          formatTemplate(
+            config.commitTitle,
+            config.commitDescription,
+            {
+              optimizedCount: blobs.length,
+              filePaths: blobs.map((blob) => blob.path),
+            },
+          ),
+        );
 
-      core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
-      const svgBlob: GitBlob = await createBlob(
-        client,
-        fileData.path,
-        optimizedData,
-        fileData.encoding,
-      );
+        core.debug(`commit successful (see ${commitInfo.url})`);
+      }
 
-      blobs.push(svgBlob);
+      const optimized = blobs.length;
+      const skipped = svgCount - blobs.length;
+      core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+    } else {
+      core.info(`Found 0/${filesCount} new or changed SVGs, exiting`);
     }
-
-    if (config.isDryRun()) {
-      core.info("Dry mode enabled, not committing");
-    } else if (blobs.length > 0) {
-      const commitInfo: CommitInfo = await commitFiles(
-        client,
-        blobs,
-        strFormat(
-          messageTemplate,
-          blobs.length,
-          "- " + blobs.map(blob => blob.path).join("\n- "),
-        ),
-      );
-
-      core.debug(`commit successful (see ${commitInfo.url})`);
-    }
-
-    const optimized = blobs.length;
-    const skipped = svgCount - blobs.length;
-    core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
 
     return true;
   } catch (error) {

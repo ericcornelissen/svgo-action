@@ -1,10 +1,10 @@
+import contentPayloads from "./fixtures/contents-payloads.json";
+
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
-
-import contentPayloads from "./fixtures/contents-payloads.json";
 
 import {
   PR_NOT_FOUND,
@@ -17,6 +17,7 @@ import {
   commitFiles,
   createBlob,
   getCommitMessage,
+  getPrComments,
   getPrFile,
   getPrFiles,
   getPrNumber,
@@ -27,9 +28,9 @@ import {
 const COMMIT_MODE_FILE = "100644";
 const COMMIT_TYPE_BLOB = "blob";
 
+
 const token = core.getInput("repo-token", { required: true });
 const client = new github.GitHub(token);
-
 
 describe("::commitFiles", () => {
 
@@ -64,7 +65,7 @@ describe("::commitFiles", () => {
     client.git.updateRef.mockClear();
   });
 
-  test("calls functions to create a commit", async () => {
+  test("call functions to create a commit", async () => {
     await commitFiles(client, defaultBlobs, defaultCommitMessage);
     expect(client.git.getRef).toHaveBeenCalledTimes(1);
     expect(client.git.getCommit).toHaveBeenCalledTimes(1);
@@ -77,9 +78,9 @@ describe("::commitFiles", () => {
     defaultBlobs,
     [complexBlob],
     [fooBlob, barBlob],
-  ])("return value for different arrays of blobs", (blobs) => {
+  ])("return value for different arrays of blobs", async (blobs) => {
     const promise = commitFiles(client, blobs as GitBlob[], defaultCommitMessage);
-    return expect(promise).resolves.toEqual(
+    await expect(promise).resolves.toEqual(
       expect.objectContaining({
         sha: expect.any(String),
         url: expect.any(String),
@@ -101,44 +102,44 @@ describe("::commitFiles", () => {
     );
   });
 
-  test("empty list of blobs", () => {
+  test("empty list of blobs", async () => {
     const promise = commitFiles(client, [/* empty list of blobs */], defaultCommitMessage);
-    return expect(promise).resolves.toBeDefined();
+    await expect(promise).resolves.toBeDefined();
   });
 
-  test("ref is not found", () => {
+  test("ref is not found", async () => {
     github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
-    return expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
   });
 
-  test("previous commit is not found", () => {
+  test("previous commit is not found", async () => {
     github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
-    return expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
   });
 
-  test("tree could not be created", () => {
+  test("tree could not be created", async () => {
     github.GitHubInstance.git.createTree.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
-    return expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
   });
 
-  test("commit could not be created", () => {
+  test("commit could not be created", async () => {
     github.GitHubInstance.git.createCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
-    return expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
   });
 
-  test("ref could not be updated", () => {
+  test("ref could not be updated", async () => {
     github.GitHubInstance.git.updateRef.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
-    return expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
   });
 
   test("the 'pull_request' is missing from context payload", async () => {
@@ -146,10 +147,9 @@ describe("::commitFiles", () => {
     delete github.context.payload.pull_request;
 
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
-    const result = await expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
 
     github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
-    return result;
   });
 
   test("the 'repository' is missing from context payload", async () => {
@@ -157,10 +157,9 @@ describe("::commitFiles", () => {
     delete github.context.payload.repository;
 
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
-    const result = await expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
 
     github.context.payload.repository = backup;
-    return result;
   });
 
 });
@@ -173,14 +172,12 @@ describe("::createBlob", () => {
 
   const testVarious = test.each(
     Object.values(contentPayloads)
-      .map(({ path, content, encoding }) => {
-        return [path, content, encoding];
-      })
-      .slice(0, 3),
+      .map(({ path, content, encoding }) => [path, content, encoding])
+      .slice(0, 4),
   );
 
-  testVarious("create blob for '%s'", (path: string, content: string, encoding: string) => {
-    return expect(createBlob(
+  testVarious("create blob for '%s'", async (path: string, content: string, encoding: string) => {
+    await expect(createBlob(
       client,
       path,
       content,
@@ -195,10 +192,10 @@ describe("::createBlob", () => {
     );
   });
 
-  test("blob could not be created", () => {
+  test("blob could not be created", async () => {
     github.GitHubInstance.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
 
-    return expect(
+    await expect(
       createBlob(
         client,
         defaultPath,
@@ -228,18 +225,82 @@ describe("::getCommitMessage", () => {
     expect(result).toBeDefined();
   });
 
-  test("ref is not found", () => {
+  test("ref is not found", async () => {
     github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getCommitMessage(client);
-    return expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
   });
 
-  test("commit is not found", () => {
+  test("commit is not found", async () => {
     github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getCommitMessage(client);
-    return expect(promise).rejects.toBeDefined();
+    await expect(promise).rejects.toBeDefined();
+  });
+
+});
+
+describe("::getPrComments", () => {
+
+  test("no comments", async () => {
+    const comments = getPrComments(client, github.PR_NUMBER.NO_COMMENTS);
+
+    const result: string[] = [];
+    for await (const comment of comments) {
+      result.push(comment);
+    }
+    expect(result).toHaveLength(0);
+  });
+
+  test("1 comment", async () => {
+    const comments = getPrComments(client, github.PR_NUMBER.ONE_COMMENT);
+
+    const result: string[] = [];
+    for await (const comment of comments) {
+      result.push(comment);
+    }
+    expect(result).toHaveLength(1);
+  });
+
+  test("10 comments", async () => {
+    const comments = getPrComments(client, github.PR_NUMBER.TEN_COMMENTS);
+
+    const result: string[] = [];
+    for await (const comment of comments) {
+      result.push(comment);
+    }
+    expect(result).toHaveLength(10);
+  });
+
+  test("11 comments", async () => {
+    const comments = getPrComments(client, github.PR_NUMBER.ELEVEN_COMMENTS);
+
+    const result: string[] = [];
+    for await (const comment of comments) {
+      result.push(comment);
+    }
+    expect(result).toHaveLength(11);
+  });
+
+  test("17 comments", async () => {
+    const comments = getPrComments(client, github.PR_NUMBER.SEVENTEEN_COMMENTS);
+
+    const result: string[] = [];
+    for await (const comment of comments) {
+      result.push(comment);
+    }
+    expect(result).toHaveLength(17);
+  });
+
+  test("103 comments", async () => {
+    const comments = getPrComments(client, github.PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS);
+
+    const result: string[] = [];
+    for await (const comment of comments) {
+      result.push(comment);
+    }
+    expect(result).toHaveLength(103);
   });
 
 });
@@ -268,8 +329,11 @@ describe("::getPrFile", () => {
     expect(fileData.encoding).toBeDefined();
   });
 
-  test("throw for non-existent file", () => {
-    return expect(getPrFile(client, "foobar")).rejects.toBeDefined();
+  test("file is not found", async () => {
+    github.GitHubInstance.repos.getContents.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getPrFile(client, "foobar");
+    await expect(promise).rejects.toBeDefined();
   });
 
 });
@@ -286,8 +350,11 @@ describe("::getPrFiles", () => {
     expect(changedFiles).toBeDefined();
   });
 
-  test("throw for non-existent file", () => {
-    return expect(getPrFiles(client, -1)).rejects.toBeDefined();
+  test("throw for non-existent file", async () => {
+    github.GitHubInstance.pulls.listFiles.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getPrFiles(client, github.PR_NUMBER.MANY_CHANGES);
+    await expect(promise).rejects.toBeDefined();
   });
 
 });
@@ -306,7 +373,7 @@ describe("::getPrNumber", () => {
     expect(actual).toBe(prNumber);
   });
 
-  test(`return PR_NOT_FOUND (${PR_NOT_FOUND}) when there was no Pull Request in the context`, () => {
+  test("no Pull Request in the context", () => {
     const backup = github.context.payload.pull_request;
     delete github.context.payload.pull_request;
 
@@ -342,8 +409,11 @@ describe("::getRepoFile", () => {
     expect(fileData.encoding).toBeDefined();
   });
 
-  test("throw for non-existent file", () => {
-    return expect(getRepoFile(client, "foobar")).rejects.toBeDefined();
+  test("throw for non-existent file", async () => {
+    github.GitHubInstance.repos.getContents.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getRepoFile(client, "9001");
+    await expect(promise).rejects.toBeDefined();
   });
 
 });
