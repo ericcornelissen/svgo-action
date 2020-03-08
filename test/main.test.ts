@@ -117,11 +117,11 @@ describe("Logging", () => {
     expect(core.setFailed).not.toHaveBeenCalled();
   });
 
-  test.skip("log an error when Pull Request number could not be found", async () => {
+  test("log an error when Pull Request number could not be found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
 
     await main();
-    expect(core.error).toHaveBeenCalled();
+    expect(core.setFailed).toHaveBeenCalled();
   });
 
 });
