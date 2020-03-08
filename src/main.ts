@@ -1,5 +1,5 @@
 import * as core from "@actions/core";
-import * as github from "@actions/github";
+import { GitHub } from "@actions/github";
 import * as yaml from "js-yaml";
 
 import { decode, encode } from "./encoder";
@@ -39,9 +39,7 @@ import { formatTemplate } from "./templating";
 const DISABLE_PATTERN = /disable-svgo-action/;
 
 
-async function fetchConfigInRepo(
-  client: github.GitHub,
-): Promise<RawActionConfig> {
+async function fetchConfigInRepo(client: GitHub): Promise<RawActionConfig> {
   const configFilePath: string = getConfigFilePath();
   try {
     const { content, encoding } = await getRepoFile(client, configFilePath);
@@ -56,7 +54,7 @@ async function fetchConfigInRepo(
 }
 
 async function fetchSvgoOptions(
-  client: github.GitHub,
+  client: GitHub,
   optionsFilePath: string,
 ): Promise<SVGOptions> {
   try {
@@ -71,9 +69,9 @@ async function fetchSvgoOptions(
   }
 }
 
-function getContext(): [github.GitHub, number] {
+function getContext(): [GitHub, number] {
   const token: string = getRepoToken();
-  const client: github.GitHub = new github.GitHub(token);
+  const client: GitHub = new GitHub(token);
 
   const prNumber: number = getPrNumber();
   if (prNumber === PR_NOT_FOUND) {
@@ -84,7 +82,7 @@ function getContext(): [github.GitHub, number] {
 }
 
 async function checkIfActionIsDisabled(
-  client: github.GitHub,
+  client: GitHub,
   prNumber: number,
 ): Promise<[boolean, string]> {
   const commitMessage: string = await getCommitMessage(client);
@@ -102,7 +100,7 @@ async function checkIfActionIsDisabled(
 }
 
 async function getSvgsInPR(
-  client: github.GitHub,
+  client: GitHub,
   prNumber: number,
 ): Promise<[FileInfo[], number]> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
@@ -124,7 +122,7 @@ async function getSvgsInPR(
 }
 
 async function doOptimizeSvgs(
-  client: github.GitHub,
+  client: GitHub,
   svgo: SVGOptimizer,
   prSvgs: FileInfo[],
 ): Promise<GitBlob[]> {
@@ -162,7 +160,7 @@ async function doOptimizeSvgs(
 }
 
 async function doCommitChanges(
-  client: github.GitHub,
+  client: GitHub,
   commitTitle: string,
   commitDescription: string,
   blobs: GitBlob[],
