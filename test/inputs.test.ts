@@ -70,6 +70,14 @@ describe("ActionConfig", () => {
       core.info.mockClear();
     });
 
+    test("dry-run is not set at all", () => {
+      const defaultValue = "false";
+      mockCoreGetInput(inputName, defaultValue);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.isDryRun).toBe(false);
+    });
+
     test("dry-run is `'false'` in the workflow file", () => {
       mockCoreGetInput(inputName, "false");
 
@@ -139,6 +147,14 @@ describe("ActionConfig", () => {
 
     const inputName = "svgo-options";
     const testPaths = test.each([".svgo.yml", "foo.yml", "in/folder/config.yml"]);
+
+    test("svgo-options is not set at all", () => {
+      const defaultValue = ".svgo.yml";
+      mockCoreGetInput(inputName, defaultValue);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.svgoOptionsPath).toBe(defaultValue);
+    });
 
     testPaths("svgo-options is set (to '%s') in the workflow file", (path) => {
       mockCoreGetInput(inputName, path);
