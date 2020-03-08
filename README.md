@@ -131,14 +131,14 @@ jobs:
   ...
 ```
 
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.2-undefined.svg?logo=github&logoColor=white&style=flat
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.2.2-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
-[maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
+[maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 [SVGO]: https://github.com/svg/svgo
 [Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
 [in the Workflow file]: #in-the-workflow-file
