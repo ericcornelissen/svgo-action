@@ -137,7 +137,7 @@ describe("Configuration", () => {
     expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
   });
 
-  test("dry run enabled", async () => {
+  test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.isDryRun = true;
 
@@ -150,7 +150,7 @@ describe("Configuration", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
-  test("dry run disabled", async () => {
+  test("dry mode disabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.isDryRun = false;
 
@@ -168,6 +168,7 @@ describe("Configuration", () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.svgoOptionsPath = svgoOptionsPath;
 
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     inputs.ActionConfig.mockReturnValueOnce(actionConfig);
     when(githubAPI.getRepoFile)
       .calledWith(github.GitHubInstance, svgoOptionsPath)

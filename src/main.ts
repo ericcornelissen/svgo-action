@@ -101,18 +101,6 @@ async function checkIfActionIsDisabled(
   return [false, ""];
 }
 
-async function getSvgoInstance(
-  client: github.GitHub,
-  config: ActionConfig,
-): Promise<SVGOptimizer> {
-  core.debug(`fetching SVGO options (at ${config.svgoOptionsPath})`);
-  const svgoOptions: SVGOptions = await fetchSvgoOptions(
-    client,
-    config.svgoOptionsPath,
-  );
-  return new SVGOptimizer(svgoOptions);
-}
-
 async function getSvgsInPR(
   client: github.GitHub,
   prNumber: number,
@@ -138,9 +126,8 @@ async function getSvgsInPR(
 async function doOptimizeSvgs(
   client: github.GitHub,
   svgo: SVGOptimizer,
-  config: ActionConfig,
   prSvgs: FileInfo[],
-): Promise<void> {
+): Promise<GitBlob[]> {
   core.debug("fetching content of SVGs in pull request");
   const blobs: GitBlob[] = [];
   for (const svgFileInfo of prSvgs) {
@@ -171,29 +158,33 @@ async function doOptimizeSvgs(
     blobs.push(svgBlob);
   }
 
-  if (config.isDryRun) {
-    core.info("Dry mode enabled, not committing");
-  } else if (blobs.length > 0) {
+  return blobs;
+}
+
+async function doCommitChanges(
+  client: github.GitHub,
+  commitTitle: string,
+  commitDescription: string,
+  blobs: GitBlob[],
+): Promise<void> {
+  if (blobs.length > 0) {
+    const commitMessage: string = formatTemplate(
+      commitTitle,
+      commitDescription,
+      {
+        optimizedCount: blobs.length,
+        filePaths: blobs.map((blob) => blob.path),
+      },
+    );
+
     const commitInfo: CommitInfo = await commitFiles(
       client,
       blobs,
-      formatTemplate(
-        config.commitTitle,
-        config.commitDescription,
-        {
-          optimizedCount: blobs.length,
-          filePaths: blobs.map((blob) => blob.path),
-        },
-      ),
+      commitMessage,
     );
 
     core.debug(`commit successful (see ${commitInfo.url})`);
   }
-
-  const svgCount = prSvgs.length;
-  const optimized = blobs.length;
-  const skipped = svgCount - blobs.length;
-  core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
 }
 
 
@@ -209,13 +200,21 @@ export default async function main(): Promise<boolean> {
     const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
     const config: ActionConfig = new ActionConfig(rawConfig);
     if (config.isDryRun) {
-      core.info("Dry mode is enabled, no changes will be committed");
+      core.info("Dry mode enabled, no changes will be committed");
     }
 
-    const svgo: SVGOptimizer = await getSvgoInstance(client, config);
     const [prSvgs, svgCount] = await getSvgsInPR(client, prNumber);
     if (svgCount > 0) {
-      await doOptimizeSvgs(client, svgo, config, prSvgs);
+      const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
+      const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
+      const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
+      if (!config.isDryRun) {
+        await doCommitChanges( client, config.commitTitle, config.commitDescription, blobs);
+      }
+
+      const optimized = blobs.length;
+      const skipped = svgCount - blobs.length;
+      core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
     }
 
     return true;
