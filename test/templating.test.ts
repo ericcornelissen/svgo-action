@@ -69,9 +69,32 @@ describe("::formatTemplate", () => {
       expect(resultTitle).toEqual(`Optimized ${optimizedCount} SVG(s)`);
     });
 
-    test.todo("different templates using '{{svgCount}}'");
+    test.each([
+      "{{svgCount}} SVG(s) were considered",
+      "There are ({{ svgCount }}) SVG(s) in this commit",
+      "Hello, weird this i{{svgCount}}s...",
+      "{{svgCount}}",
+    ])("different templates using '{{svgCount}}'", (templateString) => {
+      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      expect(result).toBeDefined();
 
-    test.todo("different values for `svgCount`");
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).not.toEqual(expect.stringMatching(/\{\{\s*svgCount\s*\}\}/));
+
+      const expectedTitle = templateString.replace(/\{\{\s*svgCount\s*\}\}/, defaultData.svgCount.toString());
+      expect(resultTitle).toEqual(expectedTitle);
+    });
+
+    test.each([0, 1, 4, 9001])("different values for `svgCount`", (svgCount) => {
+      const data = Object.assign({ }, defaultData, { svgCount });
+      const templateString = "{{svgCount}} SVG(s) were considered";
+
+      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).toEqual(`${svgCount} SVG(s) were considered`);
+    });
 
   });
 
@@ -150,9 +173,32 @@ describe("::formatTemplate", () => {
       expect(resultMessage).toEqual(`Optimized ${optimizedCount} SVG(s)`);
     });
 
-    test.todo("different templates using '{{svgCount}}'");
+    test.each([
+      "For this commit {{svgCount}} SVG(s) were conidered",
+      "Optimize some SVGs, considered {{ svgCount }} SVG(s)",
+      "foo b{{svgCount}}ar",
+      "{{svgCount}}",
+    ])("different templates using '{{svgCount}}'", (templateString) => {
+      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      expect(result).toBeDefined();
 
-    test.todo("different values for `svgCount`");
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).not.toEqual(expect.stringMatching(/\{\{\s*svgCount\s*\}\}/));
+
+      const expectedMessage = templateString.replace(/\{\{\s*svgCount\s*\}\}/, defaultData.svgCount.toString());
+      expect(resultMessage).toEqual(expectedMessage);
+    });
+
+    test.each([0, 1, 4, 9001])("different values for `svgCount`", (svgCount) => {
+      const data = Object.assign({ }, defaultData, { svgCount });
+      const templateString = "{{svgCount}} SVG(s) were considered";
+
+      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).toEqual(`${svgCount} SVG(s) were considered`);
+    });
 
   });
 
