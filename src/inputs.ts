@@ -14,7 +14,7 @@ const BOOLEAN = "boolean";
 const FALSE = "false";
 const TRUE = "true";
 
-const CONVENTIONAL_COMMIT_TITLE = "chore:  optimize {{optimizedCount}} SVG(s)";
+const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
 const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVGs:\n{{fileList}}";
 const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
 

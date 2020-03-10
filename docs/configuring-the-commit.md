@@ -72,7 +72,7 @@ commit:
 This will result in commit messages that look like:
 
 ```git
-fix: optimize {{optimizedCount}} SVG(s)
+chore: optimize 42 SVG(s)
 
 You can still configure the commit description
 ```
