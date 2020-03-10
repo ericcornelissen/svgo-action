@@ -16,6 +16,12 @@ import {
 } from "../src/inputs";
 
 
+const INPUT_NAME_CONFIG_PATH = "configuration-path";
+const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
+const INPUT_NAME_DRY_RUN = "dry-run";
+const INPUT_NAME_REPO_TOKEN = "repo-token";
+const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
+
 function mockCoreGetInput(key: string, value: string): void {
   when(core.getInput)
     .calledWith(key, expect.any(Object))
@@ -25,7 +31,7 @@ function mockCoreGetInput(key: string, value: string): void {
 describe("::getConfigFilePath", () => {
 
   test("return what core returns", () => {
-    const expected = core.getInput("configuration-path");
+    const expected = core.getInput(INPUT_NAME_CONFIG_PATH);
     const result = getConfigFilePath();
     expect(result).toEqual(expected);
   });
@@ -35,7 +41,7 @@ describe("::getConfigFilePath", () => {
 describe("::getRepoToken", () => {
 
   test("return what core returns", () => {
-    const expected = core.getInput("repo-token");
+    const expected = core.getInput(INPUT_NAME_REPO_TOKEN);
     const result = getRepoToken();
     expect(result).toEqual(expected);
   });
@@ -92,8 +98,7 @@ describe("ActionConfig", () => {
 
   describe(".commitTitle", () => {
 
-    const conventionalCommitExp = /.+:\s.+/;
-    const inputName = "conventional-commits";
+    const CONVENTIONAL_COMMIT_EXP = /.+:\s.+/;
 
     test("commit is not defined in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ });
@@ -120,35 +125,35 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).not.toEqual("");
     });
 
-    test("`conventional-commit` is enabled and no commit title is specified", () => {
-      mockCoreGetInput(inputName, "true");
+    test("conventional-commit is enabled and no commit title is specified", () => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).not.toEqual("");
-      expect(instance.commitTitle).toMatch(conventionalCommitExp);
+      expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("`conventional-commit` is enabled and a commit title is specified", () => {
-      mockCoreGetInput(inputName, "true");
+    test("conventional-commit is enabled and a commit title is specified", () => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
 
       const instance: ActionConfig = new ActionConfig({ commit: { title: "deadbeef" } });
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).not.toEqual("");
-      expect(instance.commitTitle).toMatch(conventionalCommitExp);
+      expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("`conventional-commit` is disabled and no commit title is specified", () => {
-      mockCoreGetInput(inputName, "false");
+    test("conventional-commit is disabled and no commit title is specified", () => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).not.toEqual("");
-      expect(instance.commitTitle).not.toMatch(conventionalCommitExp);
+      expect(instance.commitTitle).not.toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("`conventional-commit` is disabled and a commit title is specified", () => {
-      mockCoreGetInput(inputName, "false");
+    test("conventional-commit is disabled and a commit title is specified", () => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
 
       const instance: ActionConfig = new ActionConfig({ commit: { title: "Do the thing" } });
       expect(instance.commitTitle).toEqual("Do the thing");
@@ -158,7 +163,6 @@ describe("ActionConfig", () => {
 
   describe(".isDryRun", () => {
 
-    const inputName = "dry-run";
     const testNonBoolean = test.each(["foobar", "treu", "fals"]);
 
     beforeEach(() => {
@@ -167,28 +171,28 @@ describe("ActionConfig", () => {
 
     test("dry-run is not set at all", () => {
       const defaultValue = "false";
-      mockCoreGetInput(inputName, defaultValue);
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, defaultValue);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.isDryRun).toBe(false);
     });
 
     test("dry-run is `'false'` in the workflow file", () => {
-      mockCoreGetInput(inputName, "false");
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.isDryRun).toBe(false);
     });
 
     test("dry-run is `'true'` in the workflow file", () => {
-      mockCoreGetInput(inputName, "true");
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.isDryRun).toBe(true);
     });
 
     testNonBoolean("dry run is `'%s'` in the workflow file", async (value) => {
-      mockCoreGetInput(inputName, value);
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, value);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.isDryRun).toBe(true);
@@ -197,7 +201,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `false` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: false");
-      mockCoreGetInput(inputName, "true");
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.isDryRun).toBe(false);
@@ -205,7 +209,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `true` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: true");
-      mockCoreGetInput(inputName, "false");
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.isDryRun).toBe(true);
@@ -213,7 +217,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `'false'` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: 'false'");
-      mockCoreGetInput(inputName, "true");
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.isDryRun).toBe(false);
@@ -221,7 +225,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `'true'` in the config object", () => {
       const rawConfig: RawActionConfig = yaml.safeLoad("dry-run: 'true'");
-      mockCoreGetInput(inputName, "false");
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.isDryRun).toBe(true);
@@ -229,7 +233,7 @@ describe("ActionConfig", () => {
 
     testNonBoolean("dry run is `'%s'` in the config object", async (value) => {
       const rawConfig: RawActionConfig = yaml.safeLoad(`dry-run: '${value}'`);
-      mockCoreGetInput(inputName, "false");
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.isDryRun).toBe(true);
@@ -240,26 +244,25 @@ describe("ActionConfig", () => {
 
   describe(".svgoOptionsPath", () => {
 
-    const inputName = "svgo-options";
     const testPaths = test.each([".svgo.yml", "foo.yml", "in/folder/config.yml"]);
 
     test("svgo-options is not set at all", () => {
       const defaultValue = ".svgo.yml";
-      mockCoreGetInput(inputName, defaultValue);
+      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, defaultValue);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.svgoOptionsPath).toBe(defaultValue);
     });
 
     testPaths("svgo-options is set (to '%s') in the workflow file", (path) => {
-      mockCoreGetInput(inputName, path);
+      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, path);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.svgoOptionsPath).toBe(path);
     });
 
     testPaths("svgo-options is set (to '%s') in the config object", (path) => {
-      mockCoreGetInput(inputName, `dir/${path}`);
+      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, `dir/${path}`);
 
       const instance: ActionConfig = new ActionConfig({ "svgo-options": path });
       expect(instance.svgoOptionsPath).toBe(path);
