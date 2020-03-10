@@ -92,6 +92,9 @@ describe("ActionConfig", () => {
 
   describe(".commitTitle", () => {
 
+    const conventionalCommitExp = /.+:\s.+/;
+    const inputName = "conventional-commits";
+
     test("commit is not defined in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ });
       expect(instance.commitTitle).toBeDefined();
@@ -115,6 +118,40 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { title: "" } });
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).not.toEqual("");
+    });
+
+    test("`conventional-commit` is enabled and no commit title is specified", () => {
+      mockCoreGetInput(inputName, "true");
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).toMatch(conventionalCommitExp);
+    });
+
+    test("`conventional-commit` is enabled and a commit title is specified", () => {
+      mockCoreGetInput(inputName, "true");
+
+      const instance: ActionConfig = new ActionConfig({ commit: { title: "deadbeef" } });
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).toMatch(conventionalCommitExp);
+    });
+
+    test("`conventional-commit` is disabled and no commit title is specified", () => {
+      mockCoreGetInput(inputName, "false");
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).not.toMatch(conventionalCommitExp);
+    });
+
+    test("`conventional-commit` is disabled and a commit title is specified", () => {
+      mockCoreGetInput(inputName, "false");
+
+      const instance: ActionConfig = new ActionConfig({ commit: { title: "Do the thing" } });
+      expect(instance.commitTitle).toEqual("Do the thing");
     });
 
   });
