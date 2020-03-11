@@ -5,6 +5,7 @@ describe("::formatTemplate", () => {
   const defaultTitleTemplate = "foo";
   const defaultMessageTemplate = "bar";
   const defaultData: CommitData = {
+    fileCount: 1337,
     filePaths: ["test.svg", "foo.svg", "bar.svg"],
     optimizedCount: 36,
     svgCount: 42,
@@ -28,6 +29,10 @@ describe("::formatTemplate", () => {
       const resultTitle = result.split("\n\n")[0];
       expect(resultTitle).toEqual(templateString);
     });
+
+    test.todo("different templates using '{{fileCount}}'");
+
+    test.todo("different values for `fileCount`");
 
     test.each([
       "Optimized SVG(s):\n{{filesList}}",
@@ -116,6 +121,10 @@ describe("::formatTemplate", () => {
       const resultMessage = result.split("\n\n")[1];
       expect(resultMessage).toEqual(templateString);
     });
+
+    test.todo("different templates using '{{fileCount}}'");
+
+    test.todo("different values for `fileCount`");
 
     test.each([
       "Optimized SVG(s):\n{{filesList}}",

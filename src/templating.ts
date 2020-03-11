@@ -1,8 +1,12 @@
+const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
 const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
 const SVG_COUNT_EXP = /\{\{\s*svgCount\s*\}\}/;
 
 const format = {
+  fileCount: (template: string, value: number): string => {
+    return template.replace(FILE_COUNT_EXP, value.toString());
+  },
   filePaths: (template: string, value: string[]): string => {
     return template.replace(FILES_LIST_EXP, "- " + value.join("\n- "));
   },
@@ -30,6 +34,7 @@ function formatAll(
 
 
 export type CommitData = {
+  fileCount: number;
   filePaths: (string | undefined)[];
   optimizedCount: number;
   svgCount: number;
