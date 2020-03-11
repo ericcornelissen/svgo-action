@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- Add `svgCount` as templating variable. ([#122])
+- Add `fileCount` and `svgCount` as templating variable. ([#122])
 
 ## [0.3.0] - 2020-03-08
 
