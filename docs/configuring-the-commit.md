@@ -62,6 +62,7 @@ that not all templating variables are available in the commit `title`.
 
 | Name             | Value                                    | In title | In description |
 | ---------------- | ---------------------------------------- | -------- | -------------- |
+| `fileCount`      | The number of files found in the PR      | Yes      | Yes            |
 | `filesList`      | A bullet list of the optimized SVG files | No       | Yes            |
 | `optimizedCount` | The number of optimized SVGs             | Yes      | Yes            |
 | `svgCount`       | The number of SVGs found in the PR       | Yes      | Yes            |
