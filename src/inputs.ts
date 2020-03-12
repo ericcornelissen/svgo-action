@@ -53,7 +53,8 @@ export class ActionConfig {
   }
 
   private static getCommitDescription(config: RawActionConfig): string {
-    return config.commit?.description || DEFAULT_COMMIT_DESCRIPTION;
+    return (config.commit?.description !== undefined) ?
+      config.commit?.description : DEFAULT_COMMIT_DESCRIPTION;
   }
 
   private static getCommitTitle(config: RawActionConfig): string {

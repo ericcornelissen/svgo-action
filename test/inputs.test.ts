@@ -92,7 +92,7 @@ describe("ActionConfig", () => {
     test("commit description is an empty string in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { description: "" } });
       expect(instance.commitDescription).toBeDefined();
-      expect(instance.commitDescription).not.toEqual("");
+      expect(instance.commitDescription).toEqual("");
     });
 
   });
