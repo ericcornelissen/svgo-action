@@ -5,8 +5,10 @@ describe("::formatTemplate", () => {
   const defaultTitleTemplate = "foo";
   const defaultMessageTemplate = "bar";
   const defaultData: CommitData = {
+    fileCount: 1337,
     filePaths: ["test.svg", "foo.svg", "bar.svg"],
     optimizedCount: 36,
+    svgCount: 42,
   };
 
   describe("Title Templating", () => {
@@ -26,6 +28,33 @@ describe("::formatTemplate", () => {
 
       const resultTitle = result.split("\n\n")[0];
       expect(resultTitle).toEqual(templateString);
+    });
+
+    test.each([
+      "The PR contains {{fileCount}} file(s)",
+      "There are {{ fileCount }} file(s) in this PR",
+      "ninj{{fileCount }}a edit",
+      "{{fileCount}}",
+    ])("different templates using '{{fileCount}}'", (templateString) => {
+      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).not.toEqual(expect.stringMatching(/\{\{\s*fileCount\s*\}\}/));
+
+      const expectedTitle = templateString.replace(/\{\{\s*fileCount\s*\}\}/, defaultData.fileCount.toString());
+      expect(resultTitle).toEqual(expectedTitle);
+    });
+
+    test.each([0, 1, 2, 80085])("different values for `fileCount`", (fileCount) => {
+      const data = Object.assign({ }, defaultData, { fileCount });
+      const templateString = "The PR contains {{fileCount}} file(s)";
+
+      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).toEqual(`The PR contains ${fileCount} file(s)`);
     });
 
     test.each([
@@ -68,6 +97,33 @@ describe("::formatTemplate", () => {
       expect(resultTitle).toEqual(`Optimized ${optimizedCount} SVG(s)`);
     });
 
+    test.each([
+      "{{svgCount}} SVG(s) were considered",
+      "There are ({{ svgCount }}) SVG(s) in this commit",
+      "Hello, weird this i{{svgCount}}s...",
+      "{{svgCount}}",
+    ])("different templates using '{{svgCount}}'", (templateString) => {
+      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).not.toEqual(expect.stringMatching(/\{\{\s*svgCount\s*\}\}/));
+
+      const expectedTitle = templateString.replace(/\{\{\s*svgCount\s*\}\}/, defaultData.svgCount.toString());
+      expect(resultTitle).toEqual(expectedTitle);
+    });
+
+    test.each([0, 1, 4, 9001])("different values for `svgCount`", (svgCount) => {
+      const data = Object.assign({ }, defaultData, { svgCount });
+      const templateString = "{{svgCount}} SVG(s) were considered";
+
+      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).toEqual(`${svgCount} SVG(s) were considered`);
+    });
+
   });
 
   describe("Message Templates", () => {
@@ -87,6 +143,33 @@ describe("::formatTemplate", () => {
 
       const resultMessage = result.split("\n\n")[1];
       expect(resultMessage).toEqual(templateString);
+    });
+
+    test.each([
+      "For this commit {{fileCount}} file(s) were conidered",
+      "Optimize some SVGs out of {{ fileCount }} file(s)",
+      "Lo{{fileCount}}rem ipsum",
+      "{{fileCount}}",
+    ])("different templates using '{{fileCount}}'", (templateString) => {
+      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      expect(result).toBeDefined();
+
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).not.toEqual(expect.stringMatching(/\{\{\s*fileCount\s*\}\}/));
+
+      const expectedMessage = templateString.replace(/\{\{\s*fileCount\s*\}\}/, defaultData.fileCount.toString());
+      expect(resultMessage).toEqual(expectedMessage);
+    });
+
+    test.each([0, 1, 2, 80085])("different values for `fileCount`", (fileCount) => {
+      const data = Object.assign({ }, defaultData, { fileCount });
+      const templateString = "The PR contains {{fileCount}} files";
+
+      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).toEqual(`The PR contains ${fileCount} files`);
     });
 
     test.each([
@@ -143,6 +226,33 @@ describe("::formatTemplate", () => {
 
       const resultMessage = result.split("\n\n")[1];
       expect(resultMessage).toEqual(`Optimized ${optimizedCount} SVG(s)`);
+    });
+
+    test.each([
+      "For this commit {{svgCount}} SVG(s) were conidered",
+      "Optimize some SVGs, considered {{ svgCount }} SVG(s)",
+      "foo b{{svgCount}}ar",
+      "{{svgCount}}",
+    ])("different templates using '{{svgCount}}'", (templateString) => {
+      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      expect(result).toBeDefined();
+
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).not.toEqual(expect.stringMatching(/\{\{\s*svgCount\s*\}\}/));
+
+      const expectedMessage = templateString.replace(/\{\{\s*svgCount\s*\}\}/, defaultData.svgCount.toString());
+      expect(resultMessage).toEqual(expectedMessage);
+    });
+
+    test.each([0, 1, 4, 9001])("different values for `svgCount`", (svgCount) => {
+      const data = Object.assign({ }, defaultData, { svgCount });
+      const templateString = "{{svgCount}} SVG(s) were considered";
+
+      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).toEqual(`${svgCount} SVG(s) were considered`);
     });
 
   });

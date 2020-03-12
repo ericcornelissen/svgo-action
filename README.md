@@ -23,7 +23,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.3.0
+    - uses: ericcornelissen/svgo-action@v0.3.1
       with:
         repo-token: "${{ secrets.GITHUB_TOKEN }}"
 ```
@@ -42,6 +42,10 @@ configuration file]. Below you can find the available options.
 
 - `commit`: configure the commit message for the Action.
   - [Full documentation](docs/configuring-the-commit.md)
+- `conventional-commits`: Use [conventional commit] message titles for commits.
+  - Possible values: `false`, `true`
+  - Default value: `false`
+  - Example: `conventional-commits: true`
 - `dry-run`: If enabled, the action doesn't commit changes back.
   - Possible values: `false`, `true`
   - Default value: `false`
@@ -60,6 +64,7 @@ The first way to configure the action is inside the Workflow file, after the
 ```yaml
 with:
   repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  conventional-commits: true
   dry-run: true
   svgo-options: "path/to/svgo-options.yml"
 ```
@@ -74,6 +79,7 @@ you can configure the Action inside this file. For example:
 dry-run: true
 svgo-options: "path/to/svgo-options.yml"
 commit:
+  conventional: false
   title: "Optimized {{optimizedCount}} SVG(s)"
   description: "Namely:\n{{filesList}}"
 ```
@@ -137,7 +143,7 @@ jobs:
 ```
 
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.3.0-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.3.1-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
@@ -150,3 +156,4 @@ jobs:
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
 [#17]: https://github.com/ericcornelissen/svgo-action/issues/17
+[conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/

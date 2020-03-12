@@ -10,6 +10,10 @@ inputs:
     description: 'The path for the svgo-action configurations'
     default: '.github/svgo-action.yml'
     required: false
+  conventional-commits:
+    description: 'Use conventional commit titles for commits'
+    default: false
+    required: false
   dry-run:
     description: 'Run the action in dry mode (i.e. do not commit)'
     default: false

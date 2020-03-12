@@ -2,6 +2,7 @@ import * as core from "@actions/core";
 
 
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
+const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
 const INPUT_NAME_DRY_RUN = "dry-run";
 const INPUT_NAME_REPO_TOKEN = "repo-token";
 const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
@@ -9,16 +10,22 @@ const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 const NOT_REQUIRED = { required: false };
 const REQUIRED = { required: true };
 
+const BOOLEAN = "boolean";
+const FALSE = "false";
+const TRUE = "true";
+
+const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
 const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVGs:\n{{fileList}}";
 const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
 
 
 export type RawActionConfig = {
   readonly commit?: {
+    readonly conventional?: boolean;
     readonly title?: string;
     readonly description?: string;
   };
-  readonly "dry-run"?: boolean | string;
+  readonly "dry-run"?: boolean;
   readonly "svgo-options"?: string;
 }
 
@@ -50,7 +57,17 @@ export class ActionConfig {
   }
 
   private static getCommitTitle(config: RawActionConfig): string {
-    return config.commit?.title || DEFAULT_COMMIT_TITLE;
+    const useConventionalCommit = this.normalizeBoolOption(
+      config.commit?.conventional,
+      INPUT_NAME_CONVENTIONAL_COMMITS,
+      true,
+    );
+
+    if (useConventionalCommit) {
+      return CONVENTIONAL_COMMIT_TITLE;
+    } else {
+      return config.commit?.title || DEFAULT_COMMIT_TITLE;
+    }
   }
 
   private static getSvgoOptionsPath(config: RawActionConfig): string {
@@ -58,11 +75,15 @@ export class ActionConfig {
   }
 
   private static getDryRunValue(config: RawActionConfig): boolean {
-    const BOOLEAN = "boolean", FALSE = "false", TRUE = "true";
+    return this.normalizeBoolOption(config["dry-run"], INPUT_NAME_DRY_RUN, true);
+  }
 
-    const value = (config["dry-run"] !== undefined)
-      ? config["dry-run"] : core.getInput(INPUT_NAME_DRY_RUN, NOT_REQUIRED);
-
+  private static normalizeBoolOption(
+    configValue: boolean | undefined,
+    inputName: string,
+    assumptionValue: boolean,
+  ): boolean {
+    const value = (configValue !== undefined) ? configValue : core.getInput(inputName, NOT_REQUIRED);
     if (typeof value === BOOLEAN) {
       return value as boolean;
     } else if (value === FALSE) {
@@ -70,8 +91,8 @@ export class ActionConfig {
     } else if (value === TRUE) {
       return true;
     } else {
-      core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
-      return true;
+      core.info(`Unknown ${inputName} value '${value}', assuming ${assumptionValue}`);
+      return assumptionValue;
     }
   }
 

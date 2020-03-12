@@ -9,6 +9,11 @@ Versioning].
 
 - _No changes yet_
 
+## [0.3.1] - 2020-03-12
+
+- Add `fileCount` and `svgCount` as templating variable. ([#122])
+- Add option to use conventional commit message titles. ([#124])
+
 ## [0.3.0] - 2020-03-08
 
 - Disable the action from a Pull Request comment. ([#106])
@@ -73,3 +78,5 @@ Versioning].
 [#108]: https://github.com/ericcornelissen/svgo-action/pull/108
 [#111]: https://github.com/ericcornelissen/svgo-action/pull/111
 [#112]: https://github.com/ericcornelissen/svgo-action/pull/112
+[#122]: https://github.com/ericcornelissen/svgo-action/pull/122
+[#124]: https://github.com/ericcornelissen/svgo-action/pull/124

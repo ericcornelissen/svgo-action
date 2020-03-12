@@ -12,6 +12,8 @@ export const getInput = jest.fn()
       return "./config.yml";
     } else if (key === "dry-run") {
       return "false";
+    } else if (key === "conventional-commits") {
+      return "false";
     }
   })
   .mockName("core.getInput");
