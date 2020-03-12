@@ -60,7 +60,7 @@ key as shown below. This still allows you to configure the commit message
 `description`. The `title` value will be ignored.
 
 > :information_source: This option is also available from the Workflow file
-> through the `conventional-commit` option.
+> through the `conventional-commits` option.
 
 ```yaml
 # .github/svgo-action.yml
