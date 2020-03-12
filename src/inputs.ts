@@ -21,10 +21,11 @@ const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
 
 export type RawActionConfig = {
   readonly commit?: {
+    readonly conventional?: boolean;
     readonly title?: string;
     readonly description?: string;
   };
-  readonly "dry-run"?: boolean | string;
+  readonly "dry-run"?: boolean;
   readonly "svgo-options"?: string;
 }
 
@@ -56,8 +57,13 @@ export class ActionConfig {
   }
 
   private static getCommitTitle(config: RawActionConfig): string {
-    const useConventionalCommit = core.getInput(INPUT_NAME_CONVENTIONAL_COMMITS, NOT_REQUIRED);
-    if (useConventionalCommit === TRUE) {
+    const useConventionalCommit = this.normalizeBoolOption(
+      config.commit?.conventional,
+      INPUT_NAME_CONVENTIONAL_COMMITS,
+      true,
+    );
+
+    if (useConventionalCommit) {
       return CONVENTIONAL_COMMIT_TITLE;
     } else {
       return config.commit?.title || DEFAULT_COMMIT_TITLE;
@@ -69,9 +75,15 @@ export class ActionConfig {
   }
 
   private static getDryRunValue(config: RawActionConfig): boolean {
-    const value = (config["dry-run"] !== undefined)
-      ? config["dry-run"] : core.getInput(INPUT_NAME_DRY_RUN, NOT_REQUIRED);
+    return this.normalizeBoolOption(config["dry-run"], INPUT_NAME_DRY_RUN, true);
+  }
 
+  private static normalizeBoolOption(
+    configValue: boolean | undefined,
+    inputName: string,
+    assumptionValue: boolean,
+  ): boolean {
+    const value = (configValue !== undefined) ? configValue : core.getInput(inputName, NOT_REQUIRED);
     if (typeof value === BOOLEAN) {
       return value as boolean;
     } else if (value === FALSE) {
@@ -79,8 +91,8 @@ export class ActionConfig {
     } else if (value === TRUE) {
       return true;
     } else {
-      core.info(`Unknown dry-run value '${value}', assuming ${TRUE}`);
-      return true;
+      core.info(`Unknown ${inputName} value '${value}', assuming ${assumptionValue}`);
+      return assumptionValue;
     }
   }
 
