@@ -1,4 +1,5 @@
 import contentPayloads from "./fixtures/contents-payloads.json";
+import files from "./fixtures/file-data.json";
 
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
@@ -78,7 +79,7 @@ describe("::commitFiles", () => {
     defaultBlobs,
     [complexBlob],
     [fooBlob, barBlob],
-  ])("return value for different arrays of blobs", async (blobs) => {
+  ])("return value for non-empty array of blobs", async (blobs) => {
     const promise = commitFiles(client, blobs as GitBlob[], defaultCommitMessage);
     await expect(promise).resolves.toEqual(
       expect.objectContaining({
@@ -92,7 +93,7 @@ describe("::commitFiles", () => {
     defaultCommitMessage,
     "Optimized SVGs",
     "fix: optimized SVGs",
-  ])("commit message (%s)", async (commitMessage) => {
+  ])("uses the commit message (%s)", async (commitMessage) => {
     await commitFiles(client, defaultBlobs, commitMessage);
     expect(client.git.createCommit).toHaveBeenCalledTimes(1);
     expect(client.git.createCommit).toHaveBeenCalledWith(
@@ -307,25 +308,25 @@ describe("::getPrComments", () => {
 
 describe("::getPrFile", () => {
 
-  const EXISTING_FILE_PATH = "test.svg";
+  const testFiles = test.each(Object.keys(files).slice(0, 4));
 
-  test("return something when requesting data for an existing file", async () => {
-    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+  testFiles("get an existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getPrFile(client, filePath);
     expect(fileData).toBeDefined();
   });
 
-  test("'path' is defined for existing file", async () => {
-    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+  testFiles("'path' is defined for existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getPrFile(client, filePath);
     expect(fileData.path).toBeDefined();
   });
 
-  test("'content' is defined for existing file", async () => {
-    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+  testFiles("'content' is defined for existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getPrFile(client, filePath);
     expect(fileData.content).toBeDefined();
   });
 
-  test("'encoding' is defined for existing file", async () => {
-    const fileData: FileData = await getPrFile(client, EXISTING_FILE_PATH);
+  testFiles("'encoding' is defined for existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getPrFile(client, filePath);
     expect(fileData.encoding).toBeDefined();
   });
 
@@ -340,17 +341,17 @@ describe("::getPrFile", () => {
 
 describe("::getPrFiles", () => {
 
-  test("return correctly for a Pull Request with 1 changed files", async () => {
+  test("return value for a Pull Request with 1 changed files", async () => {
     const changedFiles = await getPrFiles(client, github.PR_NUMBER.ADD_SVG);
     expect(changedFiles).toBeDefined();
   });
 
-  test("return correctly for a Pull Request with no changes", async () => {
+  test("return value for a Pull Request with no changes", async () => {
     const changedFiles = await getPrFiles(client, github.PR_NUMBER.NO_CHANGES);
     expect(changedFiles).toBeDefined();
   });
 
-  test("throw for non-existent file", async () => {
+  test("throw when file in Pull Request does not exist", async () => {
     github.GitHubInstance.pulls.listFiles.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getPrFiles(client, github.PR_NUMBER.MANY_CHANGES);
@@ -366,14 +367,14 @@ describe("::getPrNumber", () => {
     github.PR_NUMBER.MANY_CHANGES,
     github.PR_NUMBER.ADD_SVG,
     github.PR_NUMBER.MODIFY_SVG,
-  ])("return the correct number for Pull Request #%i", (prNumber: number) => {
+  ])("return value for Pull Request #%i", (prNumber: number) => {
     github.context.payload.pull_request.number = prNumber;
 
     const actual: number = getPrNumber();
     expect(actual).toBe(prNumber);
   });
 
-  test("no Pull Request in the context", () => {
+  test("the 'pull_request' is missing from context payload", () => {
     const backup = github.context.payload.pull_request;
     delete github.context.payload.pull_request;
 
@@ -387,25 +388,25 @@ describe("::getPrNumber", () => {
 
 describe("::getRepoFile", () => {
 
-  const EXISTING_FILE_PATH = ".svgo.yml";
+  const testFiles = test.each(Object.keys(files).slice(0, 4));
 
-  test("return something when requesting data for an existing file", async () => {
-    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+  testFiles("return value for an existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getRepoFile(client, filePath);
     expect(fileData).toBeDefined();
   });
 
-  test("'path' is defined for existing file", async () => {
-    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+  testFiles("'path' is defined for existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getRepoFile(client, filePath);
     expect(fileData.path).toBeDefined();
   });
 
-  test("'content' is defined for existing file", async () => {
-    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+  testFiles("'content' is defined for existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getRepoFile(client, filePath);
     expect(fileData.content).toBeDefined();
   });
 
-  test("'encoding' is defined for existing file", async () => {
-    const fileData: FileData = await getRepoFile(client, EXISTING_FILE_PATH);
+  testFiles("'encoding' is defined for existing file (%s)", async (filePath) => {
+    const fileData: FileData = await getRepoFile(client, filePath);
     expect(fileData.encoding).toBeDefined();
   });
 
