@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.3.1] - 2020-03-12
+
 - Add `fileCount` and `svgCount` as templating variable. ([#122])
 - Add option to use conventional commit message titles. ([#124])
 
