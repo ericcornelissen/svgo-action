@@ -245,62 +245,32 @@ describe("::getCommitMessage", () => {
 describe("::getPrComments", () => {
 
   test("no comments", async () => {
-    const comments = getPrComments(client, github.PR_NUMBER.NO_COMMENTS);
-
-    const result: string[] = [];
-    for await (const comment of comments) {
-      result.push(comment);
-    }
+    const result = await getPrComments(client, github.PR_NUMBER.NO_COMMENTS);
     expect(result).toHaveLength(0);
   });
 
   test("1 comment", async () => {
-    const comments = getPrComments(client, github.PR_NUMBER.ONE_COMMENT);
-
-    const result: string[] = [];
-    for await (const comment of comments) {
-      result.push(comment);
-    }
+    const result = await getPrComments(client, github.PR_NUMBER.ONE_COMMENT);
     expect(result).toHaveLength(1);
   });
 
   test("10 comments", async () => {
-    const comments = getPrComments(client, github.PR_NUMBER.TEN_COMMENTS);
-
-    const result: string[] = [];
-    for await (const comment of comments) {
-      result.push(comment);
-    }
+    const result = await getPrComments(client, github.PR_NUMBER.TEN_COMMENTS);
     expect(result).toHaveLength(10);
   });
 
   test("11 comments", async () => {
-    const comments = getPrComments(client, github.PR_NUMBER.ELEVEN_COMMENTS);
-
-    const result: string[] = [];
-    for await (const comment of comments) {
-      result.push(comment);
-    }
+    const result = await getPrComments(client, github.PR_NUMBER.ELEVEN_COMMENTS);
     expect(result).toHaveLength(11);
   });
 
   test("17 comments", async () => {
-    const comments = getPrComments(client, github.PR_NUMBER.SEVENTEEN_COMMENTS);
-
-    const result: string[] = [];
-    for await (const comment of comments) {
-      result.push(comment);
-    }
+    const result = await getPrComments(client, github.PR_NUMBER.SEVENTEEN_COMMENTS);
     expect(result).toHaveLength(17);
   });
 
   test("103 comments", async () => {
-    const comments = getPrComments(client, github.PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS);
-
-    const result: string[] = [];
-    for await (const comment of comments) {
-      result.push(comment);
-    }
+    const result = await getPrComments(client, github.PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS);
     expect(result).toHaveLength(103);
   });
 
