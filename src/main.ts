@@ -200,7 +200,7 @@ export default async function main(): Promise<void> {
             config.commitDescription,
             {
               fileCount: fileCount,
-              filePaths: blobs.map((blob) => blob.path),
+              filePaths: prSvgs.map((svg) => svg.path),
               optimizedCount: blobs.length,
               svgCount: svgCount,
             },
