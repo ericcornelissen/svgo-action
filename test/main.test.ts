@@ -191,9 +191,21 @@ describe("Configuration", () => {
     );
   });
 
-  test.todo("conventional-commits are enabled");
+  test("conventional-commits are enabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commitTitle = "chore: optimize {{optimizedCount}} SVG(s)";
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-  test.todo("commit.convetional is enabled");
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+
+    expect(templating.formatTemplate).toHaveBeenCalledWith(
+      actionConfig.commitTitle,
+      expect.any(String),
+      expect.any(Object),
+    );
+  });
 
 });
 
@@ -249,7 +261,17 @@ describe("Manual Action control", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
-  test.todo("commit message that doesn't disable the Action");
+  test.each([
+    "This is the commit title\n\nAnd this the message",
+    "chore: make some changes\n\n- This isn't tennis\n- Praise the sun",
+    "Added some SVGs to the website",
+    "Double rainbow\n\nwhat does it mean?",
+  ])("commit message that doesn't disables the Action (%s)", async (commitMessage) => {
+    githubAPI.getCommitMessage.mockResolvedValueOnce(commitMessage);
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
 
   test.each([
     "This is the commit title\n\nAnd this the message (%s)",
@@ -257,8 +279,8 @@ describe("Manual Action control", () => {
     "Added some SVGs to the website\n\n%s",
     "Double rainbow\n\nwhat does it %s mean?",
   ])("commit message that *does* disables the Action", async (baseCommitMessage) => {
-    const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
-    githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
+    const commitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
+    githubAPI.getCommitMessage.mockResolvedValueOnce(commitMessage);
 
     await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
