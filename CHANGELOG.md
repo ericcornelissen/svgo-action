@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Re-enable the Action from a Pull Request comment. ([#129])
 
 ## [0.3.1] - 2020-03-12
 
@@ -80,3 +80,4 @@ Versioning].
 [#112]: https://github.com/ericcornelissen/svgo-action/pull/112
 [#122]: https://github.com/ericcornelissen/svgo-action/pull/122
 [#124]: https://github.com/ericcornelissen/svgo-action/pull/124
+[#129]: https://github.com/ericcornelissen/svgo-action/pull/129

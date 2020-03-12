@@ -37,6 +37,7 @@ import { formatTemplate } from "./templating";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
+const ENABLE_PATTERN = /enable-svgo-action/;
 
 
 async function fetchConfigInRepo(client: GitHub): Promise<RawActionConfig> {
@@ -90,8 +91,11 @@ async function checkIfActionIsDisabled(
     return { isDisabled: true, disabledFrom: "commit message" };
   }
 
-  for await (const comment of getPrComments(client, prNumber)) {
-    if (DISABLE_PATTERN.test(comment)) {
+  const prComments: string[] = await getPrComments(client, prNumber);
+  for (const comment of prComments) {
+    if (ENABLE_PATTERN.test(comment)) {
+      break;
+    } else if (DISABLE_PATTERN.test(comment)) {
       return { isDisabled: true, disabledFrom: "Pull Request" };
     }
   }

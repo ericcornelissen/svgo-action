@@ -114,8 +114,11 @@ can be achieved by including the string "_disable-svgo-action_" anywhere in any
 comment on the Pull Request.
 
 > :warning: This will stop the Action from optimizing SVGs in any subsequent
-> build for that Pull Request. To revert the effect the comment must be modified
-> or removed.
+> build for that Pull Request.
+
+If you want to enable the Action again, include the string
+"_enable-svgo-action_" anywhere in a comment on the Pull Request after it has
+been disabled and the Action will be enabled again.
 
 #### Limit Runs
 
