@@ -261,11 +261,83 @@ describe("Manual Action control", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
-  test.todo("enable comment after disable comment on Pull Request");
+  test("enable comment after disable comment on Pull Request", async () => {
+    const comments = [
+      "In this comment we disable the action (disable-svgo-action)",
+      "Discussion",
+      "Bla bla",
+      "In this comment we enable the action (enable-svgo-action)",
+      "The Spanish Inquisition",
+    ];
 
-  test.todo("disable comment after enable comment on Pull Request");
+    githubAPI.getPrComments.mockImplementationOnce(() => ({
+      [Symbol.asyncIterator](): unknown {
+        return {
+          async next(): Promise<unknown> {
+            const comment = comments.pop();
+            if (comment) {
+              return { done: false, value: comment };
+            } else {
+              return { done: true };
+            }
+          },
+        };
+      },
+    }));
 
-  test.todo("only a comment that enables on Pull Request");
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("disable comment after enable comment on Pull Request", async () => {
+    const comments = [
+      "In this comment we disable the action (disable-svgo-action)",
+      "Foo",
+      "Bar",
+      "In this comment we enable the action (enable-svgo-action)",
+      "No, I don't want the Action to run! disable-svgo-action",
+    ];
+
+    githubAPI.getPrComments.mockImplementationOnce(() => ({
+      [Symbol.asyncIterator](): unknown {
+        return {
+          async next(): Promise<unknown> {
+            const comment = comments.pop();
+            if (comment) {
+              return { done: false, value: comment };
+            } else {
+              return { done: true };
+            }
+          },
+        };
+      },
+    }));
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("only a comment that enables on Pull Request", async () => {
+    const comments = ["I don't know what I'm doing but enable-svgo-action"];
+
+    githubAPI.getPrComments.mockImplementationOnce(() => ({
+      [Symbol.asyncIterator](): unknown {
+        return {
+          async next(): Promise<unknown> {
+            const comment = comments.pop();
+            if (comment) {
+              return { done: false, value: comment };
+            } else {
+              return { done: true };
+            }
+          },
+        };
+      },
+    }));
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
 
   test.each([
     "This is the commit title\n\nAnd this the message",
