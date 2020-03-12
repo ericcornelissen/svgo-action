@@ -261,6 +261,12 @@ describe("Manual Action control", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
+  test.todo("enable comment after disable comment on Pull Request");
+
+  test.todo("disable comment after enable comment on Pull Request");
+
+  test.todo("only a comment that enables on Pull Request");
+
   test.each([
     "This is the commit title\n\nAnd this the message",
     "chore: make some changes\n\n- This isn't tennis\n- Praise the sun",
