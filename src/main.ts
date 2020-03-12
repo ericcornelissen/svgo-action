@@ -112,12 +112,6 @@ async function getSvgsInPR(
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-  if (svgCount > 0) {
-    core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
-  } else {
-    core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
-  }
-
   return { fileCount, prSvgs, svgCount };
 }
 
@@ -183,6 +177,8 @@ async function run(
 ): Promise<void> {
   const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
   if (svgCount > 0) {
+    core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
+
     const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
     if (!config.isDryRun) {
       const commitMessage: string = formatTemplate(
@@ -202,6 +198,8 @@ async function run(
     const optimized = blobs.length;
     const skipped = svgCount - blobs.length;
     core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+  } else {
+    core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
   }
 }
 
