@@ -176,49 +176,45 @@ async function doCommitChanges(
 }
 
 
-export default async function main(): Promise<boolean> {
+export default async function main(): Promise<void> {
   try {
     const { client, prNumber } = getContext();
     const { isDisabled, disabledFrom } = await checkIfActionIsDisabled(client, prNumber);
     if (isDisabled) {
       core.info(`Action disabled from ${disabledFrom}, exiting`);
-      return true;
-    }
-
-    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
-    const config: ActionConfig = new ActionConfig(rawConfig);
-    if (config.isDryRun) {
-      core.info("Dry mode enabled, no changes will be committed");
-    }
-
-    const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
-    if (svgCount > 0) {
-      const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
-      const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
-      const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
-      if (!config.isDryRun) {
-        const commitMessage: string = formatTemplate(
-          config.commitTitle,
-          config.commitDescription,
-          {
-            fileCount: fileCount,
-            filePaths: blobs.map((blob) => blob.path),
-            optimizedCount: blobs.length,
-            svgCount: svgCount,
-          },
-        );
-        await doCommitChanges(client, commitMessage, blobs);
+    } else {
+      const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
+      const config: ActionConfig = new ActionConfig(rawConfig);
+      if (config.isDryRun) {
+        core.info("Dry mode enabled, no changes will be committed");
       }
 
-      const optimized = blobs.length;
-      const skipped = svgCount - blobs.length;
-      core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
-    }
+      const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
+      if (svgCount > 0) {
+        const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
+        const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
+        const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
+        if (!config.isDryRun) {
+          const commitMessage: string = formatTemplate(
+            config.commitTitle,
+            config.commitDescription,
+            {
+              fileCount: fileCount,
+              filePaths: blobs.map((blob) => blob.path),
+              optimizedCount: blobs.length,
+              svgCount: svgCount,
+            },
+          );
+          await doCommitChanges(client, commitMessage, blobs);
+        }
 
-    return true;
+        const optimized = blobs.length;
+        const skipped = svgCount - blobs.length;
+        core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+      }
+    }
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
-    return false;
   }
 }
 

@@ -268,9 +268,7 @@ describe("Manipulation", () => {
       },
     }));
 
-    const result = await main();
-
-    expect(result).toBe(true);
+    await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
@@ -284,9 +282,7 @@ describe("Manipulation", () => {
     const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
     githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
 
-    const result = await main();
-
-    expect(result).toBe(true);
+    await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
