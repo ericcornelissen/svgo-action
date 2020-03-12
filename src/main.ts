@@ -37,6 +37,7 @@ import { formatTemplate } from "./templating";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
+const ENABLE_PATTERN = /enable-svgo-action/;
 
 
 async function fetchConfigInRepo(client: GitHub): Promise<RawActionConfig> {
@@ -90,8 +91,11 @@ async function checkIfActionIsDisabled(
     return { isDisabled: true, disabledFrom: "commit message" };
   }
 
-  for await (const comment of getPrComments(client, prNumber)) {
-    if (DISABLE_PATTERN.test(comment)) {
+  const prComments: string[] = await getPrComments(client, prNumber);
+  for (const comment of prComments) {
+    if (ENABLE_PATTERN.test(comment)) {
+      break;
+    } else if (DISABLE_PATTERN.test(comment)) {
       return { isDisabled: true, disabledFrom: "Pull Request" };
     }
   }
@@ -111,12 +115,6 @@ async function getSvgsInPR(
   const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
-
-  if (svgCount > 0) {
-    core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
-  } else {
-    core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
-  }
 
   return { fileCount, prSvgs, svgCount };
 }
@@ -175,15 +173,44 @@ async function doCommitChanges(
   }
 }
 
+async function run(
+  client: GitHub,
+  config: ActionConfig,
+  svgo: SVGOptimizer,
+  prNumber: number,
+): Promise<void> {
+  const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
+  if (svgCount > 0) {
+    core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
 
-export default async function main(): Promise<boolean> {
+    const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
+    if (!config.isDryRun) {
+      const commitMessage: string = formatTemplate(
+        config.commitTitle,
+        config.commitDescription,
+        {
+          fileCount: fileCount,
+          filePaths: prSvgs.map((svg) => svg.path),
+          optimizedCount: blobs.length,
+          svgCount: svgCount,
+        },
+      );
+
+      await doCommitChanges(client, commitMessage, blobs);
+    }
+
+    const optimized = blobs.length;
+    const skipped = svgCount - blobs.length;
+    core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+  } else {
+    core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
+  }
+}
+
+
+export default async function main(): Promise<void> {
   try {
     const { client, prNumber } = getContext();
-    const { isDisabled, disabledFrom } = await checkIfActionIsDisabled(client, prNumber);
-    if (isDisabled) {
-      core.info(`Action disabled from ${disabledFrom}, exiting`);
-      return true;
-    }
 
     const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
     const config: ActionConfig = new ActionConfig(rawConfig);
@@ -191,34 +218,17 @@ export default async function main(): Promise<boolean> {
       core.info("Dry mode enabled, no changes will be committed");
     }
 
-    const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
-    if (svgCount > 0) {
-      const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
-      const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
-      const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
-      if (!config.isDryRun) {
-        const commitMessage: string = formatTemplate(
-          config.commitTitle,
-          config.commitDescription,
-          {
-            fileCount: fileCount,
-            filePaths: blobs.map((blob) => blob.path),
-            optimizedCount: blobs.length,
-            svgCount: svgCount,
-          },
-        );
-        await doCommitChanges(client, commitMessage, blobs);
-      }
+    const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
+    const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
-      const optimized = blobs.length;
-      const skipped = svgCount - blobs.length;
-      core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+    const { isDisabled, disabledFrom } = await checkIfActionIsDisabled(client, prNumber);
+    if (isDisabled) {
+      core.info(`Action disabled from ${disabledFrom}, exiting`);
+    } else {
+      await run(client, config, svgo, prNumber);
     }
-
-    return true;
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
-    return false;
   }
 }
 

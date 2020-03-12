@@ -50,25 +50,9 @@ beforeEach(() => {
   templating.formatTemplate.mockClear();
 });
 
-describe("Function usage", () => {
-
-  test("gets the Pull Request number", async () => {
-    await main();
-    expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
-  });
-
-  test("gets the changed files in the Pull Request", async () => {
-    await main();
-    expect(githubAPI.getPrFiles).toHaveBeenCalledTimes(1);
-  });
-
-  test("gets the contents of at least one of the files in the Pull Request", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-
-    await main();
-    expect(githubAPI.getPrFile).toHaveBeenCalledTimes(1);
-  });
-
+test("get the Pull Request number", async () => {
+  await main();
+  expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
 });
 
 describe("Logging", () => {
@@ -76,11 +60,6 @@ describe("Logging", () => {
   test("does some debug logging", async () => {
     await main();
     expect(core.debug).toHaveBeenCalled();
-  });
-
-  test("summary when everything is fine", async () => {
-    await main();
-    expect(core.info).toHaveBeenCalled();
   });
 
   test("summary for a Pull Request with 1 optimized SVG", async () => {
@@ -115,13 +94,6 @@ describe("Logging", () => {
   test("don't set a failed state when everything is fine", async () => {
     await main();
     expect(core.setFailed).not.toHaveBeenCalled();
-  });
-
-  test("log an error when Pull Request number could not be found", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
-
-    await main();
-    expect(core.setFailed).toHaveBeenCalled();
   });
 
 });
@@ -219,29 +191,32 @@ describe("Configuration", () => {
     );
   });
 
+  test("conventional-commits are enabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commitTitle = "chore: optimize {{optimizedCount}} SVG(s)";
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+
+    expect(templating.formatTemplate).toHaveBeenCalledWith(
+      actionConfig.commitTitle,
+      expect.any(String),
+      expect.any(Object),
+    );
+  });
+
 });
 
-describe("Manipulation", () => {
+describe("Manual Action control", () => {
 
   test.each([
     ["But why is the rum gone"],
     ["Asiimov", "It's dangerous to go alone!", "Praise the sun"],
     ["The Spanish Inquisition", "No this is Patrick!"],
   ])("comments on the Pull Request that don't disable the Action", async (...comments) => {
-    githubAPI.getPrComments.mockImplementationOnce(() => ({
-      [Symbol.asyncIterator](): unknown {
-        return {
-          async next(): Promise<unknown> {
-            const comment = comments.pop();
-            if (comment) {
-              return { done: false, value: comment };
-            } else {
-              return { done: true };
-            }
-          },
-        };
-      },
-    }));
+    githubAPI.getPrComments.mockResolvedValueOnce(comments);
 
     await main();
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
@@ -252,27 +227,65 @@ describe("Manipulation", () => {
     ["Hello world!", "%s"],
     ["foo", "foo %s bar", "bar"],
     ["%s", "Yip Yip!", "%s"],
-  ])("comments on the Pull Request that do disable the Action", async (...baseComments) => {
-    githubAPI.getPrComments.mockImplementationOnce(() => ({
-      [Symbol.asyncIterator](): unknown {
-        return {
-          async next(): Promise<unknown> {
-            const comment = baseComments.pop();
-            if (comment) {
-              return { done: false, value: strFormat(comment, "disable-svgo-action") };
-            } else {
-              return { done: true };
-            }
-          },
-        };
-      },
-    }));
+  ])("comments on the Pull Request that *do* disable the Action", async (...baseComments) => {
+    githubAPI.getPrComments.mockResolvedValueOnce(
+      baseComments.map((comment) => strFormat(comment, "disable-svgo-action")),
+    );
 
-    const result = await main();
-
-    expect(result).toBe(true);
+    await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("enable comment after disable comment on Pull Request", async () => {
+    githubAPI.getPrComments.mockResolvedValueOnce([
+      // Newest comment
+      "The Spanish Inquisition",
+      "In this comment we enable the action (enable-svgo-action)",
+      "Bla bla",
+      "Discussion",
+      "In this comment we disable the action (disable-svgo-action)",
+      // Oldest comment
+    ]);
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("disable comment after enable comment on Pull Request", async () => {
+    githubAPI.getPrComments.mockResolvedValueOnce([
+      // Newest comment
+      "No, I don't want the Action to run! disable-svgo-action",
+      "In this comment we enable the action (enable-svgo-action)",
+      "Bar",
+      "Foo",
+      "In this comment we disable the action (disable-svgo-action)",
+      // Oldest comment
+    ]);
+
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("only a comment that enables on Pull Request", async () => {
+    githubAPI.getPrComments.mockResolvedValueOnce(
+      ["I don't know what I'm doing but enable-svgo-action"],
+    );
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test.each([
+    "This is the commit title\n\nAnd this the message",
+    "chore: make some changes\n\n- This isn't tennis\n- Praise the sun",
+    "Added some SVGs to the website",
+    "Double rainbow\n\nwhat does it mean?",
+  ])("commit message that doesn't disables the Action (%s)", async (commitMessage) => {
+    githubAPI.getCommitMessage.mockResolvedValueOnce(commitMessage);
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
   test.each([
@@ -280,13 +293,11 @@ describe("Manipulation", () => {
     "chore: make some changes\n\n- This isn't tennis\n- Praise the sun\n\n%s",
     "Added some SVGs to the website\n\n%s",
     "Double rainbow\n\nwhat does it %s mean?",
-  ])("commit message that disables the Action", async (baseCommitMessage) => {
-    const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
-    githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
+  ])("commit message that *does* disables the Action", async (baseCommitMessage) => {
+    const commitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
+    githubAPI.getCommitMessage.mockResolvedValueOnce(commitMessage);
 
-    const result = await main();
-
-    expect(result).toBe(true);
+    await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
@@ -644,6 +655,13 @@ describe("Payloads", () => {
 });
 
 describe("Error scenarios", () => {
+
+  test("the Pull Request number could not be found", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
+
+    await main();
+    expect(core.setFailed).toHaveBeenCalled();
+  });
 
   test("the Pull Request files could not be found", async () => {
     githubAPI.getPrFiles.mockRejectedValueOnce(new Error("Not found"));

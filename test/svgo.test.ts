@@ -32,14 +32,14 @@ describe("SVGOptimizer", () => {
 
   describe(".optimize", () => {
 
+    const optimizer: SVGOptimizer = new SVGOptimizer({ });
+
     const testSvgs = test.each(
       Object.entries(files)
         .filter(([key, _]) => key.endsWith(".svg"))
         .map(([_, value]) => value)
         .slice(0, 4),
     );
-
-    const optimizer: SVGOptimizer = new SVGOptimizer({ });
 
     testSvgs("return a (string) value", async (svg: string) => {
       const result = await optimizer.optimize(svg);

@@ -28,6 +28,7 @@ function mockCoreGetInput(key: string, value: string): void {
     .mockReturnValueOnce(value);
 }
 
+
 describe("::getConfigFilePath", () => {
 
   test("return what core returns", () => {
@@ -91,16 +92,16 @@ describe("ActionConfig", () => {
     test("commit description is an empty string in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { description: "" } });
       expect(instance.commitDescription).toBeDefined();
-      expect(instance.commitDescription).not.toEqual("");
+      expect(instance.commitDescription).toEqual("");
     });
 
   });
 
   describe(".commitTitle", () => {
 
-    const testNonBoolean = test.each(["foobar", "treu", "fals"]);
-
     const CONVENTIONAL_COMMIT_EXP = /.+:\s.+/;
+
+    const testNonBoolean = test.each(["foobar", "treu", "fals"]);
 
     test("commit is not defined in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ });
@@ -263,7 +264,7 @@ describe("ActionConfig", () => {
       expect(instance.isDryRun).toBe(true);
     });
 
-    testNonBoolean("dry run is `'%s'` in the workflow file", async (value) => {
+    testNonBoolean("dry run is `'%s'` in the workflow file", (value) => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, value);
 
       const instance: ActionConfig = new ActionConfig();
@@ -305,7 +306,7 @@ describe("ActionConfig", () => {
       expect(instance.isDryRun).toBe(true);
     });
 
-    testNonBoolean("dry run is `'%s'` in the config object", async (value) => {
+    testNonBoolean("dry run is `'%s'` in the config object", (value) => {
       const rawConfig: RawActionConfig = yaml.safeLoad(`dry-run: '${value}'`);
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 

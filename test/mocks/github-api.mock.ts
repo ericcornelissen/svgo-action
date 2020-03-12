@@ -32,19 +32,11 @@ export const createBlob = jest.fn()
   .mockName("github-api.createBlob");
 
 export const getCommitMessage = jest.fn()
-  .mockImplementation(async () => "This is a commit message")
+  .mockResolvedValue("This is a commit message")
   .mockName("github-api.getCommitMessage");
 
 export const getPrComments = jest.fn()
-  .mockImplementation(() => ({
-    [Symbol.asyncIterator](): unknown {
-      return {
-        async next(): Promise<unknown> {
-          return { done: true };
-        },
-      };
-    },
-  }))
+  .mockResolvedValue([])
   .mockName("github-api.getPrFile");
 
 export const getPrFile = jest.fn()
