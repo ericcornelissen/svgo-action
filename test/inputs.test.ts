@@ -98,6 +98,8 @@ describe("ActionConfig", () => {
 
   describe(".commitTitle", () => {
 
+    const testNonBoolean = test.each(["foobar", "treu", "fals"]);
+
     const CONVENTIONAL_COMMIT_EXP = /.+:\s.+/;
 
     test("commit is not defined in the config object", () => {
@@ -125,7 +127,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).not.toEqual("");
     });
 
-    test("conventional-commit is enabled and no commit title is specified", () => {
+    test("conventional-commits is enabled and no commit title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
 
       const instance: ActionConfig = new ActionConfig();
@@ -134,7 +136,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("conventional-commit is enabled and a commit title is specified", () => {
+    test("conventional-commits is enabled and a commit title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
 
       const instance: ActionConfig = new ActionConfig({ commit: { title: "deadbeef" } });
@@ -143,7 +145,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("conventional-commit is disabled and no commit title is specified", () => {
+    test("conventional-commits is disabled and no commit title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
 
       const instance: ActionConfig = new ActionConfig();
@@ -152,11 +154,81 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).not.toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("conventional-commit is disabled and a commit title is specified", () => {
+    test("conventional-commits is disabled and a commit title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
 
       const instance: ActionConfig = new ActionConfig({ commit: { title: "Do the thing" } });
       expect(instance.commitTitle).toEqual("Do the thing");
+    });
+
+    testNonBoolean("conventional-commits is '%s'", (value) => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, value);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`Unknown conventional-commits value '${value}'`),
+      );
+    });
+
+    test("commit.conventional is enabled and no commit title is specified", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { conventional: true } });
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
+    });
+
+    test("commit.conventional is enabled and a commit title is specified", () => {
+      const instance: ActionConfig = new ActionConfig({
+        commit: { conventional: true, title: "Mom's spaghetti" },
+      });
+
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
+    });
+
+    test("commit.conventional is disabled and no commit title is specified", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { conventional: false } });
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).not.toMatch(CONVENTIONAL_COMMIT_EXP);
+    });
+
+    test("commit.conventional is disabled and a commit title is specified", () => {
+      const instance: ActionConfig = new ActionConfig({
+        commit: { conventional: false, title: "Yip yip!" },
+      });
+
+      expect(instance.commitTitle).toEqual("Yip yip!");
+    });
+
+    testNonBoolean("commit.conventional is '%s'", (value) => {
+      const rawConfig: RawActionConfig = yaml.safeLoad(`commit:\n  - conventional: '${value}'`);
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`Unknown conventional-commits value '${value}'`),
+      );
+    });
+
+    test("conventional-commits enabled and commit.conventional disabled", () => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
+
+      const instance: ActionConfig = new ActionConfig({ commit: { conventional: false } });
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).not.toMatch(CONVENTIONAL_COMMIT_EXP);
+    });
+
+    test("conventional-commits disabled and commit.conventional enabled", () => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+
+      const instance: ActionConfig = new ActionConfig({ commit: { conventional: true } });
+      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
   });
@@ -196,7 +268,9 @@ describe("ActionConfig", () => {
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.isDryRun).toBe(true);
-      expect(core.info).toHaveBeenCalledTimes(1);
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`Unknown dry-run value '${value}'`),
+      );
     });
 
     test("dry-run is `false` in the config object", () => {
@@ -237,7 +311,9 @@ describe("ActionConfig", () => {
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.isDryRun).toBe(true);
-      expect(core.info).toHaveBeenCalledTimes(1);
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`Unknown dry-run value '${value}'`),
+      );
     });
 
   });
