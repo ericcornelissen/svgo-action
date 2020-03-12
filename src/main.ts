@@ -102,23 +102,23 @@ async function checkIfActionIsDisabled(
 async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
-): Promise<{ prSvgs: FileInfo[]; svgCount: number }> {
+): Promise<{ fileCount: number; prSvgs: FileInfo[]; svgCount: number }> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
   const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
-  const filesCount = prFiles.length;
-  core.debug(`the pull request contains ${filesCount} file(s)`);
+  const fileCount = prFiles.length;
+  core.debug(`the pull request contains ${fileCount} file(s)`);
 
   const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
   if (svgCount > 0) {
-    core.info(`Found ${svgCount} new/changed SVGs (out of ${filesCount} files), optimizing...`);
+    core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
   } else {
-    core.info(`Found 0/${filesCount} new or changed SVGs, exiting`);
+    core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
   }
 
-  return { prSvgs, svgCount };
+  return { fileCount, prSvgs, svgCount };
 }
 
 async function doOptimizeSvgs(
@@ -161,20 +161,10 @@ async function doOptimizeSvgs(
 
 async function doCommitChanges(
   client: GitHub,
-  commitTitle: string,
-  commitDescription: string,
+  commitMessage: string,
   blobs: GitBlob[],
 ): Promise<void> {
   if (blobs.length > 0) {
-    const commitMessage: string = formatTemplate(
-      commitTitle,
-      commitDescription,
-      {
-        optimizedCount: blobs.length,
-        filePaths: blobs.map((blob) => blob.path),
-      },
-    );
-
     const commitInfo: CommitInfo = await commitFiles(
       client,
       blobs,
@@ -201,13 +191,23 @@ export default async function main(): Promise<boolean> {
       core.info("Dry mode enabled, no changes will be committed");
     }
 
-    const { prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
+    const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
     if (svgCount > 0) {
       const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
       const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
       const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
       if (!config.isDryRun) {
-        await doCommitChanges( client, config.commitTitle, config.commitDescription, blobs);
+        const commitMessage: string = formatTemplate(
+          config.commitTitle,
+          config.commitDescription,
+          {
+            fileCount: fileCount,
+            filePaths: blobs.map((blob) => blob.path),
+            optimizedCount: blobs.length,
+            svgCount: svgCount,
+          },
+        );
+        await doCommitChanges(client, commitMessage, blobs);
       }
 
       const optimized = blobs.length;

@@ -62,8 +62,10 @@ that not all templating variables are available in the commit `title`.
 
 | Name             | Value                                    | In title | In description |
 | ---------------- | ---------------------------------------- | -------- | -------------- |
+| `fileCount`      | The number of files found in the PR      | Yes      | Yes            |
 | `filesList`      | A bullet list of the optimized SVG files | No       | Yes            |
 | `optimizedCount` | The number of optimized SVGs             | Yes      | Yes            |
+| `svgCount`       | The number of SVGs found in the PR       | Yes      | Yes            |
 
 ### Example
 
@@ -71,18 +73,22 @@ that not all templating variables are available in the commit `title`.
 # .github/svgo-action.yml
 
 commit:
-  title: Optimized {{optimizedCount}} SVG(s)
-  description: "Namely:\n{{filesList}}"
+  title: Optimized {{optimizedCount}}/{{svgCount}} SVG(s)
+  description: "Namely:\n{{filesList}}\n
+    \n
+    ({{fileCount}} file(s) in PR, of which {{svgCount}} are SVG(s))"
 ```
 
 This will result in commit messages that look like:
 
 ```git
-Optimized 2 SVG(s)
+Optimized 3/4 SVG(s)
 
 Namely:
 - foo.svg
 - bar.svg
+
+(5 file(s) in PR, of which 4 are SVG(s))
 ```
 
 [commit message templating]: #commit-message-templating
