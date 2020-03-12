@@ -50,25 +50,9 @@ beforeEach(() => {
   templating.formatTemplate.mockClear();
 });
 
-describe("Function usage", () => {
-
-  test("gets the Pull Request number", async () => {
-    await main();
-    expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
-  });
-
-  test("gets the changed files in the Pull Request", async () => {
-    await main();
-    expect(githubAPI.getPrFiles).toHaveBeenCalledTimes(1);
-  });
-
-  test("gets the contents of at least one of the files in the Pull Request", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-
-    await main();
-    expect(githubAPI.getPrFile).toHaveBeenCalledTimes(1);
-  });
-
+test("get the Pull Request number", async () => {
+  await main();
+  expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
 });
 
 describe("Logging", () => {
@@ -76,11 +60,6 @@ describe("Logging", () => {
   test("does some debug logging", async () => {
     await main();
     expect(core.debug).toHaveBeenCalled();
-  });
-
-  test("summary when everything is fine", async () => {
-    await main();
-    expect(core.info).toHaveBeenCalled();
   });
 
   test("summary for a Pull Request with 1 optimized SVG", async () => {
@@ -115,13 +94,6 @@ describe("Logging", () => {
   test("don't set a failed state when everything is fine", async () => {
     await main();
     expect(core.setFailed).not.toHaveBeenCalled();
-  });
-
-  test("log an error when Pull Request number could not be found", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
-
-    await main();
-    expect(core.setFailed).toHaveBeenCalled();
   });
 
 });
@@ -219,9 +191,13 @@ describe("Configuration", () => {
     );
   });
 
+  test.todo("conventional-commits are enabled");
+
+  test.todo("commit.convetional is enabled");
+
 });
 
-describe("Manipulation", () => {
+describe("Manual Action control", () => {
 
   test.each([
     ["But why is the rum gone"],
@@ -252,7 +228,7 @@ describe("Manipulation", () => {
     ["Hello world!", "%s"],
     ["foo", "foo %s bar", "bar"],
     ["%s", "Yip Yip!", "%s"],
-  ])("comments on the Pull Request that do disable the Action", async (...baseComments) => {
+  ])("comments on the Pull Request that *do* disable the Action", async (...baseComments) => {
     githubAPI.getPrComments.mockImplementationOnce(() => ({
       [Symbol.asyncIterator](): unknown {
         return {
@@ -268,25 +244,23 @@ describe("Manipulation", () => {
       },
     }));
 
-    const result = await main();
-
-    expect(result).toBe(true);
+    await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
+
+  test.todo("commit message that doesn't disable the Action");
 
   test.each([
     "This is the commit title\n\nAnd this the message (%s)",
     "chore: make some changes\n\n- This isn't tennis\n- Praise the sun\n\n%s",
     "Added some SVGs to the website\n\n%s",
     "Double rainbow\n\nwhat does it %s mean?",
-  ])("commit message that disables the Action", async (baseCommitMessage) => {
+  ])("commit message that *does* disables the Action", async (baseCommitMessage) => {
     const fullCommitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
     githubAPI.getCommitMessage.mockResolvedValueOnce(fullCommitMessage);
 
-    const result = await main();
-
-    expect(result).toBe(true);
+    await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
@@ -644,6 +618,13 @@ describe("Payloads", () => {
 });
 
 describe("Error scenarios", () => {
+
+  test("the Pull Request number could not be found", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
+
+    await main();
+    expect(core.setFailed).toHaveBeenCalled();
+  });
 
   test("the Pull Request files could not be found", async () => {
     githubAPI.getPrFiles.mockRejectedValueOnce(new Error("Not found"));

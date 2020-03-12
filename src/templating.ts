@@ -35,7 +35,7 @@ function formatAll(
 
 export type CommitData = {
   fileCount: number;
-  filePaths: (string | undefined)[];
+  filePaths: string[];
   optimizedCount: number;
   svgCount: number;
 }
