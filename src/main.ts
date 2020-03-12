@@ -91,7 +91,8 @@ async function checkIfActionIsDisabled(
     return { isDisabled: true, disabledFrom: "commit message" };
   }
 
-  for await (const comment of getPrComments(client, prNumber)) {
+  const prComments: string[] = await getPrComments(client, prNumber);
+  for (const comment of prComments) {
     if (ENABLE_PATTERN.test(comment)) {
       break;
     } else if (DISABLE_PATTERN.test(comment)) {
