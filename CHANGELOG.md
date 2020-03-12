@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Re-enable the Action from a Pull Request comment. ([#129])
+- Fix default commit message description. ([#130])
 
 ## [0.3.1] - 2020-03-12
 
@@ -81,3 +82,4 @@ Versioning].
 [#122]: https://github.com/ericcornelissen/svgo-action/pull/122
 [#124]: https://github.com/ericcornelissen/svgo-action/pull/124
 [#129]: https://github.com/ericcornelissen/svgo-action/pull/129
+[#130]: https://github.com/ericcornelissen/svgo-action/pull/130
