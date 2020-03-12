@@ -53,6 +53,22 @@ Optimize 42 SVG(s) with SVGO
 This will be the commit message description
 ```
 
+If you prefer the commit description to be omitted, you can simply configure it
+as an empty string.
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  description: ""
+```
+
+This will result in commit messages that look like:
+
+```git
+Optimize 42 SVG(s) with SVGO
+```
+
 ### Conventional Commits
 
 If you want to use [conventional commit] messages, you can use `conventional`
