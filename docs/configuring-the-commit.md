@@ -18,7 +18,7 @@ as described in [commit message templating].
 # .github/svgo-action.yml
 
 commit:
-  title: "This will be the commit message title"
+  title: This will be the commit message title
 ```
 
 This will result in commit messages that look like:
@@ -42,7 +42,7 @@ templating].
 # .github/svgo-action.yml
 
 commit:
-  description: "This will be the commit message description"
+  description: This will be the commit message description
 ```
 
 This will result in commit messages that look like:
@@ -110,8 +110,8 @@ key as shown below. This still allows you to configure the commit message
 
 commit:
   conventional: true
-  title: "This will be ignored"
-  description: "You can still configure the commit description"
+  title: This will be ignored
+  description: You can still configure the commit description
 ```
 
 This will result in commit messages that look like:
