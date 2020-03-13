@@ -37,6 +37,7 @@ export type CommitData = {
   fileCount: number;
   filePaths: string[];
   optimizedCount: number;
+  skippedCount: number;
   svgCount: number;
 }
 

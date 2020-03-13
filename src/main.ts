@@ -192,6 +192,7 @@ async function run(
           fileCount: fileCount,
           filePaths: prSvgs.map((svg) => svg.path),
           optimizedCount: blobs.length,
+          skippedCount: 0,
           svgCount: svgCount,
         },
       );
