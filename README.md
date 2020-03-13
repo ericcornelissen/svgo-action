@@ -15,7 +15,7 @@ Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO action:
 
 ```yaml
-name: "Pull Request SVGOptimizer"
+name: Pull Request SVGOptimizer
 on:
 - pull_request
 
@@ -25,7 +25,7 @@ jobs:
     steps:
     - uses: ericcornelissen/svgo-action@v0.3.2
       with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 _Note: This grants access to the `GITHUB_TOKEN` so the action can make calls to
@@ -54,7 +54,7 @@ configuration file]. Below you can find the available options.
   used as configuration for [SVGO].
   - Possible values: _Any file path_
   - Default value: `".svgo.yml"`
-  - Example: `svgo-options: "path/to/svgo-options.yml"`
+  - Example: `svgo-options: path/to/svgo-options.yml`
 
 #### In the Workflow file
 
@@ -63,10 +63,10 @@ The first way to configure the action is inside the Workflow file, after the
 
 ```yaml
 with:
-  repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  repo-token: ${{ secrets.GITHUB_TOKEN }}
   conventional-commits: true
   dry-run: true
-  svgo-options: "path/to/svgo-options.yml"
+  svgo-options: path/to/svgo-options.yml
 ```
 
 #### In `.github/svgo-action.yml`
@@ -77,11 +77,13 @@ you can configure the Action inside this file. For example:
 
 ```yaml
 dry-run: true
-svgo-options: "path/to/svgo-options.yml"
+svgo-options: path/to/svgo-options.yml
 commit:
   conventional: false
-  title: "Optimized {{optimizedCount}} SVG(s)"
-  description: "Namely:\n{{filesList}}"
+  title: Optimized {{optimizedCount}} SVG(s)
+  description: |
+    Namely:
+    {{filesList}}
 ```
 
 #### In Another Configuration File
@@ -94,8 +96,8 @@ value should point to the configuration file you want to use. For example:
 
 ```yaml
 with:
-  repo-token: "${{ secrets.GITHUB_TOKEN }}"
-  configuration-path: "path/to/configuration/file.yml"
+  repo-token: ${{ secrets.GITHUB_TOKEN }}
+  configuration-path: path/to/configuration/file.yml
 ```
 
 ### Advanced Usage
@@ -135,11 +137,11 @@ To run this action only when SVG files are changed, update the `on:`
 configuration as follows:
 
 ```yaml
-name: "Pull Request SVGOptimizer"
+name: Pull Request SVGOptimizer
 on:
   pull_request:
     paths:
-      - '**.svg'
+      - "**.svg"
 
 jobs:
   ...
