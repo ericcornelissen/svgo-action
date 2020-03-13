@@ -38,11 +38,11 @@ function formatAll(
 
 
 export type CommitData = {
-  fileCount: number;
-  filePaths: string[];
-  optimizedCount: number;
-  skippedCount: number;
-  svgCount: number;
+  readonly fileCount: number;
+  readonly filePaths: string[];
+  readonly optimizedCount: number;
+  readonly skippedCount: number;
+  readonly svgCount: number;
 }
 
 
