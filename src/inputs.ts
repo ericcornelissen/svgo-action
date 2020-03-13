@@ -15,7 +15,7 @@ const FALSE = "false";
 const TRUE = "true";
 
 const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
-const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVGs:\n{{fileList}}";
+const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVGs:\n{{filesList}}";
 const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
 
 
@@ -53,7 +53,8 @@ export class ActionConfig {
   }
 
   private static getCommitDescription(config: RawActionConfig): string {
-    return config.commit?.description || DEFAULT_COMMIT_DESCRIPTION;
+    return (config.commit?.description !== undefined) ?
+      config.commit.description : DEFAULT_COMMIT_DESCRIPTION;
   }
 
   private static getCommitTitle(config: RawActionConfig): string {

@@ -15,7 +15,7 @@ Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO action:
 
 ```yaml
-name: "Pull Request SVGOptimizer"
+name: Pull Request SVGOptimizer
 on:
 - pull_request
 
@@ -23,9 +23,9 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.3.1
+    - uses: ericcornelissen/svgo-action@v0.3.2
       with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 _Note: This grants access to the `GITHUB_TOKEN` so the action can make calls to
@@ -54,7 +54,7 @@ configuration file]. Below you can find the available options.
   used as configuration for [SVGO].
   - Possible values: _Any file path_
   - Default value: `".svgo.yml"`
-  - Example: `svgo-options: "path/to/svgo-options.yml"`
+  - Example: `svgo-options: path/to/svgo-options.yml`
 
 #### In the Workflow file
 
@@ -63,10 +63,10 @@ The first way to configure the action is inside the Workflow file, after the
 
 ```yaml
 with:
-  repo-token: "${{ secrets.GITHUB_TOKEN }}"
+  repo-token: ${{ secrets.GITHUB_TOKEN }}
   conventional-commits: true
   dry-run: true
-  svgo-options: "path/to/svgo-options.yml"
+  svgo-options: path/to/svgo-options.yml
 ```
 
 #### In `.github/svgo-action.yml`
@@ -77,11 +77,13 @@ you can configure the Action inside this file. For example:
 
 ```yaml
 dry-run: true
-svgo-options: "path/to/svgo-options.yml"
+svgo-options: path/to/svgo-options.yml
 commit:
   conventional: false
-  title: "Optimized {{optimizedCount}} SVG(s)"
-  description: "Namely:\n{{filesList}}"
+  title: Optimized {{optimizedCount}} SVG(s)
+  description: |
+    Namely:
+    {{filesList}}
 ```
 
 #### In Another Configuration File
@@ -94,8 +96,8 @@ value should point to the configuration file you want to use. For example:
 
 ```yaml
 with:
-  repo-token: "${{ secrets.GITHUB_TOKEN }}"
-  configuration-path: "path/to/configuration/file.yml"
+  repo-token: ${{ secrets.GITHUB_TOKEN }}
+  configuration-path: path/to/configuration/file.yml
 ```
 
 ### Advanced Usage
@@ -114,8 +116,11 @@ can be achieved by including the string "_disable-svgo-action_" anywhere in any
 comment on the Pull Request.
 
 > :warning: This will stop the Action from optimizing SVGs in any subsequent
-> build for that Pull Request. To revert the effect the comment must be modified
-> or removed.
+> build for that Pull Request.
+
+If you want to enable the Action again, include the string
+"_enable-svgo-action_" anywhere in a comment on the Pull Request after it has
+been disabled and the Action will be enabled again.
 
 #### Limit Runs
 
@@ -132,18 +137,18 @@ To run this action only when SVG files are changed, update the `on:`
 configuration as follows:
 
 ```yaml
-name: "Pull Request SVGOptimizer"
+name: Pull Request SVGOptimizer
 on:
   pull_request:
     paths:
-      - '**.svg'
+      - "**.svg"
 
 jobs:
   ...
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.3.1-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v0.3.2
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.3.2-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action

@@ -18,7 +18,7 @@ as described in [commit message templating].
 # .github/svgo-action.yml
 
 commit:
-  title: "This will be the commit message title"
+  title: This will be the commit message title
 ```
 
 This will result in commit messages that look like:
@@ -42,7 +42,7 @@ templating].
 # .github/svgo-action.yml
 
 commit:
-  description: "This will be the commit message description"
+  description: This will be the commit message description
 ```
 
 This will result in commit messages that look like:
@@ -53,6 +53,49 @@ Optimize 42 SVG(s) with SVGO
 This will be the commit message description
 ```
 
+#### Multi-line Descriptions
+
+If you want a commit desciption that spans multiple lines we recommend using
+[YAML multiline strings].
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  description: |
+    If you want a commit message that is a
+    bit longer and potentially spans multiple
+    lines you can use YAML multiline strings.
+```
+
+This will result in commit messages that look like:
+
+```git
+Optimize 42 SVG(s) with SVGO
+
+If you want a commit message that is a
+bit longer and potentially spans multiple
+lines you can use YAML multiline strings.
+```
+
+#### Omitting the Description
+
+If you prefer the commit description to be omitted, you can simply configure it
+as an empty string.
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  description: ""
+```
+
+This will result in commit messages that look like:
+
+```git
+Optimize 42 SVG(s) with SVGO
+```
+
 ### Conventional Commits
 
 If you want to use [conventional commit] messages, you can use `conventional`
@@ -60,15 +103,15 @@ key as shown below. This still allows you to configure the commit message
 `description`. The `title` value will be ignored.
 
 > :information_source: This option is also available from the Workflow file
-> through the `conventional-commit` option.
+> through the `conventional-commits` option.
 
 ```yaml
 # .github/svgo-action.yml
 
 commit:
   conventional: true
-  title: "This will be ignored"
-  description: "You can still configure the commit description"
+  title: This will be ignored
+  description: You can still configure the commit description
 ```
 
 This will result in commit messages that look like:
@@ -100,9 +143,11 @@ that not all templating variables are available in the commit `title`.
 
 commit:
   title: Optimized {{optimizedCount}}/{{svgCount}} SVG(s)
-  description: "Namely:\n{{filesList}}\n
-    \n
-    ({{fileCount}} file(s) in PR, of which {{svgCount}} are SVG(s))"
+  description: |
+    Namely:
+    {{filesList}}
+
+    Details: {{fileCount}} file(s) in PR, of which {{svgCount}} are SVG(s)
 ```
 
 This will result in commit messages that look like:
@@ -114,9 +159,10 @@ Namely:
 - foo.svg
 - bar.svg
 
-(5 file(s) in PR, of which 4 are SVG(s))
+Details: 5 file(s) in PR, of which 4 are SVG(s)
 ```
 
 [commit message templating]: #commit-message-templating
+[yaml multiline strings]: https://yaml-multiline.info/
 [conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/
 [handlebars]: https://handlebarsjs.com/
