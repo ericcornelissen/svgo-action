@@ -184,6 +184,9 @@ async function run(
     core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
 
     const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
+    const optimized = blobs.length;
+    const skipped = svgCount - blobs.length;
+
     if (!config.isDryRun) {
       const commitMessage: string = formatTemplate(
         config.commitTitle,
@@ -191,8 +194,8 @@ async function run(
         {
           fileCount: fileCount,
           filePaths: prSvgs.map((svg) => svg.path),
-          optimizedCount: blobs.length,
-          skippedCount: 0,
+          optimizedCount: optimized,
+          skippedCount: skipped,
           svgCount: svgCount,
         },
       );
@@ -200,8 +203,6 @@ async function run(
       await doCommitChanges(client, commitMessage, blobs);
     }
 
-    const optimized = blobs.length;
-    const skipped = svgCount - blobs.length;
     core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
   } else {
     core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
