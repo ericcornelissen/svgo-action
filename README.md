@@ -37,9 +37,6 @@ There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
 configuration file]. Below you can find the available options.
 
-> :information_source: In the future the action will have more options. See
-> [#17] for progress in this regard.
-
 - `commit`: configure the commit message for the Action.
   - [Full documentation](docs/configuring-the-commit.md)
 - `conventional-commits`: Use [conventional commit] message titles for commits.
@@ -164,5 +161,4 @@ jobs:
 [in the Workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
-[#17]: https://github.com/ericcornelissen/svgo-action/issues/17
 [conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/
