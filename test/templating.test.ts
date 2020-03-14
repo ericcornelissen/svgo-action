@@ -7,6 +7,7 @@ describe("::formatTemplate", () => {
     fileCount: 1337,
     filePaths: ["test.svg", "foo.svg", "bar.svg"],
     optimizedCount: 36,
+    skippedCount: 6,
     svgCount: 42,
   };
   const defaultTitleTemplate = "foo";
@@ -96,6 +97,33 @@ describe("::formatTemplate", () => {
 
       const resultTitle = result.split("\n\n")[0];
       expect(resultTitle).toEqual(`Optimized ${optimizedCount} SVG(s)`);
+    });
+
+    test.each([
+      "{{skippedCount}} SVG(s) were skipped",
+      "Up to ({{ skippedCount }}) SVG(s) have been skipped",
+      "No, this is Pa{{skippedCount}}trick",
+      "{{skippedCount}}",
+    ])("template using '{{skippedCount}}' (%s)", (templateString) => {
+      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).not.toEqual(templateString);
+
+      const expectedTitle = templateString.replace(/\{\{\s*skippedCount\s*\}\}/, defaultData.skippedCount.toString());
+      expect(resultTitle).toEqual(expectedTitle);
+    });
+
+    test.each([0, 1, 5, 42])("different values for `skippedCount` (%i)", (skippedCount) => {
+      const data = Object.assign({ }, defaultData, { skippedCount });
+      const templateString = "{{skippedCount}} SVG(s) were skipped";
+
+      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).toEqual(`${skippedCount} SVG(s) were skipped`);
     });
 
     test.each([
@@ -227,6 +255,33 @@ describe("::formatTemplate", () => {
 
       const resultMessage = result.split("\n\n")[1];
       expect(resultMessage).toEqual(`Optimized ${optimizedCount} SVG(s)`);
+    });
+
+    test.each([
+      "{{skippedCount}} SVG(s) were skipped",
+      "Up to ({{ skippedCount }}) SVG(s) have been skipped",
+      "No, this is Pa{{skippedCount}}trick",
+      "{{skippedCount}}",
+    ])("template using '{{skippedCount}}' (%s)", (templateString) => {
+      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      expect(result).toBeDefined();
+
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).not.toEqual(templateString);
+
+      const expectedMessage = templateString.replace(/\{\{\s*skippedCount\s*\}\}/, defaultData.skippedCount.toString());
+      expect(resultMessage).toEqual(expectedMessage);
+    });
+
+    test.each([0, 1, 5, 42])("different values for `skippedCount` (%i)", (skippedCount) => {
+      const data = Object.assign({ }, defaultData, { skippedCount });
+      const templateString = "{{skippedCount}} SVG(s) were skipped";
+
+      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultMessage = result.split("\n\n")[1];
+      expect(resultMessage).toEqual(`${skippedCount} SVG(s) were skipped`);
     });
 
     test.each([
