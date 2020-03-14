@@ -23,7 +23,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.3.2
+    - uses: ericcornelissen/svgo-action@v0.4.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -36,9 +36,6 @@ GitHub's rest API_
 There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
 configuration file]. Below you can find the available options.
-
-> :information_source: In the future the action will have more options. See
-> [#17] for progress in this regard.
 
 - `commit`: configure the commit message for the Action.
   - [Full documentation](docs/configuring-the-commit.md)
@@ -118,9 +115,13 @@ comment on the Pull Request.
 > :warning: This will stop the Action from optimizing SVGs in any subsequent
 > build for that Pull Request.
 
-If you want to enable the Action again, include the string
-"_enable-svgo-action_" anywhere in a comment on the Pull Request after it has
-been disabled and the Action will be enabled again.
+If you want to enable the Action for a singe commit when it is disabled from the
+Pull Request comments, include the string "_enable-svgo-action_" anywhere in the
+commit message. Then, for that commit only, the Action will optimize SVGs.
+
+If instead you want to enable the Action again for all commits, include the
+string "_enable-svgo-action_" anywhere in a comment on the Pull Request after it
+has been disabled, and the Action will start optimizing SVGs again.
 
 #### Limit Runs
 
@@ -147,8 +148,8 @@ jobs:
   ...
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v0.3.2
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.3.2-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v0.4.0
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.4.0-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
@@ -160,5 +161,4 @@ jobs:
 [in the Workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
-[#17]: https://github.com/ericcornelissen/svgo-action/issues/17
 [conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/

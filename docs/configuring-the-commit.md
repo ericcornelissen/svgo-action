@@ -134,6 +134,7 @@ that not all templating variables are available in the commit `title`.
 | `fileCount`      | The number of files found in the PR      | Yes      | Yes            |
 | `filesList`      | A bullet list of the optimized SVG files | No       | Yes            |
 | `optimizedCount` | The number of optimized SVGs             | Yes      | Yes            |
+| `skippedCount`   | The number of not-optimized SVGs         | Yes      | Yes            |
 | `svgCount`       | The number of SVGs found in the PR       | Yes      | Yes            |
 
 ### Example
@@ -147,7 +148,8 @@ commit:
     Namely:
     {{filesList}}
 
-    Details: {{fileCount}} file(s) in PR, of which {{svgCount}} are SVG(s)
+    Details: {{fileCount}} file(s) in PR, of which {{svgCount}} are SVG(s),
+    {{skippedCount}} SVG(s) was already optimized
 ```
 
 This will result in commit messages that look like:
@@ -159,7 +161,8 @@ Namely:
 - foo.svg
 - bar.svg
 
-Details: 5 file(s) in PR, of which 4 are SVG(s)
+Details: 5 file(s) in PR, of which 4 are SVG(s),
+1 SVG(s) was already optimized
 ```
 
 [commit message templating]: #commit-message-templating

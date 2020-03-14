@@ -82,6 +82,22 @@ function getContext(): { client: GitHub; prNumber: number } {
   return { client, prNumber };
 }
 
+async function checkIfActionIsDisabledFromPR(
+  client: GitHub,
+  prNumber: number,
+): Promise<boolean> {
+  const prComments: string[] = await getPrComments(client, prNumber);
+  for (const comment of prComments) {
+    if (ENABLE_PATTERN.test(comment)) {
+      break;
+    } else if (DISABLE_PATTERN.test(comment)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 async function checkIfActionIsDisabled(
   client: GitHub,
   prNumber: number,
@@ -91,11 +107,9 @@ async function checkIfActionIsDisabled(
     return { isDisabled: true, disabledFrom: "commit message" };
   }
 
-  const prComments: string[] = await getPrComments(client, prNumber);
-  for (const comment of prComments) {
-    if (ENABLE_PATTERN.test(comment)) {
-      break;
-    } else if (DISABLE_PATTERN.test(comment)) {
+  if (!ENABLE_PATTERN.test(commitMessage)) {
+    const disabledFromPR = await checkIfActionIsDisabledFromPR(client, prNumber);
+    if (disabledFromPR) {
       return { isDisabled: true, disabledFrom: "Pull Request" };
     }
   }
@@ -184,6 +198,9 @@ async function run(
     core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
 
     const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
+    const optimized = blobs.length;
+    const skipped = svgCount - blobs.length;
+
     if (!config.isDryRun) {
       const commitMessage: string = formatTemplate(
         config.commitTitle,
@@ -191,7 +208,8 @@ async function run(
         {
           fileCount: fileCount,
           filePaths: prSvgs.map((svg) => svg.path),
-          optimizedCount: blobs.length,
+          optimizedCount: optimized,
+          skippedCount: skipped,
           svgCount: svgCount,
         },
       );
@@ -199,8 +217,6 @@ async function run(
       await doCommitChanges(client, commitMessage, blobs);
     }
 
-    const optimized = blobs.length;
-    const skipped = svgCount - blobs.length;
     core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
   } else {
     core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
