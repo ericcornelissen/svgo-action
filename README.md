@@ -23,7 +23,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.3.2
+    - uses: ericcornelissen/svgo-action@v0.4.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -151,8 +151,8 @@ jobs:
   ...
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v0.3.2
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.3.2-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v0.4.0
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.4.0-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action

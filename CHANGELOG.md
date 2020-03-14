@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.4.0] - 2020-03-14
+
 - Add `skippedCount` as templating variable. ([#132])
 - Re-enable the Action from a commit message. ([#133])
 
