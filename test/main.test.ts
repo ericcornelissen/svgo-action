@@ -237,7 +237,16 @@ describe("Manual Action control", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
-  test("enable comment after disable comment on Pull Request", async () => {
+  test("comments on the Pull Request that enables the action", async () => {
+    githubAPI.getPrComments.mockResolvedValueOnce(
+      ["I don't know what I'm doing but enable-svgo-action"],
+    );
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("comments on the Pull Request that first disable and then enables the action", async () => {
     githubAPI.getPrComments.mockResolvedValueOnce([
       // Newest comment
       "The Spanish Inquisition",
@@ -252,7 +261,7 @@ describe("Manual Action control", () => {
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
-  test("disable comment after enable comment on Pull Request", async () => {
+  test("comments on the Pull Request that first enables and then disable the action", async () => {
     githubAPI.getPrComments.mockResolvedValueOnce([
       // Newest comment
       "No, I don't want the Action to run! disable-svgo-action",
@@ -265,15 +274,6 @@ describe("Manual Action control", () => {
 
     await main();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
-  });
-
-  test("only a comment that enables on Pull Request", async () => {
-    githubAPI.getPrComments.mockResolvedValueOnce(
-      ["I don't know what I'm doing but enable-svgo-action"],
-    );
-
-    await main();
-    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
   test.each([
@@ -300,6 +300,37 @@ describe("Manual Action control", () => {
     await main();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("commit message that enables the action when it isn't disabled from the PR", async () => {
+    githubAPI.getCommitMessage.mockResolvedValueOnce(
+      "I don't know what I'm doing but enable-svgo-action",
+    );
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+  });
+
+  test("commit message that enables the action when it *is* disabled from the PR", async () => {
+    // Verify the PR comment disables the Action
+    githubAPI.getPrComments.mockResolvedValueOnce(["disable-svgo-action"]);
+    await main();
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
+
+    // Rest the info log so we can check it again
+    core.info.mockClear();
+
+    // The actual test
+    githubAPI.getPrComments.mockResolvedValueOnce(["disable-svgo-action"]);
+    githubAPI.getCommitMessage.mockResolvedValueOnce(
+      "I don't know what I'm doing but enable-svgo-action",
+    );
+
+    await main();
+    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
+
+    // Make sure the ResolveValueOnce for getPrComments is resolved before the next test
+    await githubAPI.getPrComments();
   });
 
 });
