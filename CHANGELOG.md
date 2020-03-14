@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add `skippedCount` as templating variable. ([#132])
 
 ## [0.3.2] - 2020-03-13
 
@@ -87,3 +87,4 @@ Versioning].
 [#124]: https://github.com/ericcornelissen/svgo-action/pull/124
 [#129]: https://github.com/ericcornelissen/svgo-action/pull/129
 [#130]: https://github.com/ericcornelissen/svgo-action/pull/130
+[#132]: https://github.com/ericcornelissen/svgo-action/pull/132
