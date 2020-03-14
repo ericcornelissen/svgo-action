@@ -118,9 +118,13 @@ comment on the Pull Request.
 > :warning: This will stop the Action from optimizing SVGs in any subsequent
 > build for that Pull Request.
 
-If you want to enable the Action again, include the string
-"_enable-svgo-action_" anywhere in a comment on the Pull Request after it has
-been disabled and the Action will be enabled again.
+If you want to enable the Action for a singe commit when it is disabled from the
+Pull Request comments, include the string "_enable-svgo-action_" anywhere in the
+commit message. Then, for that commit only, the Action will optimize SVGs.
+
+If instead you want to enable the Action again for all commits, include the
+string "_enable-svgo-action_" anywhere in a comment on the Pull Request after it
+has been disabled, and the Action will start optimizing SVGs again.
 
 #### Limit Runs
 

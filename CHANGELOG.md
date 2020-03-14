@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Add `skippedCount` as templating variable. ([#132])
+- Re-enable the Action from a commit message. ([#133])
 
 ## [0.3.2] - 2020-03-13
 
@@ -88,3 +89,4 @@ Versioning].
 [#129]: https://github.com/ericcornelissen/svgo-action/pull/129
 [#130]: https://github.com/ericcornelissen/svgo-action/pull/130
 [#132]: https://github.com/ericcornelissen/svgo-action/pull/132
+[#133]: https://github.com/ericcornelissen/svgo-action/pull/133

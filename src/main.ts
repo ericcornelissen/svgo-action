@@ -82,6 +82,22 @@ function getContext(): { client: GitHub; prNumber: number } {
   return { client, prNumber };
 }
 
+async function checkIfActionIsDisabledFromPR(
+  client: GitHub,
+  prNumber: number,
+): Promise<boolean> {
+  const prComments: string[] = await getPrComments(client, prNumber);
+  for (const comment of prComments) {
+    if (ENABLE_PATTERN.test(comment)) {
+      break;
+    } else if (DISABLE_PATTERN.test(comment)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 async function checkIfActionIsDisabled(
   client: GitHub,
   prNumber: number,
@@ -91,11 +107,9 @@ async function checkIfActionIsDisabled(
     return { isDisabled: true, disabledFrom: "commit message" };
   }
 
-  const prComments: string[] = await getPrComments(client, prNumber);
-  for (const comment of prComments) {
-    if (ENABLE_PATTERN.test(comment)) {
-      break;
-    } else if (DISABLE_PATTERN.test(comment)) {
+  if (!ENABLE_PATTERN.test(commitMessage)) {
+    const disabledFromPR = await checkIfActionIsDisabledFromPR(client, prNumber);
+    if (disabledFromPR) {
       return { isDisabled: true, disabledFrom: "Pull Request" };
     }
   }
