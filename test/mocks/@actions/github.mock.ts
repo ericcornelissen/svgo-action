@@ -19,6 +19,7 @@ export enum PR_NUMBER {
   ADD_SVG_REMOVE_FILE,
   ADD_FILE_REMOVE_SVG,
   ADD_OPTIMIZED_SVG,
+  ADD_FAKE_SVG,
 
   NO_COMMENTS,
   ONE_COMMENT,
@@ -199,6 +200,8 @@ export const GitHubInstance = {
             return { data: prPayloads["add 1 file, remove 1 SVG"] };
           case PR_NUMBER.ADD_OPTIMIZED_SVG:
             return { data: prPayloads["add 1 optimized SVG"] };
+          case PR_NUMBER.ADD_FAKE_SVG:
+            return { data: prPayloads["add fake SVG"] };
           default:
             return { };
         }

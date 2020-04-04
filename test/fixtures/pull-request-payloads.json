@@ -324,5 +324,19 @@
       "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/optimized.svg?ref=786d2c73db84047ac090a32c9810d547a3287e88",
       "patch": "@@ -0,0 +1,1 @@\n+<svg viewBox=\"0 0 64 64\" xmlns=\"http://www.w3.org/2000/svg\"><title>Optimal icon</title><path d=\"M24 22.525H0l12-21.05 12 21.05z\"/></svg>\n\\ No newline at end of file"
     }
+  ],
+  "add fake SVG": [
+    {
+      "sha": "786d2c73db84047ac090a32c9810d547a3287e88",
+      "filename": "fake.svg",
+      "status": "added",
+      "additions": 1,
+      "deletions": 0,
+      "changes": 1,
+      "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/49948ac6c0d705fe321ce449948ac6c0dfdac6c0/fake.svg",
+      "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/49948ac6c0d705fe321ce449948ac6c0dfdac6c0/fake.svg",
+      "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/fake.svg?ref=49948ac6c0d705fe321ce449948ac6c0dfdac6c0",
+      "patch": "@@ -0,0 +1,1 @@This is just a text file, disguised as an SVG.\n\\ No newline at end of file"
+    }
   ]
 }
