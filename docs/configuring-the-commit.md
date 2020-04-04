@@ -26,7 +26,7 @@ This will result in commit messages that look like:
 ```git
 This will be the commit message title
 
-Optimized SVGs:
+Optimized SVG(s):
 - foo.svg
 - bar.svg
 ```
