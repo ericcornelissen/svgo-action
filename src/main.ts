@@ -146,25 +146,29 @@ async function doOptimizeSvgs(
     core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
     const originalSvg: string = decode(fileData.content, fileData.encoding);
 
-    core.debug(`optimizing '${svgFileInfo.path}'`);
-    const optimizedSvg: string = await svgo.optimize(originalSvg);
-    if (originalSvg === optimizedSvg) {
-      core.debug(`skipping '${fileData.path}', already optimized`);
-      continue;
+    try {
+      core.debug(`optimizing '${svgFileInfo.path}'`);
+      const optimizedSvg: string = await svgo.optimize(originalSvg);
+      if (originalSvg === optimizedSvg) {
+        core.debug(`skipping '${fileData.path}', already optimized`);
+        continue;
+      }
+
+      core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
+      const optimizedData: string = encode(optimizedSvg, fileData.encoding);
+
+      core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
+      const svgBlob: GitBlob = await createBlob(
+        client,
+        fileData.path,
+        optimizedData,
+        fileData.encoding,
+      );
+
+      blobs.push(svgBlob);
+    } catch(_) {
+      core.info(`SVGO cannot optimize '${fileData.path}', source incorrect`);
     }
-
-    core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
-    const optimizedData: string = encode(optimizedSvg, fileData.encoding);
-
-    core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
-    const svgBlob: GitBlob = await createBlob(
-      client,
-      fileData.path,
-      optimizedData,
-      fileData.encoding,
-    );
-
-    blobs.push(svgBlob);
   }
 
   return blobs;
