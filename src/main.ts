@@ -138,7 +138,6 @@ async function doOptimizeSvgs(
   svgo: SVGOptimizer,
   prSvgs: FileInfo[],
 ): Promise<GitBlob[]> {
-  core.debug("fetching content of SVGs in pull request");
   const blobs: GitBlob[] = [];
   for (const svgFileInfo of prSvgs) {
     core.debug(`fetching file contents of '${svgFileInfo.path}'`);
@@ -195,7 +194,7 @@ async function run(
 ): Promise<void> {
   const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
   if (svgCount > 0) {
-    core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
+    core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
 
     const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
     const optimized = blobs.length;
