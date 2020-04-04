@@ -133,31 +133,29 @@ async function getSvgsInPR(
   return { fileCount, prSvgs, svgCount };
 }
 
-async function doOptimizeSvgs(
+async function doOptimizeSvg(
   client: GitHub,
   svgo: SVGOptimizer,
-  prSvgs: FileInfo[],
-): Promise<GitBlob[]> {
-  core.debug("fetching content of SVGs in pull request");
-  const blobs: GitBlob[] = [];
-  for (const svgFileInfo of prSvgs) {
-    core.debug(`fetching file contents of '${svgFileInfo.path}'`);
-    const fileData: FileData = await getPrFile(client, svgFileInfo.path);
+  svg: FileInfo,
+): Promise<GitBlob | undefined> {
+  core.debug(`fetching file contents of '${svg.path}'`);
+  const fileData: FileData = await getPrFile(client, svg.path);
 
-    core.debug(`decoding ${fileData.encoding}-encoded '${svgFileInfo.path}'`);
-    const originalSvg: string = decode(fileData.content, fileData.encoding);
+  core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
+  const originalSvg: string = decode(fileData.content, fileData.encoding);
 
-    core.debug(`optimizing '${svgFileInfo.path}'`);
+  try {
+    core.debug(`optimizing '${svg.path}'`);
     const optimizedSvg: string = await svgo.optimize(originalSvg);
-    if (originalSvg === optimizedSvg) {
+    if (originalSvg == optimizedSvg) {
       core.debug(`skipping '${fileData.path}', already optimized`);
-      continue;
+      return;
     }
 
-    core.debug(`encoding optimized '${svgFileInfo.path}' back to ${fileData.encoding}`);
+    core.debug(`encoding optimized '${svg.path}' back to ${fileData.encoding}`);
     const optimizedData: string = encode(optimizedSvg, fileData.encoding);
 
-    core.debug(`creating blob for optimized '${svgFileInfo.path}'`);
+    core.debug(`creating blob for optimized '${svg.path}'`);
     const svgBlob: GitBlob = await createBlob(
       client,
       fileData.path,
@@ -165,7 +163,23 @@ async function doOptimizeSvgs(
       fileData.encoding,
     );
 
-    blobs.push(svgBlob);
+    return svgBlob;
+  } catch(_) {
+    core.info(`SVGO cannot optimize '${fileData.path}', source incorrect`);
+  }
+}
+
+async function doOptimizeSvgs(
+  client: GitHub,
+  svgo: SVGOptimizer,
+  prSvgs: FileInfo[],
+): Promise<GitBlob[]> {
+  const blobs: GitBlob[] = [];
+  for (const svgFileInfo of prSvgs) {
+    const svgBlob = await doOptimizeSvg(client, svgo, svgFileInfo);
+    if (svgBlob !== undefined) {
+      blobs.push(svgBlob);
+    }
   }
 
   return blobs;
@@ -195,7 +209,7 @@ async function run(
 ): Promise<void> {
   const { fileCount, prSvgs, svgCount } = await getSvgsInPR(client, prNumber);
   if (svgCount > 0) {
-    core.info(`Found ${svgCount} new/changed SVGs (out of ${fileCount} files), optimizing...`);
+    core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
 
     const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, prSvgs);
     const optimized = blobs.length;

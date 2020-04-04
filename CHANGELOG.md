@@ -9,6 +9,11 @@ Versioning].
 
 - _No changes yet_
 
+## [0.4.1] - 2020-04-05
+
+- Fix bug for SVG files not containing an SVG. ([#160])
+- Improve logging. ([#157])
+
 ## [0.4.0] - 2020-03-14
 
 - Add `skippedCount` as templating variable. ([#132])
@@ -94,3 +99,5 @@ Versioning].
 [#130]: https://github.com/ericcornelissen/svgo-action/pull/130
 [#132]: https://github.com/ericcornelissen/svgo-action/pull/132
 [#133]: https://github.com/ericcornelissen/svgo-action/pull/133
+[#157]: https://github.com/ericcornelissen/svgo-action/pull/157
+[#160]: https://github.com/ericcornelissen/svgo-action/pull/160

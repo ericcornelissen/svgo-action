@@ -36,6 +36,7 @@ describe("SVGOptimizer", () => {
 
     const testSvgs = test.each(
       Object.entries(files)
+        .filter(([key, _]) => key !== "fake.svg")
         .filter(([key, _]) => key.endsWith(".svg"))
         .map(([_, value]) => value)
         .slice(0, 4),
@@ -64,6 +65,11 @@ describe("SVGOptimizer", () => {
       const optimized1 = await optimizer.optimize(files["complex.svg"]);
       const optimized2 = await optimizer2.optimize(files["complex.svg"]);
       expect(optimized1).not.toEqual(optimized2);
+    });
+
+    test("not an svg", async () => {
+      const promise = optimizer.optimize(files["fake.svg"]);
+      await expect(promise).rejects.toBeDefined();
     });
 
   });

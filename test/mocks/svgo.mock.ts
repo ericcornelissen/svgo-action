@@ -1,3 +1,4 @@
+import files from "../fixtures/file-data.json";
 import optimizations from "../fixtures/optimizations.json";
 
 
@@ -8,6 +9,10 @@ export const OptimizerInstance = {
         if (original === svg) {
           return optimized;
         }
+      }
+
+      if (svg === files["fake.svg"]) {
+        throw new Error("Not an SVG");
       }
     })
     .mockName("SVGOptimizer.optimize"),
