@@ -691,6 +691,7 @@ describe("Error scenarios", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
 
     await main();
+
     expect(core.setFailed).toHaveBeenCalled();
   });
 
@@ -739,6 +740,19 @@ describe("Error scenarios", () => {
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(`not found.*${actionConfigPath}`));
+  });
+
+  test("an SVG file that does not contain SVG content", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FAKE_SVG);
+
+    await main();
+
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("cannot optimize"));
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
   });
 
 });
