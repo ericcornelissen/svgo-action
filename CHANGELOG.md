@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve logging. ([#157])
 
 ## [0.4.0] - 2020-03-14
 
@@ -94,3 +94,4 @@ Versioning].
 [#130]: https://github.com/ericcornelissen/svgo-action/pull/130
 [#132]: https://github.com/ericcornelissen/svgo-action/pull/132
 [#133]: https://github.com/ericcornelissen/svgo-action/pull/133
+[#157]: https://github.com/ericcornelissen/svgo-action/pull/157
