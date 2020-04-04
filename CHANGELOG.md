@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.4.1] - 2020-04-05
+
 - Fix bug for SVG files not containing an SVG. ([#160])
 - Improve logging. ([#157])
 
