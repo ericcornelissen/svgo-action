@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix bug for SVG files not containing an SVG. ([#160])
 - Improve logging. ([#157])
 
 ## [0.4.0] - 2020-03-14
@@ -95,3 +96,4 @@ Versioning].
 [#132]: https://github.com/ericcornelissen/svgo-action/pull/132
 [#133]: https://github.com/ericcornelissen/svgo-action/pull/133
 [#157]: https://github.com/ericcornelissen/svgo-action/pull/157
+[#160]: https://github.com/ericcornelissen/svgo-action/pull/160
