@@ -17,6 +17,7 @@ import {
   // Functions
   commitFiles,
   createBlob,
+  createComment,
   getCommitMessage,
   getPrComments,
   getPrFile,
@@ -202,6 +203,32 @@ describe("::createBlob", () => {
         defaultPath,
         defaultContent,
         defaultEncoding,
+      ),
+    ).rejects.toBeDefined();
+  });
+
+});
+
+describe("::createComment", () => {
+
+  test("create a comment", async () => {
+    await expect(
+      createComment(
+        client,
+        1,
+        "Hello world",
+      ),
+    ).resolves.toBeUndefined();
+  });
+
+  test("comment could not be created", async () => {
+    github.GitHubInstance.issues.createComment.mockRejectedValueOnce(new Error("Not found"));
+
+    await expect(
+      createComment(
+        client,
+        1,
+        "Hello world",
       ),
     ).rejects.toBeDefined();
   });
