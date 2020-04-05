@@ -1,18 +1,38 @@
-import { FullFileData } from "../src/main";
 import { CommitData, formatComment, formatTemplate } from "../src/templating";
 
 
-describe("::formatComment", () => {
-
-  const defaultData: FullFileData[] = [
+const defaultData: CommitData = {
+  fileCount: 1337,
+  filePaths: ["test.svg", "foo.svg", "bar.svg"],
+  optimizedCount: 3,
+  skippedCount: 39,
+  svgCount: 42,
+  fileTable: [
     {
-      path: "foobar.svg",
+      path: "test.svg",
+      status: "added",
+      encoding: "utf-8",
+      original: "Hello",
+      optimized: "world",
+    },
+    {
+      path: "foo.svg",
       status: "added",
       encoding: "utf-8",
       original: "foo",
       optimized: "bar",
     },
-  ];
+    {
+      path: "bar.svg",
+      status: "added",
+      encoding: "utf-8",
+      original: "bar",
+      optimized: "foo",
+    },
+  ],
+};
+
+describe("::formatComment", () => {
 
   test("runs", () => {
     const result = formatComment(defaultData);
@@ -23,13 +43,6 @@ describe("::formatComment", () => {
 
 describe("::formatTemplate", () => {
 
-  const defaultData: CommitData = {
-    fileCount: 1337,
-    filePaths: ["test.svg", "foo.svg", "bar.svg"],
-    optimizedCount: 36,
-    skippedCount: 6,
-    svgCount: 42,
-  };
   const defaultTitleTemplate = "foo";
   const defaultMessageTemplate = "bar";
 
