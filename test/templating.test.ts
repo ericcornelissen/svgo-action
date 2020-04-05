@@ -1,5 +1,25 @@
-import { CommitData, formatTemplate } from "../src/templating";
+import { FullFileData } from "../src/main";
+import { CommitData, formatComment, formatTemplate } from "../src/templating";
 
+
+describe("::formatComment", () => {
+
+  const defaultData: FullFileData[] = [
+    {
+      path: "foobar.svg",
+      status: "added",
+      encoding: "utf-8",
+      original: "foo",
+      optimized: "bar",
+    },
+  ];
+
+  test("runs", () => {
+    const result = formatComment(defaultData);
+    expect(result).toBeDefined();
+  });
+
+});
 
 describe("::formatTemplate", () => {
 
