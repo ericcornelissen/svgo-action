@@ -3,11 +3,7 @@ import { CommitData, formatComment, formatCommitMessage } from "../src/templatin
 
 const defaultData: CommitData = {
   fileCount: 1337,
-  filePaths: ["test.svg", "foo.svg", "bar.svg"],
-  optimizedCount: 3,
-  skippedCount: 39,
-  svgCount: 42,
-  fileTable: [
+  fileData: [
     {
       path: "test.svg",
       encoding: "utf-8",
@@ -27,6 +23,9 @@ const defaultData: CommitData = {
       optimized: "foo",
     },
   ],
+  optimizedCount: 3,
+  skippedCount: 39,
+  svgCount: 42,
 };
 
 describe("::formatComment", () => {
@@ -251,7 +250,16 @@ describe("::formatCommitMessage", () => {
       ["foo.svg", "bar.svg"],
       ["in/a/folder.svg", "and/this/one.svg"],
     ])("different values for  `filesList`", (...filePaths) => {
-      const data = Object.assign({ }, defaultData, { filePaths });
+      const data = Object.assign({ }, defaultData, {
+        fileData: filePaths.map((path) => {
+          return {
+            path: path,
+            encoding: "utf-8",
+            original: "foo",
+            optimized: "bar",
+          };
+        }),
+      });
       const templateString = "Optimized SVG(s):\n{{filesList}}";
 
       const result = formatCommitMessage(defaultTitleTemplate, templateString, data);

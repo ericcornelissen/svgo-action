@@ -27,13 +27,14 @@ const formatters = [
     },
   },
   {
-    key: "filePaths",
-    fn: (template: string, value: string[]): string => {
-      return template.replace(FILES_LIST_EXP, "- " + value.join("\n- "));
+    key: "fileData",
+    fn: (template: string, value: FileData[]): string => {
+      const paths: string[] = value.map((svg) => svg.path);
+      return template.replace(FILES_LIST_EXP, "- " + paths.join("\n- "));
     },
   },
   {
-    key: "fileTable",
+    key: "fileData",
     fn: (template: string, value: FileData[]): string => {
       let table = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
       for (const svg of value) {
@@ -83,11 +84,10 @@ function formatAll(
 
 export type CommitData = {
   readonly fileCount: number;
-  readonly filePaths: string[];
+  readonly fileData: FileData[];
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
-  readonly fileTable: FileData[];
 }
 
 
@@ -103,7 +103,7 @@ export function formatCommitMessage(
   messageTemplate: string,
   data: CommitData,
 ): string {
-  const title: string = formatAll(titleTemplate, data, ["filePaths", "fileTable"]);
+  const title: string = formatAll(titleTemplate, data, ["fileData"]);
   const message: string = formatAll(messageTemplate, data);
   return `${title}\n\n${message}`.trimRight();
 }

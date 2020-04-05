@@ -240,10 +240,7 @@ async function run(
     const skippedCount = svgCount - blobs.length;
 
     if (!config.isDryRun) {
-      const data = { fileCount, optimizedCount, skippedCount, svgCount,
-        filePaths: svgsData.map((svg) => svg.path),
-        fileTable: svgsData,
-      };
+      const data = { fileCount, optimizedCount, skippedCount, svgCount, fileData: svgsData };
 
       const commitMessage: string = formatCommitMessage(config.commitTitle, config.commitDescription, data);
       await doCommitChanges(client, commitMessage, blobs);
