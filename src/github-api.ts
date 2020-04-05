@@ -55,18 +55,18 @@ export type CommitInfo = {
   readonly url: string;
 }
 
+export type GitBlob = Octokit.GitCreateTreeParamsTree;
+
 export type GitFileData = {
-  readonly path: string;
   readonly content: string;
   readonly encoding: string;
+  readonly path: string;
 }
 
 export type GitFileInfo = {
   readonly path: string;
   readonly status: string;
 }
-
-export type GitBlob = Octokit.GitCreateTreeParamsTree;
 
 
 export async function commitFiles(
@@ -175,9 +175,9 @@ export async function getPrFile(
 
   const fileDetails = fileContents.data[0] || fileContents.data;
   return {
-    path: fileDetails.path,
     content: fileDetails.content,
     encoding: fileDetails.encoding,
+    path: fileDetails.path,
   };
 }
 

@@ -9,9 +9,9 @@ import {
 
   // Types
   CommitInfo,
+  GitBlob,
   GitFileData,
   GitFileInfo,
-  GitBlob,
 
   // Functionality
   commitFiles,

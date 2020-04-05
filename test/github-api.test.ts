@@ -281,23 +281,23 @@ describe("::getPrFile", () => {
   const testFiles = test.each(Object.keys(files).slice(0, 4));
 
   testFiles("get an existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getPrFile(client, filePath);
-    expect(gitFileData).toBeDefined();
+    const fileData: GitFileData = await getPrFile(client, filePath);
+    expect(fileData).toBeDefined();
   });
 
   testFiles("'path' is defined for existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getPrFile(client, filePath);
-    expect(gitFileData.path).toBeDefined();
+    const fileData: GitFileData = await getPrFile(client, filePath);
+    expect(fileData.path).toBeDefined();
   });
 
   testFiles("'content' is defined for existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getPrFile(client, filePath);
-    expect(gitFileData.content).toBeDefined();
+    const fileData: GitFileData = await getPrFile(client, filePath);
+    expect(fileData.content).toBeDefined();
   });
 
   testFiles("'encoding' is defined for existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getPrFile(client, filePath);
-    expect(gitFileData.encoding).toBeDefined();
+    const fileData: GitFileData = await getPrFile(client, filePath);
+    expect(fileData.encoding).toBeDefined();
   });
 
   test("file is not found", async () => {
@@ -361,23 +361,23 @@ describe("::getRepoFile", () => {
   const testFiles = test.each(Object.keys(files).slice(0, 4));
 
   testFiles("return value for an existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getRepoFile(client, filePath);
-    expect(gitFileData).toBeDefined();
+    const fileData: GitFileData = await getRepoFile(client, filePath);
+    expect(fileData).toBeDefined();
   });
 
   testFiles("'path' is defined for existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getRepoFile(client, filePath);
-    expect(gitFileData.path).toBeDefined();
+    const fileData: GitFileData = await getRepoFile(client, filePath);
+    expect(fileData.path).toBeDefined();
   });
 
   testFiles("'content' is defined for existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getRepoFile(client, filePath);
-    expect(gitFileData.content).toBeDefined();
+    const fileData: GitFileData = await getRepoFile(client, filePath);
+    expect(fileData.content).toBeDefined();
   });
 
   testFiles("'encoding' is defined for existing file (%s)", async (filePath) => {
-    const gitFileData: GitFileData = await getRepoFile(client, filePath);
-    expect(gitFileData.encoding).toBeDefined();
+    const fileData: GitFileData = await getRepoFile(client, filePath);
+    expect(fileData.encoding).toBeDefined();
   });
 
   test("throw for non-existent file", async () => {
