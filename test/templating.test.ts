@@ -1,4 +1,5 @@
-import { CommitData, formatCommitMessage } from "../src/templating";
+import { CommitData } from "../src/main";
+import { formatCommitMessage } from "../src/templating";
 
 
 describe("::formatCommitMessage", () => {

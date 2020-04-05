@@ -1,3 +1,6 @@
+import { CommitData } from "./main";
+
+
 const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
 const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
@@ -52,13 +55,6 @@ function formatAll(
 }
 
 
-export type CommitData = {
-  readonly fileCount: number;
-  readonly filePaths: string[];
-  readonly optimizedCount: number;
-  readonly skippedCount: number;
-  readonly svgCount: number;
-}
 
 
 export function formatCommitMessage(
