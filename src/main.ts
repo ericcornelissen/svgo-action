@@ -34,7 +34,7 @@ import {
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { formatComment, formatTemplate } from "./templating";
+import { formatComment, formatCommitMessage } from "./templating";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
@@ -245,7 +245,7 @@ async function run(
         fileTable: svgsData,
       };
 
-      const commitMessage: string = formatTemplate(config.commitTitle, config.commitDescription, data);
+      const commitMessage: string = formatCommitMessage(config.commitTitle, config.commitDescription, data);
       await doCommitChanges(client, commitMessage, blobs);
 
       const comment: string = formatComment(COMMENT_TEMPLATE, data);

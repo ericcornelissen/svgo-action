@@ -19,43 +19,61 @@ function toPercentage(decimal: number): number {
   return -1 * Math.round(decimal * 10000) / 100;
 }
 
-const format = {
-  fileCount: (template: string, value: number): string => {
-    return template.replace(FILE_COUNT_EXP, value.toString());
+const formatters = [
+  {
+    key: "fileCount",
+    fn: (template: string, value: number): string => {
+      return template.replace(FILE_COUNT_EXP, value.toString());
+    },
   },
-  filePaths: (template: string, value: string[]): string => {
-    return template.replace(FILES_LIST_EXP, "- " + value.join("\n- "));
+  {
+    key: "filePaths",
+    fn: (template: string, value: string[]): string => {
+      return template.replace(FILES_LIST_EXP, "- " + value.join("\n- "));
+    },
   },
-  fileTable: (template: string, value: FileData[]): string => {
-    let table = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
-    for (const svg of value) {
-      const originalFileSize: number = getFileSizeInKB(svg.original);
-      const optimizedFileSize: number = getFileSizeInKB(svg.optimized);
-      const improvement: number = toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
-      table += `| ${svg.path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
-    }
+  {
+    key: "fileTable",
+    fn: (template: string, value: FileData[]): string => {
+      let table = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
+      for (const svg of value) {
+        const originalFileSize: number = getFileSizeInKB(svg.original);
+        const optimizedFileSize: number = getFileSizeInKB(svg.optimized);
+        const improvement: number = toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
+        table += `| ${svg.path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
+      }
 
-    return template.replace(FILES_TABLE_EXP, table);
+      return template.replace(FILES_TABLE_EXP, table);
+    },
   },
-  optimizedCount: (template: string, value: number): string => {
-    return template.replace(OPTIMIZED_COUNT_EXP, value.toString());
+  {
+    key: "optimizedCount",
+    fn: (template: string, value: number): string => {
+      return template.replace(OPTIMIZED_COUNT_EXP, value.toString());
+    },
   },
-  skippedCount: (template: string, value: number): string => {
-    return template.replace(SKIPPED_COUNT_EXP, value.toString());
+  {
+    key: "skippedCount",
+    fn: (template: string, value: number): string => {
+      return template.replace(SKIPPED_COUNT_EXP, value.toString());
+    },
   },
-  svgCount: (template: string, value: number): string => {
-    return template.replace(SVG_COUNT_EXP, value.toString());
+  {
+    key: "svgCount",
+    fn: (template: string, value: number): string => {
+      return template.replace(SVG_COUNT_EXP, value.toString());
+    },
   },
-};
+];
 
 function formatAll(
   template: string,
   data: CommitData,
   exclude: string[] = [],
 ): string {
-  for (const [key, value] of Object.entries(data)) {
+  for (const { key, fn } of formatters) {
     if (!exclude.includes(key)) {
-      template = format[key](template, value);
+      template = fn(template, data[key]);
     }
   }
 
@@ -80,7 +98,7 @@ export function formatComment(
   return formatAll(commentTemplate, data);
 }
 
-export function formatTemplate(
+export function formatCommitMessage(
   titleTemplate: string,
   messageTemplate: string,
   data: CommitData,
