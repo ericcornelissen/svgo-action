@@ -61,7 +61,7 @@ export type CommitData = {
 }
 
 
-export function formatTemplate(
+export function formatCommitMessage(
   titleTemplate: string,
   messageTemplate: string,
   data: CommitData,

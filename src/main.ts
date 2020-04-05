@@ -33,7 +33,7 @@ import {
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { formatTemplate } from "./templating";
+import { formatCommitMessage } from "./templating";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
@@ -233,7 +233,7 @@ async function run(
     const skipped = svgCount - blobs.length;
 
     if (!config.isDryRun) {
-      const commitMessage: string = formatTemplate(
+      const commitMessage: string = formatCommitMessage(
         config.commitTitle,
         config.commitDescription,
         {
