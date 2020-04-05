@@ -55,13 +55,13 @@ export type CommitInfo = {
   readonly url: string;
 }
 
-export type FileData = {
+export type GitFileData = {
   readonly path: string;
   readonly content: string;
   readonly encoding: string;
 }
 
-export type FileInfo = {
+export type GitFileInfo = {
   readonly path: string;
   readonly status: string;
 }
@@ -165,7 +165,7 @@ export async function getPrComments(
 export async function getPrFile(
   client: github.GitHub,
   path: string,
-): Promise<FileData> {
+): Promise<GitFileData> {
   const fileContents = await client.repos.getContents({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -184,7 +184,7 @@ export async function getPrFile(
 export async function getPrFiles(
   client: github.GitHub,
   prNumber: number,
-): Promise<FileInfo[]> {
+): Promise<GitFileInfo[]> {
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -209,6 +209,6 @@ export function getPrNumber(): number {
 export async function getRepoFile(
   client: github.GitHub,
   path: string,
-): Promise<FileData> {
+): Promise<GitFileData> {
   return await getPrFile(client, path);
 }
