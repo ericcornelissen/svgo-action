@@ -1,7 +1,7 @@
-import { CommitData, formatTemplate } from "../src/templating";
+import { CommitData, formatCommitMessage } from "../src/templating";
 
 
-describe("::formatTemplate", () => {
+describe("::formatCommitMessage", () => {
 
   const defaultData: CommitData = {
     fileCount: 1337,
@@ -16,7 +16,7 @@ describe("::formatTemplate", () => {
   describe("Title templating", () => {
 
     test("empty template string", () => {
-      const result = formatTemplate("", defaultMessageTemplate, defaultData);
+      const result = formatCommitMessage("", defaultMessageTemplate, defaultData);
       expect(result).toEqual(`\n\n${defaultMessageTemplate}`);
     });
 
@@ -25,7 +25,7 @@ describe("::formatTemplate", () => {
       "This isn't even my final form",
       "Rick Astley - Never gonne give you up",
     ])("no template values (%s)", (templateString) => {
-      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, defaultData);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -38,7 +38,7 @@ describe("::formatTemplate", () => {
       "ninj{{fileCount }}a edit",
       "{{fileCount}}",
     ])("template using '{{fileCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, defaultData);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -52,7 +52,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { fileCount });
       const templateString = "The PR contains {{fileCount}} file(s)";
 
-      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, data);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -65,7 +65,7 @@ describe("::formatTemplate", () => {
       "WeIrD DoEs{{filesList}}NoT mEaN iNcOrReCt!",
       "{{ filesList }}",
     ])("ignore '{{filesList}}' in '%s'", (templateString) => {
-      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, defaultData);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -78,7 +78,7 @@ describe("::formatTemplate", () => {
       "Hello, t{{optimizedCount}}his is weird...",
       "{{optimizedCount}}",
     ])("template using '{{optimizedCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, defaultData);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -92,7 +92,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { optimizedCount });
       const templateString = "Optimized {{optimizedCount}} SVG(s)";
 
-      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, data);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -105,7 +105,7 @@ describe("::formatTemplate", () => {
       "No, this is Pa{{skippedCount}}trick",
       "{{skippedCount}}",
     ])("template using '{{skippedCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, defaultData);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -119,7 +119,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { skippedCount });
       const templateString = "{{skippedCount}} SVG(s) were skipped";
 
-      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, data);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -132,7 +132,7 @@ describe("::formatTemplate", () => {
       "Hello, weird this i{{svgCount}}s...",
       "{{svgCount}}",
     ])("template using '{{svgCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(templateString, defaultMessageTemplate, defaultData);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, defaultData);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -146,7 +146,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { svgCount });
       const templateString = "{{svgCount}} SVG(s) were considered";
 
-      const result = formatTemplate(templateString, defaultMessageTemplate, data);
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, data);
       expect(result).toBeDefined();
 
       const resultTitle = result.split("\n\n")[0];
@@ -158,7 +158,7 @@ describe("::formatTemplate", () => {
   describe("Message templates", () => {
 
     test("empty template string", () => {
-      const result = formatTemplate(defaultTitleTemplate, "", defaultData);
+      const result = formatCommitMessage(defaultTitleTemplate, "", defaultData);
       expect(result).toEqual(defaultTitleTemplate);
     });
 
@@ -167,7 +167,7 @@ describe("::formatTemplate", () => {
       "This isn't even my final form",
       "Rick Astley - Never gonne give you up",
     ])("no template values (%s)", (templateString) => {
-      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -180,7 +180,7 @@ describe("::formatTemplate", () => {
       "Lo{{fileCount}}rem ipsum",
       "{{fileCount}}",
     ])("template using '{{fileCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -194,7 +194,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { fileCount });
       const templateString = "The PR contains {{fileCount}} files";
 
-      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -207,7 +207,7 @@ describe("::formatTemplate", () => {
       "WeIrD DoEs{{filesList}}NoT mEaN iNcOrReCt!",
       "{{ filesList }}",
     ])("template using '{{filesList}}' (%s)", (templateString) => {
-      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -222,7 +222,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { filePaths });
       const templateString = "Optimized SVG(s):\n{{filesList}}";
 
-      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -236,7 +236,7 @@ describe("::formatTemplate", () => {
       "Weird tem{{optimizedCount}}plates are templates too",
       "{{optimizedCount}}",
     ])("template using '{{optimizedCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -250,7 +250,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { optimizedCount });
       const templateString = "Optimized {{optimizedCount}} SVG(s)";
 
-      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -263,7 +263,7 @@ describe("::formatTemplate", () => {
       "No, this is Pa{{skippedCount}}trick",
       "{{skippedCount}}",
     ])("template using '{{skippedCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -277,7 +277,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { skippedCount });
       const templateString = "{{skippedCount}} SVG(s) were skipped";
 
-      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -290,7 +290,7 @@ describe("::formatTemplate", () => {
       "foo b{{svgCount}}ar",
       "{{svgCount}}",
     ])("template using '{{svgCount}}' (%s)", (templateString) => {
-      const result = formatTemplate(defaultTitleTemplate, templateString, defaultData);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];
@@ -304,7 +304,7 @@ describe("::formatTemplate", () => {
       const data = Object.assign({ }, defaultData, { svgCount });
       const templateString = "{{svgCount}} SVG(s) were considered";
 
-      const result = formatTemplate(defaultTitleTemplate, templateString, data);
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
       expect(result).toBeDefined();
 
       const resultMessage = result.split("\n\n")[1];

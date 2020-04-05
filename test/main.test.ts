@@ -47,7 +47,7 @@ beforeEach(() => {
   svgo.SVGOptimizer.mockClear();
   svgo.OptimizerInstance.optimize.mockClear();
 
-  templating.formatTemplate.mockClear();
+  templating.formatCommitMessage.mockClear();
 });
 
 test("get the Pull Request number", async () => {
@@ -164,7 +164,7 @@ describe("Configuration", () => {
 
     await main();
 
-    expect(templating.formatTemplate).toHaveBeenCalledWith(
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       commitTitle,
       expect.any(String),
       expect.any(Object),
@@ -184,7 +184,7 @@ describe("Configuration", () => {
 
     await main();
 
-    expect(templating.formatTemplate).toHaveBeenCalledWith(
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       expect.any(String),
       commitDescription,
       expect.any(Object),
@@ -200,7 +200,7 @@ describe("Configuration", () => {
 
     await main();
 
-    expect(templating.formatTemplate).toHaveBeenCalledWith(
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       actionConfig.commitTitle,
       expect.any(String),
       expect.any(Object),
