@@ -149,7 +149,7 @@ async function getSvgsInPR(
     svgsData.push({
       content: svgContent,
       encoding: fileData.encoding,
-      path: svg.path,
+      path: fileData.path,
     });
   }
 
@@ -164,7 +164,7 @@ async function doOptimizeSvg(
   try {
     core.debug(`optimizing '${svg.path}'`);
     const optimizedSvg: string = await svgo.optimize(svg.content);
-    if (svg.content == optimizedSvg) {
+    if (svg.content === optimizedSvg) {
       core.debug(`skipping '${svg.path}', already optimized`);
       return;
     }

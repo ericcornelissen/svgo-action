@@ -11,8 +11,8 @@ import {
   PR_NOT_FOUND,
 
   // Types
-  GitFileData,
   GitBlob,
+  GitFileData,
 
   // Functions
   commitFiles,

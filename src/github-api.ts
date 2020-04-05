@@ -122,10 +122,10 @@ export async function createBlob(
   });
 
   return {
-    path: path,
     mode: COMMIT_MODE_FILE,
-    type: COMMIT_TYPE_BLOB,
+    path: path,
     sha: fileBlob.sha,
+    type: COMMIT_TYPE_BLOB,
   };
 }
 
