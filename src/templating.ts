@@ -32,7 +32,7 @@ const format = {
       const originalFileSize: number = getFileSizeInKB(svg.original);
       const optimizedFileSize: number = getFileSizeInKB(svg.optimized);
       const improvement: number = toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
-      table += `| ${svg.path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |`;
+      table += `| ${svg.path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
     }
 
     return template.replace(FILES_TABLE_EXP, table);
