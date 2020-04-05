@@ -1,5 +1,5 @@
 import { existingFiles, svgFiles } from "../src/filters";
-import { FileInfo } from "../src/github-api";
+import { GitFileInfo } from "../src/github-api";
 
 
 const EMPTY_ARRAY = [];
@@ -17,7 +17,7 @@ describe("::existingFiles", () => {
   });
 
   test(`only ${STATUS_ADDED} files`, () => {
-    const files: FileInfo[] = [
+    const files: GitFileInfo[] = [
       { path: "foo.bar", status: STATUS_ADDED },
       { path: "test.svg", status: STATUS_ADDED },
     ];
@@ -27,7 +27,7 @@ describe("::existingFiles", () => {
   });
 
   test(`only ${STATUS_MODIFIED} files`, () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: ".gitignore", status: STATUS_MODIFIED },
       { path: "main.ts", status: STATUS_MODIFIED },
     ];
@@ -37,7 +37,7 @@ describe("::existingFiles", () => {
   });
 
   test(`only ${STATUS_REMOVED} files`, () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: "jest.config.js", status: STATUS_REMOVED },
       { path: "optimized.svg", status: STATUS_REMOVED },
     ];
@@ -47,7 +47,7 @@ describe("::existingFiles", () => {
   });
 
   test(`mix of ${STATUS_ADDED}, ${STATUS_MODIFIED}, and ${STATUS_REMOVED} files`, () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: "foo.bar", status: STATUS_ADDED },
       { path: "optimized.svg", status: STATUS_REMOVED },
       { path: ".gitignore", status: STATUS_MODIFIED },
@@ -75,7 +75,7 @@ describe("::svgFiles", () => {
   });
 
   test("non-empty array with SVGs only", () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: "foo.svg", status: STATUS_MODIFIED },
       { path: "bar.svg", status: STATUS_ADDED },
       { path: "test.svg", status: STATUS_REMOVED },
@@ -86,7 +86,7 @@ describe("::svgFiles", () => {
   });
 
   test("non-empty array with SVGs and other files", () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: "foo.svg", status: STATUS_MODIFIED },
       { path: "guppy.c++", status: STATUS_ADDED },
       { path: "test.svg", status: STATUS_REMOVED },
@@ -101,7 +101,7 @@ describe("::svgFiles", () => {
   });
 
   test("non-empty array without SVGs", () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: "sapnu.puas", status: STATUS_ADDED },
       { path: "dead.beef", status: STATUS_MODIFIED },
       { path: "this-is-not-an.svg.pdf", status: STATUS_MODIFIED },
@@ -113,7 +113,7 @@ describe("::svgFiles", () => {
   });
 
   test("non-conventional filenames", () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: ".dotfile-but.svg", status: STATUS_ADDED },
       { path: ".dotfile-not-svg.txt", status: STATUS_MODIFIED },
     ];
@@ -125,7 +125,7 @@ describe("::svgFiles", () => {
   });
 
   test("filters dotfiles (.*)", () => {
-    const files: FileInfo[]  = [
+    const files: GitFileInfo[]  = [
       { path: ".editorconfig", status: STATUS_ADDED },
       { path: ".gitignore", status: STATUS_MODIFIED },
     ];

@@ -55,18 +55,18 @@ export type CommitInfo = {
   readonly url: string;
 }
 
-export type FileData = {
-  readonly path: string;
+export type GitBlob = Octokit.GitCreateTreeParamsTree;
+
+export type GitFileData = {
   readonly content: string;
   readonly encoding: string;
+  readonly path: string;
 }
 
-export type FileInfo = {
+export type GitFileInfo = {
   readonly path: string;
   readonly status: string;
 }
-
-export type GitBlob = Octokit.GitCreateTreeParamsTree;
 
 
 export async function commitFiles(
@@ -122,10 +122,10 @@ export async function createBlob(
   });
 
   return {
-    path: path,
     mode: COMMIT_MODE_FILE,
-    type: COMMIT_TYPE_BLOB,
+    path: path,
     sha: fileBlob.sha,
+    type: COMMIT_TYPE_BLOB,
   };
 }
 
@@ -165,7 +165,7 @@ export async function getPrComments(
 export async function getPrFile(
   client: github.GitHub,
   path: string,
-): Promise<FileData> {
+): Promise<GitFileData> {
   const fileContents = await client.repos.getContents({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -175,16 +175,16 @@ export async function getPrFile(
 
   const fileDetails = fileContents.data[0] || fileContents.data;
   return {
-    path: fileDetails.path,
     content: fileDetails.content,
     encoding: fileDetails.encoding,
+    path: fileDetails.path,
   };
 }
 
 export async function getPrFiles(
   client: github.GitHub,
   prNumber: number,
-): Promise<FileInfo[]> {
+): Promise<GitFileInfo[]> {
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -209,6 +209,6 @@ export function getPrNumber(): number {
 export async function getRepoFile(
   client: github.GitHub,
   path: string,
-): Promise<FileData> {
+): Promise<GitFileData> {
   return await getPrFile(client, path);
 }
