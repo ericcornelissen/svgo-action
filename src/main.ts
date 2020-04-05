@@ -16,6 +16,7 @@ import {
   // Functionality
   commitFiles,
   createBlob,
+  createComment,
   getCommitMessage,
   getPrComments,
   getPrFile,
@@ -232,6 +233,8 @@ async function run(
     }
 
     core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
+
+    createComment(client, prNumber, "Example comment");
   } else {
     core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
   }
