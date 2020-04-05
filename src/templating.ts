@@ -1,3 +1,8 @@
+import { FullFileData } from "./main";
+
+
+const UTF8 = "utf-8";
+
 const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
 const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
@@ -36,6 +41,14 @@ function formatAll(
   return template;
 }
 
+function getFileSizeInKB(content: string): number {
+  return Buffer.byteLength(content, UTF8) / 1000;
+}
+
+function toPercentage(decimal: number): number {
+  return -1 * Math.round(decimal * 10000) / 100;
+}
+
 
 export type CommitData = {
   readonly fileCount: number;
@@ -45,6 +58,23 @@ export type CommitData = {
   readonly svgCount: number;
 }
 
+
+export function formatComment(
+  svgs: FullFileData[],
+): string {
+  let comment = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles: \n\n";
+  comment += "| Filename | Before | After | Improvement |\n";
+  comment += "| --- | --- | --- | --- |\n";
+
+  for (const svg of svgs) {
+    const originalFileSize: number = getFileSizeInKB(svg.original);
+    const optimizedFileSize: number = getFileSizeInKB(svg.optimized);
+    const improvement: number = toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
+    comment += `| ${svg.path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |`;
+  }
+
+  return comment;
+}
 
 export function formatTemplate(
   titleTemplate: string,

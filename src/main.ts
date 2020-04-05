@@ -34,14 +34,14 @@ import {
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { formatTemplate } from "./templating";
+import { formatComment, formatTemplate } from "./templating";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
 const ENABLE_PATTERN = /enable-svgo-action/;
 
 
-type FullFileData = {
+export type FullFileData = {
   readonly path: string;
   readonly status: string;
   readonly encoding: string;
@@ -225,29 +225,6 @@ async function doCommitChanges(
   }
 }
 
-async function doCommentOnPr(
-  client: GitHub,
-  prNumber: number,
-  svgs: FullFileData[],
-): Promise<void> {
-  function getFileSizeInKB(content: string): number {
-    return Buffer.byteLength(content, "utf8") / 1000;
-  }
-
-  let comment = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles: \n\n";
-  comment += "| Filename | Before | After | Improvement |\n";
-  comment += "| --- | --- | --- | --- |\n";
-
-  for (const svg of svgs) {
-    const originalFileSize: number = getFileSizeInKB(svg.original);
-    const optimizedFileSize: number = getFileSizeInKB(svg.optimized);
-    const improvement: number = -1 * Math.round((originalFileSize - optimizedFileSize) / originalFileSize * 10000) / 100;
-    comment += `| ${svg.path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |`;
-  }
-
-  await createComment(client, prNumber, comment);
-}
-
 async function run(
   client: GitHub,
   config: ActionConfig,
@@ -274,9 +251,10 @@ async function run(
           svgCount: svgCount,
         },
       );
-
       await doCommitChanges(client, commitMessage, blobs);
-      await doCommentOnPr(client, prNumber, svgsData);
+
+      const comment: string = formatComment(svgsData);
+      await createComment(client, prNumber, comment);
     }
 
     core.info(`Successfully optimized ${optimized}/${svgCount} SVG(s) (${skipped}/${svgCount} SVG(s) skipped)`);
