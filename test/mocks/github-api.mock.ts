@@ -1,11 +1,11 @@
 import * as github from "./@actions/github.mock";
 
-import { FileData } from "../../src/github-api";
+import { GitFileData } from "../../src/github-api";
 
 
 const client = new github.GitHub();
 
-async function getContents(path: string): Promise<FileData> {
+async function getContents(path: string): Promise<GitFileData> {
   const { data } = await client.repos.getContents({ path });
   return {
     path: data.path,

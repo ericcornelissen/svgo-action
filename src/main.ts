@@ -9,9 +9,9 @@ import {
 
   // Types
   CommitInfo,
-  FileData,
-  FileInfo,
   GitBlob,
+  GitFileData,
+  GitFileInfo,
 
   // Functionality
   commitFiles,
@@ -41,9 +41,8 @@ const DISABLE_PATTERN = /disable-svgo-action/;
 const ENABLE_PATTERN = /enable-svgo-action/;
 
 
-export type FullFileData = {
+export type FileData = {
   readonly path: string;
-  readonly status: string;
   readonly encoding: string;
 
   readonly original: string;
@@ -131,30 +130,30 @@ async function checkIfActionIsDisabled(
 async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
-): Promise<{ fileCount: number; svgCount: number; svgsData: FullFileData[] }> {
+): Promise<{ fileCount: number; svgCount: number; svgsData: FileData[] }> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
-  const prFiles: FileInfo[] = await getPrFiles(client, prNumber);
+
+  const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
   const fileCount = prFiles.length;
   core.debug(`the pull request contains ${fileCount} file(s)`);
 
-  const prSvgs: FileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
+  const prSvgs: GitFileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-  const svgsData: FullFileData[] = [];
+  const svgsData: FileData[] = [];
   for (const svg of prSvgs) {
     core.debug(`fetching file contents of '${svg.path}'`);
-    const fileData: FileData = await getPrFile(client, svg.path);
+    const fileData: GitFileData = await getPrFile(client, svg.path);
 
     core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
-    const originalSvg: string = decode(fileData.content, fileData.encoding);
+    const svgContent: string = decode(fileData.content, fileData.encoding);
 
     svgsData.push({
-      path: svg.path,
-      status: svg.status,
       encoding: fileData.encoding,
-      original: originalSvg,
-      optimized: originalSvg,
+      original: svgContent,
+      optimized: svgContent,
+      path: svg.path,
     });
   }
 
@@ -164,7 +163,7 @@ async function getSvgsInPR(
 async function doOptimizeSvg(
   client: GitHub,
   svgo: SVGOptimizer,
-  svg: FullFileData,
+  svg: FileData,
 ): Promise<GitBlob | undefined> {
   try {
     core.debug(`optimizing '${svg.path}'`);
@@ -196,11 +195,11 @@ async function doOptimizeSvg(
 async function doOptimizeSvgs(
   client: GitHub,
   svgo: SVGOptimizer,
-  prSvgs: FullFileData[],
+  svgsData: FileData[],
 ): Promise<GitBlob[]> {
   const blobs: GitBlob[] = [];
-  for (const svgFileInfo of prSvgs) {
-    const svgBlob = await doOptimizeSvg(client, svgo, svgFileInfo);
+  for (const svgData of svgsData) {
+    const svgBlob = await doOptimizeSvg(client, svgo, svgData);
     if (svgBlob !== undefined) {
       blobs.push(svgBlob);
     }

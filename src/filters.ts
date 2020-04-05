@@ -1,4 +1,4 @@
-import { FileInfo } from "./github-api";
+import { GitFileInfo } from "./github-api";
 
 
 const STATUS_ADDED = "added";
@@ -7,11 +7,11 @@ const STATUS_MODIFIED = "modified";
 const SVG_FILE_EXTENSION = ".svg";
 
 
-export function existingFiles(fileInfo: FileInfo): boolean {
+export function existingFiles(fileInfo: GitFileInfo): boolean {
   return fileInfo.status === STATUS_MODIFIED
       || fileInfo.status === STATUS_ADDED;
 }
 
-export function svgFiles(fileInfo: FileInfo): boolean {
+export function svgFiles(fileInfo: GitFileInfo): boolean {
   return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
 }

@@ -1,4 +1,4 @@
-import { FullFileData } from "./main";
+import { FileData } from "./main";
 
 
 const UTF8 = "utf-8";
@@ -26,7 +26,7 @@ const format = {
   filePaths: (template: string, value: string[]): string => {
     return template.replace(FILES_LIST_EXP, "- " + value.join("\n- "));
   },
-  fileTable: (template: string, value: FullFileData[]): string => {
+  fileTable: (template: string, value: FileData[]): string => {
     let table = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
     for (const svg of value) {
       const originalFileSize: number = getFileSizeInKB(svg.original);
@@ -69,7 +69,7 @@ export type CommitData = {
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
-  readonly fileTable: FullFileData[];
+  readonly fileTable: FileData[];
 }
 
 

@@ -32,6 +32,7 @@ module.exports = {
       exports: "always-multiline",
       functions: "always-multiline",
     }],
+    "no-console": ["error"],
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],

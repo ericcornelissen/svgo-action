@@ -10,21 +10,18 @@ const defaultData: CommitData = {
   fileTable: [
     {
       path: "test.svg",
-      status: "added",
       encoding: "utf-8",
       original: "Hello",
       optimized: "world",
     },
     {
       path: "foo.svg",
-      status: "added",
       encoding: "utf-8",
       original: "foo",
       optimized: "bar",
     },
     {
       path: "bar.svg",
-      status: "added",
       encoding: "utf-8",
       original: "bar",
       optimized: "foo",
