@@ -31,8 +31,10 @@ const defaultData: CommitData = {
 
 describe("::formatComment", () => {
 
+  const defaultCommentTemplate = "foobar";
+
   test("runs", () => {
-    const result = formatComment(defaultData);
+    const result = formatComment(defaultCommentTemplate, defaultData);
     expect(result).toBeDefined();
   });
 

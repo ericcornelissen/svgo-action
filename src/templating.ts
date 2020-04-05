@@ -73,9 +73,11 @@ export type CommitData = {
 }
 
 
-export function formatComment(data: CommitData): string {
-  const template = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
-  return formatAll(template, data);
+export function formatComment(
+  commentTemplate: string,
+  data: CommitData,
+): string {
+  return formatAll(commentTemplate, data);
 }
 
 export function formatTemplate(

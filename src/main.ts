@@ -40,6 +40,8 @@ import { formatComment, formatTemplate } from "./templating";
 const DISABLE_PATTERN = /disable-svgo-action/;
 const ENABLE_PATTERN = /enable-svgo-action/;
 
+const COMMENT_TEMPLATE = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
+
 
 export type FileData = {
   readonly path: string;
@@ -246,7 +248,7 @@ async function run(
       const commitMessage: string = formatTemplate(config.commitTitle, config.commitDescription, data);
       await doCommitChanges(client, commitMessage, blobs);
 
-      const comment: string = formatComment(data);
+      const comment: string = formatComment(COMMENT_TEMPLATE, data);
       await createComment(client, prNumber, comment);
     }
 
