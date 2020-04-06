@@ -1,11 +1,28 @@
-import { CommitData, formatCommitMessage } from "../src/templating";
+import { CommitData } from "../src/main";
+import { formatCommitMessage } from "../src/templating";
 
 
 describe("::formatCommitMessage", () => {
 
   const defaultData: CommitData = {
     fileCount: 1337,
-    filePaths: ["test.svg", "foo.svg", "bar.svg"],
+    fileData: [
+      {
+        content: "test",
+        originalEncoding: "base64",
+        path: "test.svg",
+      },
+      {
+        content: "foo",
+        originalEncoding: "base64",
+        path: "foo.svg",
+      },
+      {
+        content: "bar",
+        originalEncoding: "base64",
+        path: "bar.svg",
+      },
+    ],
     optimizedCount: 36,
     skippedCount: 6,
     svgCount: 42,
@@ -219,7 +236,15 @@ describe("::formatCommitMessage", () => {
       ["foo.svg", "bar.svg"],
       ["in/a/folder.svg", "and/this/one.svg"],
     ])("different values for  `filesList`", (...filePaths) => {
-      const data = Object.assign({ }, defaultData, { filePaths });
+      const data = Object.assign({ }, defaultData, {
+        fileData: filePaths.map((path) => {
+          return {
+            content: "Hello world!",
+            originalEncoding: "base64",
+            path: path,
+          };
+        }),
+      });
       const templateString = "Optimized SVG(s):\n{{filesList}}";
 
       const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
