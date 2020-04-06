@@ -1,3 +1,3 @@
-export const formatTemplate = jest.fn()
+export const formatCommitMessage = jest.fn()
   .mockReturnValue("This is the commit message")
-  .mockName("templating.formatTemplate");
+  .mockName("templating.formatCommitMessage");

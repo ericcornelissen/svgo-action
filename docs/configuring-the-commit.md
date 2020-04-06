@@ -148,8 +148,9 @@ commit:
     Namely:
     {{filesList}}
 
-    Details: {{fileCount}} file(s) in PR, of which {{svgCount}} are SVG(s),
-    {{skippedCount}} SVG(s) was already optimized
+    Details:
+    {{fileCount}} file(s) in PR, {{svgCount}} SVG(s),
+    {{skippedCount}} SVG(s) already optimized
 ```
 
 This will result in commit messages that look like:
@@ -160,9 +161,11 @@ Optimized 3/4 SVG(s)
 Namely:
 - foo.svg
 - bar.svg
+- foobar.svg
 
-Details: 5 file(s) in PR, of which 4 are SVG(s),
-1 SVG(s) was already optimized
+Details:
+5 file(s) in PR, 4 SVG(s),
+1 SVG(s) already optimized
 ```
 
 [commit message templating]: #commit-message-templating
