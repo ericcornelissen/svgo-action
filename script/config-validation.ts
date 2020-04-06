@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import * as fs from "fs";
 import * as yaml from "js-yaml";
 import * as path from "path";
 
 
 type Jobs = [{ steps: any[] }];
-type Commit = { conventional: boolean, description: string, title: string };
+type Commit = { conventional: boolean; description: string; title: string };
 type Report = string[];
 
 
@@ -67,7 +69,7 @@ function checkValueOfConfigurationPath(configurationPath?: string): string {
     }
 
     if (!(configurationPath.endsWith(".yaml") || configurationPath.endsWith(".yml"))) {
-      return warning("the configuration-path file does not look like a YAML file")
+      return warning("the configuration-path file does not look like a YAML file");
     }
   }
 
@@ -164,7 +166,7 @@ function checkValueOfSvgoOptions(svgoOptions?: string): string {
     }
 
     if (!(svgoOptions.endsWith(".yaml") || svgoOptions.endsWith(".yml"))) {
-      return warning("the svgo-options file does not look like a YAML file")
+      return warning("the svgo-options file does not look like a YAML file");
     }
   }
 
@@ -223,7 +225,7 @@ function main(configFile: string): void {
   const report: Report = analyze(rawConfigObject);
 
   console.log("\nReport:\n=======");
-  console.log(report.filter(x => x !== "").join("\n"));
+  console.log(report.filter((x) => x !== "").join("\n"));
 }
 
 main(process.argv[2]);
