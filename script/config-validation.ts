@@ -6,6 +6,9 @@ import { RawActionConfig, ActionConfig } from "../src/inputs";
 import { formatTemplate } from "../src/templating";
 
 
+type Jobs = [{ steps: any[] }];
+
+
 const BOOLEAN = "boolean";
 const STRING = "string";
 
@@ -17,6 +20,11 @@ const EXAMPLE_SVG_COUNT = 4;
 const EXAMPLE_OPTIMIZED_COUNT = 3;
 const EXAMPLE_SKIPPED_COUNT = 3;
 const EXAMPLE_FILE_LIST = ["foo.svg", "bar.svg", "foobar.svg"];
+
+const ALLOWED_KEYS_FILE = ["commit", "dry-run", "svgo-options"];
+const ALLOWED_KEYS_COMMIT = ["conventional", "title", "description"];
+const ALLOWED_KEYS_WORKFLOW = ["repo-token", "configuration-path", "conventional-commits", "dry-run", "svgo-options"];
+
 
 
 function getExampleTemplate(title: string, description: string): string {
@@ -52,55 +60,35 @@ function getConfigObject(file: string): any {
 }
 
 
-function checkKeysInCommit(commitObject: any): void {
-  if (commitObject === undefined) {
-    return
-  }
-
-  const KNOWN_KEYS: string[] = ["conventional", "title", "description"];
-  for (const key of Object.keys(commitObject)) {
-    if (!KNOWN_KEYS.includes(key)) {
-      warning(`Unknown key '${key}' in commit`);
-    }
-  }
-}
-
-function checkKeysInConfig(configObject: any): void {
-  const KNOWN_KEYS: string[] = ["commit", "dry-run", "svgo-options"];
+function checkKeysInConfig(configObject: any, allowed: string[]): string[] {
+  const report: string[] = [];
   for (const key of Object.keys(configObject)) {
-    if (!KNOWN_KEYS.includes(key)) {
-      warning(`Unknown key '${key}'`);
+    if (!allowed.includes(key)) {
+      report.push(warning(`Unknown key '${key}'`));
     }
   }
 
-  checkKeysInCommit(configObject.commit);
+  return report;
 }
 
-
-function checkValueOfDryRun(dryRun?: boolean | string): string {
-  if (dryRun !== undefined) {
-    if (typeof dryRun === STRING) {
-      if (dryRun === TRUE_STRING || dryRun === FALSE_STRING) {
-        return suggest("change the dry-run value to a boolean (instead of a string)");
-      }
-    }
-
-    if (typeof dryRun !== BOOLEAN) {
-      return error(`Unknown value for dry-run '${dryRun}'`);
-    }
+function checkKeysInCommit(commitObject: any): string[] {
+  const report: string[] = [];
+  if (commitObject === undefined) {
+    return report;
   }
 
-  return "";
+  return checkKeysInConfig(commitObject, ALLOWED_KEYS_COMMIT);
 }
 
-function checkValueOfSvgoOptions(svgoOptions?: string): string {
-  if (svgoOptions !== undefined) {
-    if (typeof svgoOptions !== STRING) {
-      return error(`Unknown value for svgo-options '${svgoOptions}'`);
+
+function checkValueOfConfigurationPath(configurationPath?: string): string {
+  if (configurationPath !== undefined) {
+    if (typeof configurationPath !== STRING) {
+      return error(`Unknown value for configuration-path '${configurationPath}'`);
     }
 
-    if (!(svgoOptions.endsWith(".yaml") || svgoOptions.endsWith(".yml"))) {
-      return warning("the svgo-options file does not look like a YAML file")
+    if (!(configurationPath.endsWith(".yaml") || configurationPath.endsWith(".yml"))) {
+      return warning("the configuration-path file does not look like a YAML file")
     }
   }
 
@@ -167,37 +155,124 @@ function checkValueOfCommit(commit?: RawActionConfig["commit"]): string[] {
   return report;
 }
 
-function checkValuesInConfig(configObject: RawActionConfig): string[] {
-  const report: string[] = [];
-  report.push(checkValueOfDryRun(configObject["dry-run"]));
-  report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
-  report.push(...checkValueOfCommit(configObject.commit));
+function checkValueOfDryRun(dryRun?: boolean | string): string {
+  if (dryRun !== undefined) {
+    if (typeof dryRun === STRING) {
+      if (dryRun === TRUE_STRING || dryRun === FALSE_STRING) {
+        return suggest("change the dry-run value to a boolean (instead of a string)");
+      }
+    }
 
-  return report;
+    if (typeof dryRun !== BOOLEAN) {
+      return error(`Unknown value for dry-run '${dryRun}'`);
+    }
+  }
+
+  return "";
+}
+
+function checkValueOfRepoToken(repoToken?: string): string {
+  if (repoToken === undefined) {
+    return error("Repo token is required but was not found");
+  }
+
+  if (repoToken !== "${{ secrets.GITHUB_TOKEN }}") {
+    return error("Repo token must be ${{ secrets.GITHUB_TOKEN }}");
+  }
+
+  return "";
+}
+
+function checkValueOfSvgoOptions(svgoOptions?: string): string {
+  if (svgoOptions !== undefined) {
+    if (typeof svgoOptions !== STRING) {
+      return error(`Unknown value for svgo-options '${svgoOptions}'`);
+    }
+
+    if (!(svgoOptions.endsWith(".yaml") || svgoOptions.endsWith(".yml"))) {
+      return warning("the svgo-options file does not look like a YAML file")
+    }
+  }
+
+  return "";
 }
 
 
-function analyze(configObject: any): [ActionConfig, string[], string] {
+function analyzeConfigFile(configObject: any): [ActionConfig, string[], string] {
+  const report: string[] = [];
   const rawConfig: RawActionConfig = configObject as RawActionConfig;
 
-  checkKeysInConfig(configObject);
-  const report: string[] = checkValuesInConfig(rawConfig);
+  report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_FILE));
+  report.push(...checkKeysInCommit(configObject.commit));
+
+  report.push(...checkValueOfCommit(configObject.commit));
+  report.push(checkValueOfDryRun(configObject["dry-run"]));
+  report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
+
   const config: ActionConfig = new ActionConfig(rawConfig);
   const exampleCommit: string = getExampleTemplate(
     config.commitTitle,
     config.commitDescription
   );
 
-  return [config, report.filter(x => x !== ""), exampleCommit];
+  return [config, report, exampleCommit];
 }
+
+function analyzeWorkflowFile(jobs: Jobs): [ActionConfig, string[], string] {
+  function doAnalyze(configObject: any): [ActionConfig, string[], string] {
+    const report: string[] = [];
+    const rawConfig: RawActionConfig = configObject as RawActionConfig;
+
+    report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_WORKFLOW));
+
+    report.push(checkValueOfConfigurationPath(configObject["configuration-path"]));
+    report.push(checkValueOfCommitConventional(configObject["conventional-commits"]));
+    report.push(checkValueOfDryRun(configObject["dry-run"]));
+    report.push(checkValueOfRepoToken(configObject["repo-token"]));
+    report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
+
+    const config: ActionConfig = new ActionConfig(rawConfig);
+    const exampleCommit: string = getExampleTemplate(
+      config.commitTitle,
+      config.commitDescription
+    );
+
+    return [config, report, exampleCommit];
+  }
+
+  for (const pipeline of Object.values(jobs)) {
+    for (const step of pipeline.steps) {
+      if (step.uses && step.uses.includes("ericcornelissen/svgo-action")) {
+        return doAnalyze(step.with);
+      }
+    }
+  }
+
+  return [
+    new ActionConfig(),
+    [],
+    "",
+  ];
+}
+
+function analyze(configObject: any): [ActionConfig, string[], string] {
+  if (configObject.jobs !== undefined) {
+    console.log("Workflow file detected");
+    return analyzeWorkflowFile(configObject.jobs);
+  } else {
+    console.log("Config file detected");
+    return analyzeConfigFile(configObject);
+  }
+}
+
 
 function main(configFile: string): void {
   const rawConfigObject: any = getConfigObject(configFile);
   const [config, report, exampleCommit] = analyze(rawConfigObject);
 
   console.log("\nReport:\n=======");
-  console.log(report.join("\n"));
-  console.log("\Raw Config:\n===========");
+  console.log(report.filter(x => x !== "").join("\n"));
+  console.log("\nRaw Config:\n===========");
   console.log(config);
   console.log("\nExample commit:\n===============");
   console.log(exampleCommit);
