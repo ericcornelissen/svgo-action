@@ -21,7 +21,7 @@
     "lint:ws": "editorconfig-checker",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "validate-config": "npx ts-node ./script/config-validation.ts"
+    "validate-config": "npx ts-node ./script/config-validation/cli.ts"
   },
   "repository": {
     "type": "git",
