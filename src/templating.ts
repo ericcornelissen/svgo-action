@@ -1,4 +1,4 @@
-import { FileData } from "./main";
+import { CommitData, FileData } from "./main";
 
 
 const UTF8 = "utf-8";
@@ -29,7 +29,7 @@ const formatters = [
   {
     key: "fileData",
     fn: (template: string, value: FileData[]): string => {
-      const paths: string[] = value.map((svg) => svg.path);
+      const paths: string[] = value.map((fileData) => fileData.path);
       return template.replace(FILES_LIST_EXP, "- " + paths.join("\n- "));
     },
   },
@@ -82,13 +82,6 @@ function formatAll(
 }
 
 
-export type CommitData = {
-  readonly fileCount: number;
-  readonly fileData: FileData[];
-  readonly optimizedCount: number;
-  readonly skippedCount: number;
-  readonly svgCount: number;
-}
 
 
 export function formatComment(

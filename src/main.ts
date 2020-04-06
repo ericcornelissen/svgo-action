@@ -44,11 +44,20 @@ const COMMENT_TEMPLATE = "SVG(s) automatically optimized using [SVGO](https://gi
 
 
 export type FileData = {
+  readonly content: string;
+  readonly originalEncoding: string;
   readonly path: string;
-  readonly encoding: string;
 
   readonly original: string;
   optimized: string;
+}
+
+export type CommitData = {
+  readonly fileCount: number;
+  readonly fileData: FileData[];
+  readonly optimizedCount: number;
+  readonly skippedCount: number;
+  readonly svgCount: number;
 }
 
 
@@ -132,7 +141,7 @@ async function checkIfActionIsDisabled(
 async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
-): Promise<{ fileCount: number; svgCount: number; svgsData: FileData[] }> {
+): Promise<{ fileCount: number; svgCount: number; svgs: FileData[] }> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
 
   const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
@@ -143,7 +152,7 @@ async function getSvgsInPR(
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-  const svgsData: FileData[] = [];
+  const svgs: FileData[] = [];
   for (const svg of prSvgs) {
     core.debug(`fetching file contents of '${svg.path}'`);
     const fileData: GitFileData = await getPrFile(client, svg.path);
@@ -151,60 +160,69 @@ async function getSvgsInPR(
     core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
     const svgContent: string = decode(fileData.content, fileData.encoding);
 
-    svgsData.push({
-      encoding: fileData.encoding,
+    svgs.push({
+      content: svgContent,
+      originalEncoding: fileData.encoding,
+      path: fileData.path,
+
       original: svgContent,
       optimized: svgContent,
-      path: svg.path,
     });
   }
 
-  return { fileCount, svgCount, svgsData };
-}
-
-async function doOptimizeSvg(
-  client: GitHub,
-  svgo: SVGOptimizer,
-  svg: FileData,
-): Promise<GitBlob | undefined> {
-  try {
-    core.debug(`optimizing '${svg.path}'`);
-    const optimizedSvg: string = await svgo.optimize(svg.original);
-    if (svg.original == optimizedSvg) {
-      core.debug(`skipping '${svg.path}', already optimized`);
-      return;
-    }
-
-    svg.optimized = optimizedSvg;
-
-    core.debug(`encoding optimized '${svg.path}' back to ${svg.encoding}`);
-    const optimizedData: string = encode(optimizedSvg, svg.encoding);
-
-    core.debug(`creating blob for optimized '${svg.path}'`);
-    const svgBlob: GitBlob = await createBlob(
-      client,
-      svg.path,
-      optimizedData,
-      svg.encoding,
-    );
-
-    return svgBlob;
-  } catch(_) {
-    core.info(`SVGO cannot optimize '${svg.path}', source incorrect`);
-  }
+  return { fileCount, svgCount, svgs };
 }
 
 async function doOptimizeSvgs(
-  client: GitHub,
   svgo: SVGOptimizer,
-  svgsData: FileData[],
+  originalSvgs: FileData[],
+): Promise<FileData[]> {
+  const optimizedSvgs: FileData[] = [];
+  for (const svg of originalSvgs) {
+    try {
+      core.debug(`optimizing '${svg.path}'`);
+      const optimizedSvg: string = await svgo.optimize(svg.content);
+      if (svg.content === optimizedSvg) {
+        core.debug(`skipping '${svg.path}', already optimized`);
+        continue;
+      }
+
+      svg.optimized = optimizedSvg;
+
+      optimizedSvgs.push({
+        content: optimizedSvg,
+        originalEncoding: svg.originalEncoding,
+        path: svg.path,
+
+        original: svg.content,
+        optimized: optimizedSvg,
+      });
+    } catch(_) {
+      core.info(`SVGO cannot optimize '${svg.path}', source incorrect`);
+    }
+  }
+
+  return optimizedSvgs;
+}
+
+async function toBlobs(
+  client: GitHub,
+  files: FileData[],
 ): Promise<GitBlob[]> {
   const blobs: GitBlob[] = [];
-  for (const svgData of svgsData) {
-    const svgBlob = await doOptimizeSvg(client, svgo, svgData);
-    if (svgBlob !== undefined) {
-      blobs.push(svgBlob);
-    }
+  for (const file of files) {
+    core.debug(`encoding (updated) '${file.path}' back to ${file.originalEncoding}`);
+    const optimizedData: string = encode(file.content, file.originalEncoding);
+
+    core.debug(`creating blob for (updated) '${file.path}'`);
+    const svgBlob: GitBlob = await createBlob(
+      client,
+      file.path,
+      optimizedData,
+      file.originalEncoding,
+    );
+
+    blobs.push(svgBlob);
   }
 
   return blobs;
@@ -212,10 +230,17 @@ async function doOptimizeSvgs(
 
 async function doCommitChanges(
   client: GitHub,
-  commitMessage: string,
+  config: ActionConfig,
   blobs: GitBlob[],
+  commitData: CommitData,
 ): Promise<void> {
   if (blobs.length > 0) {
+    const commitMessage: string = formatCommitMessage(
+      config.commitTitle,
+      config.commitDescription,
+      commitData,
+    );
+
     const commitInfo: CommitInfo = await commitFiles(
       client,
       blobs,
@@ -232,18 +257,24 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const { fileCount, svgCount, svgsData } = await getSvgsInPR(client, prNumber);
+  const { fileCount, svgCount, svgs } = await getSvgsInPR(client, prNumber);
   if (svgCount > 0) {
     core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
-    const blobs: GitBlob[] = await doOptimizeSvgs(client, svgo, svgsData);
-    const optimizedCount = blobs.length;
-    const skippedCount = svgCount - blobs.length;
+    const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);
+    const optimizedCount = optimizedSvgs.length;
+    const skippedCount = svgCount - optimizedSvgs.length;
 
     if (!config.isDryRun) {
-      const data = { fileCount, optimizedCount, skippedCount, svgCount, fileData: svgsData };
+      const data: CommitData = {
+        fileCount: fileCount,
+        fileData: optimizedSvgs,
+        optimizedCount: optimizedCount,
+        skippedCount: skippedCount,
+        svgCount: svgCount,
+      };
 
-      const commitMessage: string = formatCommitMessage(config.commitTitle, config.commitDescription, data);
-      await doCommitChanges(client, commitMessage, blobs);
+      const blobs: GitBlob[] = await toBlobs(client, optimizedSvgs);
+      await doCommitChanges(client, config, blobs, data);
 
       const comment: string = formatComment(COMMENT_TEMPLATE, data);
       await createComment(client, prNumber, comment);

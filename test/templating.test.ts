@@ -1,24 +1,31 @@
-import { CommitData, formatComment, formatCommitMessage } from "../src/templating";
+import { CommitData } from "../src/main";
+import { formatComment, formatCommitMessage } from "../src/templating";
 
 
 const defaultData: CommitData = {
   fileCount: 1337,
   fileData: [
     {
+      content: "test",
+      originalEncoding: "utf-8",
       path: "test.svg",
-      encoding: "utf-8",
+
       original: "Hello",
       optimized: "world",
     },
     {
+      content: "foo",
+      originalEncoding: "utf-8",
       path: "foo.svg",
-      encoding: "utf-8",
+
       original: "foo",
       optimized: "bar",
     },
     {
+      content: "bar",
+      originalEncoding: "utf-8",
       path: "bar.svg",
-      encoding: "utf-8",
+
       original: "bar",
       optimized: "foo",
     },
@@ -253,8 +260,10 @@ describe("::formatCommitMessage", () => {
       const data = Object.assign({ }, defaultData, {
         fileData: filePaths.map((path) => {
           return {
+            content: "Hello world!",
+            originalEncoding: "base64",
             path: path,
-            encoding: "utf-8",
+
             original: "foo",
             optimized: "bar",
           };
