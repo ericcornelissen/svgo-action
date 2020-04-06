@@ -247,11 +247,11 @@ async function run(
   if (svgCount > 0) {
     core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
     const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);
-    const blobs: GitBlob[] = await toBlobs(client, optimizedSvgs);
-    const optimizedCount = blobs.length;
-    const skippedCount = svgCount - blobs.length;
+    const optimizedCount = optimizedSvgs.length;
+    const skippedCount = svgCount - optimizedSvgs.length;
 
     if (!config.isDryRun) {
+      const blobs: GitBlob[] = await toBlobs(client, optimizedSvgs);
       await doCommitChanges(client, config, blobs, {
         fileCount: fileCount,
         filePaths: svgs.map((svg) => svg.path),
