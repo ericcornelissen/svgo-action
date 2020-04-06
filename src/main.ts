@@ -40,7 +40,7 @@ const DISABLE_PATTERN = /disable-svgo-action/;
 const ENABLE_PATTERN = /enable-svgo-action/;
 
 
-type FileData = {
+export type FileData = {
   readonly content: string;
   readonly originalEncoding: string;
   readonly path: string;
@@ -48,7 +48,7 @@ type FileData = {
 
 export type CommitData = {
   readonly fileCount: number;
-  readonly filePaths: string[];
+  readonly fileData: FileData[];
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
@@ -254,7 +254,7 @@ async function run(
       const blobs: GitBlob[] = await toBlobs(client, optimizedSvgs);
       await doCommitChanges(client, config, blobs, {
         fileCount: fileCount,
-        filePaths: svgs.map((svg) => svg.path),
+        fileData: optimizedSvgs,
         optimizedCount: optimizedCount,
         skippedCount: skippedCount,
         svgCount: svgCount,

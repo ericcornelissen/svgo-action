@@ -1,4 +1,4 @@
-import { CommitData } from "./main";
+import { CommitData, FileData } from "./main";
 
 
 const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
@@ -15,9 +15,10 @@ const formatters = [
     },
   },
   {
-    key: "filePaths",
-    fn: (template: string, value: string[]): string => {
-      return template.replace(FILES_LIST_EXP, "- " + value.join("\n- "));
+    key: "fileData",
+    fn: (template: string, value: FileData[]): string => {
+      const paths: string[] = value.map((fileData) => fileData.path);
+      return template.replace(FILES_LIST_EXP, "- " + paths.join("\n- "));
     },
   },
   {
@@ -62,7 +63,7 @@ export function formatCommitMessage(
   messageTemplate: string,
   data: CommitData,
 ): string {
-  const title: string = formatAll(titleTemplate, data, ["filePaths"]);
+  const title: string = formatAll(titleTemplate, data, ["fileData"]);
   const message: string = formatAll(messageTemplate, data);
   return `${title}\n\n${message}`.trimRight();
 }
