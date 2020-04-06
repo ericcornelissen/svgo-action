@@ -2,11 +2,10 @@ import * as fs from "fs";
 import * as yaml from "js-yaml";
 import * as path from "path";
 
-import { RawActionConfig, ActionConfig } from "../src/inputs";
-import { formatTemplate } from "../src/templating";
-
 
 type Jobs = [{ steps: any[] }];
+type Commit = { conventional: boolean, description: string, title: string };
+type Report = string[];
 
 
 const BOOLEAN = "boolean";
@@ -15,29 +14,9 @@ const STRING = "string";
 const TRUE_STRING = "true";
 const FALSE_STRING = "false";
 
-const EXAMPLE_FILE_COUNT = 5;
-const EXAMPLE_SVG_COUNT = 4;
-const EXAMPLE_OPTIMIZED_COUNT = 3;
-const EXAMPLE_SKIPPED_COUNT = 3;
-const EXAMPLE_FILE_LIST = ["foo.svg", "bar.svg", "foobar.svg"];
-
 const ALLOWED_KEYS_FILE = ["commit", "dry-run", "svgo-options"];
 const ALLOWED_KEYS_COMMIT = ["conventional", "title", "description"];
 const ALLOWED_KEYS_WORKFLOW = ["repo-token", "configuration-path", "conventional-commits", "dry-run", "svgo-options"];
-
-
-
-function getExampleTemplate(title: string, description: string): string {
-  return formatTemplate(
-    title, description, {
-      fileCount: EXAMPLE_FILE_COUNT,
-      filePaths: EXAMPLE_FILE_LIST,
-      optimizedCount: EXAMPLE_OPTIMIZED_COUNT,
-      skippedCount: EXAMPLE_SKIPPED_COUNT,
-      svgCount: EXAMPLE_SVG_COUNT,
-    },
-  )
-}
 
 
 function error(msg: string): string {
@@ -124,11 +103,6 @@ function checkValueOfCommitTitle(title?: string, conventional?: boolean | string
     if (title.includes("\n")) {
       return warning("The commit title should not contains newlines");
     }
-
-    const exampleTitle: string = getExampleTemplate(title, "");
-    if (exampleTitle.length > 50) {
-      return suggest(`Keep the commit title shorter than 50 characters, example:\n ${exampleTitle}`);
-    }
   }
 
   return "";
@@ -144,7 +118,7 @@ function checkValueOfCommitDescription(description?: string): string {
   return "";
 }
 
-function checkValueOfCommit(commit?: RawActionConfig["commit"]): string[] {
+function checkValueOfCommit(commit?: Commit): string[] {
   const report: string[] = [];
   if (commit !== undefined) {
     report.push(checkValueOfCommitConventional(commit.conventional));
@@ -198,46 +172,28 @@ function checkValueOfSvgoOptions(svgoOptions?: string): string {
 }
 
 
-function analyzeConfigFile(configObject: any): [ActionConfig, string[], string] {
-  const report: string[] = [];
-  const rawConfig: RawActionConfig = configObject as RawActionConfig;
-
+function analyzeConfigFile(configObject: any): Report {
+  const report: Report = [];
   report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_FILE));
   report.push(...checkKeysInCommit(configObject.commit));
-
   report.push(...checkValueOfCommit(configObject.commit));
   report.push(checkValueOfDryRun(configObject["dry-run"]));
   report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
-  const config: ActionConfig = new ActionConfig(rawConfig);
-  const exampleCommit: string = getExampleTemplate(
-    config.commitTitle,
-    config.commitDescription
-  );
-
-  return [config, report, exampleCommit];
+  return report;
 }
 
-function analyzeWorkflowFile(jobs: Jobs): [ActionConfig, string[], string] {
-  function doAnalyze(configObject: any): [ActionConfig, string[], string] {
-    const report: string[] = [];
-    const rawConfig: RawActionConfig = configObject as RawActionConfig;
-
+function analyzeWorkflowFile(jobs: Jobs): Report {
+  function doAnalyze(configObject: any): Report {
+    const report: Report = [];
     report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_WORKFLOW));
-
     report.push(checkValueOfConfigurationPath(configObject["configuration-path"]));
     report.push(checkValueOfCommitConventional(configObject["conventional-commits"]));
     report.push(checkValueOfDryRun(configObject["dry-run"]));
     report.push(checkValueOfRepoToken(configObject["repo-token"]));
     report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
-    const config: ActionConfig = new ActionConfig(rawConfig);
-    const exampleCommit: string = getExampleTemplate(
-      config.commitTitle,
-      config.commitDescription
-    );
-
-    return [config, report, exampleCommit];
+    return report;
   }
 
   for (const pipeline of Object.values(jobs)) {
@@ -248,14 +204,10 @@ function analyzeWorkflowFile(jobs: Jobs): [ActionConfig, string[], string] {
     }
   }
 
-  return [
-    new ActionConfig(),
-    [],
-    "",
-  ];
+  return [error("svgo-action not found in Workflow file")];
 }
 
-function analyze(configObject: any): [ActionConfig, string[], string] {
+function analyze(configObject: any): Report {
   if (configObject.jobs !== undefined) {
     console.log("Workflow file detected");
     return analyzeWorkflowFile(configObject.jobs);
@@ -268,16 +220,10 @@ function analyze(configObject: any): [ActionConfig, string[], string] {
 
 function main(configFile: string): void {
   const rawConfigObject: any = getConfigObject(configFile);
-  const [config, report, exampleCommit] = analyze(rawConfigObject);
+  const report: Report = analyze(rawConfigObject);
 
   console.log("\nReport:\n=======");
   console.log(report.filter(x => x !== "").join("\n"));
-  console.log("\nRaw Config:\n===========");
-  console.log(config);
-  console.log("\nExample commit:\n===============");
-  console.log(exampleCommit);
-
-  // TODO
 }
 
 main(process.argv[2]);
