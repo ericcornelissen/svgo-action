@@ -55,32 +55,18 @@ export type CommitData = {
 }
 
 
-async function fetchConfigInRepo(client: GitHub): Promise<RawActionConfig> {
-  const configFilePath: string = getConfigFilePath();
+async function fetchYamlFile(
+  client: GitHub,
+  filePath: string,
+): Promise<any> { // eslint-disable-line @typescript-eslint/no-explicit-any
   try {
-    const { content, encoding } = await getRepoFile(client, configFilePath);
-    core.debug(`configuration file for Action found ('${configFilePath}')`);
+    const { content, encoding } = await getRepoFile(client, filePath);
+    core.debug(`found '${filePath}', decoding and loading YAML`);
 
     const rawActionConfig: string = decode(content, encoding);
     return yaml.safeLoad(rawActionConfig);
   } catch(_) {
-    core.debug(`configuration file for Action not found ('${configFilePath}')`);
-    return { };
-  }
-}
-
-async function fetchSvgoOptions(
-  client: GitHub,
-  optionsFilePath: string,
-): Promise<SVGOptions> {
-  try {
-    const { content, encoding } = await getRepoFile(client, optionsFilePath);
-    core.debug(`options file for SVGO found ('${optionsFilePath}')`);
-
-    const rawSvgoOptions: string = decode(content, encoding);
-    return yaml.safeLoad(rawSvgoOptions);
-  } catch(_) {
-    core.debug(`options file for SVGO not found ('${optionsFilePath}')`);
+    core.debug(`file not found ('${filePath}')`);
     return { };
   }
 }
@@ -272,13 +258,14 @@ export default async function main(): Promise<void> {
   try {
     const { client, prNumber } = getContext();
 
-    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
+    const configFilePath: string = getConfigFilePath();
+    const rawConfig: RawActionConfig = await fetchYamlFile(client, configFilePath);
     const config: ActionConfig = new ActionConfig(rawConfig);
     if (config.isDryRun) {
       core.info("Dry mode enabled, no changes will be committed");
     }
 
-    const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
+    const svgoOptions: SVGOptions = await fetchYamlFile(client, config.svgoOptionsPath);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     const { isDisabled, disabledFrom } = await checkIfActionIsDisabled(client, prNumber);
