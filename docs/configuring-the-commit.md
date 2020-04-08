@@ -55,7 +55,7 @@ This will be the commit message description
 
 #### Multi-line Descriptions
 
-If you want a commit desciption that spans multiple lines we recommend using
+If you want a commit description that spans multiple lines we recommend using
 [YAML multiline strings].
 
 ```yaml
