@@ -1,4 +1,4 @@
-import { CommitData, FileData } from "./main";
+import { CommitData } from "./main";
 
 
 const UTF8 = "utf-8";
@@ -28,20 +28,21 @@ const formatters = [
   },
   {
     key: "fileData",
-    fn: (template: string, value: FileData[]): string => {
-      const paths: string[] = value.map((fileData) => fileData.path);
+    fn: (template: string, value: CommitData["fileData"]): string => {
+      const paths: string[] = value.optimized.map((fileData) => fileData.path);
       return template.replace(FILES_LIST_EXP, "- " + paths.join("\n- "));
     },
   },
   {
     key: "fileData",
-    fn: (template: string, value: FileData[]): string => {
+    fn: (template: string, value: CommitData["fileData"]): string => {
       let table = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
-      for (const svg of value) {
-        const originalFileSize: number = getFileSizeInKB(svg.original);
-        const optimizedFileSize: number = getFileSizeInKB(svg.optimized);
+      for (let i = 0; i < value.optimized.length; i++) {
+        const path: string = value.original[i].path;
+        const originalFileSize: number = getFileSizeInKB(value.original[i].content);
+        const optimizedFileSize: number = getFileSizeInKB(value.optimized[i].content);
         const improvement: number = toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
-        table += `| ${svg.path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
+        table += `| ${path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
       }
 
       return template.replace(FILES_TABLE_EXP, table);

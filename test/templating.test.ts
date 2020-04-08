@@ -4,32 +4,42 @@ import { formatComment, formatCommitMessage } from "../src/templating";
 
 const defaultData: CommitData = {
   fileCount: 1337,
-  fileData: [
-    {
-      content: "test",
-      originalEncoding: "utf-8",
-      path: "test.svg",
-
-      original: "Hello",
-      optimized: "world",
-    },
-    {
-      content: "foo",
-      originalEncoding: "utf-8",
-      path: "foo.svg",
-
-      original: "foo",
-      optimized: "bar",
-    },
-    {
-      content: "bar",
-      originalEncoding: "utf-8",
-      path: "bar.svg",
-
-      original: "bar",
-      optimized: "foo",
-    },
-  ],
+  fileData: {
+    optimized: [
+      {
+        content: "world!",
+        originalEncoding: "utf-8",
+        path: "test.svg",
+      },
+      {
+        content: "bar",
+        originalEncoding: "utf-8",
+        path: "foo.svg",
+      },
+      {
+        content: "foo",
+        originalEncoding: "utf-8",
+        path: "bar.svg",
+      },
+    ],
+    original: [
+      {
+        content: "Hello",
+        originalEncoding: "utf-8",
+        path: "test.svg",
+      },
+      {
+        content: "foo",
+        originalEncoding: "utf-8",
+        path: "foo.svg",
+      },
+      {
+        content: "bar",
+        originalEncoding: "utf-8",
+        path: "bar.svg",
+      },
+    ],
+  },
   optimizedCount: 3,
   skippedCount: 39,
   svgCount: 42,
@@ -258,16 +268,22 @@ describe("::formatCommitMessage", () => {
       ["in/a/folder.svg", "and/this/one.svg"],
     ])("different values for  `filesList`", (...filePaths) => {
       const data = Object.assign({ }, defaultData, {
-        fileData: filePaths.map((path) => {
-          return {
-            content: "Hello world!",
-            originalEncoding: "base64",
-            path: path,
-
-            original: "foo",
-            optimized: "bar",
-          };
-        }),
+        fileData: {
+          optimized: filePaths.map((path) => {
+            return {
+              content: "Hey world!",
+              originalEncoding: "base64",
+              path: path,
+            };
+          }),
+          original: filePaths.map((path) => {
+            return {
+              content: "Hello world!",
+              originalEncoding: "base64",
+              path: path,
+            };
+          }),
+        },
       });
       const templateString = "Optimized SVG(s):\n{{filesList}}";
 

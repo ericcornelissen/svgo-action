@@ -47,14 +47,14 @@ export type FileData = {
   readonly content: string;
   readonly originalEncoding: string;
   readonly path: string;
-
-  readonly original: string;
-  optimized: string;
 }
 
 export type CommitData = {
   readonly fileCount: number;
-  readonly fileData: FileData[];
+  readonly fileData: {
+    readonly optimized: FileData[];
+    readonly original: FileData[];
+  };
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
@@ -164,9 +164,6 @@ async function getSvgsInPR(
       content: svgContent,
       originalEncoding: fileData.encoding,
       path: fileData.path,
-
-      original: svgContent,
-      optimized: svgContent,
     });
   }
 
@@ -187,15 +184,10 @@ async function doOptimizeSvgs(
         continue;
       }
 
-      svg.optimized = optimizedSvg;
-
       optimizedSvgs.push({
         content: optimizedSvg,
         originalEncoding: svg.originalEncoding,
         path: svg.path,
-
-        original: svg.content,
-        optimized: optimizedSvg,
       });
     } catch(_) {
       core.info(`SVGO cannot optimize '${svg.path}', source incorrect`);
@@ -267,7 +259,7 @@ async function run(
     if (!config.isDryRun) {
       const data: CommitData = {
         fileCount: fileCount,
-        fileData: optimizedSvgs,
+        fileData: { optimized: optimizedSvgs, original: svgs },
         optimizedCount: optimizedCount,
         skippedCount: skippedCount,
         svgCount: svgCount,
