@@ -38,6 +38,7 @@ beforeEach(() => {
 
   githubAPI.commitFiles.mockClear();
   githubAPI.createBlob.mockClear();
+  githubAPI.createComment.mockClear();
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
@@ -331,6 +332,48 @@ describe("Manual Action control", () => {
 
     // Make sure the ResolveValueOnce for getPrComments is resolved before the next test
     await githubAPI.getPrComments();
+  });
+
+});
+
+describe("Comments", () => {
+
+  test("comment on a Pull Request when there is a new SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
+  });
+
+  test("comment on a Pull Request when there is a modified SVG", async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
+
+    await main();
+
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FILE,
+    PR_NUMBER.REMOVE_SVG,
+  ])("don't comment when there is no SVG added or modified", async (prNumber) => {
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FAKE_SVG,
+    PR_NUMBER.ADD_OPTIMIZED_SVG,
+  ])("don't comment when no SVG needed to be optimized", async (prNumber) => {
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
 
 });

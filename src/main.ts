@@ -226,21 +226,19 @@ async function doCommitChanges(
   blobs: GitBlob[],
   commitData: CommitData,
 ): Promise<void> {
-  if (blobs.length > 0) {
-    const commitMessage: string = formatCommitMessage(
-      config.commitTitle,
-      config.commitDescription,
-      commitData,
-    );
+  const commitMessage: string = formatCommitMessage(
+    config.commitTitle,
+    config.commitDescription,
+    commitData,
+  );
 
-    const commitInfo: CommitInfo = await commitFiles(
-      client,
-      blobs,
-      commitMessage,
-    );
+  const commitInfo: CommitInfo = await commitFiles(
+    client,
+    blobs,
+    commitMessage,
+  );
 
-    core.debug(`commit successful (see ${commitInfo.url})`);
-  }
+  core.debug(`commit successful (see ${commitInfo.url})`);
 }
 
 async function run(
@@ -256,7 +254,7 @@ async function run(
     const optimizedCount = optimizedSvgs.length;
     const skippedCount = svgCount - optimizedSvgs.length;
 
-    if (!config.isDryRun) {
+    if (!config.isDryRun && optimizedCount > 0) {
       const data: CommitData = {
         fileCount: fileCount,
         fileData: { optimized: optimizedSvgs, original: svgs },
