@@ -217,22 +217,28 @@ async function toBlobs(
 async function doCommitChanges(
   client: GitHub,
   config: ActionConfig,
-  blobs: GitBlob[],
   commitData: CommitData,
 ): Promise<void> {
-  const commitMessage: string = formatCommitMessage(
-    config.commitTitle,
-    config.commitDescription,
-    commitData,
-  );
+  if (!config.isDryRun && commitData.optimizedCount > 0) {
+    const blobs: GitBlob[] = await toBlobs(client, commitData.fileData);
+    const commitMessage: string = formatCommitMessage(
+      config.commitTitle,
+      config.commitDescription,
+      commitData,
+    );
+    const commitInfo: CommitInfo = await commitFiles(
+      client,
+      blobs,
+      commitMessage,
+    );
 
-  const commitInfo: CommitInfo = await commitFiles(
-    client,
-    blobs,
-    commitMessage,
-  );
+    core.debug(`commit successful (see ${commitInfo.url})`);
 
-  core.debug(`commit successful (see ${commitInfo.url})`);
+    if (config.enableComments) {
+      core.info("Comments enabled but not yet supported");
+    }
+  }
+
 }
 
 async function run(
@@ -248,20 +254,13 @@ async function run(
     const optimizedCount = optimizedSvgs.length;
     const skippedCount = svgCount - optimizedSvgs.length;
 
-    if (!config.isDryRun && optimizedCount > 0) {
-      const blobs: GitBlob[] = await toBlobs(client, optimizedSvgs);
-      await doCommitChanges(client, config, blobs, {
-        fileCount: fileCount,
-        fileData: optimizedSvgs,
-        optimizedCount: optimizedCount,
-        skippedCount: skippedCount,
-        svgCount: svgCount,
-      });
-
-      if (config.enableComments) {
-        core.info("Comments enabled but not yet supported");
-      }
-    }
+    await doCommitChanges(client, config, {
+      fileCount: fileCount,
+      fileData: optimizedSvgs,
+      optimizedCount: optimizedCount,
+      skippedCount: skippedCount,
+      svgCount: svgCount,
+    });
 
     core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s) (${skippedCount}/${svgCount} SVG(s) skipped)`);
   } else {
