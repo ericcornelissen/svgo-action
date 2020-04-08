@@ -339,7 +339,7 @@ describe("Comments", () => {
 
   const expectedLog = "Comments enabled but not yet supported";
 
-  test("does not comment if comments are disabled", async () => {
+  test("don't comment if comments are disabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.enableComments = false;
 
