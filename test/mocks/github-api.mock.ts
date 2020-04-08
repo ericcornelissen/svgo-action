@@ -31,6 +31,9 @@ export const createBlob = jest.fn()
   }))
   .mockName("github-api.createBlob");
 
+export const createComment = jest.fn()
+  .mockName("github-api.createComment");
+
 export const getCommitMessage = jest.fn()
   .mockResolvedValue("This is a commit message")
   .mockName("github-api.getCommitMessage");

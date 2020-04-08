@@ -1,11 +1,23 @@
-import { CommitData, FileData } from "./main";
+import { CommitData } from "./main";
 
+
+const UTF8 = "utf-8";
 
 const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
+const FILES_TABLE_EXP = /\{\{\s*filesTable\s*\}\}/;
 const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
 const SKIPPED_COUNT_EXP = /\{\{\s*skippedCount\s*\}\}/;
 const SVG_COUNT_EXP = /\{\{\s*svgCount\s*\}\}/;
+
+
+function getFileSizeInKB(content: string): number {
+  return Buffer.byteLength(content, UTF8) / 1000;
+}
+
+function toPercentage(decimal: number): number {
+  return -1 * Math.round(decimal * 10000) / 100;
+}
 
 const formatters = [
   {
@@ -16,9 +28,24 @@ const formatters = [
   },
   {
     key: "fileData",
-    fn: (template: string, value: FileData[]): string => {
-      const paths: string[] = value.map((fileData) => fileData.path);
+    fn: (template: string, value: CommitData["fileData"]): string => {
+      const paths: string[] = value.optimized.map((fileData) => fileData.path);
       return template.replace(FILES_LIST_EXP, "- " + paths.join("\n- "));
+    },
+  },
+  {
+    key: "fileData",
+    fn: (template: string, value: CommitData["fileData"]): string => {
+      let table = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
+      for (let i = 0; i < value.optimized.length; i++) {
+        const path: string = value.original[i].path;
+        const originalFileSize: number = getFileSizeInKB(value.original[i].content);
+        const optimizedFileSize: number = getFileSizeInKB(value.optimized[i].content);
+        const improvement: number = toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
+        table += `| ${path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
+      }
+
+      return template.replace(FILES_TABLE_EXP, table);
     },
   },
   {
@@ -57,6 +84,13 @@ function formatAll(
 
 
 
+
+export function formatComment(
+  commentTemplate: string,
+  data: CommitData,
+): string {
+  return formatAll(commentTemplate, data);
+}
 
 export function formatCommitMessage(
   titleTemplate: string,

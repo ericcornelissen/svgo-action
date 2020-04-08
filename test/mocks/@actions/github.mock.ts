@@ -114,6 +114,8 @@ export const GitHubInstance = {
       .mockName("GitHub.git.updateRef"),
   },
   issues: {
+    createComment: jest.fn()
+      .mockName("GitHub.issues.createComment"),
     listComments: jest.fn()
       .mockImplementation(async ({ issue_number: prNumber, per_page: perPage, page }) => {
         const generateComments = (length) => Array.from({ length }).map((_, i) => ({ body: `${i}` }));

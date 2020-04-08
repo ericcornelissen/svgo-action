@@ -1,32 +1,63 @@
 import { CommitData } from "../src/main";
-import { formatCommitMessage } from "../src/templating";
+import { formatComment, formatCommitMessage } from "../src/templating";
 
 
-describe("::formatCommitMessage", () => {
-
-  const defaultData: CommitData = {
-    fileCount: 1337,
-    fileData: [
+const defaultData: CommitData = {
+  fileCount: 1337,
+  fileData: {
+    optimized: [
       {
-        content: "test",
-        originalEncoding: "base64",
+        content: "world!",
+        originalEncoding: "utf-8",
+        path: "test.svg",
+      },
+      {
+        content: "bar",
+        originalEncoding: "utf-8",
+        path: "foo.svg",
+      },
+      {
+        content: "foo",
+        originalEncoding: "utf-8",
+        path: "bar.svg",
+      },
+    ],
+    original: [
+      {
+        content: "Hello",
+        originalEncoding: "utf-8",
         path: "test.svg",
       },
       {
         content: "foo",
-        originalEncoding: "base64",
+        originalEncoding: "utf-8",
         path: "foo.svg",
       },
       {
         content: "bar",
-        originalEncoding: "base64",
+        originalEncoding: "utf-8",
         path: "bar.svg",
       },
     ],
-    optimizedCount: 36,
-    skippedCount: 6,
-    svgCount: 42,
-  };
+  },
+  optimizedCount: 3,
+  skippedCount: 39,
+  svgCount: 42,
+};
+
+describe("::formatComment", () => {
+
+  const defaultCommentTemplate = "foobar";
+
+  test("runs", () => {
+    const result = formatComment(defaultCommentTemplate, defaultData);
+    expect(result).toBeDefined();
+  });
+
+});
+
+describe("::formatCommitMessage", () => {
+
   const defaultTitleTemplate = "foo";
   const defaultMessageTemplate = "bar";
 
@@ -237,13 +268,22 @@ describe("::formatCommitMessage", () => {
       ["in/a/folder.svg", "and/this/one.svg"],
     ])("different values for  `filesList`", (...filePaths) => {
       const data = Object.assign({ }, defaultData, {
-        fileData: filePaths.map((path) => {
-          return {
-            content: "Hello world!",
-            originalEncoding: "base64",
-            path: path,
-          };
-        }),
+        fileData: {
+          optimized: filePaths.map((path) => {
+            return {
+              content: "Hey world!",
+              originalEncoding: "base64",
+              path: path,
+            };
+          }),
+          original: filePaths.map((path) => {
+            return {
+              content: "Hello world!",
+              originalEncoding: "base64",
+              path: path,
+            };
+          }),
+        },
       });
       const templateString = "Optimized SVG(s):\n{{filesList}}";
 

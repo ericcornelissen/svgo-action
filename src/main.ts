@@ -16,6 +16,7 @@ import {
   // Functionality
   commitFiles,
   createBlob,
+  createComment,
   getCommitMessage,
   getPrComments,
   getPrFile,
@@ -33,11 +34,13 @@ import {
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { formatCommitMessage } from "./templating";
+import { formatComment, formatCommitMessage } from "./templating";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
 const ENABLE_PATTERN = /enable-svgo-action/;
+
+const COMMENT_TEMPLATE = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
 
 
 export type FileData = {
@@ -48,7 +51,10 @@ export type FileData = {
 
 export type CommitData = {
   readonly fileCount: number;
-  readonly fileData: FileData[];
+  readonly fileData: {
+    readonly optimized: FileData[];
+    readonly original: FileData[];
+  };
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
@@ -187,7 +193,7 @@ async function toBlobs(
     const optimizedData: string = encode(file.content, file.originalEncoding);
 
     core.debug(`creating blob for (updated) '${file.path}'`);
-    const svgBlob = await createBlob(
+    const svgBlob: GitBlob = await createBlob(
       client,
       file.path,
       optimizedData,
@@ -202,11 +208,12 @@ async function toBlobs(
 
 async function doCommitChanges(
   client: GitHub,
+  prNumber: number,
   config: ActionConfig,
   commitData: CommitData,
 ): Promise<void> {
   if (!config.isDryRun && commitData.optimizedCount > 0) {
-    const blobs: GitBlob[] = await toBlobs(client, commitData.fileData);
+    const blobs: GitBlob[] = await toBlobs(client, commitData.fileData.optimized);
     const commitMessage: string = formatCommitMessage(
       config.commitTitle,
       config.commitDescription,
@@ -221,7 +228,8 @@ async function doCommitChanges(
     core.debug(`commit successful (see ${commitInfo.url})`);
 
     if (config.enableComments) {
-      core.info("Comments enabled but not yet supported");
+      const comment: string = formatComment(COMMENT_TEMPLATE, commitData);
+      await createComment(client, prNumber, comment);
     }
   }
 }
@@ -239,9 +247,9 @@ async function run(
     const optimizedCount = optimizedSvgs.length;
     const skippedCount = svgCount - optimizedSvgs.length;
 
-    await doCommitChanges(client, config, {
+    await doCommitChanges(client, prNumber, config, {
       fileCount: fileCount,
-      fileData: optimizedSvgs,
+      fileData: { optimized: optimizedSvgs, original: svgs },
       optimizedCount: optimizedCount,
       skippedCount: skippedCount,
       svgCount: svgCount,

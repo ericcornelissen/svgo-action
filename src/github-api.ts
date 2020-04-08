@@ -129,6 +129,19 @@ export async function createBlob(
   };
 }
 
+export async function createComment(
+  client: github.GitHub,
+  prNumber: number,
+  comment: string,
+): Promise<void> {
+  await client.issues.createComment({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+    body: comment,
+  });
+}
+
 export async function getCommitMessage(client: github.GitHub): Promise<string> {
   const { message } = await getCommit(client);
   return message;

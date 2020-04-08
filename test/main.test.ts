@@ -38,6 +38,7 @@ beforeEach(() => {
 
   githubAPI.commitFiles.mockClear();
   githubAPI.createBlob.mockClear();
+  githubAPI.createComment.mockClear();
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
@@ -337,8 +338,6 @@ describe("Manual Action control", () => {
 
 describe("Comments", () => {
 
-  const expectedLog = "Comments enabled but not yet supported";
-
   test("don't comment if comments are disabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.enableComments = false;
@@ -348,7 +347,7 @@ describe("Comments", () => {
 
     await main();
 
-    expect(core.info).not.toHaveBeenCalledWith(expectedLog);
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
 
   test("comment on a Pull Request when there is a new SVG", async () => {
@@ -360,7 +359,7 @@ describe("Comments", () => {
 
     await main();
 
-    expect(core.info).toHaveBeenCalledWith(expectedLog);
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
   });
 
   test("comment on a Pull Request when there is a modified SVG", async () => {
@@ -372,7 +371,7 @@ describe("Comments", () => {
 
     await main();
 
-    expect(core.info).toHaveBeenCalledWith(expectedLog);
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
   });
 
   test.each([
@@ -387,7 +386,7 @@ describe("Comments", () => {
 
     await main();
 
-    expect(core.info).not.toHaveBeenCalledWith(expectedLog);
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
 
   test.each([
@@ -402,7 +401,7 @@ describe("Comments", () => {
 
     await main();
 
-    expect(core.info).not.toHaveBeenCalledWith(expectedLog);
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
 
 });
