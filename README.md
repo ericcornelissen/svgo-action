@@ -37,7 +37,11 @@ There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
 configuration file]. Below you can find the available options.
 
-- `commit`: configure the commit message for the Action.
+- `comments`: Enable comments on Pull Requests with an optimization summary.
+  - Possible values: `false`, `true`
+  - Default value: `false`
+  - Example: `comments: true`
+- `commit`: Configure the commit message for the Action.
   - [Full documentation](docs/configuring-the-commit.md)
 - `conventional-commits`: Use [conventional commit] message titles for commits.
   - Possible values: `false`, `true`
@@ -61,6 +65,7 @@ The first way to configure the action is inside the Workflow file, after the
 ```yaml
 with:
   repo-token: ${{ secrets.GITHUB_TOKEN }}
+  comments: true
   conventional-commits: true
   dry-run: true
   svgo-options: path/to/svgo-options.yml
@@ -73,6 +78,7 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
+comments: true
 dry-run: true
 svgo-options: path/to/svgo-options.yml
 commit:
@@ -106,9 +112,9 @@ achieved by including the string "_disable-svgo-action_" anywhere in the commit
 message.
 
 > :warning: This will only stop the Action from optimizing SVGs in the build
-> corresonding to the commit whose commit message contains the string.
+> corresponding to the commit whose commit message contains the string.
 
-Another possiblity is to disable the Action from a Pull Request comment. This
+Another possibility is to disable the Action from a Pull Request comment. This
 can be achieved by including the string "_disable-svgo-action_" anywhere in any
 comment on the Pull Request.
 

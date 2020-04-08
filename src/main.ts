@@ -61,32 +61,18 @@ export type CommitData = {
 }
 
 
-async function fetchConfigInRepo(client: GitHub): Promise<RawActionConfig> {
-  const configFilePath: string = getConfigFilePath();
+async function fetchYamlFile(
+  client: GitHub,
+  filePath: string,
+): Promise<any> { // eslint-disable-line @typescript-eslint/no-explicit-any
   try {
-    const { content, encoding } = await getRepoFile(client, configFilePath);
-    core.debug(`configuration file for Action found ('${configFilePath}')`);
+    const { content, encoding } = await getRepoFile(client, filePath);
+    core.debug(`found '${filePath}', decoding and loading YAML`);
 
     const rawActionConfig: string = decode(content, encoding);
     return yaml.safeLoad(rawActionConfig);
   } catch(_) {
-    core.debug(`configuration file for Action not found ('${configFilePath}')`);
-    return { };
-  }
-}
-
-async function fetchSvgoOptions(
-  client: GitHub,
-  optionsFilePath: string,
-): Promise<SVGOptions> {
-  try {
-    const { content, encoding } = await getRepoFile(client, optionsFilePath);
-    core.debug(`options file for SVGO found ('${optionsFilePath}')`);
-
-    const rawSvgoOptions: string = decode(content, encoding);
-    return yaml.safeLoad(rawSvgoOptions);
-  } catch(_) {
-    core.debug(`options file for SVGO not found ('${optionsFilePath}')`);
+    core.debug(`file not found ('${filePath}')`);
     return { };
   }
 }
@@ -222,23 +208,30 @@ async function toBlobs(
 
 async function doCommitChanges(
   client: GitHub,
+  prNumber: number,
   config: ActionConfig,
-  blobs: GitBlob[],
   commitData: CommitData,
 ): Promise<void> {
-  const commitMessage: string = formatCommitMessage(
-    config.commitTitle,
-    config.commitDescription,
-    commitData,
-  );
+  if (!config.isDryRun && commitData.optimizedCount > 0) {
+    const blobs: GitBlob[] = await toBlobs(client, commitData.fileData.optimized);
+    const commitMessage: string = formatCommitMessage(
+      config.commitTitle,
+      config.commitDescription,
+      commitData,
+    );
+    const commitInfo: CommitInfo = await commitFiles(
+      client,
+      blobs,
+      commitMessage,
+    );
 
-  const commitInfo: CommitInfo = await commitFiles(
-    client,
-    blobs,
-    commitMessage,
-  );
+    core.debug(`commit successful (see ${commitInfo.url})`);
 
-  core.debug(`commit successful (see ${commitInfo.url})`);
+    if (config.enableComments) {
+      const comment: string = formatComment(COMMENT_TEMPLATE, commitData);
+      await createComment(client, prNumber, comment);
+    }
+  }
 }
 
 async function run(
@@ -254,21 +247,13 @@ async function run(
     const optimizedCount = optimizedSvgs.length;
     const skippedCount = svgCount - optimizedSvgs.length;
 
-    if (!config.isDryRun && optimizedCount > 0) {
-      const data: CommitData = {
-        fileCount: fileCount,
-        fileData: { optimized: optimizedSvgs, original: svgs },
-        optimizedCount: optimizedCount,
-        skippedCount: skippedCount,
-        svgCount: svgCount,
-      };
-
-      const blobs: GitBlob[] = await toBlobs(client, optimizedSvgs);
-      await doCommitChanges(client, config, blobs, data);
-
-      const comment: string = formatComment(COMMENT_TEMPLATE, data);
-      await createComment(client, prNumber, comment);
-    }
+    await doCommitChanges(client, prNumber, config, {
+      fileCount: fileCount,
+      fileData: { optimized: optimizedSvgs, original: svgs },
+      optimizedCount: optimizedCount,
+      skippedCount: skippedCount,
+      svgCount: svgCount,
+    });
 
     core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s) (${skippedCount}/${svgCount} SVG(s) skipped)`);
   } else {
@@ -281,13 +266,14 @@ export default async function main(): Promise<void> {
   try {
     const { client, prNumber } = getContext();
 
-    const rawConfig: RawActionConfig = await fetchConfigInRepo(client);
+    const configFilePath: string = getConfigFilePath();
+    const rawConfig: RawActionConfig = await fetchYamlFile(client, configFilePath);
     const config: ActionConfig = new ActionConfig(rawConfig);
     if (config.isDryRun) {
       core.info("Dry mode enabled, no changes will be committed");
     }
 
-    const svgoOptions: SVGOptions = await fetchSvgoOptions(client, config.svgoOptionsPath);
+    const svgoOptions: SVGOptions = await fetchYamlFile(client, config.svgoOptionsPath);
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
     const { isDisabled, disabledFrom } = await checkIfActionIsDisabled(client, prNumber);

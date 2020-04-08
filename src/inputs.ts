@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 
 
+const INPUT_NAME_COMMENTS = "comments";
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
 const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
 const INPUT_NAME_DRY_RUN = "dry-run";
@@ -20,6 +21,7 @@ const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
 
 
 export type RawActionConfig = {
+  readonly comments?: boolean;
   readonly commit?: {
     readonly conventional?: boolean;
     readonly title?: string;
@@ -42,14 +44,20 @@ export class ActionConfig {
 
   public readonly commitDescription: string;
   public readonly commitTitle: string;
+  public readonly enableComments: boolean;
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
 
   constructor(config: RawActionConfig = { }) {
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
+    this.enableComments = ActionConfig.getCommentsValue(config);
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
+  }
+
+  private static getCommentsValue(config: RawActionConfig): boolean {
+    return this.normalizeBoolOption(config.comments, INPUT_NAME_COMMENTS, true);
   }
 
   private static getCommitDescription(config: RawActionConfig): string {

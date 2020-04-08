@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add functionality to comment on Pull Requests. ([#170])
 
 ## [0.4.1] - 2020-04-05
 
@@ -101,3 +101,4 @@ Versioning].
 [#133]: https://github.com/ericcornelissen/svgo-action/pull/133
 [#157]: https://github.com/ericcornelissen/svgo-action/pull/157
 [#160]: https://github.com/ericcornelissen/svgo-action/pull/160
+[#170]: https://github.com/ericcornelissen/svgo-action/pull/170
