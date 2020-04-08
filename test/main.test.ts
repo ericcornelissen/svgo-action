@@ -335,6 +335,78 @@ describe("Manual Action control", () => {
 
 });
 
+describe("Comments", () => {
+
+  const expectedLog = "Comments enabled but not yet supported";
+
+  test("don't comment if comments are disabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = false;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(core.info).not.toHaveBeenCalledWith(expectedLog);
+  });
+
+  test("comment on a Pull Request when there is a new SVG", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(core.info).toHaveBeenCalledWith(expectedLog);
+  });
+
+  test("comment on a Pull Request when there is a modified SVG", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(core.info).toHaveBeenCalledWith(expectedLog);
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FILE,
+    PR_NUMBER.REMOVE_SVG,
+  ])("don't comment when there is no SVG added or modified", async (prNumber) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(core.info).not.toHaveBeenCalledWith(expectedLog);
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FAKE_SVG,
+    PR_NUMBER.ADD_OPTIMIZED_SVG,
+  ])("don't comment when no SVG needed to be optimized", async (prNumber) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(core.info).not.toHaveBeenCalledWith(expectedLog);
+  });
+
+});
+
 describe("Payloads", () => {
 
   const barFilePath = "bar.svg";

@@ -16,6 +16,7 @@ import {
 } from "../src/inputs";
 
 
+const INPUT_NAME_COMMENTS = "comments";
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
 const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
 const INPUT_NAME_DRY_RUN = "dry-run";
@@ -230,6 +231,91 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).not.toEqual("");
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
+    });
+
+  });
+
+  describe(".enableComments", () => {
+
+    const testNonBoolean = test.each(["foobar", "treu", "fals"]);
+
+    beforeEach(() => {
+      core.info.mockClear();
+    });
+
+    test("comments is not set at all", () => {
+      const defaultValue = "false";
+      mockCoreGetInput(INPUT_NAME_COMMENTS, defaultValue);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.enableComments).toBe(false);
+    });
+
+    test("comments is `'false'` in the workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.enableComments).toBe(false);
+    });
+
+    test("comments is `'true'` in the workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.enableComments).toBe(true);
+    });
+
+    testNonBoolean("comments is `'%s'` in the workflow file", (value) => {
+      mockCoreGetInput(INPUT_NAME_COMMENTS, value);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.enableComments).toBe(true);
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`Unknown comments value '${value}'`),
+      );
+    });
+
+    test("comments is `false` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comments: false");
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.enableComments).toBe(false);
+    });
+
+    test("comments is `true` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comments: true");
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.enableComments).toBe(true);
+    });
+
+    test("comments is `'false'` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comments: 'false'");
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.enableComments).toBe(false);
+    });
+
+    test("comments is `'true'` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comments: 'true'");
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.enableComments).toBe(true);
+    });
+
+    testNonBoolean("comments is `'%s'` in the config object", (value) => {
+      const rawConfig: RawActionConfig = yaml.safeLoad(`comments: '${value}'`);
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.enableComments).toBe(true);
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`Unknown comments value '${value}'`),
+      );
     });
 
   });
