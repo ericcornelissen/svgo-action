@@ -1,10 +1,9 @@
 import * as core from "@actions/core";
 import { GitHub } from "@actions/github";
 import * as yaml from "js-yaml";
-import { Minimatch, IMinimatch } from "minimatch";
 
 import { decode, encode } from "./encoder";
-import { existingFiles, svgFiles } from "./filters";
+import { existingFiles, filesNotMatching, svgFiles } from "./filters";
 import {
   PR_NOT_FOUND,
 
@@ -141,8 +140,7 @@ async function getSvgsInPR(
 
   // TODO: this is just an example of how files can be ignored using globs
   const glob = "foo/*";
-  const matcher: IMinimatch = new Minimatch(glob);
-  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(({ path }) => !matcher.match(path));
+  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(filesNotMatching(glob));
   const ignoredCount = svgCount - notIgnoredSvgs.length;
   core.debug(`${ignoredCount} SVG(s) will be ignored that match '${glob}'`);
 
