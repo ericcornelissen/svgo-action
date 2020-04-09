@@ -1,6 +1,5 @@
 import * as core from "@actions/core";
 import { GitHub } from "@actions/github";
-import * as yaml from "js-yaml";
 
 import { decode, encode } from "./encoder";
 import { existingFiles, svgFiles } from "./filters";
@@ -22,7 +21,6 @@ import {
   getPrFile,
   getPrFiles,
   getPrNumber,
-  getRepoFile,
 } from "./github-api";
 import {
   // Types
@@ -35,6 +33,8 @@ import {
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { formatComment, formatCommitMessage } from "./templating";
+
+import { fetchYamlFile } from "./utils/fetch-yaml";
 
 
 const DISABLE_PATTERN = /disable-svgo-action/;
@@ -60,22 +60,6 @@ export type CommitData = {
   readonly svgCount: number;
 }
 
-
-async function fetchYamlFile(
-  client: GitHub,
-  filePath: string,
-): Promise<any> { // eslint-disable-line @typescript-eslint/no-explicit-any
-  try {
-    const { content, encoding } = await getRepoFile(client, filePath);
-    core.debug(`found '${filePath}', decoding and loading YAML`);
-
-    const rawActionConfig: string = decode(content, encoding);
-    return yaml.safeLoad(rawActionConfig);
-  } catch(_) {
-    core.debug(`file not found ('${filePath}')`);
-    return { };
-  }
-}
 
 function getContext(): { client: GitHub; prNumber: number } {
   const token: string = getRepoToken();
