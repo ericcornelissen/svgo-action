@@ -6,6 +6,10 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
+  comments:
+    description: 'Enable comments on Pull Requests with an optimization summary'
+    default: false
+    required: false
   configuration-path:
     description: 'The path for the svgo-action configurations'
     default: '.github/svgo-action.yml'

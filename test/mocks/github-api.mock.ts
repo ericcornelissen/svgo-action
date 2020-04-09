@@ -1,11 +1,11 @@
 import * as github from "./@actions/github.mock";
 
-import { FileData } from "../../src/github-api";
+import { GitFileData } from "../../src/github-api";
 
 
 const client = new github.GitHub();
 
-async function getContents(path: string): Promise<FileData> {
+async function getContents(path: string): Promise<GitFileData> {
   const { data } = await client.repos.getContents({ path });
   return {
     path: data.path,
@@ -30,6 +30,9 @@ export const createBlob = jest.fn()
     sha: "8cef761674c705447f0ce449948ac6c0dd76f041",
   }))
   .mockName("github-api.createBlob");
+
+export const createComment = jest.fn()
+  .mockName("github-api.createComment");
 
 export const getCommitMessage = jest.fn()
   .mockResolvedValue("This is a commit message")

@@ -38,6 +38,7 @@ beforeEach(() => {
 
   githubAPI.commitFiles.mockClear();
   githubAPI.createBlob.mockClear();
+  githubAPI.createComment.mockClear();
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
@@ -47,7 +48,7 @@ beforeEach(() => {
   svgo.SVGOptimizer.mockClear();
   svgo.OptimizerInstance.optimize.mockClear();
 
-  templating.formatTemplate.mockClear();
+  templating.formatCommitMessage.mockClear();
 });
 
 test("get the Pull Request number", async () => {
@@ -164,7 +165,7 @@ describe("Configuration", () => {
 
     await main();
 
-    expect(templating.formatTemplate).toHaveBeenCalledWith(
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       commitTitle,
       expect.any(String),
       expect.any(Object),
@@ -184,7 +185,7 @@ describe("Configuration", () => {
 
     await main();
 
-    expect(templating.formatTemplate).toHaveBeenCalledWith(
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       expect.any(String),
       commitDescription,
       expect.any(Object),
@@ -200,7 +201,7 @@ describe("Configuration", () => {
 
     await main();
 
-    expect(templating.formatTemplate).toHaveBeenCalledWith(
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       actionConfig.commitTitle,
       expect.any(String),
       expect.any(Object),
@@ -331,6 +332,76 @@ describe("Manual Action control", () => {
 
     // Make sure the ResolveValueOnce for getPrComments is resolved before the next test
     await githubAPI.getPrComments();
+  });
+
+});
+
+describe("Comments", () => {
+
+  test("don't comment if comments are disabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = false;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
+  });
+
+  test("comment on a Pull Request when there is a new SVG", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
+  });
+
+  test("comment on a Pull Request when there is a modified SVG", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FILE,
+    PR_NUMBER.REMOVE_SVG,
+  ])("don't comment when there is no SVG added or modified", async (prNumber) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FAKE_SVG,
+    PR_NUMBER.ADD_OPTIMIZED_SVG,
+  ])("don't comment when no SVG needed to be optimized", async (prNumber) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
 
 });

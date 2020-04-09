@@ -9,6 +9,10 @@ Versioning].
 
 - _No changes yet_
 
+## [0.4.2] - 2020-04-09
+
+- Add functionality to comment on Pull Requests. ([#164], [#170])
+
 ## [0.4.1] - 2020-04-05
 
 - Fix bug for SVG files not containing an SVG. ([#160])
@@ -101,3 +105,5 @@ Versioning].
 [#133]: https://github.com/ericcornelissen/svgo-action/pull/133
 [#157]: https://github.com/ericcornelissen/svgo-action/pull/157
 [#160]: https://github.com/ericcornelissen/svgo-action/pull/160
+[#164]: https://github.com/ericcornelissen/svgo-action/pull/164
+[#170]: https://github.com/ericcornelissen/svgo-action/pull/170
