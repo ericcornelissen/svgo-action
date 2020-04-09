@@ -127,6 +127,7 @@ async function checkIfActionIsDisabled(
 async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
+  ignoredGlob: string,
 ): Promise<{ fileCount: number; svgCount: number; svgs: FileData[] }> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
 
@@ -138,11 +139,9 @@ async function getSvgsInPR(
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-  // TODO: this is just an example of how files can be ignored using globs
-  const glob = "foo/*";
-  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(filesNotMatching(glob));
+  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(filesNotMatching(ignoredGlob));
   const ignoredCount = svgCount - notIgnoredSvgs.length;
-  core.debug(`${ignoredCount} SVG(s) will be ignored that match '${glob}'`);
+  core.debug(`${ignoredCount} SVG(s) will be ignored that match '${ignoredGlob}'`);
 
   const svgs: FileData[] = [];
   for (const svg of notIgnoredSvgs) {
@@ -246,7 +245,12 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const { fileCount, svgCount, svgs } = await getSvgsInPR(client, prNumber);
+  const { fileCount, svgCount, svgs } = await getSvgsInPR(
+    client,
+    prNumber,
+    config.ignoredGlob,
+  );
+
   if (svgCount > 0) {
     core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
     const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);

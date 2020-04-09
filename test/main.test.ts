@@ -213,8 +213,11 @@ describe("Configuration", () => {
     const { content: fileContent, encoding: fileEncoding } = contentPayloads[filePath];
     const fooSvgData = files[filePath];
 
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.ignoredGlob = "foo/*";
+
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
-    // TODO: mock that a glob is configured for this run that ignores the SVG in the dir
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
     await main();
 
