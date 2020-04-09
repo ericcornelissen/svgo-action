@@ -25,7 +25,7 @@ describe("::fetchYamlFile", () => {
     expect(result).toEqual({ });
   });
 
-  testFiles("a file in the repository", async (filePath) => {
+  testFiles("a file in the repository ('%s')", async (filePath) => {
     const result = await fetchYamlFile(client, filePath);
     expect(result).not.toEqual({ });
   });
