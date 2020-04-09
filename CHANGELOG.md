@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.4.2] - 2020-04-09
+
 - Add functionality to comment on Pull Requests. ([#164], [#170])
 
 ## [0.4.1] - 2020-04-05
