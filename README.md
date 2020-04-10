@@ -51,6 +51,10 @@ configuration file]. Below you can find the available options.
   - Possible values: `false`, `true`
   - Default value: `false`
   - Example: `dry-run: true`
+- `ignore`: Specify a glob of SVGs that should not be optimized.
+  - Possible values _Any glob_
+  - Default value: `""` (_ignore nothing_)
+  - Example: `ignore: do/not/optimize/**/*.svg`
 - `svgo-options`: Specify the path of the file in the repository that should be
   used as configuration for [SVGO].
   - Possible values: _Any file path_
@@ -68,6 +72,7 @@ with:
   comments: true
   conventional-commits: true
   dry-run: true
+  ignore: do/not/optimize/**/*.svg
   svgo-options: path/to/svgo-options.yml
 ```
 
@@ -80,6 +85,7 @@ you can configure the Action inside this file. For example:
 ```yaml
 comments: true
 dry-run: true
+ignore: do/not/optimize/**/*.svg
 svgo-options: path/to/svgo-options.yml
 commit:
   conventional: false

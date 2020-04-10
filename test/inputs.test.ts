@@ -20,6 +20,7 @@ const INPUT_NAME_COMMENTS = "comments";
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
 const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
 const INPUT_NAME_DRY_RUN = "dry-run";
+const INPUT_NAME_IGNORE = "ignore";
 const INPUT_NAME_REPO_TOKEN = "repo-token";
 const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
@@ -401,6 +402,48 @@ describe("ActionConfig", () => {
       expect(core.info).toHaveBeenCalledWith(
         expect.stringContaining(`Unknown dry-run value '${value}'`),
       );
+    });
+
+  });
+
+  describe(".ignoreGlob", () => {
+
+    const testGlobs = test.each(["file.svg", "dir/*", "folder/**/*"]);
+
+    test("dry-run is not set at all", () => {
+      const defaultValue = "";
+      mockCoreGetInput(INPUT_NAME_IGNORE, defaultValue);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.ignoreGlob).toBe("");
+    });
+
+    testGlobs("ignore is '%s' in the workflow file", (glob) => {
+      mockCoreGetInput(INPUT_NAME_IGNORE, glob);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.ignoreGlob).toBe(glob);
+    });
+
+    testGlobs("ignore is '%s' in the config file", (glob) => {
+      const defaultValue = "";
+      const rawConfig: RawActionConfig = { ignore: glob };
+      mockCoreGetInput(INPUT_NAME_IGNORE, defaultValue);
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.ignoreGlob).toBe(glob);
+    });
+
+    test.each([
+      ["foo.svg", "bar.svg"],
+      ["dir/*", "folder/*"],
+      ["folder/**/*", "dir/**/*"],
+    ])("ignore is '%s' in the workflow file and '%s' in the config file", (workflowGlob, configGlob) => {
+      const rawConfig: RawActionConfig = { ignore: configGlob };
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, workflowGlob);
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.ignoreGlob).toBe(configGlob);
     });
 
   });

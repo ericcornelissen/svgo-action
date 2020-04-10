@@ -111,7 +111,7 @@ async function checkIfActionIsDisabled(
 async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
-  ignoredGlob: string,
+  ignoreGlob: string,
 ): Promise<{ fileCount: number; svgCount: number; svgs: FileData[] }> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
 
@@ -123,9 +123,9 @@ async function getSvgsInPR(
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(filesNotMatching(ignoredGlob));
+  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(filesNotMatching(ignoreGlob));
   const ignoredCount = svgCount - notIgnoredSvgs.length;
-  core.debug(`${ignoredCount} SVG(s) will be ignored that match '${ignoredGlob}'`);
+  core.debug(`${ignoredCount} SVG(s) will be ignored that match '${ignoreGlob}'`);
 
   const svgs: FileData[] = [];
   for (const svg of notIgnoredSvgs) {
@@ -232,7 +232,7 @@ async function run(
   const { fileCount, svgCount, svgs } = await getSvgsInPR(
     client,
     prNumber,
-    config.ignoredGlob,
+    config.ignoreGlob,
   );
 
   if (svgCount > 0) {
