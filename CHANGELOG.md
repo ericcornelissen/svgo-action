@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- Add functionality to ignore SVGs based on a glob ([#175])
+- Add functionality to ignore SVGs based on a glob. ([#175], [#179])
 
 ## [0.4.2] - 2020-04-09
 
@@ -108,3 +108,4 @@ Versioning].
 [#164]: https://github.com/ericcornelissen/svgo-action/pull/164
 [#170]: https://github.com/ericcornelissen/svgo-action/pull/170
 [#175]: https://github.com/ericcornelissen/svgo-action/pull/175
+[#179]: https://github.com/ericcornelissen/svgo-action/pull/179
