@@ -1,4 +1,4 @@
-import { CommitData } from "./main";
+import { CommitData, FileData } from "./main";
 
 import { getFileSizeInKB } from "./utils/file-size";
 import { toPercentage } from "./utils/percentages";
@@ -28,11 +28,19 @@ const formatters = [
   {
     key: "fileData",
     fn: (template: string, value: CommitData["fileData"]): string => {
-      let table = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
-      for (let i = 0; i < value.optimized.length; i++) {
-        const path: string = value.original[i].path;
-        const originalFileSize: number = getFileSizeInKB(value.original[i].content);
-        const optimizedFileSize: number = getFileSizeInKB(value.optimized[i].content);
+      const findOriginalSvg = (path: string): FileData => {
+        const i: number = value.original.findIndex((fileData) => fileData.path === path);
+        return value.original[i];
+      };
+
+      let table = "| Filename | Before | After | Improvement |\n";
+      table += "| --- | --- | --- | --- |\n";
+      for (const optimizedSvg of value.optimized) {
+        const path: string = optimizedSvg.path;
+        const originalSvg = findOriginalSvg(path);
+
+        const originalFileSize: number = getFileSizeInKB(originalSvg.content);
+        const optimizedFileSize: number = getFileSizeInKB(optimizedSvg.content);
         const improvement: number = -1 * toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
         table += `| ${path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
       }
