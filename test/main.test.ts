@@ -581,7 +581,9 @@ describe("Payloads", () => {
     );
   });
 
-  test.skip("a Pull Request with 1 new SVG and one new SVG in a directory", async () => {
+  test("a Pull Request with 1 new SVG and one new SVG in a directory", async () => {
+    const foobarFilePath = "foo/bar.svg";
+
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
 
     await main();
@@ -607,7 +609,7 @@ describe("Payloads", () => {
     );
     expect(githubAPI.createBlob).toHaveBeenCalledWith(
       github.GitHubInstance,
-      barFilePath,
+      foobarFilePath,
       expect.any(String),
       barSvgEncoding,
     );
@@ -617,7 +619,7 @@ describe("Payloads", () => {
       github.GitHubInstance,
       expect.arrayContaining([
         expect.objectContaining({ path: fooFilePath }),
-        expect.objectContaining({ path: barFilePath }),
+        expect.objectContaining({ path: foobarFilePath }),
       ]),
       expect.any(String),
     );

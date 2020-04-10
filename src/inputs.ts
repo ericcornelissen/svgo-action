@@ -53,7 +53,7 @@ export class ActionConfig {
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
     this.enableComments = ActionConfig.getCommentsValue(config);
-    this.ignoredGlob = "";
+    this.ignoredGlob = ""; // TODO: make configurable, see #162
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
