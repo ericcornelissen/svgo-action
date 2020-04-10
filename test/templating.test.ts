@@ -54,6 +54,76 @@ describe("::formatComment", () => {
     expect(result).toBeDefined();
   });
 
+  test("template using {{filesTable}}, only first SVG is optimized", () => {
+    const data = Object.assign({ }, defaultData, {
+      fileData: {
+        optimized: [
+          {
+            content: "Hey",
+            originalEncoding: "utf-8",
+            path: "test.svg",
+          },
+        ],
+        original: [
+          {
+            content: "Hello",
+            originalEncoding: "utf-8",
+            path: "test.svg",
+          },
+          {
+            content: "foo",
+            originalEncoding: "utf-8",
+            path: "foo.svg",
+          },
+        ],
+      },
+    });
+    const templateString = "{{filesTable}}";
+
+    const result = formatComment(templateString, data);
+    expect(result).toBeDefined();
+    expect(result).toEqual(
+      "| Filename | Before | After | Improvement |\n" +
+      "| --- | --- | --- | --- |\n" +
+      "| test.svg | 0.005 KB | 0.003 KB | -40% |\n",
+    );
+  });
+
+  test("template using {{filesTable}}, only second SVG is optimized", () => {
+    const data = Object.assign({ }, defaultData, {
+      fileData: {
+        optimized: [
+          {
+            content: "foo",
+            originalEncoding: "utf-8",
+            path: "foo.svg",
+          },
+        ],
+        original: [
+          {
+            content: "Hello",
+            originalEncoding: "utf-8",
+            path: "test.svg",
+          },
+          {
+            content: "foobar",
+            originalEncoding: "utf-8",
+            path: "foo.svg",
+          },
+        ],
+      },
+    });
+    const templateString = "{{filesTable}}";
+
+    const result = formatComment(templateString, data);
+    expect(result).toBeDefined();
+    expect(result).toEqual(
+      "| Filename | Before | After | Improvement |\n" +
+      "| --- | --- | --- | --- |\n" +
+      "| foo.svg | 0.006 KB | 0.003 KB | -50% |\n",
+    );
+  });
+
 });
 
 describe("::formatCommitMessage", () => {

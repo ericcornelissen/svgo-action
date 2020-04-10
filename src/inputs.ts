@@ -45,6 +45,7 @@ export class ActionConfig {
   public readonly commitDescription: string;
   public readonly commitTitle: string;
   public readonly enableComments: boolean;
+  public readonly ignoredGlob: string;
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
 
@@ -52,6 +53,7 @@ export class ActionConfig {
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
     this.enableComments = ActionConfig.getCommentsValue(config);
+    this.ignoredGlob = ""; // TODO: make configurable, see #162
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
