@@ -5,6 +5,7 @@ const INPUT_NAME_COMMENTS = "comments";
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
 const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
 const INPUT_NAME_DRY_RUN = "dry-run";
+const INPUT_NAME_IGNORE = "ignore";
 const INPUT_NAME_REPO_TOKEN = "repo-token";
 const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
@@ -28,6 +29,7 @@ export type RawActionConfig = {
     readonly description?: string;
   };
   readonly "dry-run"?: boolean;
+  readonly ignore?: string;
   readonly "svgo-options"?: string;
 }
 
@@ -53,7 +55,7 @@ export class ActionConfig {
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
     this.enableComments = ActionConfig.getCommentsValue(config);
-    this.ignoredGlob = ""; // TODO: make configurable, see #162
+    this.ignoredGlob = ActionConfig.getIgnoredGlob(config);
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
@@ -79,6 +81,11 @@ export class ActionConfig {
     } else {
       return config.commit?.title || DEFAULT_COMMIT_TITLE;
     }
+  }
+
+  private static getIgnoredGlob(config: RawActionConfig): string {
+    return (config.ignore !== undefined) ?
+      config.ignore : core.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
   }
 
   private static getSvgoOptionsPath(config: RawActionConfig): string {
