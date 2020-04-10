@@ -11,6 +11,8 @@ const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
 const SKIPPED_COUNT_EXP = /\{\{\s*skippedCount\s*\}\}/;
 const SVG_COUNT_EXP = /\{\{\s*svgCount\s*\}\}/;
 
+const FILES_TABLE_HEADER = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
+
 const formatters = [
   {
     key: "fileCount",
@@ -29,20 +31,25 @@ const formatters = [
     key: "fileData",
     fn: (template: string, value: CommitData["fileData"]): string => {
       const findOriginalSvg = (path: string): FileData => {
-        const i: number = value.original.findIndex((fileData) => fileData.path === path);
+        const i: number = value.original.findIndex((fileData) => {
+          return fileData.path === path;
+        });
+
         return value.original[i];
       };
 
-      let table = "| Filename | Before | After | Improvement |\n";
-      table += "| --- | --- | --- | --- |\n";
+      let table = FILES_TABLE_HEADER;
       for (const optimizedSvg of value.optimized) {
         const path: string = optimizedSvg.path;
-        const originalSvg = findOriginalSvg(path);
+        const originalSvg: FileData = findOriginalSvg(path);
 
-        const originalFileSize: number = getFileSizeInKB(originalSvg.content);
-        const optimizedFileSize: number = getFileSizeInKB(optimizedSvg.content);
-        const improvement: number = -1 * toPercentage((originalFileSize - optimizedFileSize) / originalFileSize);
-        table += `| ${path} | ${originalFileSize} KB | ${optimizedFileSize} KB | ${improvement}% |\n`;
+        const originalSize: number = getFileSizeInKB(originalSvg.content);
+        const optimizedFSize: number = getFileSizeInKB(optimizedSvg.content);
+
+        const reduction: number = (originalSize - optimizedFSize) / originalSize;
+        const reductionPercentage: number = -1 * toPercentage(reduction);
+
+        table += `| ${path} | ${originalSize} KB | ${optimizedFSize} KB | ${reductionPercentage}% |\n`;
       }
 
       return template.replace(FILES_TABLE_EXP, table);
