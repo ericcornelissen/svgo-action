@@ -47,7 +47,7 @@ export class ActionConfig {
   public readonly commitDescription: string;
   public readonly commitTitle: string;
   public readonly enableComments: boolean;
-  public readonly ignoredGlob: string;
+  public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
 
@@ -55,7 +55,7 @@ export class ActionConfig {
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
     this.enableComments = ActionConfig.getCommentsValue(config);
-    this.ignoredGlob = ActionConfig.getIgnoredGlob(config);
+    this.ignoreGlob = ActionConfig.getIgnoreGlob(config);
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
@@ -83,7 +83,7 @@ export class ActionConfig {
     }
   }
 
-  private static getIgnoredGlob(config: RawActionConfig): string {
+  private static getIgnoreGlob(config: RawActionConfig): string {
     return (config.ignore !== undefined) ?
       config.ignore : core.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
   }

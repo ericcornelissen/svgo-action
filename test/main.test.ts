@@ -214,7 +214,7 @@ describe("Configuration", () => {
     const fooSvgData = files[filePath];
 
     const actionConfig = new inputs.ActionConfig();
-    actionConfig.ignoredGlob = "foo/*";
+    actionConfig.ignoreGlob = "foo/*";
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
     inputs.ActionConfig.mockReturnValueOnce(actionConfig);
