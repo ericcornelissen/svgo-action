@@ -9,6 +9,10 @@ Versioning].
 
 - Add functionality to ignore SVGs based on a glob. ([#175], [#179])
 
+## [0.4.3] - 2020-04-10
+
+- Fix bug in the Pull Request comment when not all SVG are optimized. ([#178])
+
 ## [0.4.2] - 2020-04-09
 
 - Add functionality to comment on Pull Requests. ([#164], [#170])
@@ -108,4 +112,5 @@ Versioning].
 [#164]: https://github.com/ericcornelissen/svgo-action/pull/164
 [#170]: https://github.com/ericcornelissen/svgo-action/pull/170
 [#175]: https://github.com/ericcornelissen/svgo-action/pull/175
+[#178]: https://github.com/ericcornelissen/svgo-action/pull/178
 [#179]: https://github.com/ericcornelissen/svgo-action/pull/179
