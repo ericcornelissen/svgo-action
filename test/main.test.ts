@@ -208,6 +208,46 @@ describe("Configuration", () => {
     );
   });
 
+  test("configure a glob to ignore files", async () => {
+    const filePath = "foo.svg";
+    const { content: fileContent, encoding: fileEncoding } = contentPayloads[filePath];
+    const fooSvgData = files[filePath];
+
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.ignoredGlob = "foo/*";
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(fileContent, fileEncoding);
+
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fileEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String),
+      fileEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: filePath }),
+      ]),
+      expect.any(String),
+    );
+  });
+
 });
 
 describe("Manual Action control", () => {
@@ -536,6 +576,50 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: fooFilePath }),
         expect.objectContaining({ path: barFilePath }),
+      ]),
+      expect.any(String),
+    );
+  });
+
+  test("a Pull Request with 1 new SVG and one new SVG in a directory", async () => {
+    const foobarFilePath = "foo/bar.svg";
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
+
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(2);
+    expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
+    expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
+
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(2);
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(2);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), barSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(2);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      fooFilePath,
+      expect.any(String),
+      fooSvgEncoding,
+    );
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      foobarFilePath,
+      expect.any(String),
+      barSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: foobarFilePath }),
       ]),
       expect.any(String),
     );

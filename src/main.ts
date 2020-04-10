@@ -2,7 +2,7 @@ import * as core from "@actions/core";
 import { GitHub } from "@actions/github";
 
 import { decode, encode } from "./encoder";
-import { existingFiles, svgFiles } from "./filters";
+import { existingFiles, filesNotMatching, svgFiles } from "./filters";
 import {
   PR_NOT_FOUND,
 
@@ -111,6 +111,7 @@ async function checkIfActionIsDisabled(
 async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
+  ignoredGlob: string,
 ): Promise<{ fileCount: number; svgCount: number; svgs: FileData[] }> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
 
@@ -122,8 +123,12 @@ async function getSvgsInPR(
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
+  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(filesNotMatching(ignoredGlob));
+  const ignoredCount = svgCount - notIgnoredSvgs.length;
+  core.debug(`${ignoredCount} SVG(s) will be ignored that match '${ignoredGlob}'`);
+
   const svgs: FileData[] = [];
-  for (const svg of prSvgs) {
+  for (const svg of notIgnoredSvgs) {
     core.debug(`fetching file contents of '${svg.path}'`);
     const fileData: GitFileData = await getPrFile(client, svg.path);
 
@@ -224,7 +229,12 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const { fileCount, svgCount, svgs } = await getSvgsInPR(client, prNumber);
+  const { fileCount, svgCount, svgs } = await getSvgsInPR(
+    client,
+    prNumber,
+    config.ignoredGlob,
+  );
+
   if (svgCount > 0) {
     core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
     const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);
