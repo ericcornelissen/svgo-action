@@ -17,7 +17,7 @@ to improve the documentation.
 ## Comments
 
 | Name       | Default Value | Workflow file      | Config File        |
-|------------|---------------|--------------------|--------------------|
+| ---------- | ------------- | ------------------ | ------------------ |
 | `comments` | `false`       | :heavy_check_mark: | :heavy_check_mark: |
 
 The _comments_ options can be used to enable comments by the Action on Pull
@@ -44,7 +44,7 @@ comments: true
 ## Commit
 
 | Name     | Default Value | Workflow file | Config File        |
-|----------|---------------|---------------|--------------------|
+| -------- | ------------- | ------------- | ------------------ |
 | `commit` | n/a           | :x:           | :heavy_check_mark: |
 
 The _commit_ option can be used to configure the commits created by the Action.
@@ -198,7 +198,7 @@ conventional-commits: true
 ## Dry-run
 
 | Name      | Default Value | Workflow file      | Config File        |
-|-----------|---------------|--------------------|--------------------|
+| --------- | ------------- | ------------------ | ------------------ |
 | `dry-run` | `false`       | :heavy_check_mark: | :heavy_check_mark: |
 
 The _dry-run_ option can be used to run the Action without having it make any
@@ -225,7 +225,7 @@ dry-run: true
 ## Ignore
 
 | Name      | Default Value | Workflow file      | Config File        |
-|-----------|---------------|--------------------|--------------------|
+| --------- | ------------- | ------------------ | ------------------ |
 | `ignored` | `""`          | :heavy_check_mark: | :heavy_check_mark: |
 
 The _ignore_ option allows you to specify what files should be ignored by the
@@ -268,7 +268,7 @@ ignore: not/optimized/**/*
 ## SVGO Options
 
 | Name           | Default Value | Workflow file      | Config File        |
-|----------------|---------------|--------------------|--------------------|
+| -------------- | ------------- | ------------------ | ------------------ |
 | `svgo-options` | `".svgo.yml"` | :heavy_check_mark: | :heavy_check_mark: |
 
 The _SVG Options_ option allows you to specify the configuration file for
@@ -294,6 +294,6 @@ svgo-options: my-svgo-options.yml
 [commit message templating]: /docs/templating.md
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new
-[SVGO]: https://github.com/svg/svgo
-[YAML]: https://yaml.org/
+[svgo]: https://github.com/svg/svgo
+[yaml]: https://yaml.org/
 [yaml multiline strings]: https://yaml-multiline.info/

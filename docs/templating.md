@@ -5,13 +5,13 @@ customize the commit message. This allows you to insert variable values from the
 Action run, such as the number of optimized SVGs, into the commit message. Note
 that not all templating variables are available in the commit `title`.
 
-| Name             | Value                                    | In title | In description |
-| ---------------- | ---------------------------------------- | -------- | -------------- |
-| `fileCount`      | The number of files found in the PR      | Yes      | Yes            |
-| `filesList`      | A bullet list of the optimized SVG files | No       | Yes            |
-| `optimizedCount` | The number of optimized SVGs             | Yes      | Yes            |
-| `skippedCount`   | The number of not-optimized SVGs         | Yes      | Yes            |
-| `svgCount`       | The number of SVGs found in the PR       | Yes      | Yes            |
+| Name             | Value                                    | In title           | In description     |
+| ---------------- | ---------------------------------------- | ------------------ | ------------------ |
+| `fileCount`      | The number of files found in the PR      | :heavy_check_mark: | :heavy_check_mark: |
+| `filesList`      | A bullet list of the optimized SVG files | :x:                | :heavy_check_mark: |
+| `optimizedCount` | The number of optimized SVGs             | :heavy_check_mark: | :heavy_check_mark: |
+| `skippedCount`   | The number of not-optimized SVGs         | :heavy_check_mark: | :heavy_check_mark: |
+| `svgCount`       | The number of SVGs found in the PR       | :heavy_check_mark: | :heavy_check_mark: |
 
 ## Example
 

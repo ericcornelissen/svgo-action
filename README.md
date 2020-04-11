@@ -38,12 +38,12 @@ There are a couple of ways for you to configure the Action. You can configure it
 configuration file]. The table below shows the options that can be configured.
 
 | Name                   | Description                              | Default       | Documentation                                 |
-|------------------------|------------------------------------------|---------------|-----------------------------------------------|
+| ---------------------- | ---------------------------------------- | ------------- | --------------------------------------------- |
 | `comments`             | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comments)             |
 | `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
 | `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
 | `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
-| `ignore`               | A glob of SVGs that should be ignored    | `""`          | [docs](/docs/options.md#ignore)               |
+| `ignore`               | A [glob] of SVGs that should be ignored  | `""`          | [docs](/docs/options.md#ignore)               |
 | `svgo-options`         | Specify the [SVGO] configuration file    | `".svgo.yml"` | [docs](/docs/options.md#svgo-options)         |
 
 #### In the Workflow file
@@ -155,8 +155,9 @@ jobs:
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 
 [conventional commit]: https://www.conventionalcommits.org/
-[Creating a Workflow file]: https://help.github.com/en/articles/
-[in the Workflow file]: #in-the-workflow-file
+[creating a workflow file]: https://help.github.com/en/articles/
+[glob]: https://en.wikipedia.org/wiki/Glob_(programming)
+[in the workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
-[SVGO]: https://github.com/svg/svgoconfiguring-a-workflow#creating-a-workflow-file
+[svgo]: https://github.com/svg/svgo
