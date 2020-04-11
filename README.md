@@ -1,4 +1,4 @@
-# SVGO action
+# SVGO Action
 
 [![GitHub Marketplace][marketplace-image]][marketplace-url]
 [![Node.js CI][ci-image]][ci-url]
@@ -35,31 +35,16 @@ GitHub's rest API_
 
 There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
-configuration file]. Below you can find the available options.
+configuration file]. The table below shows the options that can be configured.
 
-- `comments`: Enable comments on Pull Requests with an optimization summary.
-  - Possible values: `false`, `true`
-  - Default value: `false`
-  - Example: `comments: true`
-- `commit`: Configure the commit message for the Action.
-  - [Full documentation](docs/configuring-the-commit.md)
-- `conventional-commits`: Use [conventional commit] message titles for commits.
-  - Possible values: `false`, `true`
-  - Default value: `false`
-  - Example: `conventional-commits: true`
-- `dry-run`: If enabled, the action doesn't commit changes back.
-  - Possible values: `false`, `true`
-  - Default value: `false`
-  - Example: `dry-run: true`
-- `ignore`: Specify a glob of SVGs that should not be optimized.
-  - Possible values _Any glob_
-  - Default value: `""` (_ignore nothing_)
-  - Example: `ignore: do/not/optimize/**/*.svg`
-- `svgo-options`: Specify the path of the file in the repository that should be
-  used as configuration for [SVGO].
-  - Possible values: _Any file path_
-  - Default value: `".svgo.yml"`
-  - Example: `svgo-options: path/to/svgo-options.yml`
+| Name                   | Description                              | Default       | Documentation |
+|------------------------|------------------------------------------|---------------|---------------|
+| `comments`             | Leave comments on Pull Requests          | `false`       | -             |
+| `commit`               | Configure the Action's commit messages   | -             | [docs](docs/configuring-the-commit.md) |
+| `conventional-commits` | Use [conventional commit] message titles | `false`       | -             |
+| `dry-run`              | Prevent the Action from making commits   | `false`       | -             |
+| `ignore`               | A glob of SVGs that should be ignored    | `""`          | -             |
+| `svgo-options`         | Specify the [SVGO] configuration file    | `".svgo.yml"` | -             |
 
 #### In the Workflow file
 
