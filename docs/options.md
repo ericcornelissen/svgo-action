@@ -7,7 +7,7 @@ This file contains the documentation for all options for the SVGO Action.
 - [Conventional Commits](#conventional-commits)
 - [Dry-run](#dry-run)
 - [Ignore](#ignore)
-- [SVG Options](#svgo-options)
+- [SVGO Options](#svgo-options)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -148,7 +148,7 @@ ignore: not/optimized/**/*
 
 ---
 
-## SVG Options
+## SVGO Options
 
 | Name           | Default Value | Workflow file      | Config File        |
 |----------------|---------------|--------------------|--------------------|
@@ -173,7 +173,7 @@ To change the SVGO configuration file:
 svgo-options: my-svgo-options.yml
 ```
 
-[conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/
+[conventional commit]: https://www.conventionalcommits.org/
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new
 [SVGO]: https://github.com/svg/svgo

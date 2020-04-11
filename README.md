@@ -153,9 +153,10 @@ jobs:
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
-[SVGO]: https://github.com/svg/svgo
-[Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
+
+[conventional commit]: https://www.conventionalcommits.org/
+[Creating a Workflow file]: https://help.github.com/en/articles/
 [in the Workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
-[conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/
+[SVGO]: https://github.com/svg/svgoconfiguring-a-workflow#creating-a-workflow-file
