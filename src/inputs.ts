@@ -14,6 +14,7 @@ const REQUIRED = { required: true };
 
 const BOOLEAN = "boolean";
 const FALSE = "false";
+const STRING = "string";
 const TRUE = "true";
 
 const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
@@ -23,7 +24,7 @@ const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://git
 
 
 export type RawActionConfig = {
-  readonly comments?: boolean;
+  readonly comments?: boolean | string;
   readonly commit?: {
     readonly conventional?: boolean;
     readonly title?: string;
@@ -54,17 +55,23 @@ export class ActionConfig {
   public readonly svgoOptionsPath: string;
 
   constructor(config: RawActionConfig = { }) {
-    this.comment = DEFAULT_COMMENT;
+    this.comment = ActionConfig.getCommentValue(config);
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
-    this.enableComments = ActionConfig.getCommentsValue(config);
+    this.enableComments = ActionConfig.getEnableCommentsValue(config);
     this.ignoreGlob = ActionConfig.getIgnoreGlob(config);
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
 
-  private static getCommentsValue(config: RawActionConfig): boolean {
-    return this.normalizeBoolOption(config.comments, INPUT_NAME_COMMENTS, true);
+  private static getCommentValue(config: RawActionConfig): string {
+    const value = (config.comments !== undefined) ?
+      config.comments : core.getInput(INPUT_NAME_COMMENTS, NOT_REQUIRED);
+    if (typeof value === STRING && value !== TRUE) {
+      return value as string;
+    } else {
+      return DEFAULT_COMMENT;
+    }
   }
 
   private static getCommitDescription(config: RawActionConfig): string {
@@ -84,6 +91,10 @@ export class ActionConfig {
     } else {
       return config.commit?.title || DEFAULT_COMMIT_TITLE;
     }
+  }
+
+  private static getEnableCommentsValue(config: RawActionConfig): boolean {
+    return this.normalizeBoolOption(config.comments as boolean, INPUT_NAME_COMMENTS, true);
   }
 
   private static getIgnoreGlob(config: RawActionConfig): string {
