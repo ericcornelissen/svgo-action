@@ -40,8 +40,6 @@ import { fetchYamlFile } from "./utils/fetch-yaml";
 const DISABLE_PATTERN = /disable-svgo-action/;
 const ENABLE_PATTERN = /enable-svgo-action/;
 
-const COMMENT_TEMPLATE = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
-
 
 export type FileData = {
   readonly content: string;
@@ -217,7 +215,7 @@ async function doCommitChanges(
     core.debug(`commit successful (see ${commitInfo.url})`);
 
     if (config.enableComments) {
-      const comment: string = formatComment(COMMENT_TEMPLATE, commitData);
+      const comment: string = formatComment(config.comment, commitData);
       await createComment(client, prNumber, comment);
     }
   }

@@ -19,6 +19,7 @@ const TRUE = "true";
 const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
 const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVG(s):\n{{filesList}}";
 const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
+const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
 
 
 export type RawActionConfig = {
@@ -44,6 +45,7 @@ export function getRepoToken(): string {
 
 export class ActionConfig {
 
+  public readonly comment: string;
   public readonly commitDescription: string;
   public readonly commitTitle: string;
   public readonly enableComments: boolean;
@@ -52,6 +54,7 @@ export class ActionConfig {
   public readonly svgoOptionsPath: string;
 
   constructor(config: RawActionConfig = { }) {
+    this.comment = DEFAULT_COMMENT;
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
     this.enableComments = ActionConfig.getCommentsValue(config);
