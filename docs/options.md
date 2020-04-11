@@ -29,13 +29,13 @@ the Action. If the Action did not do anything, it won't leave a comment.
 To enable comments by the Action:
 
 ```yaml
-# In a Workflow file
+# .github/workflows/svgo.yml
 - uses: ericcornelissen/svgo-action@latest
   with:
     comments: true
 
 
-# In a configuration file
+# .github/svgo-action.yml
 comments: true
 ```
 
@@ -51,6 +51,123 @@ The _commit_ option can be used to configure the commits created by the Action.
 Because it is a complex option, it can only be configured in a configuration
 file.
 
+- [Commit Title](#commit-title)
+- [Commit Description](#commit-description)
+
+### Commit Title
+
+The commit title, i.e. the first line of a commit message, can be configured
+using the `title` key as shown below. The commit title can be a template string
+as described in [commit message templating].
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  title: This will be the commit message title
+```
+
+This will result in commit messages that look like:
+
+```git
+This will be the commit message title
+
+Optimized SVG(s):
+- foo.svg
+- bar.svg
+```
+
+#### Conventional Commit Titles
+
+If you want to use [conventional commit] messages, you can use the
+`conventional` key as shown below. This still allows you to configure the commit
+message `description`, but the `title` value will be ignored.
+
+> :information_source: This option is also available from the Workflow file
+> through the `conventional-commits` option.
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  conventional: true
+  title: This will be ignored
+  description: You can still configure the commit description
+```
+
+This will result in commit messages that look like:
+
+```git
+chore: optimize 42 SVG(s)
+
+You can still configure the commit description
+```
+
+### Commit Description
+
+The commit description, i.e. the part of the commit message that comes after the
+commit title, can be configured using the `description` key as shown below. The
+commit description can be a template string as described in [commit message
+templating].
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  description: This will be the commit message description
+```
+
+This will result in commit messages that look like:
+
+```git
+Optimize 42 SVG(s) with SVGO
+
+This will be the commit message description
+```
+
+#### Multi-line Descriptions
+
+If you want a commit description that spans multiple lines we recommend using
+[YAML multiline strings].
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  description: |
+    If you want a commit message that is a
+    bit longer and potentially spans multiple
+    lines you can use YAML multiline strings.
+```
+
+This will result in commit messages that look like:
+
+```git
+Optimize 42 SVG(s) with SVGO
+
+If you want a commit message that is a
+bit longer and potentially spans multiple
+lines you can use YAML multiline strings.
+```
+
+#### Omitting the Description
+
+If you prefer the commit description to be omitted, you can simply configure it
+as an empty string.
+
+```yaml
+# .github/svgo-action.yml
+
+commit:
+  description: ""
+```
+
+This will result in commit messages that look like:
+
+```git
+Optimize 42 SVG(s) with SVGO
+```
+
 ---
 
 ## Conventional Commits
@@ -58,7 +175,7 @@ file.
 The _conventional commits_ option can be used to enable [conventional commit]
 message titles for commits.
 
-> :warning: If this option is set to `true`, the _title_ value of the commit
+> :warning: If this option is set to `true`, the _title_ value of the `commit`
 > option will be ignored.
 
 ### Examples
@@ -66,13 +183,13 @@ message titles for commits.
 To enable conventional commit titles:
 
 ```yaml
-# In a Workflow file
+# .github/workflows/svgo.yml
 - uses: ericcornelissen/svgo-action@latest
   with:
     conventional-commits: true
 
 
-# In a configuration file
+# .github/svgo-action.yml
 conventional-commits: true
 ```
 
@@ -93,13 +210,13 @@ want to give the Action a try.
 To enable the dry-run mode:
 
 ```yaml
-# In a Workflow file
+# .github/workflows/svgo.yml
 - uses: ericcornelissen/svgo-action@latest
   with:
     dry-run: true
 
 
-# In a configuration file
+# .github/svgo-action.yml
 dry-run: true
 ```
 
@@ -123,26 +240,26 @@ Any file that matches the glob will **not** be optimized by the Action.
 To ignore all files in a specific folder:
 
 ```yaml
-# In a Workflow file
+# .github/workflows/svgo.yml
 - uses: ericcornelissen/svgo-action@latest
   with:
     ignore: not/optimized/*
 
 
-# In a configuration file
+# .github/svgo-action.yml
 ignore: not/optimized/*
 ```
 
 To ignore all files in a specific folder and all its subfolders:
 
 ```yaml
-# In a Workflow file
+# .github/workflows/svgo.yml
 - uses: ericcornelissen/svgo-action@latest
   with:
     ignore: not/optimized/**/
 
 
-# In a configuration file
+# .github/svgo-action.yml
 ignore: not/optimized/**/*
 ```
 
@@ -163,18 +280,20 @@ file is not found the Action will fall back on SVGO's default configuration.
 To change the SVGO configuration file:
 
 ```yaml
-# In a Workflow file
+# .github/workflows/svgo.yml
 - uses: ericcornelissen/svgo-action@latest
   with:
     svgo-options: my-svgo-options.yml
 
 
-# In a configuration file
+# .github/svgo-action.yml
 svgo-options: my-svgo-options.yml
 ```
 
 [conventional commit]: https://www.conventionalcommits.org/
+[commit message templating]: /docs/templating.md
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new
 [SVGO]: https://github.com/svg/svgo
 [YAML]: https://yaml.org/
+[yaml multiline strings]: https://yaml-multiline.info/
