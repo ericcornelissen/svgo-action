@@ -6,7 +6,7 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
-  comments:
+  comment:
     description: 'Enable comments on Pull Requests with an optimization summary'
     default: false
     required: false

@@ -106,10 +106,10 @@ export function formatComment(
 
 export function formatCommitMessage(
   titleTemplate: string,
-  messageTemplate: string,
+  bodyTemplate: string,
   data: CommitData,
 ): string {
   const title: string = formatAll(titleTemplate, data, ["fileData"]);
-  const message: string = formatAll(messageTemplate, data);
-  return `${title}\n\n${message}`.trimRight();
+  const body: string = formatAll(bodyTemplate, data);
+  return `${title}\n\n${body}`.trimRight();
 }

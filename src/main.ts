@@ -209,7 +209,7 @@ async function doCommitChanges(
     const blobs: GitBlob[] = await toBlobs(client, commitData.fileData.optimized);
     const commitMessage: string = formatCommitMessage(
       config.commitTitle,
-      config.commitDescription,
+      config.commitBody,
       commitData,
     );
     const commitInfo: CommitInfo = await commitFiles(
