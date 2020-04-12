@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [0.4.4] - 2020-04-12
+
 - Add functionality to ignore SVGs based on a glob. ([#175], [#179])
 - Add option to customize Pull Request comments. ([#184], [#186])
 - Update the documentation for the Action's options. ([#185])
