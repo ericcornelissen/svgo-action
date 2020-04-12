@@ -1,4 +1,4 @@
-# SVGO action
+# SVGO Action
 
 [![GitHub Marketplace][marketplace-image]][marketplace-url]
 [![Node.js CI][ci-image]][ci-url]
@@ -35,31 +35,16 @@ GitHub's rest API_
 
 There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
-configuration file]. Below you can find the available options.
+configuration file]. The table below shows the options that can be configured.
 
-- `comments`: Enable comments on Pull Requests with an optimization summary.
-  - Possible values: `false`, `true`
-  - Default value: `false`
-  - Example: `comments: true`
-- `commit`: Configure the commit message for the Action.
-  - [Full documentation](docs/configuring-the-commit.md)
-- `conventional-commits`: Use [conventional commit] message titles for commits.
-  - Possible values: `false`, `true`
-  - Default value: `false`
-  - Example: `conventional-commits: true`
-- `dry-run`: If enabled, the action doesn't commit changes back.
-  - Possible values: `false`, `true`
-  - Default value: `false`
-  - Example: `dry-run: true`
-- `ignore`: Specify a glob of SVGs that should not be optimized.
-  - Possible values _Any glob_
-  - Default value: `""` (_ignore nothing_)
-  - Example: `ignore: do/not/optimize/**/*.svg`
-- `svgo-options`: Specify the path of the file in the repository that should be
-  used as configuration for [SVGO].
-  - Possible values: _Any file path_
-  - Default value: `".svgo.yml"`
-  - Example: `svgo-options: path/to/svgo-options.yml`
+| Name                   | Description                              | Default       | Documentation                                 |
+| ---------------------- | ---------------------------------------- | ------------- | --------------------------------------------- |
+| `comments`             | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comments)             |
+| `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
+| `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
+| `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
+| `ignore`               | A [glob] of SVGs that should be ignored  | `""`          | [docs](/docs/options.md#ignore)               |
+| `svgo-options`         | Specify the [SVGO] configuration file    | `".svgo.yml"` | [docs](/docs/options.md#svgo-options)         |
 
 #### In the Workflow file
 
@@ -168,9 +153,11 @@ jobs:
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
-[SVGO]: https://github.com/svg/svgo
-[Creating a Workflow file]: https://help.github.com/en/articles/configuring-a-workflow#creating-a-workflow-file
-[in the Workflow file]: #in-the-workflow-file
+
+[conventional commit]: https://www.conventionalcommits.org/
+[creating a workflow file]: https://help.github.com/en/articles/
+[glob]: https://en.wikipedia.org/wiki/Glob_(programming)
+[in the workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
-[conventional commit]: https://www.conventionalcommits.org/en/v1.0.0/
+[svgo]: https://github.com/svg/svgo
