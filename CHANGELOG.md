@@ -10,6 +10,7 @@ Versioning].
 - Add functionality to ignore SVGs based on a glob. ([#175], [#179])
 - Add option to customize Pull Request comments. ([#184])
 - Update the documentation for the Action's options. ([#185])
+- Add the files table template value for commit descriptions. ([#187])
 
 ## [0.4.3] - 2020-04-10
 
@@ -118,3 +119,4 @@ Versioning].
 [#179]: https://github.com/ericcornelissen/svgo-action/pull/179
 [#184]: https://github.com/ericcornelissen/svgo-action/pull/184
 [#185]: https://github.com/ericcornelissen/svgo-action/pull/185
+[#187]: https://github.com/ericcornelissen/svgo-action/pull/187
