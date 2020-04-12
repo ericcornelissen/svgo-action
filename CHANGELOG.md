@@ -10,7 +10,7 @@ Versioning].
 - Add functionality to ignore SVGs based on a glob. ([#175], [#179])
 - Add option to customize Pull Request comments. ([#184], [#186])
 - Update the documentation for the Action's options. ([#185])
-- Add the files table template value for commit descriptions. ([#187])
+- Add the files table template value for commit message bodies. ([#187])
 
 ## [0.4.3] - 2020-04-10
 

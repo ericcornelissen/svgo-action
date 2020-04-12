@@ -156,7 +156,7 @@ describe("Configuration", () => {
     "This should be a commit title",
     "Why not Zoidberg",
     "A templated commit title? {{optimizedCount}}",
-  ])("custom commit title (%s)", async (commitTitle) => {
+  ])("custom commit message title (%s)", async (commitTitle) => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.commitTitle = commitTitle;
 
@@ -176,9 +176,9 @@ describe("Configuration", () => {
     "This should be a commit desciption",
     "Shut up and take my money",
     "A templated commit title? {{filesList}}",
-  ])("custom commit description (%s)", async (commitDescription) => {
+  ])("custom commit message body (%s)", async (commitBoy) => {
     const actionConfig = new inputs.ActionConfig();
-    actionConfig.commitDescription = commitDescription;
+    actionConfig.commitBody = commitBoy;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     inputs.ActionConfig.mockReturnValueOnce(actionConfig);
@@ -187,7 +187,7 @@ describe("Configuration", () => {
 
     expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       expect.any(String),
-      commitDescription,
+      commitBoy,
       expect.any(Object),
     );
   });

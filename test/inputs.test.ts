@@ -120,33 +120,33 @@ describe("ActionConfig", () => {
 
   });
 
-  describe(".commitDescription", () => {
+  describe(".commitBody", () => {
 
-    const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVG(s):\n{{filesList}}";
+    const DEFAULT_COMMIT_BODY = "Optimized SVG(s):\n{{filesList}}";
 
     test("commit is not defined in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ });
-      expect(instance.commitDescription).toEqual(DEFAULT_COMMIT_DESCRIPTION);
+      expect(instance.commitBody).toEqual(DEFAULT_COMMIT_BODY);
     });
 
-    test("commit is defined in the config object, but the description isn't", () => {
+    test("commit is defined in the config object, but the body isn't", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { } });
-      expect(instance.commitDescription).toEqual(DEFAULT_COMMIT_DESCRIPTION);
+      expect(instance.commitBody).toEqual(DEFAULT_COMMIT_BODY);
     });
 
     test.each([
-      "This is a commit description",
-      "This is templated commit description {{optimizedCount}}",
+      "This is a commit message body",
+      "This is templated commit message body {{optimizedCount}}",
       "These are not the droids you're looking for",
-    ])("commit description is defined in the config object", (description) => {
-      const instance: ActionConfig = new ActionConfig({ commit: { description } });
-      expect(instance.commitDescription).toEqual(description);
+    ])("commit message body is defined in the config object", (body) => {
+      const instance: ActionConfig = new ActionConfig({ commit: { body } });
+      expect(instance.commitBody).toEqual(body);
     });
 
-    test("commit description is an empty string in the config object", () => {
-      const instance: ActionConfig = new ActionConfig({ commit: { description: "" } });
-      expect(instance.commitDescription).toBeDefined();
-      expect(instance.commitDescription).toEqual("");
+    test("commit message body is an empty string in the config object", () => {
+      const instance: ActionConfig = new ActionConfig({ commit: { body: "" } });
+      expect(instance.commitBody).toBeDefined();
+      expect(instance.commitBody).toEqual("");
     });
 
   });
@@ -171,23 +171,23 @@ describe("ActionConfig", () => {
     });
 
     test.each([
-      "This is a commit title",
-      "This is templated commit title {{optimizedCount}}",
+      "This is a commit message title",
+      "This is templated commit message title {{optimizedCount}}",
       "If you see a rat the size of a car, you're playing the wrong game",
-    ])("commit title is defined in the config object", (title) => {
+    ])("commit message title is defined in the config object", (title) => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
 
       const instance: ActionConfig = new ActionConfig({ commit: { title } });
       expect(instance.commitTitle).toEqual(title);
     });
 
-    test("commit title is an empty string in the config object", () => {
+    test("commit message title is an empty string in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { title: "" } });
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
-    test("conventional-commits is enabled and no commit title is specified", () => {
+    test("conventional-commits is enabled and no commit message title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
 
       const instance: ActionConfig = new ActionConfig();
@@ -196,7 +196,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("conventional-commits is enabled and a commit title is specified", () => {
+    test("conventional-commits is enabled and a commit message title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
 
       const instance: ActionConfig = new ActionConfig({ commit: { title: "deadbeef" } });
@@ -205,7 +205,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("conventional-commits is disabled and no commit title is specified", () => {
+    test("conventional-commits is disabled and no commit message title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
 
       const instance: ActionConfig = new ActionConfig();
@@ -213,7 +213,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
-    test("conventional-commits is disabled and a commit title is specified", () => {
+    test("conventional-commits is disabled and a commit message title is specified", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
 
       const instance: ActionConfig = new ActionConfig({ commit: { title: "Do the thing" } });
@@ -230,14 +230,14 @@ describe("ActionConfig", () => {
       );
     });
 
-    test("commit.conventional is enabled and no commit title is specified", () => {
+    test("commit.conventional is enabled and no commit message title is specified", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { conventional: true } });
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).not.toEqual("");
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("commit.conventional is enabled and a commit title is specified", () => {
+    test("commit.conventional is enabled and a commit message title is specified", () => {
       const instance: ActionConfig = new ActionConfig({
         commit: { conventional: true, title: "Mom's spaghetti" },
       });
@@ -247,13 +247,13 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
     });
 
-    test("commit.conventional is disabled and no commit title is specified", () => {
+    test("commit.conventional is disabled and no commit message title is specified", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { conventional: false } });
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
-    test("commit.conventional is disabled and a commit title is specified", () => {
+    test("commit.conventional is disabled and a commit message title is specified", () => {
       const instance: ActionConfig = new ActionConfig({
         commit: { conventional: false, title: "Yip yip!" },
       });
