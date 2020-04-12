@@ -444,6 +444,22 @@ describe("Comments", () => {
     expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
 
+  test("custom comment on a Pull Request", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+    actionConfig.comment = "Hello world!";
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(templating.formatComment).toHaveBeenCalledWith(
+      actionConfig.comment,
+      expect.any(Object),
+    );
+  });
+
 });
 
 describe("Payloads", () => {
