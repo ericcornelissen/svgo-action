@@ -26,7 +26,8 @@ the Action. If the Action did not do anything, it won't leave a comment.
 
 Alternatively, the _comments_ option can be used to configure the contents of
 comments by the Action. By setting the value to a string, comments are enabled
-and the string will parsed as a template (see [commit message templating]).
+and the string will be used as the comment. The comment can be a template string
+as described in [the templating documentation].
 
 ### Examples
 
@@ -82,7 +83,7 @@ file.
 
 The commit title, i.e. the first line of a commit message, can be configured
 using the `title` key as shown below. The commit title can be a template string
-as described in [commit message templating].
+as described in [the templating documentation].
 
 ```yaml
 # .github/svgo-action.yml
@@ -131,8 +132,8 @@ You can still configure the commit description
 
 The commit description, i.e. the part of the commit message that comes after the
 commit title, can be configured using the `description` key as shown below. The
-commit description can be a template string as described in [commit message
-templating].
+commit description can be a template string as described in [the templating
+documentation].
 
 ```yaml
 # .github/svgo-action.yml
@@ -315,9 +316,9 @@ svgo-options: my-svgo-options.yml
 ```
 
 [conventional commit]: https://www.conventionalcommits.org/
-[commit message templating]: /docs/templating.md
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new
 [svgo]: https://github.com/svg/svgo
+[the templating documentation]: /docs/templating.md
 [yaml]: https://yaml.org/
 [yaml multiline strings]: https://yaml-multiline.info/
