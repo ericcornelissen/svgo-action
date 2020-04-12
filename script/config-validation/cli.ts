@@ -20,7 +20,7 @@ function main(configFile: string): void {
 
   console.log(`${type} file detected\n`);
   console.log("\nReport:\n=======");
-  console.log(report.filter((x) => x !== "").join("\n"));
+  console.log(report.join("\n"));
 }
 
 main(process.argv[2]);

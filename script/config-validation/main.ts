@@ -32,6 +32,8 @@ const ALLOWED_KEYS_FILE = ["commit", "dry-run", "svgo-options"];
 const ALLOWED_KEYS_COMMIT = ["conventional", "title", "description"];
 const ALLOWED_KEYS_WORKFLOW = ["repo-token", "configuration-path", "conventional-commits", "dry-run", "svgo-options"];
 
+const emptyString = (s: string): boolean => s !== "";
+
 
 function isBooleanString(value?: boolean | string): boolean {
   return value === TRUE_STRING || value === FALSE_STRING;
@@ -190,7 +192,7 @@ function analyzeConfigFile(configObject: any): Report {
   report.push(checkValueOfDryRun(configObject["dry-run"]));
   report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
-  return report;
+  return report.filter(emptyString);
 }
 
 function analyzeWorkflowFile(jobs: Jobs): Report {
@@ -203,7 +205,7 @@ function analyzeWorkflowFile(jobs: Jobs): Report {
     report.push(checkValueOfRepoToken(configObject["repo-token"]));
     report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
-    return report;
+    return report.filter(emptyString);
   }
 
   for (const pipeline of Object.values(jobs)) {
