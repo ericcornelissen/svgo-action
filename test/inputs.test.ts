@@ -16,7 +16,7 @@ import {
 } from "../src/inputs";
 
 
-const INPUT_NAME_COMMENTS = "comments";
+const INPUT_NAME_COMMENT = "comment";
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
 const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
 const INPUT_NAME_DRY_RUN = "dry-run";
@@ -70,12 +70,12 @@ describe("ActionConfig", () => {
 
   });
 
-  describe(".comments", () => {
+  describe(".comment", () => {
 
     const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
 
-    test("comments is set to `'true'` in the Workflow file", () => {
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+    test("comment is set to `'true'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.comment).toEqual(DEFAULT_COMMENT);
@@ -84,24 +84,24 @@ describe("ActionConfig", () => {
     test.each([
       "Hello world!",
       "{{ svgCount }} SVG(s) were optimized, you're welcome :)",
-    ])("comments is set to template in the workflow file ('%s')", (template) => {
-      mockCoreGetInput(INPUT_NAME_COMMENTS, template);
+    ])("comment is set to a template in the Workflow file ('%s')", (template) => {
+      mockCoreGetInput(INPUT_NAME_COMMENT, template);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.comment).toEqual(template);
     });
 
-    test("comments is `true` in the config object", () => {
-      const rawConfig: RawActionConfig = yaml.safeLoad("comments: true");
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+    test("comment is `true` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comment: true");
+      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.comment).toEqual(DEFAULT_COMMENT);
     });
 
-    test("comments is `'true'` in the config object", () => {
-      const rawConfig: RawActionConfig = yaml.safeLoad("comments: 'true'");
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+    test("comment is `'true'` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comment: 'true'");
+      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.comment).toEqual(DEFAULT_COMMENT);
@@ -110,9 +110,9 @@ describe("ActionConfig", () => {
     test.each([
       "foobar",
       "{{ svgCount }} SVG(s) were optimized :sparkles:",
-    ])("comments is set to template in the config object ('%s')", (template) => {
-      const rawConfig: RawActionConfig = yaml.safeLoad(`comments: "${template}"`);
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+    ])("comment is set to a template in the config object ('%s')", (template) => {
+      const rawConfig: RawActionConfig = yaml.safeLoad(`comment: "${template}"`);
+      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.comment).toEqual(template);
@@ -298,78 +298,78 @@ describe("ActionConfig", () => {
       core.info.mockClear();
     });
 
-    test("comments is not set at all", () => {
+    test("comment is not set at all", () => {
       const defaultValue = "false";
-      mockCoreGetInput(INPUT_NAME_COMMENTS, defaultValue);
+      mockCoreGetInput(INPUT_NAME_COMMENT, defaultValue);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.enableComments).toBe(false);
     });
 
-    test("comments is `'false'` in the workflow file", () => {
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+    test("comment is `'false'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.enableComments).toBe(false);
     });
 
-    test("comments is `'true'` in the workflow file", () => {
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+    test("comment is `'true'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.enableComments).toBe(true);
     });
 
-    testNonBoolean("comments is `'%s'` in the workflow file", (value) => {
-      mockCoreGetInput(INPUT_NAME_COMMENTS, value);
+    testNonBoolean("comment is `'%s'` in the Workflow file", (value) => {
+      mockCoreGetInput(INPUT_NAME_COMMENT, value);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.enableComments).toBe(true);
       expect(core.info).toHaveBeenCalledWith(
-        expect.stringContaining(`Unknown comments value '${value}'`),
+        expect.stringContaining(`Unknown comment value '${value}'`),
       );
     });
 
-    test("comments is `false` in the config object", () => {
-      const rawConfig: RawActionConfig = yaml.safeLoad("comments: false");
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+    test("comment is `false` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comment: false");
+      mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.enableComments).toBe(false);
     });
 
-    test("comments is `true` in the config object", () => {
-      const rawConfig: RawActionConfig = yaml.safeLoad("comments: true");
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+    test("comment is `true` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comment: true");
+      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.enableComments).toBe(true);
     });
 
-    test("comments is `'false'` in the config object", () => {
-      const rawConfig: RawActionConfig = yaml.safeLoad("comments: 'false'");
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+    test("comment is `'false'` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comment: 'false'");
+      mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.enableComments).toBe(false);
     });
 
-    test("comments is `'true'` in the config object", () => {
-      const rawConfig: RawActionConfig = yaml.safeLoad("comments: 'true'");
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+    test("comment is `'true'` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comment: 'true'");
+      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.enableComments).toBe(true);
     });
 
-    testNonBoolean("comments is `'%s'` in the config object", (value) => {
-      const rawConfig: RawActionConfig = yaml.safeLoad(`comments: '${value}'`);
-      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+    testNonBoolean("comment is `'%s'` in the config object", (value) => {
+      const rawConfig: RawActionConfig = yaml.safeLoad(`comment: '${value}'`);
+      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
       expect(instance.enableComments).toBe(true);
       expect(core.info).toHaveBeenCalledWith(
-        expect.stringContaining(`Unknown comments value '${value}'`),
+        expect.stringContaining(`Unknown comment value '${value}'`),
       );
     });
 

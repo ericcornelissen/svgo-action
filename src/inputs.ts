@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 
 
-const INPUT_NAME_COMMENTS = "comments";
+const INPUT_NAME_COMMENT = "comment";
 const INPUT_NAME_CONFIG_PATH = "configuration-path";
 const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
 const INPUT_NAME_DRY_RUN = "dry-run";
@@ -24,7 +24,7 @@ const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://git
 
 
 export type RawActionConfig = {
-  readonly comments?: boolean | string;
+  readonly comment?: boolean | string;
   readonly commit?: {
     readonly conventional?: boolean;
     readonly title?: string;
@@ -65,8 +65,8 @@ export class ActionConfig {
   }
 
   private static getCommentValue(config: RawActionConfig): string {
-    const value = (config.comments !== undefined) ?
-      config.comments : core.getInput(INPUT_NAME_COMMENTS, NOT_REQUIRED);
+    const value = (config.comment !== undefined) ?
+      config.comment : core.getInput(INPUT_NAME_COMMENT, NOT_REQUIRED);
     if (typeof value === STRING && value !== TRUE) {
       // If the value is (the string) `"false"` comments will be disabled, so it
       // does not matter that the comment template is `"false"`. If the value is
@@ -98,7 +98,7 @@ export class ActionConfig {
   }
 
   private static getEnableCommentsValue(config: RawActionConfig): boolean {
-    return this.normalizeBoolOption(config.comments as boolean, INPUT_NAME_COMMENTS, true);
+    return this.normalizeBoolOption(config.comment as boolean, INPUT_NAME_COMMENT, true);
   }
 
   private static getIgnoreGlob(config: RawActionConfig): string {
