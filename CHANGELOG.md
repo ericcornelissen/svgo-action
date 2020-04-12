@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- Add `ignoredCount` as templating variable. ([#191])
+
+## [0.4.4] - 2020-04-12
+
 - Add functionality to ignore SVGs based on a glob. ([#175], [#179])
 - Add option to customize Pull Request comments. ([#184], [#186])
 - Update the documentation for the Action's options. ([#185])
@@ -121,3 +125,4 @@ Versioning].
 [#185]: https://github.com/ericcornelissen/svgo-action/pull/185
 [#186]: https://github.com/ericcornelissen/svgo-action/pull/186
 [#187]: https://github.com/ericcornelissen/svgo-action/pull/187
+[#191]: https://github.com/ericcornelissen/svgo-action/pull/191

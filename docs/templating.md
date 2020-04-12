@@ -12,6 +12,7 @@ SVGs, into these messages.
 | `fileCount`      | The number of files found in the PR       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `filesList`      | A bullet list of the optimized SVG files  | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 | `filesTable`     | A table of optimized files and statistics | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| `ignoredCount`   | The number of ignored SVGs                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `optimizedCount` | The number of optimized SVGs              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `skippedCount`   | The number of not-optimized SVGs          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `svgCount`       | The number of SVGs found in the PR        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |

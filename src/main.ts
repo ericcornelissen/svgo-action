@@ -53,6 +53,7 @@ export type CommitData = {
     readonly optimized: FileData[];
     readonly original: FileData[];
   };
+  readonly ignoredCount: number;
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
@@ -110,7 +111,12 @@ async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
   ignoreGlob: string,
-): Promise<{ fileCount: number; svgCount: number; svgs: FileData[] }> {
+): Promise<{
+  fileCount: number;
+  ignoredCount: number;
+  svgCount: number;
+  svgs: FileData[];
+}> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
 
   const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
@@ -140,7 +146,7 @@ async function getSvgsInPR(
     });
   }
 
-  return { fileCount, svgCount, svgs };
+  return { fileCount, ignoredCount, svgCount, svgs };
 }
 
 async function doOptimizeSvgs(
@@ -227,7 +233,7 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const { fileCount, svgCount, svgs } = await getSvgsInPR(
+  const { fileCount, ignoredCount, svgCount, svgs } = await getSvgsInPR(
     client,
     prNumber,
     config.ignoreGlob,
@@ -242,6 +248,7 @@ async function run(
     await doCommitChanges(client, prNumber, config, {
       fileCount: fileCount,
       fileData: { optimized: optimizedSvgs, original: svgs },
+      ignoredCount: ignoredCount,
       optimizedCount: optimizedCount,
       skippedCount: skippedCount,
       svgCount: svgCount,
