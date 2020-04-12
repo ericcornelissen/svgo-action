@@ -25,8 +25,8 @@ Requests. The comment by the Action contains a summary of the optimization by
 the Action. If the Action did not do anything, it won't leave a comment.
 
 Alternatively, the _comments_ option can be used to configure the contents of
-comments by the Action. By setting the value to string, comments are enabled and
-the string will parsed as a template (see [commit message templating]).
+comments by the Action. By setting the value to a string, comments are enabled
+and the string will parsed as a template (see [commit message templating]).
 
 ### Examples
 

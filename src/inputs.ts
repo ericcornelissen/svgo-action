@@ -68,6 +68,10 @@ export class ActionConfig {
     const value = (config.comments !== undefined) ?
       config.comments : core.getInput(INPUT_NAME_COMMENTS, NOT_REQUIRED);
     if (typeof value === STRING && value !== TRUE) {
+      // If the value is (the string) `"false"` comments will be disabled, so it
+      // does not matter that the comment template is `"false"`. If the value is
+      // (the string) `"true"`, we interpret it as (the boolean) `true`, so the
+      // default template should be used.
       return value as string;
     } else {
       return DEFAULT_COMMENT;
