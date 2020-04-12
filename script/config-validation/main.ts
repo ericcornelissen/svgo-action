@@ -15,7 +15,7 @@ import {
 } from "./messages";
 
 
-type Commit = { conventional: boolean; description: string; title: string };
+type Commit = { conventional: boolean; body: string; title: string };
 
 type Jobs = [{ steps: any[] }];
 
@@ -28,9 +28,9 @@ const STRING = "string";
 const TRUE_STRING = "true";
 const FALSE_STRING = "false";
 
-const ALLOWED_KEYS_FILE = ["commit", "dry-run", "svgo-options"];
-const ALLOWED_KEYS_COMMIT = ["conventional", "title", "description"];
-const ALLOWED_KEYS_WORKFLOW = ["repo-token", "configuration-path", "conventional-commits", "dry-run", "svgo-options"];
+const ALLOWED_KEYS_FILE = ["comment", "commit", "dry-run", "svgo-options"];
+const ALLOWED_KEYS_COMMIT = ["conventional", "title", "body"];
+const ALLOWED_KEYS_WORKFLOW = ["repo-token", "comment", "configuration-path", "conventional-commits", "dry-run", "svgo-options"];
 
 const emptyString = (s: string): boolean => s !== "";
 
@@ -64,6 +64,26 @@ function checkKeysInCommit(commitObject: any): string[] {
   return checkKeysInConfig(commitObject, ALLOWED_KEYS_COMMIT);
 }
 
+
+function checkValueOfComment(value?: string): string {
+  const keyName = "comment";
+  if (value !== undefined) {
+    if (typeof value === STRING) {
+      if (isBooleanString(value)) {
+        return useBoolInsteadOfString(keyName);
+      } else {
+        // value is a template for the comment content
+        return "";
+      }
+    }
+
+    if (typeof value !== BOOLEAN) {
+      return unknownValueFor(keyName, value);
+    }
+  }
+
+  return "";
+}
 
 function checkValueOfConfigurationPath(value?: string): string {
   const keyName = "configuration-path";
@@ -116,8 +136,8 @@ function checkValueOfCommitTitle(value?: string, conventional?: boolean | string
   return "";
 }
 
-function checkValueOfCommitDescription(value?: string): string {
-  const keyName = "commit.description";
+function checkValueOfCommitBody(value?: string): string {
+  const keyName = "commit.body";
   if (value !== undefined) {
     if (typeof value !== STRING) {
       return unknownValueFor(keyName, value);
@@ -132,7 +152,7 @@ function checkValueOfCommit(commit?: Commit): string[] {
   if (commit !== undefined) {
     report.push(checkValueOfCommitConventional(commit.conventional));
     report.push(checkValueOfCommitTitle(commit.title, commit.conventional));
-    report.push(checkValueOfCommitDescription(commit.description));
+    report.push(checkValueOfCommitBody(commit.body));
   }
 
   return report;
@@ -189,6 +209,7 @@ function analyzeConfigFile(configObject: any): Report {
   report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_FILE));
   report.push(...checkKeysInCommit(configObject.commit));
   report.push(...checkValueOfCommit(configObject.commit));
+  report.push(checkValueOfComment(configObject.comment));
   report.push(checkValueOfDryRun(configObject["dry-run"]));
   report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
@@ -199,6 +220,7 @@ function analyzeWorkflowFile(jobs: Jobs): Report {
   function doAnalyze(configObject: any): Report {
     const report: Report = [];
     report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_WORKFLOW));
+    report.push(checkValueOfComment(configObject.comment));
     report.push(checkValueOfConfigurationPath(configObject["configuration-path"]));
     report.push(checkValueOfCommitConventional(configObject["conventional-commits"]));
     report.push(checkValueOfDryRun(configObject["dry-run"]));
