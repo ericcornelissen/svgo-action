@@ -7,6 +7,8 @@ Versioning].
 
 ## [Unreleased]
 
+- (!) Rename the `comments` option to `comment`. ([#190])
+- (!) Rename the `commit.description` options to `commit.body`. ([#190])
 - Add `ignoredCount` as templating variable. ([#191])
 
 ## [0.4.4] - 2020-04-12
@@ -125,4 +127,5 @@ Versioning].
 [#185]: https://github.com/ericcornelissen/svgo-action/pull/185
 [#186]: https://github.com/ericcornelissen/svgo-action/pull/186
 [#187]: https://github.com/ericcornelissen/svgo-action/pull/187
+[#190]: https://github.com/ericcornelissen/svgo-action/pull/190
 [#191]: https://github.com/ericcornelissen/svgo-action/pull/191
