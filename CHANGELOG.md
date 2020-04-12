@@ -33,7 +33,7 @@ Versioning].
 ## [0.3.2] - 2020-03-13
 
 - Re-enable the Action from a Pull Request comment. ([#129])
-- Fix default commit message description. ([#130])
+- Fix the default commit message body. ([#130])
 
 ## [0.3.1] - 2020-03-12
 

@@ -39,7 +39,7 @@ configuration file]. The table below shows the options that can be configured.
 
 | Name                   | Description                              | Default       | Documentation                                 |
 | ---------------------- | ---------------------------------------- | ------------- | --------------------------------------------- |
-| `comments`             | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comments)             |
+| `comment`              | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comment)              |
 | `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
 | `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
 | `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
@@ -54,7 +54,7 @@ The first way to configure the action is inside the Workflow file, after the
 ```yaml
 with:
   repo-token: ${{ secrets.GITHUB_TOKEN }}
-  comments: true
+  comment: true
   conventional-commits: true
   dry-run: true
   ignore: do/not/optimize/**/*.svg
@@ -68,14 +68,14 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
-comments: true
+comment: true
 dry-run: true
 ignore: do/not/optimize/**/*.svg
 svgo-options: path/to/svgo-options.yml
 commit:
   conventional: false
   title: Optimized {{optimizedCount}} SVG(s)
-  description: |
+  body: |
     Namely:
     {{filesList}}
 ```
