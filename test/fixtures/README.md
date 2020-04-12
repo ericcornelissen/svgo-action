@@ -24,7 +24,7 @@ string should be an optimized version of the SVG, and `encoding` should be the
 encoding of the optimized version encoded the same way as the subject SVG is
 encoded in _'contents-payloads.json'_.
 
-> :warning: The encoded file data in _'coptimizations.json'_ should match,
+> :warning: The encoded file data in _'optimizations.json'_ should match,
 > exactly, the optimized file data in the same file.
 
 The _'svgo-action.json'_ file has a special relation to the file found under

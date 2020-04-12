@@ -38,6 +38,7 @@ beforeEach(() => {
 
   githubAPI.commitFiles.mockClear();
   githubAPI.createBlob.mockClear();
+  githubAPI.createComment.mockClear();
   githubAPI.getPrFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
@@ -155,7 +156,7 @@ describe("Configuration", () => {
     "This should be a commit title",
     "Why not Zoidberg",
     "A templated commit title? {{optimizedCount}}",
-  ])("custom commit title (%s)", async (commitTitle) => {
+  ])("custom commit message title (%s)", async (commitTitle) => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.commitTitle = commitTitle;
 
@@ -175,9 +176,9 @@ describe("Configuration", () => {
     "This should be a commit desciption",
     "Shut up and take my money",
     "A templated commit title? {{filesList}}",
-  ])("custom commit description (%s)", async (commitDescription) => {
+  ])("custom commit message body (%s)", async (commitBoy) => {
     const actionConfig = new inputs.ActionConfig();
-    actionConfig.commitDescription = commitDescription;
+    actionConfig.commitBody = commitBoy;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     inputs.ActionConfig.mockReturnValueOnce(actionConfig);
@@ -186,7 +187,7 @@ describe("Configuration", () => {
 
     expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       expect.any(String),
-      commitDescription,
+      commitBoy,
       expect.any(Object),
     );
   });
@@ -204,6 +205,46 @@ describe("Configuration", () => {
       actionConfig.commitTitle,
       expect.any(String),
       expect.any(Object),
+    );
+  });
+
+  test("configure a glob to ignore files", async () => {
+    const filePath = "foo.svg";
+    const { content: fileContent, encoding: fileEncoding } = contentPayloads[filePath];
+    const fooSvgData = files[filePath];
+
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.ignoreGlob = "foo/*";
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(fileContent, fileEncoding);
+
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fileEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      filePath,
+      expect.any(String),
+      fileEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: filePath }),
+      ]),
+      expect.any(String),
     );
   });
 
@@ -331,6 +372,92 @@ describe("Manual Action control", () => {
 
     // Make sure the ResolveValueOnce for getPrComments is resolved before the next test
     await githubAPI.getPrComments();
+  });
+
+});
+
+describe("Comments", () => {
+
+  test("don't comment if comments are disabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = false;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
+  });
+
+  test("comment on a Pull Request when there is a new SVG", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
+  });
+
+  test("comment on a Pull Request when there is a modified SVG", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FILE,
+    PR_NUMBER.REMOVE_SVG,
+  ])("don't comment when there is no SVG added or modified", async (prNumber) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
+  });
+
+  test.each([
+    PR_NUMBER.ADD_FAKE_SVG,
+    PR_NUMBER.ADD_OPTIMIZED_SVG,
+  ])("don't comment when no SVG needed to be optimized", async (prNumber) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(githubAPI.createComment).not.toHaveBeenCalled();
+  });
+
+  test("custom comment on a Pull Request", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.enableComments = true;
+    actionConfig.comment = "Hello world!";
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
+
+    await main();
+
+    expect(templating.formatComment).toHaveBeenCalledWith(
+      actionConfig.comment,
+      expect.any(Object),
+    );
   });
 
 });
@@ -465,6 +592,50 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: fooFilePath }),
         expect.objectContaining({ path: barFilePath }),
+      ]),
+      expect.any(String),
+    );
+  });
+
+  test("a Pull Request with 1 new SVG and one new SVG in a directory", async () => {
+    const foobarFilePath = "foo/bar.svg";
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
+
+    await main();
+
+    expect(encoder.decode).toHaveBeenCalledTimes(2);
+    expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
+    expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
+
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(2);
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(2);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), barSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(2);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      fooFilePath,
+      expect.any(String),
+      fooSvgEncoding,
+    );
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      foobarFilePath,
+      expect.any(String),
+      barSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: foobarFilePath }),
       ]),
       expect.any(String),
     );

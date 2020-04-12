@@ -11,6 +11,7 @@ export enum PR_NUMBER {
   MODIFY_SVG,
   REMOVE_SVG,
   ADD_MODIFY_REMOVE_SVG,
+  ADD_SVG_AND_SVG_IN_DIR,
   ADD_FILE,
   MODIFY_FILE,
   REMOVE_FILE,
@@ -114,6 +115,8 @@ export const GitHubInstance = {
       .mockName("GitHub.git.updateRef"),
   },
   issues: {
+    createComment: jest.fn()
+      .mockName("GitHub.issues.createComment"),
     listComments: jest.fn()
       .mockImplementation(async ({ issue_number: prNumber, per_page: perPage, page }) => {
         const generateComments = (length) => Array.from({ length }).map((_, i) => ({ body: `${i}` }));
@@ -184,6 +187,8 @@ export const GitHubInstance = {
             return { data: prPayloads["remove 1 SVG"] };
           case PR_NUMBER.ADD_MODIFY_REMOVE_SVG:
             return { data: prPayloads["add 1 SVG, modify 1 SVG, remove 1 SVG"] };
+          case PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR:
+            return { data: prPayloads["add 1 SVG, add 1 SVG in dir"] };
           case PR_NUMBER.ADD_FILE:
             return { data: prPayloads["add 1 file"] };
           case PR_NUMBER.MODIFY_FILE:

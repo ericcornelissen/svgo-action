@@ -7,7 +7,24 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- (!) Rename the `comments` option to `comment`. ([#190])
+- (!) Rename the `commit.description` options to `commit.body`. ([#190])
+- Add `ignoredCount` as templating variable. ([#191])
+
+## [0.4.4] - 2020-04-12
+
+- Add functionality to ignore SVGs based on a glob. ([#175], [#179])
+- Add option to customize Pull Request comments. ([#184], [#186])
+- Update the documentation for the Action's options. ([#185])
+- Add the files table template value for commit message bodies. ([#187])
+
+## [0.4.3] - 2020-04-10
+
+- Fix bug in the Pull Request comment when not all SVG are optimized. ([#178])
+
+## [0.4.2] - 2020-04-09
+
+- Add functionality to comment on Pull Requests. ([#164], [#170])
 
 ## [0.4.1] - 2020-04-05
 
@@ -22,7 +39,7 @@ Versioning].
 ## [0.3.2] - 2020-03-13
 
 - Re-enable the Action from a Pull Request comment. ([#129])
-- Fix default commit message description. ([#130])
+- Fix the default commit message body. ([#130])
 
 ## [0.3.1] - 2020-03-12
 
@@ -101,3 +118,14 @@ Versioning].
 [#133]: https://github.com/ericcornelissen/svgo-action/pull/133
 [#157]: https://github.com/ericcornelissen/svgo-action/pull/157
 [#160]: https://github.com/ericcornelissen/svgo-action/pull/160
+[#164]: https://github.com/ericcornelissen/svgo-action/pull/164
+[#170]: https://github.com/ericcornelissen/svgo-action/pull/170
+[#175]: https://github.com/ericcornelissen/svgo-action/pull/175
+[#178]: https://github.com/ericcornelissen/svgo-action/pull/178
+[#179]: https://github.com/ericcornelissen/svgo-action/pull/179
+[#184]: https://github.com/ericcornelissen/svgo-action/pull/184
+[#185]: https://github.com/ericcornelissen/svgo-action/pull/185
+[#186]: https://github.com/ericcornelissen/svgo-action/pull/186
+[#187]: https://github.com/ericcornelissen/svgo-action/pull/187
+[#190]: https://github.com/ericcornelissen/svgo-action/pull/190
+[#191]: https://github.com/ericcornelissen/svgo-action/pull/191
