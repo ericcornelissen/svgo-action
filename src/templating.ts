@@ -7,6 +7,7 @@ import { toPercentage } from "./utils/percentages";
 const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
 const FILES_TABLE_EXP = /\{\{\s*filesTable\s*\}\}/;
+const IGNORED_COUNT_EXP = /\{\{\s*ignoredCount\s*\}\}/;
 const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
 const SKIPPED_COUNT_EXP = /\{\{\s*skippedCount\s*\}\}/;
 const SVG_COUNT_EXP = /\{\{\s*svgCount\s*\}\}/;
@@ -53,6 +54,12 @@ const formatters = [
       }
 
       return template.replace(FILES_TABLE_EXP, table);
+    },
+  },
+  {
+    key: "ignoredCount",
+    fn: (template: string, value: number): string => {
+      return template.replace(IGNORED_COUNT_EXP, value.toString());
     },
   },
   {
