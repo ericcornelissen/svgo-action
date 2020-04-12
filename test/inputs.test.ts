@@ -27,7 +27,7 @@ const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 function mockCoreGetInput(key: string, value: string): void {
   when(core.getInput)
     .calledWith(key, expect.any(Object))
-    .mockReturnValueOnce(value);
+    .mockReturnValue(value);
 }
 
 
@@ -70,16 +70,68 @@ describe("ActionConfig", () => {
 
   });
 
+  describe(".comments", () => {
+
+    const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
+
+    test("comments is set to `'true'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "true");
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.comment).toEqual(DEFAULT_COMMENT);
+    });
+
+    test.each([
+      "Hello world!",
+      "{{ svgCount }} SVG(s) were optimized, you're welcome :)",
+    ])("comments is set to template in the workflow file ('%s')", (template) => {
+      mockCoreGetInput(INPUT_NAME_COMMENTS, template);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.comment).toEqual(template);
+    });
+
+    test("comments is `true` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comments: true");
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.comment).toEqual(DEFAULT_COMMENT);
+    });
+
+    test("comments is `'true'` in the config object", () => {
+      const rawConfig: RawActionConfig = yaml.safeLoad("comments: 'true'");
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.comment).toEqual(DEFAULT_COMMENT);
+    });
+
+    test.each([
+      "foobar",
+      "{{ svgCount }} SVG(s) were optimized :sparkles:",
+    ])("comments is set to template in the config object ('%s')", (template) => {
+      const rawConfig: RawActionConfig = yaml.safeLoad(`comments: "${template}"`);
+      mockCoreGetInput(INPUT_NAME_COMMENTS, "false");
+
+      const instance: ActionConfig = new ActionConfig(rawConfig);
+      expect(instance.comment).toEqual(template);
+    });
+
+  });
+
   describe(".commitDescription", () => {
+
+    const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVG(s):\n{{filesList}}";
 
     test("commit is not defined in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ });
-      expect(instance.commitDescription).toBeDefined();
+      expect(instance.commitDescription).toEqual(DEFAULT_COMMIT_DESCRIPTION);
     });
 
     test("commit is defined in the config object, but the description isn't", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { } });
-      expect(instance.commitDescription).toBeDefined();
+      expect(instance.commitDescription).toEqual(DEFAULT_COMMIT_DESCRIPTION);
     });
 
     test.each([
@@ -101,13 +153,16 @@ describe("ActionConfig", () => {
 
   describe(".commitTitle", () => {
 
+    const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
     const CONVENTIONAL_COMMIT_EXP = /.+:\s.+/;
 
     const testNonBoolean = test.each(["foobar", "treu", "fals"]);
 
     test("commit is not defined in the config object", () => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+
       const instance: ActionConfig = new ActionConfig({ });
-      expect(instance.commitTitle).toBeDefined();
+      expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
     test("commit is defined in the config object, but the title isn't", () => {
@@ -120,6 +175,8 @@ describe("ActionConfig", () => {
       "This is templated commit title {{optimizedCount}}",
       "If you see a rat the size of a car, you're playing the wrong game",
     ])("commit title is defined in the config object", (title) => {
+      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+
       const instance: ActionConfig = new ActionConfig({ commit: { title } });
       expect(instance.commitTitle).toEqual(title);
     });
@@ -127,7 +184,7 @@ describe("ActionConfig", () => {
     test("commit title is an empty string in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { title: "" } });
       expect(instance.commitTitle).toBeDefined();
-      expect(instance.commitTitle).not.toEqual("");
+      expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
     test("conventional-commits is enabled and no commit title is specified", () => {
@@ -153,8 +210,7 @@ describe("ActionConfig", () => {
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.commitTitle).toBeDefined();
-      expect(instance.commitTitle).not.toEqual("");
-      expect(instance.commitTitle).not.toMatch(CONVENTIONAL_COMMIT_EXP);
+      expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
     test("conventional-commits is disabled and a commit title is specified", () => {
@@ -194,8 +250,7 @@ describe("ActionConfig", () => {
     test("commit.conventional is disabled and no commit title is specified", () => {
       const instance: ActionConfig = new ActionConfig({ commit: { conventional: false } });
       expect(instance.commitTitle).toBeDefined();
-      expect(instance.commitTitle).not.toEqual("");
-      expect(instance.commitTitle).not.toMatch(CONVENTIONAL_COMMIT_EXP);
+      expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
     test("commit.conventional is disabled and a commit title is specified", () => {
@@ -221,8 +276,7 @@ describe("ActionConfig", () => {
 
       const instance: ActionConfig = new ActionConfig({ commit: { conventional: false } });
       expect(instance.commitTitle).toBeDefined();
-      expect(instance.commitTitle).not.toEqual("");
-      expect(instance.commitTitle).not.toMatch(CONVENTIONAL_COMMIT_EXP);
+      expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
     test("conventional-commits disabled and commit.conventional enabled", () => {

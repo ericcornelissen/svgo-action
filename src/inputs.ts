@@ -14,15 +14,17 @@ const REQUIRED = { required: true };
 
 const BOOLEAN = "boolean";
 const FALSE = "false";
+const STRING = "string";
 const TRUE = "true";
 
 const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
 const DEFAULT_COMMIT_DESCRIPTION = "Optimized SVG(s):\n{{filesList}}";
 const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
+const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
 
 
 export type RawActionConfig = {
-  readonly comments?: boolean;
+  readonly comments?: boolean | string;
   readonly commit?: {
     readonly conventional?: boolean;
     readonly title?: string;
@@ -44,6 +46,7 @@ export function getRepoToken(): string {
 
 export class ActionConfig {
 
+  public readonly comment: string;
   public readonly commitDescription: string;
   public readonly commitTitle: string;
   public readonly enableComments: boolean;
@@ -52,16 +55,27 @@ export class ActionConfig {
   public readonly svgoOptionsPath: string;
 
   constructor(config: RawActionConfig = { }) {
+    this.comment = ActionConfig.getCommentValue(config);
     this.commitDescription = ActionConfig.getCommitDescription(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
-    this.enableComments = ActionConfig.getCommentsValue(config);
+    this.enableComments = ActionConfig.getEnableCommentsValue(config);
     this.ignoreGlob = ActionConfig.getIgnoreGlob(config);
     this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
 
-  private static getCommentsValue(config: RawActionConfig): boolean {
-    return this.normalizeBoolOption(config.comments, INPUT_NAME_COMMENTS, true);
+  private static getCommentValue(config: RawActionConfig): string {
+    const value = (config.comments !== undefined) ?
+      config.comments : core.getInput(INPUT_NAME_COMMENTS, NOT_REQUIRED);
+    if (typeof value === STRING && value !== TRUE) {
+      // If the value is (the string) `"false"` comments will be disabled, so it
+      // does not matter that the comment template is `"false"`. If the value is
+      // (the string) `"true"`, we interpret it as (the boolean) `true`, so the
+      // default template should be used.
+      return value as string;
+    } else {
+      return DEFAULT_COMMENT;
+    }
   }
 
   private static getCommitDescription(config: RawActionConfig): string {
@@ -81,6 +95,10 @@ export class ActionConfig {
     } else {
       return config.commit?.title || DEFAULT_COMMIT_TITLE;
     }
+  }
+
+  private static getEnableCommentsValue(config: RawActionConfig): boolean {
+    return this.normalizeBoolOption(config.comments as boolean, INPUT_NAME_COMMENTS, true);
   }
 
   private static getIgnoreGlob(config: RawActionConfig): string {

@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Add functionality to ignore SVGs based on a glob. ([#175], [#179])
+- Add option to customize Pull Request comments. ([#184])
 - Update the documentation for the Action's options. ([#185])
 
 ## [0.4.3] - 2020-04-10
@@ -115,4 +116,5 @@ Versioning].
 [#175]: https://github.com/ericcornelissen/svgo-action/pull/175
 [#178]: https://github.com/ericcornelissen/svgo-action/pull/178
 [#179]: https://github.com/ericcornelissen/svgo-action/pull/179
+[#184]: https://github.com/ericcornelissen/svgo-action/pull/184
 [#185]: https://github.com/ericcornelissen/svgo-action/pull/185
