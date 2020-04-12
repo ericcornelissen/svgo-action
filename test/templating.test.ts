@@ -40,8 +40,9 @@ const defaultData: CommitData = {
       },
     ],
   },
+  ignoredCount: 36,
   optimizedCount: 3,
-  skippedCount: 39,
+  skippedCount: 3,
   svgCount: 42,
 };
 
@@ -63,6 +64,12 @@ const templates = {
     "This commit contains optimization for the following SVGs:\n{{ filesList }}",
     "WeIrD DoEs{{filesList}}NoT mEaN iNcOrReCt!",
     "{{ filesList }}",
+  ],
+  ignoredCount: [
+    "This commit ignored {{ignoredCount}} SVG(s)",
+    "Ignored some SVGs ({{ ignoredCount }})",
+    "Why n{{ignoredCount}}ot Zoidberg?",
+    "{{ignoredCount}}",
   ],
   optimizedCount: [
     "This commit contains {{optimizedCount}} optimized SVG(s)",
@@ -136,6 +143,7 @@ const values = {
     },
   },
   optimizedCount: [0, 1, 3, 36],
+  ignoredCount: [0, 1, 6, 1337],
   skippedCount: [0, 1, 5, 42],
   svgCount: [0, 1, 4, 9001],
 };
@@ -225,6 +233,22 @@ describe("::formatComment", () => {
       "| --- | --- | --- | --- |\n" +
       "| foo.svg | 0.006 KB | 0.003 KB | -50% |\n",
     );
+  });
+
+  test.each(templates.ignoredCount)("template using '{{ignoredCount}}' (%s)", (templateString) => {
+    const result = formatComment(templateString, defaultData);
+    expect(result).not.toEqual(templateString);
+
+    const expected = templateString.replace(/\{\{\s*ignoredCount\s*\}\}/, defaultData.ignoredCount.toString());
+    expect(result).toEqual(expected);
+  });
+
+  test.each(values.ignoredCount)("different values for `ignoredCount` (%i)", (ignoredCount) => {
+    const data = Object.assign({ }, defaultData, { ignoredCount });
+    const templateString = "The Action ignored {{ignoredCount}} files";
+
+    const result = formatComment(templateString, data);
+    expect(result).toEqual(`The Action ignored ${ignoredCount} files`);
   });
 
   test.each(templates.optimizedCount)("template using '{{optimizedCount}}' (%s)", (templateString) => {
@@ -325,6 +349,28 @@ describe("::formatCommitMessage", () => {
 
       const resultTitle = result.split("\n\n")[0];
       expect(resultTitle).toEqual(templateString);
+    });
+
+    test.each(templates.ignoredCount)("template using '{{ignoredCount}}' (%s)", (templateString) => {
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, defaultData);
+      expect(result).not.toEqual(templateString);
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).not.toEqual(templateString);
+
+      const expectedTitle = templateString.replace(/\{\{\s*ignoredCount\s*\}\}/, defaultData.ignoredCount.toString());
+      expect(resultTitle).toEqual(expectedTitle);
+    });
+
+    test.each(values.ignoredCount)("different values for `ignoredCount` (%i)", (ignoredCount) => {
+      const data = Object.assign({ }, defaultData, { ignoredCount });
+      const templateString = "The Action ignored {{ignoredCount}} files";
+
+      const result = formatCommitMessage(templateString, defaultMessageTemplate, data);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).toEqual(`The Action ignored ${ignoredCount} files`);
     });
 
     test.each(templates.optimizedCount)("template using '{{optimizedCount}}' (%s)", (templateString) => {
@@ -499,6 +545,28 @@ describe("::formatCommitMessage", () => {
         "| --- | --- | --- | --- |\n" +
         "| foo.svg | 0.006 KB | 0.003 KB | -50% |",
       );
+    });
+
+    test.each(templates.ignoredCount)("template using '{{ignoredCount}}' (%s)", (templateString) => {
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
+      expect(result).not.toEqual(templateString);
+
+      const resultBody = result.split("\n\n")[1];
+      expect(resultBody).not.toEqual(templateString);
+
+      const expectedBody = templateString.replace(/\{\{\s*ignoredCount\s*\}\}/, defaultData.ignoredCount.toString());
+      expect(resultBody).toEqual(expectedBody);
+    });
+
+    test.each(values.ignoredCount)("different values for `ignoredCount` (%i)", (ignoredCount) => {
+      const data = Object.assign({ }, defaultData, { ignoredCount });
+      const templateString = "The Action ignored {{ignoredCount}} files";
+
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultBody = result.split("\n\n")[1];
+      expect(resultBody).toEqual(`The Action ignored ${ignoredCount} files`);
     });
 
     test.each(templates.optimizedCount)("template using '{{optimizedCount}}' (%s)", (templateString) => {
