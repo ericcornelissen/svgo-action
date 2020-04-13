@@ -23,7 +23,7 @@ jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
 jest.mock("../src/templating", () => templating);
 
-import { PR_NOT_FOUND } from "../src/github-api";
+import { PR_NOT_FOUND } from "../src/constants";
 import main from "../src/main";
 
 
@@ -173,7 +173,7 @@ describe("Configuration", () => {
   });
 
   test.each([
-    "This should be a commit desciption",
+    "This should be a commit body",
     "Shut up and take my money",
     "A templated commit title? {{filesList}}",
   ])("custom commit message body (%s)", async (commitBoy) => {

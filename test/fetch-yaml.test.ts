@@ -6,10 +6,11 @@ import * as github from "./mocks/@actions/github.mock";
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 
+import { INPUT_NAME_REPO_TOKEN } from "../src/constants";
 import { fetchYamlFile } from "../src/utils/fetch-yaml";
 
 
-const token = core.getInput("repo-token", { required: true });
+const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 const client = new github.GitHub(token);
 
 

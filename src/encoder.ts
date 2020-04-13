@@ -1,10 +1,9 @@
 import { format as strFormat } from "util";
 
+import { BASE64, UTF8 } from "./constants";
+
 
 const UNKNOWN_ENCODING_MSG = "Unknown file encoding '%s'";
-
-const BASE64 = "base64";
-const UTF8 = "utf-8";
 
 
 function decodeBase64(data: string): string {

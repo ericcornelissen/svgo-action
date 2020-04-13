@@ -1,5 +1,5 @@
-import { CommitData } from "../src/main";
 import { formatComment, formatCommitMessage } from "../src/templating";
+import { CommitData } from "../src/types";
 
 
 const defaultData: CommitData = {
@@ -45,7 +45,6 @@ const defaultData: CommitData = {
   skippedCount: 3,
   svgCount: 42,
 };
-
 
 const templates = {
   noTemplateValues: [
@@ -380,7 +379,10 @@ describe("::formatCommitMessage", () => {
       const resultTitle = result.split("\n\n")[0];
       expect(resultTitle).not.toEqual(templateString);
 
-      const expectedTitle = templateString.replace(/\{\{\s*optimizedCount\s*\}\}/, defaultData.optimizedCount.toString());
+      const expectedTitle = templateString.replace(
+        /\{\{\s*optimizedCount\s*\}\}/,
+        defaultData.optimizedCount.toString(),
+      );
       expect(resultTitle).toEqual(expectedTitle);
     });
 
@@ -576,7 +578,10 @@ describe("::formatCommitMessage", () => {
       const resultBody = result.split("\n\n")[1];
       expect(resultBody).not.toEqual(templateString);
 
-      const expectedBody = templateString.replace(/\{\{\s*optimizedCount\s*\}\}/, defaultData.optimizedCount.toString());
+      const expectedBody = templateString.replace(
+        /\{\{\s*optimizedCount\s*\}\}/,
+        defaultData.optimizedCount.toString(),
+      );
       expect(resultBody).toEqual(expectedBody);
     });
 
