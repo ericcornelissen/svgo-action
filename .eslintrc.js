@@ -51,7 +51,7 @@ module.exports = {
 
     // @typescript-eslint (https://github.com/typescript-eslint/typescript-eslint#readme)
     "@typescript-eslint/no-unused-vars": ["error", {
-      argsIgnorePattern: "_+"
+      argsIgnorePattern: "_+",
     }],
 
     // eslint-plugin-jest (https://github.com/jest-community/eslint-plugin-jest#readme)

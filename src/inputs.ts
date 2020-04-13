@@ -105,7 +105,7 @@ export class ActionConfig {
 
   private static getIgnoreGlob(config: RawActionConfig): string {
     return (config.ignore !== undefined) ?
-      config.ignore : core.getInput( INPUT_NAME_IGNORE, NOT_REQUIRED);
+      config.ignore : core.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
   }
 
   private static getSvgoOptionsPath(config: RawActionConfig): string {

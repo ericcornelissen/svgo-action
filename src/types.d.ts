@@ -31,7 +31,6 @@ export type RawActionConfig = {
   readonly "svgo-options"?: string;
 }
 
-
 // Type representing the (relevant) data about a commit.
 export type CommitInfo = {
   readonly sha: string;
