@@ -28,9 +28,9 @@ const STRING = "string";
 const TRUE_STRING = "true";
 const FALSE_STRING = "false";
 
-const ALLOWED_KEYS_FILE = ["comment", "commit", "dry-run", "svgo-options"];
+const ALLOWED_KEYS_FILE = ["comment", "commit", "dry-run", "ignore", "svgo-options"];
 const ALLOWED_KEYS_COMMIT = ["conventional", "title", "body"];
-const ALLOWED_KEYS_WORKFLOW = ["repo-token", "comment", "configuration-path", "conventional-commits", "dry-run", "svgo-options"];
+const ALLOWED_KEYS_WORKFLOW = ["repo-token", "comment", "configuration-path", "conventional-commits", "dry-run", "ignore", "svgo-options"];
 
 const emptyString = (s: string): boolean => s !== "";
 
@@ -175,6 +175,17 @@ function checkValueOfDryRun(value?: boolean | string): string {
   return "";
 }
 
+function checkValueOfIgnore(value?: string): string {
+  const keyName = "ignore";
+  if (value !== undefined) {
+    if (typeof value !== STRING) {
+      return unknownValueFor(keyName, value);
+    }
+  }
+
+  return "";
+}
+
 function checkValueOfRepoToken(value?: string): string {
   const keyName = "repo-token";
   if (value === undefined) {
@@ -211,6 +222,7 @@ function analyzeConfigFile(configObject: any): Report {
   report.push(...checkValueOfCommit(configObject.commit));
   report.push(checkValueOfComment(configObject.comment));
   report.push(checkValueOfDryRun(configObject["dry-run"]));
+  report.push(checkValueOfIgnore(configObject.ignore));
   report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
   return report.filter(emptyString);
@@ -224,6 +236,7 @@ function analyzeWorkflowFile(jobs: Jobs): Report {
     report.push(checkValueOfConfigurationPath(configObject["configuration-path"]));
     report.push(checkValueOfCommitConventional(configObject["conventional-commits"]));
     report.push(checkValueOfDryRun(configObject["dry-run"]));
+    report.push(checkValueOfIgnore(configObject.ignore));
     report.push(checkValueOfRepoToken(configObject["repo-token"]));
     report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
