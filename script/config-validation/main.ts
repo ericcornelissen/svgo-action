@@ -1,6 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
+  INPUT_NAME_COMMENT,
+  INPUT_NAME_CONFIG_PATH,
+  INPUT_NAME_CONVENTIONAL_COMMITS,
+  INPUT_NAME_DRY_RUN,
+  INPUT_NAME_IGNORE,
+  INPUT_NAME_REPO_TOKEN,
+  INPUT_NAME_SVGO_OPTIONS,
+  CONFIG_NAME_COMMIT,
+  CONFIG_NAME_COMMIT_CONVENTIONAL,
+  CONFIG_NAME_COMMIT_TITLE,
+  CONFIG_NAME_COMMIT_BODY,
+} from "../../src/constants";
+
+import {
   // Strings
   commitTitleNoNewLines,
   conventionalCommitOverridesCommitTitle,
@@ -28,9 +42,27 @@ const STRING = "string";
 const TRUE_STRING = "true";
 const FALSE_STRING = "false";
 
-const ALLOWED_KEYS_FILE = ["comment", "commit", "dry-run", "ignore", "svgo-options"];
-const ALLOWED_KEYS_COMMIT = ["conventional", "title", "body"];
-const ALLOWED_KEYS_WORKFLOW = ["repo-token", "comment", "configuration-path", "conventional-commits", "dry-run", "ignore", "svgo-options"];
+const ALLOWED_KEYS_FILE = [
+  INPUT_NAME_COMMENT,
+  CONFIG_NAME_COMMIT,
+  INPUT_NAME_DRY_RUN,
+  INPUT_NAME_IGNORE,
+  INPUT_NAME_SVGO_OPTIONS,
+];
+const ALLOWED_KEYS_COMMIT = [
+  CONFIG_NAME_COMMIT_CONVENTIONAL,
+  CONFIG_NAME_COMMIT_TITLE,
+  CONFIG_NAME_COMMIT_BODY,
+];
+const ALLOWED_KEYS_WORKFLOW = [
+  INPUT_NAME_COMMENT,
+  INPUT_NAME_CONFIG_PATH,
+  INPUT_NAME_CONVENTIONAL_COMMITS,
+  INPUT_NAME_DRY_RUN,
+  INPUT_NAME_IGNORE,
+  INPUT_NAME_REPO_TOKEN,
+  INPUT_NAME_SVGO_OPTIONS,
+];
 
 const emptyString = (s: string): boolean => s !== "";
 
@@ -117,7 +149,10 @@ function checkValueOfCommitConventional(value?: boolean | string): string {
   return "";
 }
 
-function checkValueOfCommitTitle(value?: string, conventional?: boolean | string): string {
+function checkValueOfCommitTitle(
+  value?: string,
+  conventional?: boolean | string,
+): string {
   const keyName = "commit.title";
   if (value !== undefined) {
     if (typeof value !== STRING) {
