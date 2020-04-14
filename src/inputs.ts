@@ -1,13 +1,20 @@
 import * as core from "@actions/core";
 
+import {
+  CONVENTIONAL_COMMIT_TITLE,
+  DEFAULT_COMMIT_BODY,
+  DEFAULT_COMMIT_TITLE,
+  DEFAULT_COMMENT,
+  INPUT_NAME_COMMENT,
+  INPUT_NAME_CONFIG_PATH,
+  INPUT_NAME_CONVENTIONAL_COMMITS,
+  INPUT_NAME_DRY_RUN,
+  INPUT_NAME_IGNORE,
+  INPUT_NAME_REPO_TOKEN,
+  INPUT_NAME_SVGO_OPTIONS,
+} from "./constants";
+import { RawActionConfig } from "./types";
 
-const INPUT_NAME_COMMENT = "comment";
-const INPUT_NAME_CONFIG_PATH = "configuration-path";
-const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
-const INPUT_NAME_DRY_RUN = "dry-run";
-const INPUT_NAME_IGNORE = "ignore";
-const INPUT_NAME_REPO_TOKEN = "repo-token";
-const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
 const NOT_REQUIRED = { required: false };
 const REQUIRED = { required: true };
@@ -16,24 +23,6 @@ const BOOLEAN = "boolean";
 const FALSE = "false";
 const STRING = "string";
 const TRUE = "true";
-
-const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
-const DEFAULT_COMMIT_BODY = "Optimized SVG(s):\n{{filesList}}";
-const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
-const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
-
-
-export type RawActionConfig = {
-  readonly comment?: boolean | string;
-  readonly commit?: {
-    readonly conventional?: boolean;
-    readonly title?: string;
-    readonly body?: string;
-  };
-  readonly "dry-run"?: boolean;
-  readonly ignore?: string;
-  readonly "svgo-options"?: string;
-}
 
 
 export function getConfigFilePath(): string {
@@ -67,6 +56,7 @@ export class ActionConfig {
   private static getCommentValue(config: RawActionConfig): string {
     const value = (config.comment !== undefined) ?
       config.comment : core.getInput(INPUT_NAME_COMMENT, NOT_REQUIRED);
+
     if (typeof value === STRING && value !== TRUE) {
       // If the value is (the string) `"false"` comments will be disabled, so it
       // does not matter that the comment template is `"false"`. If the value is
@@ -97,8 +87,20 @@ export class ActionConfig {
     }
   }
 
+  private static getDryRunValue(config: RawActionConfig): boolean {
+    return this.normalizeBoolOption(
+      config["dry-run"],
+      INPUT_NAME_DRY_RUN,
+      true,
+    );
+  }
+
   private static getEnableCommentsValue(config: RawActionConfig): boolean {
-    return this.normalizeBoolOption(config.comment as boolean, INPUT_NAME_COMMENT, true);
+    return this.normalizeBoolOption(
+      config.comment as boolean,
+      INPUT_NAME_COMMENT,
+      true,
+    );
   }
 
   private static getIgnoreGlob(config: RawActionConfig): string {
@@ -107,11 +109,10 @@ export class ActionConfig {
   }
 
   private static getSvgoOptionsPath(config: RawActionConfig): string {
-    return config["svgo-options"] || core.getInput(INPUT_NAME_SVGO_OPTIONS, NOT_REQUIRED);
-  }
-
-  private static getDryRunValue(config: RawActionConfig): boolean {
-    return this.normalizeBoolOption(config["dry-run"], INPUT_NAME_DRY_RUN, true);
+    return config["svgo-options"] || core.getInput(
+      INPUT_NAME_SVGO_OPTIONS,
+      NOT_REQUIRED,
+    );
   }
 
   private static normalizeBoolOption(
@@ -119,7 +120,9 @@ export class ActionConfig {
     inputName: string,
     assumptionValue: boolean,
   ): boolean {
-    const value = (configValue !== undefined) ? configValue : core.getInput(inputName, NOT_REQUIRED);
+    const value = (configValue !== undefined) ?
+      configValue : core.getInput(inputName, NOT_REQUIRED);
+
     if (typeof value === BOOLEAN) {
       return value as boolean;
     } else if (value === FALSE) {

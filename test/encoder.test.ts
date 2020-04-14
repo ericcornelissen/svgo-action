@@ -1,9 +1,8 @@
+import { BASE64 } from "../src/constants";
 import { decode, encode } from "../src/encoder";
 
 
 const EMPTY_STRING = "";
-
-const BASE64 = "base64";
 
 
 describe("::decode", () => {
