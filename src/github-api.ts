@@ -1,6 +1,9 @@
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/rest";
 
+import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
+import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
+
 
 type GitCommit = Octokit.GitGetCommitResponse;
 
@@ -21,7 +24,7 @@ async function getCommit(client: github.GitHub): Promise<GitCommit> {
   const { data: commit } = await client.git.getCommit({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    commit_sha: refData.object.sha, /* eslint-disable-line @typescript-eslint/camelcase */
+    commit_sha: refData.object.sha, // eslint-disable-line @typescript-eslint/camelcase
   });
 
   return commit;
@@ -47,28 +50,6 @@ function getCommitUrl(commitSha: string): string {
 }
 
 
-export const PR_NOT_FOUND = -1;
-
-
-export type CommitInfo = {
-  readonly sha: string;
-  readonly url: string;
-}
-
-export type GitBlob = Octokit.GitCreateTreeParamsTree;
-
-export type GitFileData = {
-  readonly content: string;
-  readonly encoding: string;
-  readonly path: string;
-}
-
-export type GitFileInfo = {
-  readonly path: string;
-  readonly status: string;
-}
-
-
 export async function commitFiles(
   client: github.GitHub,
   blobs: GitBlob[],
@@ -80,7 +61,7 @@ export async function commitFiles(
   const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    base_tree: previousCommit.tree.sha, /* eslint-disable-line @typescript-eslint/camelcase */
+    base_tree: previousCommit.tree.sha, // eslint-disable-line @typescript-eslint/camelcase
     tree: blobs,
   });
 
@@ -111,9 +92,6 @@ export async function createBlob(
   data: string,
   encoding: string,
 ): Promise<GitBlob> {
-  const COMMIT_MODE_FILE = "100644";
-  const COMMIT_TYPE_BLOB = "blob";
-
   const { data: fileBlob } = await client.git.createBlob({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
@@ -137,7 +115,7 @@ export async function createComment(
   await client.issues.createComment({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+    issue_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
     body: comment,
   });
 }
@@ -156,7 +134,7 @@ export async function getPrComments(
   const { data } = await client.pulls.get({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+    pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
   });
 
   const prComments: string[] = [];
@@ -164,8 +142,8 @@ export async function getPrComments(
     const { data: comments } = await client.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      issue_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
-      per_page: PER_PAGE, /* eslint-disable-line @typescript-eslint/camelcase */
+      issue_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+      per_page: PER_PAGE, // eslint-disable-line @typescript-eslint/camelcase
       page: i,
     });
 
@@ -201,7 +179,7 @@ export async function getPrFiles(
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+    pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
   });
 
   return prFilesDetails.data.map((details) => ({

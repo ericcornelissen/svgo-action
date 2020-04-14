@@ -23,7 +23,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v0.4.4
+    - uses: ericcornelissen/svgo-action@v1.0.0
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -39,7 +39,7 @@ configuration file]. The table below shows the options that can be configured.
 
 | Name                   | Description                              | Default       | Documentation                                 |
 | ---------------------- | ---------------------------------------- | ------------- | --------------------------------------------- |
-| `comments`             | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comments)             |
+| `comment`              | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comment)              |
 | `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
 | `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
 | `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
@@ -54,7 +54,7 @@ The first way to configure the action is inside the Workflow file, after the
 ```yaml
 with:
   repo-token: ${{ secrets.GITHUB_TOKEN }}
-  comments: true
+  comment: true
   conventional-commits: true
   dry-run: true
   ignore: do/not/optimize/**/*.svg
@@ -68,14 +68,14 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
-comments: true
+comment: true
 dry-run: true
 ignore: do/not/optimize/**/*.svg
 svgo-options: path/to/svgo-options.yml
 commit:
   conventional: false
   title: Optimized {{optimizedCount}} SVG(s)
-  description: |
+  body: |
     Namely:
     {{filesList}}
 ```
@@ -145,8 +145,8 @@ jobs:
   ...
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v0.4.4
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v0.4.4-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.0.0
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.0.0-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action

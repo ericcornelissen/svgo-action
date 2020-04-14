@@ -1,4 +1,6 @@
-import { CommitData, FileData } from "./main";
+import { format as strFormat } from "util";
+
+import { CommitData, FileData } from "./types";
 
 import { getFileSizeInKB } from "./utils/file-size";
 import { toPercentage } from "./utils/percentages";
@@ -7,28 +9,37 @@ import { toPercentage } from "./utils/percentages";
 const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
 const FILES_TABLE_EXP = /\{\{\s*filesTable\s*\}\}/;
+const IGNORED_COUNT_EXP = /\{\{\s*ignoredCount\s*\}\}/;
 const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
 const SKIPPED_COUNT_EXP = /\{\{\s*skippedCount\s*\}\}/;
 const SVG_COUNT_EXP = /\{\{\s*svgCount\s*\}\}/;
 
+const FILE_COUNT_KEY = "fileCount";
+const FILE_DATA_KEY = "fileData";
+const IGNORED_COUNT_KEY = "ignoredCount";
+const OPTIMIZED_COUNT_KEY = "optimizedCount";
+const SKIPPED_COUNT_KEY = "skippedCount";
+const SVG_COUNT_KEY = "svgCount";
+
 const FILES_TABLE_HEADER = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
+const FILES_TABLE_ROW = "| %s | %s KB | %s KB | %s%% |\n";
 
 const formatters = [
   {
-    key: "fileCount",
+    key: FILE_COUNT_KEY,
     fn: (template: string, value: number): string => {
       return template.replace(FILE_COUNT_EXP, value.toString());
     },
   },
   {
-    key: "fileData",
+    key: FILE_DATA_KEY,
     fn: (template: string, value: CommitData["fileData"]): string => {
       const paths: string[] = value.optimized.map((fileData) => fileData.path);
       return template.replace(FILES_LIST_EXP, "- " + paths.join("\n- "));
     },
   },
   {
-    key: "fileData",
+    key: FILE_DATA_KEY,
     fn: (template: string, value: CommitData["fileData"]): string => {
       const findOriginalSvg = (path: string): FileData => {
         const i: number = value.original.findIndex((fileData) => {
@@ -44,31 +55,43 @@ const formatters = [
         const originalSvg: FileData = findOriginalSvg(path);
 
         const originalSize: number = getFileSizeInKB(originalSvg.content);
-        const optimizedFSize: number = getFileSizeInKB(optimizedSvg.content);
+        const optimizedSize: number = getFileSizeInKB(optimizedSvg.content);
 
-        const reduction: number = (originalSize - optimizedFSize) / originalSize;
-        const reductionPercentage: number = -1 * toPercentage(reduction);
+        const reduced: number = (originalSize - optimizedSize) / originalSize;
+        const reducedPercentage: number = -1 * toPercentage(reduced);
 
-        table += `| ${path} | ${originalSize} KB | ${optimizedFSize} KB | ${reductionPercentage}% |\n`;
+        table += strFormat(
+          FILES_TABLE_ROW,
+          path,
+          originalSize,
+          optimizedSize,
+          reducedPercentage,
+        );
       }
 
       return template.replace(FILES_TABLE_EXP, table);
     },
   },
   {
-    key: "optimizedCount",
+    key: IGNORED_COUNT_KEY,
+    fn: (template: string, value: number): string => {
+      return template.replace(IGNORED_COUNT_EXP, value.toString());
+    },
+  },
+  {
+    key: OPTIMIZED_COUNT_KEY,
     fn: (template: string, value: number): string => {
       return template.replace(OPTIMIZED_COUNT_EXP, value.toString());
     },
   },
   {
-    key: "skippedCount",
+    key: SKIPPED_COUNT_KEY,
     fn: (template: string, value: number): string => {
       return template.replace(SKIPPED_COUNT_EXP, value.toString());
     },
   },
   {
-    key: "svgCount",
+    key: SVG_COUNT_KEY,
     fn: (template: string, value: number): string => {
       return template.replace(SVG_COUNT_EXP, value.toString());
     },
@@ -99,10 +122,10 @@ export function formatComment(
 
 export function formatCommitMessage(
   titleTemplate: string,
-  messageTemplate: string,
+  bodyTemplate: string,
   data: CommitData,
 ): string {
-  const title: string = formatAll(titleTemplate, data, ["fileData"]);
-  const message: string = formatAll(messageTemplate, data);
-  return `${title}\n\n${message}`.trimRight();
+  const title: string = formatAll(titleTemplate, data, [FILE_DATA_KEY]);
+  const body: string = formatAll(bodyTemplate, data);
+  return `${title}\n\n${body}`.trimRight();
 }

@@ -1,18 +1,10 @@
 import * as core from "@actions/core";
 import { GitHub } from "@actions/github";
 
+import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
 import { decode, encode } from "./encoder";
 import { existingFiles, filesNotMatching, svgFiles } from "./filters";
 import {
-  PR_NOT_FOUND,
-
-  // Types
-  CommitInfo,
-  GitBlob,
-  GitFileData,
-  GitFileInfo,
-
-  // Functionality
   commitFiles,
   createBlob,
   createComment,
@@ -23,40 +15,26 @@ import {
   getPrNumber,
 } from "./github-api";
 import {
-  // Types
-  RawActionConfig,
-
-  // Functionality
   ActionConfig,
   getConfigFilePath,
   getRepoToken,
 } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { formatComment, formatCommitMessage } from "./templating";
+import {
+  FileData,
+  CommitData,
+  RawActionConfig,
+
+  // Git
+  CommitInfo,
+  GitBlob,
+  GitFileData,
+  GitFileInfo,
+} from "./types";
 
 import { fetchYamlFile } from "./utils/fetch-yaml";
 
-
-const DISABLE_PATTERN = /disable-svgo-action/;
-const ENABLE_PATTERN = /enable-svgo-action/;
-
-
-export type FileData = {
-  readonly content: string;
-  readonly originalEncoding: string;
-  readonly path: string;
-}
-
-export type CommitData = {
-  readonly fileCount: number;
-  readonly fileData: {
-    readonly optimized: FileData[];
-    readonly original: FileData[];
-  };
-  readonly optimizedCount: number;
-  readonly skippedCount: number;
-  readonly svgCount: number;
-}
 
 
 function getContext(): { client: GitHub; prNumber: number } {
@@ -71,7 +49,7 @@ function getContext(): { client: GitHub; prNumber: number } {
   return { client, prNumber };
 }
 
-async function checkIfActionIsDisabledFromPR(
+async function actionDisabledFromPR(
   client: GitHub,
   prNumber: number,
 ): Promise<boolean> {
@@ -87,7 +65,7 @@ async function checkIfActionIsDisabledFromPR(
   return false;
 }
 
-async function checkIfActionIsDisabled(
+async function actionDisabled(
   client: GitHub,
   prNumber: number,
 ): Promise<{ isDisabled: boolean; disabledFrom: string }> {
@@ -97,7 +75,7 @@ async function checkIfActionIsDisabled(
   }
 
   if (!ENABLE_PATTERN.test(commitMessage)) {
-    const disabledFromPR = await checkIfActionIsDisabledFromPR(client, prNumber);
+    const disabledFromPR = await actionDisabledFromPR(client, prNumber);
     if (disabledFromPR) {
       return { isDisabled: true, disabledFrom: "Pull Request" };
     }
@@ -110,7 +88,12 @@ async function getSvgsInPR(
   client: GitHub,
   prNumber: number,
   ignoreGlob: string,
-): Promise<{ fileCount: number; svgCount: number; svgs: FileData[] }> {
+): Promise<{
+  fileCount: number;
+  ignoredCount: number;
+  svgCount: number;
+  svgs: FileData[];
+}> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
 
   const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
@@ -121,7 +104,8 @@ async function getSvgsInPR(
   const svgCount = prSvgs.length;
   core.debug(`the pull request contains ${svgCount} SVG(s)`);
 
-  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(filesNotMatching(ignoreGlob));
+  const notGlobbedFiles = filesNotMatching(ignoreGlob);
+  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(notGlobbedFiles);
   const ignoredCount = svgCount - notIgnoredSvgs.length;
   core.debug(`${ignoredCount} SVG(s) will be ignored that match '${ignoreGlob}'`);
 
@@ -140,7 +124,7 @@ async function getSvgsInPR(
     });
   }
 
-  return { fileCount, svgCount, svgs };
+  return { fileCount, ignoredCount, svgCount, svgs };
 }
 
 async function doOptimizeSvgs(
@@ -200,21 +184,26 @@ async function doCommitChanges(
   commitData: CommitData,
 ): Promise<void> {
   if (!config.isDryRun && commitData.optimizedCount > 0) {
-    const blobs: GitBlob[] = await toBlobs(client, commitData.fileData.optimized);
+    const blobs: GitBlob[] = await toBlobs(
+      client,
+      commitData.fileData.optimized,
+    );
+
     const commitMessage: string = formatCommitMessage(
       config.commitTitle,
-      config.commitDescription,
+      config.commitBody,
       commitData,
     );
+
     const commitInfo: CommitInfo = await commitFiles(
       client,
       blobs,
       commitMessage,
     );
-
     core.debug(`commit successful (see ${commitInfo.url})`);
 
     if (config.enableComments) {
+      core.debug(`creating comment on pull request #${prNumber}`);
       const comment: string = formatComment(config.comment, commitData);
       await createComment(client, prNumber, comment);
     }
@@ -227,7 +216,7 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const { fileCount, svgCount, svgs } = await getSvgsInPR(
+  const { fileCount, ignoredCount, svgCount, svgs } = await getSvgsInPR(
     client,
     prNumber,
     config.ignoreGlob,
@@ -242,6 +231,7 @@ async function run(
     await doCommitChanges(client, prNumber, config, {
       fileCount: fileCount,
       fileData: { optimized: optimizedSvgs, original: svgs },
+      ignoredCount: ignoredCount,
       optimizedCount: optimizedCount,
       skippedCount: skippedCount,
       svgCount: svgCount,
@@ -259,16 +249,23 @@ export default async function main(): Promise<void> {
     const { client, prNumber } = getContext();
 
     const configFilePath: string = getConfigFilePath();
-    const rawConfig: RawActionConfig = await fetchYamlFile(client, configFilePath);
+    const rawConfig: RawActionConfig = await fetchYamlFile(
+      client,
+      configFilePath,
+    );
+
     const config: ActionConfig = new ActionConfig(rawConfig);
     if (config.isDryRun) {
       core.info("Dry mode enabled, no changes will be committed");
     }
 
-    const svgoOptions: SVGOptions = await fetchYamlFile(client, config.svgoOptionsPath);
+    const svgoOptions: SVGOptions = await fetchYamlFile(
+      client,
+      config.svgoOptionsPath,
+    );
     const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
 
-    const { isDisabled, disabledFrom } = await checkIfActionIsDisabled(client, prNumber);
+    const { isDisabled, disabledFrom } = await actionDisabled(client, prNumber);
     if (isDisabled) {
       core.info(`Action disabled from ${disabledFrom}, exiting`);
     } else {

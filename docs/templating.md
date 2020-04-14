@@ -7,11 +7,12 @@ SVGs, into these messages.
 
 > :warning: Not all templating variables are available in the commit `title`.
 
-| Name             | Value                                     | Commit Title       | Commit Description | Comments           |
+| Name             | Value                                     | Commit Title       | Commit Body        | Comments           |
 | ---------------- | ----------------------------------------- | ------------------ | ------------------ | ------------------ |
 | `fileCount`      | The number of files found in the PR       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `filesList`      | A bullet list of the optimized SVG files  | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 | `filesTable`     | A table of optimized files and statistics | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+| `ignoredCount`   | The number of ignored SVGs                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `optimizedCount` | The number of optimized SVGs              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `skippedCount`   | The number of not-optimized SVGs          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `svgCount`       | The number of SVGs found in the PR        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
@@ -25,7 +26,7 @@ To use templating values in commit messages:
 
 commit:
   title: Optimized {{optimizedCount}}/{{svgCount}} SVG(s)
-  description: |
+  body: |
     Namely:
     {{filesList}}
 
@@ -54,7 +55,7 @@ To use templating values in Pull Request comments:
 ```yaml
 # .github/svgo-action.yml
 
-comments: |
+comment: |
   {{optimizedCount}} SVG(s) were optimized! Here are some statistics:
 
   {{filesTable}}
