@@ -27,19 +27,19 @@ export enum PR_NUMBER {
   TEN_COMMENTS,
   ELEVEN_COMMENTS,
   SEVENTEEN_COMMENTS,
-  ONE_HUNDERD_AND_THREE_COMMENTS,
+  ONE_HUNDRED_AND_THREE_COMMENTS,
 }
 
 export const context = {
   payload: {
-    pull_request: { /* eslint-disable-line @typescript-eslint/camelcase */
+    pull_request: { // eslint-disable-line @typescript-eslint/camelcase
       head: {
         ref: "branch-name",
       },
       number: PR_NUMBER.NO_CHANGES,
     },
     repository: {
-      commits_url: "https://api.github.com/repos/ericcornelissen/svgo-action/git/commits{/sha}", /* eslint-disable-line @typescript-eslint/camelcase */
+      commits_url: "https://api.github.com/repos/ericcornelissen/svgo-action/git/commits{/sha}", // eslint-disable-line @typescript-eslint/camelcase
     },
   },
   repo: {
@@ -138,7 +138,7 @@ export const GitHubInstance = {
           case PR_NUMBER.SEVENTEEN_COMMENTS:
             allComments = generateComments(17);
             break;
-          case PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS:
+          case PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS:
             allComments = generateComments(103);
             break;
           default:
@@ -165,7 +165,7 @@ export const GitHubInstance = {
             return { data: { comments: 11 } };
           case PR_NUMBER.SEVENTEEN_COMMENTS:
             return { data: { comments: 17 } };
-          case PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS:
+          case PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS:
             return { data: { comments: 103 } };
           default:
             return { };
@@ -178,7 +178,7 @@ export const GitHubInstance = {
           case PR_NUMBER.NO_CHANGES:
             return { data: [ ] };
           case PR_NUMBER.MANY_CHANGES:
-            return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 optimized SVG, add 1 file, modify 1 file"] };
+            return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 optimized SVG, add 1 file, modify 1 file"] }; // eslint-disable-line max-len
           case PR_NUMBER.ADD_SVG:
             return { data: prPayloads["add 1 SVG"] };
           case PR_NUMBER.MODIFY_SVG:

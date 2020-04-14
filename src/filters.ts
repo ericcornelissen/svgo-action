@@ -1,10 +1,8 @@
 import { Minimatch, IMinimatch } from "minimatch";
 
-import { GitFileInfo } from "./github-api";
+import { STATUS_ADDED, STATUS_MODIFIED } from "./constants";
+import { GitFileInfo } from "./types";
 
-
-const STATUS_ADDED = "added";
-const STATUS_MODIFIED = "modified";
 
 const SVG_FILE_EXTENSION = ".svg";
 

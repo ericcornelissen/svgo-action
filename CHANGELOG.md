@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.0.0] - 2020-04-14
+
 - (!) Rename the `comments` option to `comment`. ([#190])
 - (!) Rename the `commit.description` options to `commit.body`. ([#190])
 - Add `ignoredCount` as templating variable. ([#191])

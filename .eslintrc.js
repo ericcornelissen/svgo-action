@@ -32,13 +32,27 @@ module.exports = {
       exports: "always-multiline",
       functions: "always-multiline",
     }],
+    "max-len": ["error", {
+      code: 80,
+      comments: 80,
+      tabWidth: 2,
+      ignoreComments: false,
+      ignorePattern: "core\.(info|debug)",
+      ignoreUrls: true,
+      ignoreRegExpLiterals: true,
+      ignoreStrings: true,
+      ignoreTemplateLiterals: false,
+      ignoreTrailingComments: true,
+    }],
     "no-console": ["error"],
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
 
     // @typescript-eslint (https://github.com/typescript-eslint/typescript-eslint#readme)
-    "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "_+" }],
+    "@typescript-eslint/no-unused-vars": ["error", {
+      argsIgnorePattern: "_+",
+    }],
 
     // eslint-plugin-jest (https://github.com/jest-community/eslint-plugin-jest#readme)
     "jest/consistent-test-it": ["error", {
@@ -68,5 +82,14 @@ module.exports = {
         "module": "readonly",
       },
     },
+    { // Test files
+      files: ["test/**/*.ts"],
+      rules: {
+        "max-len": ["error", {
+          code: 120,
+          ignoreTrailingComments: true,
+        }],
+      }
+    }
   ],
 };

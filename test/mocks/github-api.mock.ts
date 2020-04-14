@@ -1,6 +1,7 @@
 import * as github from "./@actions/github.mock";
 
-import { GitFileData } from "../../src/github-api";
+import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB } from "../../src/constants";
+import { GitFileData } from "../../src/types";
 
 
 const client = new github.GitHub();
@@ -25,8 +26,8 @@ export const commitFiles = jest.fn()
 export const createBlob = jest.fn()
   .mockImplementation(async (_, path) => ({
     path: path,
-    mode: "100644",
-    type: "blob",
+    mode: COMMIT_MODE_FILE,
+    type: COMMIT_TYPE_BLOB,
     sha: "8cef761674c705447f0ce449948ac6c0dd76f041",
   }))
   .mockName("github-api.createBlob");
@@ -49,7 +50,7 @@ export const getPrFile = jest.fn()
 export const getPrFiles = jest.fn()
   .mockImplementation(async (_, prNumber) => {
     const { data } = await client.pulls.listFiles({
-      pull_number: prNumber, /* eslint-disable-line @typescript-eslint/camelcase */
+      pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
     });
 
     return data.map((details) => ({

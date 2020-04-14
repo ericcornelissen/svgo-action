@@ -1,11 +1,10 @@
+import { STATUS_ADDED, STATUS_MODIFIED } from "../src/constants";
 import { existingFiles, svgFiles } from "../src/filters";
-import { GitFileInfo } from "../src/github-api";
+import { GitFileInfo } from "../src/types";
 
 
 const EMPTY_ARRAY = [];
 
-const STATUS_ADDED = "added";
-const STATUS_MODIFIED = "modified";
 const STATUS_REMOVED = "removed";
 
 

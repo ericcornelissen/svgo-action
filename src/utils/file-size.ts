@@ -1,4 +1,4 @@
-const UTF8 = "utf-8";
+import { UTF8 } from "../constants";
 
 
 export function getFileSizeInKB(content: string): number {

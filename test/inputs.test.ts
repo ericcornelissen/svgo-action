@@ -6,23 +6,20 @@ import * as core from "./mocks/@actions/core.mock";
 jest.mock("@actions/core", () => core);
 
 import {
-  // Types
-  RawActionConfig,
+  DEFAULT_COMMIT_BODY,
+  DEFAULT_COMMIT_TITLE,
+  DEFAULT_COMMENT,
+  INPUT_NAME_COMMENT,
+  INPUT_NAME_CONFIG_PATH,
+  INPUT_NAME_CONVENTIONAL_COMMITS,
+  INPUT_NAME_DRY_RUN,
+  INPUT_NAME_IGNORE,
+  INPUT_NAME_REPO_TOKEN,
+  INPUT_NAME_SVGO_OPTIONS,
+} from "../src/constants";
+import { ActionConfig, getConfigFilePath, getRepoToken } from "../src/inputs";
+import { RawActionConfig } from "../src/types";
 
-  // Functionality
-  ActionConfig,
-  getConfigFilePath,
-  getRepoToken,
-} from "../src/inputs";
-
-
-const INPUT_NAME_COMMENT = "comment";
-const INPUT_NAME_CONFIG_PATH = "configuration-path";
-const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";
-const INPUT_NAME_DRY_RUN = "dry-run";
-const INPUT_NAME_IGNORE = "ignore";
-const INPUT_NAME_REPO_TOKEN = "repo-token";
-const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
 function mockCoreGetInput(key: string, value: string): void {
   when(core.getInput)
@@ -53,6 +50,8 @@ describe("::getRepoToken", () => {
 
 describe("ActionConfig", () => {
 
+  const nonBooleanStrings: string[] = ["foobar", "treu", "fals"];
+
   describe("::constructor", () => {
 
     test("construct without a parameter", () => {
@@ -71,8 +70,6 @@ describe("ActionConfig", () => {
   });
 
   describe(".comment", () => {
-
-    const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
 
     test("comment is set to `'true'` in the Workflow file", () => {
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
@@ -122,8 +119,6 @@ describe("ActionConfig", () => {
 
   describe(".commitBody", () => {
 
-    const DEFAULT_COMMIT_BODY = "Optimized SVG(s):\n{{filesList}}";
-
     test("commit is not defined in the config object", () => {
       const instance: ActionConfig = new ActionConfig({ });
       expect(instance.commitBody).toEqual(DEFAULT_COMMIT_BODY);
@@ -153,10 +148,7 @@ describe("ActionConfig", () => {
 
   describe(".commitTitle", () => {
 
-    const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
     const CONVENTIONAL_COMMIT_EXP = /.+:\s.+/;
-
-    const testNonBoolean = test.each(["foobar", "treu", "fals"]);
 
     test("commit is not defined in the config object", () => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
@@ -220,7 +212,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toEqual("Do the thing");
     });
 
-    testNonBoolean("conventional-commits is '%s'", (value) => {
+    test.each(nonBooleanStrings)("conventional-commits is '%s'", (value) => {
       mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, value);
 
       const instance: ActionConfig = new ActionConfig();
@@ -261,7 +253,7 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toEqual("Yip yip!");
     });
 
-    testNonBoolean("commit.conventional is '%s'", (value) => {
+    test.each(nonBooleanStrings)("commit.conventional is '%s'", (value) => {
       const rawConfig: RawActionConfig = yaml.safeLoad(`commit:\n  - conventional: '${value}'`);
 
       const instance: ActionConfig = new ActionConfig(rawConfig);
@@ -292,8 +284,6 @@ describe("ActionConfig", () => {
 
   describe(".enableComments", () => {
 
-    const testNonBoolean = test.each(["foobar", "treu", "fals"]);
-
     beforeEach(() => {
       core.info.mockClear();
     });
@@ -320,7 +310,7 @@ describe("ActionConfig", () => {
       expect(instance.enableComments).toBe(true);
     });
 
-    testNonBoolean("comment is `'%s'` in the Workflow file", (value) => {
+    test.each(nonBooleanStrings)("comment is `'%s'` in the Workflow file", (value) => {
       mockCoreGetInput(INPUT_NAME_COMMENT, value);
 
       const instance: ActionConfig = new ActionConfig();
@@ -362,7 +352,7 @@ describe("ActionConfig", () => {
       expect(instance.enableComments).toBe(true);
     });
 
-    testNonBoolean("comment is `'%s'` in the config object", (value) => {
+    test.each(nonBooleanStrings)("comment is `'%s'` in the config object", (value) => {
       const rawConfig: RawActionConfig = yaml.safeLoad(`comment: '${value}'`);
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
@@ -376,8 +366,6 @@ describe("ActionConfig", () => {
   });
 
   describe(".isDryRun", () => {
-
-    const testNonBoolean = test.each(["foobar", "treu", "fals"]);
 
     beforeEach(() => {
       core.info.mockClear();
@@ -405,7 +393,7 @@ describe("ActionConfig", () => {
       expect(instance.isDryRun).toBe(true);
     });
 
-    testNonBoolean("dry run is `'%s'` in the workflow file", (value) => {
+    test.each(nonBooleanStrings)("dry-run is `'%s'` in the workflow file", (value) => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, value);
 
       const instance: ActionConfig = new ActionConfig();
@@ -447,7 +435,7 @@ describe("ActionConfig", () => {
       expect(instance.isDryRun).toBe(true);
     });
 
-    testNonBoolean("dry run is `'%s'` in the config object", (value) => {
+    test.each(nonBooleanStrings)("dry-run is `'%s'` in the config object", (value) => {
       const rawConfig: RawActionConfig = yaml.safeLoad(`dry-run: '${value}'`);
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 

@@ -8,13 +8,12 @@ jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 
 import {
+  COMMIT_MODE_FILE,
+  COMMIT_TYPE_BLOB,
+  INPUT_NAME_REPO_TOKEN,
   PR_NOT_FOUND,
-
-  // Types
-  GitBlob,
-  GitFileData,
-
-  // Functions
+} from "../src/constants";
+import {
   commitFiles,
   createBlob,
   createComment,
@@ -25,13 +24,10 @@ import {
   getPrNumber,
   getRepoFile,
 } from "../src/github-api";
+import { GitBlob, GitFileData } from "../src/types";
 
 
-const COMMIT_MODE_FILE = "100644";
-const COMMIT_TYPE_BLOB = "blob";
-
-
-const token = core.getInput("repo-token", { required: true });
+const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 const client = new github.GitHub(token);
 
 describe("::commitFiles", () => {
@@ -80,8 +76,8 @@ describe("::commitFiles", () => {
     defaultBlobs,
     [complexBlob],
     [fooBlob, barBlob],
-  ])("return value for non-empty array of blobs", async (blobs) => {
-    const promise = commitFiles(client, blobs as GitBlob[], defaultCommitMessage);
+  ])("return value for non-empty array of blobs", async (...blobs) => {
+    const promise = commitFiles(client, blobs, defaultCommitMessage);
     await expect(promise).resolves.toEqual(
       expect.objectContaining({
         sha: expect.any(String),
@@ -151,7 +147,7 @@ describe("::commitFiles", () => {
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
     await expect(promise).rejects.toBeDefined();
 
-    github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
+    github.context.payload.pull_request = backup; // eslint-disable-line @typescript-eslint/camelcase
   });
 
   test("the 'repository' is missing from context payload", async () => {
@@ -297,7 +293,7 @@ describe("::getPrComments", () => {
   });
 
   test("103 comments", async () => {
-    const result = await getPrComments(client, github.PR_NUMBER.ONE_HUNDERD_AND_THREE_COMMENTS);
+    const result = await getPrComments(client, github.PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS);
     expect(result).toHaveLength(103);
   });
 
@@ -378,7 +374,7 @@ describe("::getPrNumber", () => {
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
 
-    github.context.payload.pull_request = backup; /* eslint-disable-line @typescript-eslint/camelcase */
+    github.context.payload.pull_request = backup; // eslint-disable-line @typescript-eslint/camelcase
   });
 
 });
