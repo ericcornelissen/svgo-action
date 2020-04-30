@@ -1,6 +1,6 @@
 {
   "name": "svgo-action",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "description": "Automatically run SVGO on SVGs in Pull Requests",
   "homepage": "https://github.com/marketplace/actions/svgo-action",

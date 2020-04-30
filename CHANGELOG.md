@@ -9,6 +9,10 @@ Versioning].
 
 - _No changes yet_
 
+## [1.0.1] - 2020-04-30
+
+- Update `@actions/http-client` from v1.0.6 to v1.0.8 ([#199])
+
 ## [1.0.0] - 2020-04-14
 
 - (!) Rename the `comments` option to `comment`. ([#190])
@@ -133,3 +137,4 @@ Versioning].
 [#187]: https://github.com/ericcornelissen/svgo-action/pull/187
 [#190]: https://github.com/ericcornelissen/svgo-action/pull/190
 [#191]: https://github.com/ericcornelissen/svgo-action/pull/191
+[#199]: https://github.com/ericcornelissen/svgo-action/pull/199
