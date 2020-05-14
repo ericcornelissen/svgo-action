@@ -37,7 +37,7 @@ module.exports = {
       comments: 80,
       tabWidth: 2,
       ignoreComments: false,
-      ignorePattern: "core\.(info|debug)",
+      ignorePattern: "core.(info|debug)",
       ignoreUrls: true,
       ignoreRegExpLiterals: true,
       ignoreStrings: true,
@@ -89,7 +89,7 @@ module.exports = {
           code: 120,
           ignoreTrailingComments: true,
         }],
-      }
-    }
+      },
+    },
   ],
 };
