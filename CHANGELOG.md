@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update `js-yaml` from v3.13.1 to v3.14.0 ([#207])
 
 ## [1.0.1] - 2020-04-30
 
@@ -138,3 +138,4 @@ Versioning].
 [#190]: https://github.com/ericcornelissen/svgo-action/pull/190
 [#191]: https://github.com/ericcornelissen/svgo-action/pull/191
 [#199]: https://github.com/ericcornelissen/svgo-action/pull/199
+[#207]: https://github.com/ericcornelissen/svgo-action/pull/207

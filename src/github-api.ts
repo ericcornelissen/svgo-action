@@ -24,7 +24,7 @@ async function getCommit(client: github.GitHub): Promise<GitCommit> {
   const { data: commit } = await client.git.getCommit({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    commit_sha: refData.object.sha, // eslint-disable-line @typescript-eslint/camelcase
+    commit_sha: refData.object.sha,
   });
 
   return commit;
@@ -61,7 +61,7 @@ export async function commitFiles(
   const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    base_tree: previousCommit.tree.sha, // eslint-disable-line @typescript-eslint/camelcase
+    base_tree: previousCommit.tree.sha,
     tree: blobs,
   });
 
@@ -115,7 +115,7 @@ export async function createComment(
   await client.issues.createComment({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    issue_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+    issue_number: prNumber,
     body: comment,
   });
 }
@@ -134,7 +134,7 @@ export async function getPrComments(
   const { data } = await client.pulls.get({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+    pull_number: prNumber,
   });
 
   const prComments: string[] = [];
@@ -142,8 +142,8 @@ export async function getPrComments(
     const { data: comments } = await client.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      issue_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
-      per_page: PER_PAGE, // eslint-disable-line @typescript-eslint/camelcase
+      issue_number: prNumber,
+      per_page: PER_PAGE,
       page: i,
     });
 
@@ -179,7 +179,7 @@ export async function getPrFiles(
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+    pull_number: prNumber,
   });
 
   return prFilesDetails.data.map((details) => ({

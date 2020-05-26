@@ -32,14 +32,14 @@ export enum PR_NUMBER {
 
 export const context = {
   payload: {
-    pull_request: { // eslint-disable-line @typescript-eslint/camelcase
+    pull_request: {
       head: {
         ref: "branch-name",
       },
       number: PR_NUMBER.NO_CHANGES,
     },
     repository: {
-      commits_url: "https://api.github.com/repos/ericcornelissen/svgo-action/git/commits{/sha}", // eslint-disable-line @typescript-eslint/camelcase
+      commits_url: "https://api.github.com/repos/ericcornelissen/svgo-action/git/commits{/sha}",
     },
   },
   repo: {

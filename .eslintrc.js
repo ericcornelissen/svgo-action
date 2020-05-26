@@ -25,6 +25,20 @@ module.exports = {
   rules: {
     // ESLint (https://eslint.org/docs/rules/)
     "arrow-parens": ["error", "always"],
+    "camelcase": ["error", {
+      properties: "never",
+      ignoreDestructuring: true,
+      ignoreImports: true,
+      allow: [
+        "base_tree",
+        "commit_sha",
+        "commits_url",
+        "issue_number",
+        "per_page",
+        "pull_number",
+        "pull_request",
+      ],
+    }],
     "comma-dangle": ["error", {
       arrays: "always-multiline",
       objects: "always-multiline",
