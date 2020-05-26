@@ -1,0 +1,9 @@
+hooks:
+  commit-msg: commitlint -e
+  pre-commit: >
+    git stash -q --keep-index &&
+    npm run format &&
+    npm run build &&
+    git add lib/index.js &&
+    git update-index --again &&
+    git stash pop -q
