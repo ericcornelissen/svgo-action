@@ -5,12 +5,14 @@ module.exports = {
     "@typescript-eslint",
     "jest",
     "mocha",
+    "security",
   ],
   extends: [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:jest/recommended",
+    "plugin:security/recommended",
   ],
 
   ignorePatterns: [
