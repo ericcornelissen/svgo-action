@@ -105,6 +105,7 @@ module.exports = {
           code: 120,
           ignoreTrailingComments: true,
         }],
+        "security/detect-object-injection": "off",
       },
     },
   ],

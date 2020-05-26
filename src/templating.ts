@@ -42,11 +42,15 @@ const formatters = [
     key: FILE_DATA_KEY,
     fn: (template: string, value: CommitData["fileData"]): string => {
       const findOriginalSvg = (path: string): FileData => {
-        const i: number = value.original.findIndex((fileData) => {
+        const fileData = value.original.find((fileData) => {
           return fileData.path === path;
         });
 
-        return value.original[i];
+        if (fileData === undefined) {
+          throw new Error("Original version of optimized SVG missing");
+        }
+
+        return fileData;
       };
 
       let table = FILES_TABLE_HEADER;
@@ -105,7 +109,7 @@ function formatAll(
 ): string {
   for (const { key, fn } of formatters) {
     if (!exclude.includes(key)) {
-      template = fn(template, data[key]);
+      template = fn(template, data[key]); // eslint-disable-line security/detect-object-injection
     }
   }
 
