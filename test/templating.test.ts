@@ -140,7 +140,7 @@ const values = {
         },
       ],
     },
-    optimizedMissing: {
+    originalMissing: {
       optimized: [
         {
           content: "foo",
@@ -245,7 +245,7 @@ describe("::formatComment", () => {
   });
 
   test("template using {{filesTable}}, missing original SVG data", () => {
-    const data = Object.assign({ }, defaultData, { fileData: values.fileData.optimizedMissing });
+    const data = Object.assign({ }, defaultData, { fileData: values.fileData.originalMissing });
     const templateString = "{{filesTable}}";
 
     expect(() => formatComment(templateString, data)).toThrow();
