@@ -50,7 +50,7 @@ export const getPrFile = jest.fn()
 export const getPrFiles = jest.fn()
   .mockImplementation(async (_, prNumber) => {
     const { data } = await client.pulls.listFiles({
-      pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+      pull_number: prNumber,
     });
 
     return data.map((details) => ({
