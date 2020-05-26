@@ -1,6 +1,6 @@
 {
   "hooks": {
     "commit-msg": "commitlint -e",
-    "pre-commit": "npm run format && git update-index --again && npm run build && git add lib/index.js"
+    "pre-commit": "git stash -q --keep-index && npm run format && npm run build && git update-index --again && git stash pop -q"
   }
 }
