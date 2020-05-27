@@ -4,6 +4,7 @@
 [![Node.js CI][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Maintainability][maintainability-image]][maintainability-url]
+[![Snyk Status][snyk-image]][snyk-url]
 
 Automatically run [SVGO] on SVGs in Pull Requests.
 
@@ -160,4 +161,6 @@ jobs:
 [in the workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
+[snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
+[snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 [svgo]: https://github.com/svg/svgo
