@@ -1,0 +1,25 @@
+name: Update lib/index.js
+
+on:
+  push:
+    branches: [ develop ]
+
+jobs:
+  build-and-update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v1
+      with:
+        node-version: 10.x
+    - run: npm ci
+    - run: npm run build
+    - name: Push updates
+      uses: stefanzweifel/git-auto-commit-action@v4
+      with:
+        commit_message: "chore: update lib/index.js"
+        commit_user_name: github-actions[bot]
+        commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+        commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
