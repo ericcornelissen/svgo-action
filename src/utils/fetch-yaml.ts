@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as core from "@actions/core";
-import { GitHub } from "@actions/github";
+import { Octokit } from "@octokit/core";
 import * as yaml from "js-yaml";
 
 import { decode } from "../encoder";
@@ -9,7 +9,7 @@ import { getRepoFile } from "../github-api";
 
 
 export async function fetchYamlFile(
-  client: GitHub,
+  client: Octokit,
   filePath: string,
 ): Promise<any> {
   try {

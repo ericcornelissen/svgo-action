@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
-import { GitHub } from "@actions/github";
+import * as github from "@actions/github";
+import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
 import { decode, encode } from "./encoder";
@@ -37,9 +38,9 @@ import { fetchYamlFile } from "./utils/fetch-yaml";
 
 
 
-function getContext(): { client: GitHub; prNumber: number } {
+function getContext(): { client: Octokit; prNumber: number } {
   const token: string = getRepoToken();
-  const client: GitHub = new GitHub(token);
+  const client: Octokit = github.getOctokit(token);
 
   const prNumber: number = getPrNumber();
   if (prNumber === PR_NOT_FOUND) {
@@ -50,7 +51,7 @@ function getContext(): { client: GitHub; prNumber: number } {
 }
 
 async function actionDisabledFromPR(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<boolean> {
   const prComments: string[] = await getPrComments(client, prNumber);
@@ -66,7 +67,7 @@ async function actionDisabledFromPR(
 }
 
 async function actionDisabled(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<{ isDisabled: boolean; disabledFrom: string }> {
   const commitMessage: string = await getCommitMessage(client);
@@ -85,7 +86,7 @@ async function actionDisabled(
 }
 
 async function getSvgsInPR(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
   ignoreGlob: string,
 ): Promise<{
@@ -107,7 +108,7 @@ async function getSvgsInPR(
   const notGlobbedFiles = filesNotMatching(ignoreGlob);
   const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(notGlobbedFiles);
   const ignoredCount = svgCount - notIgnoredSvgs.length;
-  core.debug(`${ignoredCount} SVG(s) will be ignored that match '${ignoreGlob}'`);
+  core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
 
   const svgs: FileData[] = [];
   for (const svg of notIgnoredSvgs) {
@@ -155,12 +156,12 @@ async function doOptimizeSvgs(
 }
 
 async function toBlobs(
-  client: GitHub,
+  client: Octokit,
   files: FileData[],
 ): Promise<GitBlob[]> {
   const blobs: GitBlob[] = [];
   for (const file of files) {
-    core.debug(`encoding (updated) '${file.path}' back to ${file.originalEncoding}`);
+    core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
 
     core.debug(`creating blob for (updated) '${file.path}'`);
@@ -178,7 +179,7 @@ async function toBlobs(
 }
 
 async function doCommitChanges(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
   config: ActionConfig,
   commitData: CommitData,
@@ -211,7 +212,7 @@ async function doCommitChanges(
 }
 
 async function run(
-  client: GitHub,
+  client: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
   prNumber: number,
@@ -223,7 +224,7 @@ async function run(
   );
 
   if (svgCount > 0) {
-    core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
+    core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s)`);
     const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);
     const optimizedCount = optimizedSvgs.length;
     const skippedCount = svgCount - optimizedSvgs.length;
@@ -237,7 +238,8 @@ async function run(
       svgCount: svgCount,
     });
 
-    core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s) (${skippedCount}/${svgCount} SVG(s) skipped)`);
+    core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s)`);
+    core.info(`  (${skippedCount}/${svgCount} SVG(s) skipped)`);
   } else {
     core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
   }

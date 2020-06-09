@@ -7,9 +7,10 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "build": "run-s build:compile build:bundle",
-    "build:bundle": "ncc build lib/main.js -m -o lib && node script/fix-svgo-plugins.js",
+    "build": "run-s build:compile build:bundle build:fix-svgo-plugin",
+    "build:bundle": "ncc build lib/main.js -m -o lib",
     "build:compile": "tsc",
+    "build:fix-svgo-plugin": "node script/fix-svgo-plugins.js",
     "clean": "run-p clean:reports",
     "clean:reports": "rimraf ./_reports",
     "format": "run-p format:js format:md",
@@ -41,7 +42,7 @@
   ],
   "dependencies": {
     "@actions/core": "1.2.4",
-    "@actions/github": "2.2.0",
+    "@actions/github": "3.0.0",
     "js-yaml": "3.14.0",
     "minimatch": "3.0.4",
     "svgo": "1.3.2"
@@ -55,11 +56,11 @@
     "@types/minimatch": "3.0.3",
     "@types/node": "12.12.31",
     "@types/svgo": "1.3.3",
-    "@typescript-eslint/eslint-plugin": "3.1.0",
-    "@typescript-eslint/parser": "3.1.0",
+    "@typescript-eslint/eslint-plugin": "3.2.0",
+    "@typescript-eslint/parser": "3.2.0",
     "@zeit/ncc": "0.22.3",
-    "editorconfig-checker": "3.0.5",
-    "eslint": "7.1.0",
+    "editorconfig-checker": "3.1.0",
+    "eslint": "7.2.0",
     "eslint-plugin-jest": "23.13.2",
     "eslint-plugin-mocha": "7.0.1",
     "eslint-plugin-security": "1.4.0",
@@ -70,7 +71,7 @@
     "npm-run-all": "4.1.5",
     "rimraf": "3.0.2",
     "ts-jest": "26.1.0",
-    "typescript": "3.9.3"
+    "typescript": "3.9.5"
   },
   "engines": {
     "node": ">=10.0.0"
