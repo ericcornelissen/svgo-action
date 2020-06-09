@@ -21,7 +21,9 @@ const OPTIMIZED_COUNT_KEY = "optimizedCount";
 const SKIPPED_COUNT_KEY = "skippedCount";
 const SVG_COUNT_KEY = "svgCount";
 
-const FILES_TABLE_HEADER = "| Filename | Before | After | Improvement |\n| --- | --- | --- | --- |\n";
+const FILES_TABLE_HEADER =
+  "| Filename | Before | After | Improvement |\n" +
+  "| --- | --- | --- | --- |\n";
 const FILES_TABLE_ROW = "| %s | %s KB | %s KB | %s%% |\n";
 
 const formatters = [
@@ -102,7 +104,8 @@ function formatAll(
 ): string {
   for (const { key, fn } of formatters) {
     if (!exclude.includes(key)) {
-      template = fn(template, data[key]); // eslint-disable-line security/detect-object-injection
+      // eslint-disable-next-line security/detect-object-injection
+      template = fn(template, data[key]);
     }
   }
 

@@ -118,7 +118,7 @@ export class ActionConfig {
   private static normalizeBoolOption(
     configValue: boolean | undefined,
     inputName: string,
-    assumptionValue: boolean,
+    defaultValue: boolean,
   ): boolean {
     const value = (configValue !== undefined) ?
       configValue : core.getInput(inputName, NOT_REQUIRED);
@@ -130,8 +130,11 @@ export class ActionConfig {
     } else if (value === TRUE) {
       return true;
     } else {
-      core.info(`Unknown ${inputName} value '${value}', assuming ${assumptionValue}`);
-      return assumptionValue;
+      core.info(
+        `Unknown ${inputName} value '${value}', ` +
+        `defaulting to '${defaultValue}'`,
+      );
+      return defaultValue;
     }
   }
 

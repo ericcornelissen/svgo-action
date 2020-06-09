@@ -41,7 +41,7 @@ export const context = {
       number: PR_NUMBER.NO_CHANGES,
     },
     repository: {
-      commits_url: "https://api.github.com/repos/ericcornelissen/svgo-action/git/commits{/sha}",
+      commits_url: "https://api.github.com/repos/pikachu/svgo-action/git/commits{/sha}",
     },
   },
   repo: {
@@ -120,8 +120,14 @@ export const GitHubInstance = {
     createComment: jest.fn()
       .mockName("GitHub.issues.createComment"),
     listComments: jest.fn()
-      .mockImplementation(async ({ issue_number: prNumber, per_page: perPage, page }) => {
-        const generateComments = (length) => Array.from({ length }).map((_, i) => ({ body: `${i}` }));
+      .mockImplementation(async ({
+        issue_number: prNumber,
+        per_page: perPage,
+        page,
+      }) => {
+        const generateComments = function(length) {
+          return Array.from({ length }).map((_, i) => ({ body: `${i}` }));
+        };
 
         let allComments: unknown[];
         switch (prNumber) {
@@ -180,7 +186,7 @@ export const GitHubInstance = {
           case PR_NUMBER.NO_CHANGES:
             return { data: [ ] };
           case PR_NUMBER.MANY_CHANGES:
-            return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 optimized SVG, add 1 file, modify 1 file"] }; // eslint-disable-line max-len
+            return { data: prPayloads["many changes"] };
           case PR_NUMBER.ADD_SVG:
             return { data: prPayloads["add 1 SVG"] };
           case PR_NUMBER.MODIFY_SVG:

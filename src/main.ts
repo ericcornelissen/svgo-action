@@ -108,7 +108,7 @@ async function getSvgsInPR(
   const notGlobbedFiles = filesNotMatching(ignoreGlob);
   const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(notGlobbedFiles);
   const ignoredCount = svgCount - notIgnoredSvgs.length;
-  core.debug(`${ignoredCount} SVG(s) will be ignored that match '${ignoreGlob}'`);
+  core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
 
   const svgs: FileData[] = [];
   for (const svg of notIgnoredSvgs) {
@@ -161,7 +161,7 @@ async function toBlobs(
 ): Promise<GitBlob[]> {
   const blobs: GitBlob[] = [];
   for (const file of files) {
-    core.debug(`encoding (updated) '${file.path}' back to ${file.originalEncoding}`);
+    core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
 
     core.debug(`creating blob for (updated) '${file.path}'`);
@@ -224,7 +224,7 @@ async function run(
   );
 
   if (svgCount > 0) {
-    core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s), optimizing...`);
+    core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s)`);
     const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);
     const optimizedCount = optimizedSvgs.length;
     const skippedCount = svgCount - optimizedSvgs.length;
@@ -238,7 +238,8 @@ async function run(
       svgCount: svgCount,
     });
 
-    core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s) (${skippedCount}/${svgCount} SVG(s) skipped)`);
+    core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s)`);
+    core.info(`  (${skippedCount}/${svgCount} SVG(s) skipped)`);
   } else {
     core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
   }

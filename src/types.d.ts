@@ -1,3 +1,6 @@
+type Mode = "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
+
+
 // Type representing the data of a file that is being processed by the Action.
 export type FileData = {
   readonly content: string;
@@ -39,7 +42,7 @@ export type CommitInfo = {
 
 // Type representing a Binary Large OBject (blob) in git.
 export type GitBlob = {
-  readonly mode: "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
+  readonly mode: Mode
   readonly path: string;
   readonly sha: string;
   readonly type: "blob" | "tree" | "commit" | undefined;
