@@ -12,8 +12,8 @@ import { GitFileData } from "../../src/types";
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 const client = github.getOctokit(token);
 
-async function getContents(path: string): Promise<GitFileData> {
-  const { data } = await client.repos.getContents({ path });
+async function getContent(path: string): Promise<GitFileData> {
+  const { data } = await client.repos.getContent({ path });
   return {
     path: data.path,
     content: data.content,
@@ -50,7 +50,7 @@ export const getPrComments = jest.fn()
   .mockName("github-api.getPrFile");
 
 export const getPrFile = jest.fn()
-  .mockImplementation(async (_, path) => await getContents(path))
+  .mockImplementation(async (_, path) => await getContent(path))
   .mockName("github-api.getPrFile");
 
 export const getPrFiles = jest.fn()
@@ -71,5 +71,5 @@ export const getPrNumber = jest.fn()
   .mockName("github-api.getPrNumber");
 
 export const getRepoFile = jest.fn()
-  .mockImplementation(async (_, path) => await getContents(path))
+  .mockImplementation(async (_, path) => await getContent(path))
   .mockName("github-api.getPrFile");

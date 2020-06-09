@@ -222,11 +222,11 @@ export const GitHubInstance = {
       .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
-    getContents: jest.fn()
+    getContent: jest.fn()
       .mockImplementation(async ({ path }) => {
         return { data: contentPayloads[path] };
       })
-      .mockName("GitHub.repos.getContents"),
+      .mockName("GitHub.repos.getContent"),
   },
 };
 

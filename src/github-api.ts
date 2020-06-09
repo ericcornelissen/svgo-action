@@ -158,7 +158,7 @@ export async function getPrFile(
   client: Octokit,
   path: string,
 ): Promise<GitFileData> {
-  const fileContents = await client.repos.getContents({
+  const fileContents = await client.repos.getContent({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     path: path,

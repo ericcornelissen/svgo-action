@@ -324,7 +324,7 @@ describe("::getPrFile", () => {
   });
 
   test("file is not found", async () => {
-    github.GitHubInstance.repos.getContents.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getPrFile(client, "foobar");
     await expect(promise).rejects.toBeDefined();
@@ -404,7 +404,7 @@ describe("::getRepoFile", () => {
   });
 
   test("throw for non-existent file", async () => {
-    github.GitHubInstance.repos.getContents.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getRepoFile(client, "9001");
     await expect(promise).rejects.toBeDefined();
