@@ -1,6 +1,6 @@
 import * as github from "@actions/github";
-import { GitGetCommitResponseData } from "@octokit/types";
 import { Octokit } from "@octokit/core";
+import { GitGetCommitResponseData } from "@octokit/types";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
 import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
