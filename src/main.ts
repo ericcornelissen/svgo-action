@@ -1,5 +1,6 @@
 import * as core from "@actions/core";
-import { GitHub } from "@actions/github";
+import * as github from "@actions/github";
+import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
 import { decode, encode } from "./encoder";
@@ -37,9 +38,9 @@ import { fetchYamlFile } from "./utils/fetch-yaml";
 
 
 
-function getContext(): { client: GitHub; prNumber: number } {
+function getContext(): { client: Octokit; prNumber: number } {
   const token: string = getRepoToken();
-  const client: GitHub = new GitHub(token);
+  const client: Octokit = github.getOctokit(token);
 
   const prNumber: number = getPrNumber();
   if (prNumber === PR_NOT_FOUND) {
@@ -50,7 +51,7 @@ function getContext(): { client: GitHub; prNumber: number } {
 }
 
 async function actionDisabledFromPR(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<boolean> {
   const prComments: string[] = await getPrComments(client, prNumber);
@@ -66,7 +67,7 @@ async function actionDisabledFromPR(
 }
 
 async function actionDisabled(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<{ isDisabled: boolean; disabledFrom: string }> {
   const commitMessage: string = await getCommitMessage(client);
@@ -85,7 +86,7 @@ async function actionDisabled(
 }
 
 async function getSvgsInPR(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
   ignoreGlob: string,
 ): Promise<{
@@ -155,7 +156,7 @@ async function doOptimizeSvgs(
 }
 
 async function toBlobs(
-  client: GitHub,
+  client: Octokit,
   files: FileData[],
 ): Promise<GitBlob[]> {
   const blobs: GitBlob[] = [];
@@ -178,7 +179,7 @@ async function toBlobs(
 }
 
 async function doCommitChanges(
-  client: GitHub,
+  client: Octokit,
   prNumber: number,
   config: ActionConfig,
   commitData: CommitData,
@@ -211,7 +212,7 @@ async function doCommitChanges(
 }
 
 async function run(
-  client: GitHub,
+  client: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
   prNumber: number,

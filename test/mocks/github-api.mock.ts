@@ -1,10 +1,16 @@
+import * as core from "./@actions/core.mock";
 import * as github from "./@actions/github.mock";
 
-import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB } from "../../src/constants";
+import {
+  COMMIT_MODE_FILE,
+  COMMIT_TYPE_BLOB,
+  INPUT_NAME_REPO_TOKEN,
+} from "../../src/constants";
 import { GitFileData } from "../../src/types";
 
 
-const client = new github.GitHub();
+const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
+const client = github.getOctokit(token);
 
 async function getContents(path: string): Promise<GitFileData> {
   const { data } = await client.repos.getContents({ path });

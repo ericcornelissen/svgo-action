@@ -28,7 +28,7 @@ import { GitBlob, GitFileData } from "../src/types";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
-const client = new github.GitHub(token);
+const client = github.getOctokit(token);
 
 describe("::commitFiles", () => {
 

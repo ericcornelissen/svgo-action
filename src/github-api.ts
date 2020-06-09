@@ -1,18 +1,19 @@
 import * as github from "@actions/github";
-import { Octokit } from "@octokit/rest";
+import { GitGetCommitResponseData } from "@octokit/types";
+import { Octokit } from "@octokit/core";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
 import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
 
 
-type GitCommit = Octokit.GitGetCommitResponse;
+type GitCommit = GitGetCommitResponseData;
 
 
 function getHead(): string {
   return github.context.payload.pull_request?.head.ref;
 }
 
-async function getCommit(client: github.GitHub): Promise<GitCommit> {
+async function getCommit(client: Octokit): Promise<GitCommit> {
   const ref = `heads/${getHead()}`;
 
   const { data: refData } = await client.git.getRef({
@@ -51,7 +52,7 @@ function getCommitUrl(commitSha: string): string {
 
 
 export async function commitFiles(
-  client: github.GitHub,
+  client: Octokit,
   blobs: GitBlob[],
   commitMessage: string,
 ): Promise<CommitInfo> {
@@ -87,7 +88,7 @@ export async function commitFiles(
 }
 
 export async function createBlob(
-  client: github.GitHub,
+  client: Octokit,
   path: string,
   data: string,
   encoding: string,
@@ -108,7 +109,7 @@ export async function createBlob(
 }
 
 export async function createComment(
-  client: github.GitHub,
+  client: Octokit,
   prNumber: number,
   comment: string,
 ): Promise<void> {
@@ -120,13 +121,13 @@ export async function createComment(
   });
 }
 
-export async function getCommitMessage(client: github.GitHub): Promise<string> {
+export async function getCommitMessage(client: Octokit): Promise<string> {
   const { message } = await getCommit(client);
   return message;
 }
 
 export async function getPrComments(
-  client: github.GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<string[]> {
   const PER_PAGE = 100;
@@ -154,7 +155,7 @@ export async function getPrComments(
 }
 
 export async function getPrFile(
-  client: github.GitHub,
+  client: Octokit,
   path: string,
 ): Promise<GitFileData> {
   const fileContents = await client.repos.getContents({
@@ -173,7 +174,7 @@ export async function getPrFile(
 }
 
 export async function getPrFiles(
-  client: github.GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<GitFileInfo[]> {
   const prFilesDetails = await client.pulls.listFiles({
@@ -198,7 +199,7 @@ export function getPrNumber(): number {
 }
 
 export async function getRepoFile(
-  client: github.GitHub,
+  client: Octokit,
   path: string,
 ): Promise<GitFileData> {
   return await getPrFile(client, path);

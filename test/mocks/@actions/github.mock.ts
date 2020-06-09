@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
+import { Octokit } from "@octokit/core";
+
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
 import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 
@@ -222,6 +224,6 @@ export const GitHubInstance = {
   },
 };
 
-export const GitHub = jest.fn()
-  .mockReturnValue(GitHubInstance)
-  .mockName("github.GitHub");
+export function getOctokit(_: string): Octokit {
+  return (GitHubInstance as unknown) as Octokit;
+}
