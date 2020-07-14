@@ -1,5 +1,5 @@
 hooks:
-  commit-msg: commitlint -e
+  commit-msg: commitlint -E HUSKY_GIT_PARAMS
   pre-commit: >
     git stash -q --keep-index &&
     npm run format &&
