@@ -4,6 +4,7 @@
 [![Node.js CI][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Maintainability][maintainability-image]][maintainability-url]
+[![LGTM Alerts][lgtm-image]][lgtm-url]
 [![Snyk Status][snyk-image]][snyk-url]
 
 Automatically run [SVGO] on SVGs in Pull Requests.
@@ -154,6 +155,10 @@ jobs:
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
+[lgtm-image]: https://img.shields.io/lgtm/alerts/g/ericcornelissen/svgo-action.svg?logo=lgtm&logoWidth=18
+[lgtm-url]: https://lgtm.com/projects/g/ericcornelissen/svgo-action/alerts/
+[snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
+[snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 
 [conventional commit]: https://www.conventionalcommits.org/
 [creating a workflow file]: https://help.github.com/en/articles/
@@ -161,6 +166,4 @@ jobs:
 [in the workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
-[snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
-[snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 [svgo]: https://github.com/svg/svgo
