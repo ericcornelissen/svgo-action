@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "@commitlint/cli": "9.1.2",
-    "@commitlint/config-conventional": "9.1.2",
+    "@commitlint/config-conventional": "10.0.0",
     "@types/jest": "26.0.10",
     "@types/jest-when": "2.7.1",
     "@types/js-yaml": "3.12.5",
