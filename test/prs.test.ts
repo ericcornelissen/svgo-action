@@ -24,7 +24,7 @@ jest.mock("../src/svgo", () => svgo);
 jest.mock("../src/templating", () => templating);
 
 import { PR_NOT_FOUND } from "../src/constants";
-import main from "../src/main";
+import main from "../src/prs";
 
 
 beforeEach(() => {
