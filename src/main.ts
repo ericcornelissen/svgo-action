@@ -8,6 +8,7 @@ import { RawActionConfig } from "./types";
 
 import { fetchYamlFile } from "./utils/fetch-yaml";
 
+import commits from "./commits";
 import prs from "./prs";
 
 
@@ -23,7 +24,7 @@ async function run(
   switch (event) {
     case EVENT_PUSH:
       core.info("Running SVGO-Action in Pull Request context");
-      core.setFailed("NOT YET SUPPORTED");
+      await commits(client, config, svgo);
       break;
     case EVENT_PULL_REQUEST:
       core.info("Running SVGO-Action in Pull Request context");
