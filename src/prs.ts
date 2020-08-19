@@ -1,5 +1,4 @@
 import * as core from "@actions/core";
-import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
@@ -15,17 +14,12 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
-import {
-  ActionConfig,
-  getConfigFilePath,
-  getRepoToken,
-} from "./inputs";
-import { SVGOptimizer, SVGOptions } from "./svgo";
+import { ActionConfig } from "./inputs";
+import { SVGOptimizer } from "./svgo";
 import { formatComment, formatCommitMessage } from "./templating";
 import {
   FileData,
   CommitData,
-  RawActionConfig,
 
   // Git
   CommitInfo,
@@ -34,21 +28,6 @@ import {
   GitFileInfo,
 } from "./types";
 
-import { fetchYamlFile } from "./utils/fetch-yaml";
-
-
-
-function getContext(): { client: Octokit; prNumber: number } {
-  const token: string = getRepoToken();
-  const client: Octokit = github.getOctokit(token);
-
-  const prNumber: number = getPrNumber();
-  if (prNumber === PR_NOT_FOUND) {
-    throw new Error("Could not get Pull Request number from context");
-  }
-
-  return { client, prNumber };
-}
 
 async function actionDisabledFromPR(
   client: Octokit,
@@ -246,34 +225,20 @@ async function run(
 }
 
 
-export default async function main(): Promise<void> {
-  try {
-    const { client, prNumber } = getContext();
+export default async function main(
+  client: Octokit,
+  config: ActionConfig,
+  svgo: SVGOptimizer,
+): Promise<void> {
+  const prNumber: number = getPrNumber();
+  if (prNumber === PR_NOT_FOUND) {
+    throw new Error("Could not get Pull Request number from context");
+  }
 
-    const configFilePath: string = getConfigFilePath();
-    const rawConfig: RawActionConfig = await fetchYamlFile(
-      client,
-      configFilePath,
-    );
-
-    const config: ActionConfig = new ActionConfig(rawConfig);
-    if (config.isDryRun) {
-      core.info("Dry mode enabled, no changes will be committed");
-    }
-
-    const svgoOptions: SVGOptions = await fetchYamlFile(
-      client,
-      config.svgoOptionsPath,
-    );
-    const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
-
-    const { isDisabled, disabledFrom } = await actionDisabled(client, prNumber);
-    if (isDisabled) {
-      core.info(`Action disabled from ${disabledFrom}, exiting`);
-    } else {
-      await run(client, config, svgo, prNumber);
-    }
-  } catch (error) {
-    core.setFailed(`action failed with error '${error}'`);
+  const { isDisabled, disabledFrom } = await actionDisabled(client, prNumber);
+  if (isDisabled) {
+    core.info(`Action disabled from ${disabledFrom}, exiting`);
+  } else {
+    await run(client, config, svgo, prNumber);
   }
 }

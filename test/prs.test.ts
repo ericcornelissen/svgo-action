@@ -12,19 +12,23 @@ import { PR_NUMBER } from "./mocks/@actions/github.mock";
 import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
-import * as svgo from "./mocks/svgo.mock";
+import * as svgoImport from "./mocks/svgo.mock";
 import * as templating from "./mocks/templating.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
-jest.mock("../src/inputs", () => inputs);
-jest.mock("../src/svgo", () => svgo);
 jest.mock("../src/templating", () => templating);
 
-import { PR_NOT_FOUND } from "../src/constants";
+import { INPUT_NAME_REPO_TOKEN, PR_NOT_FOUND } from "../src/constants";
 import main from "../src/prs";
+
+
+const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
+const client = github.getOctokit(token);
+const config = new inputs.ActionConfig();
+const svgo = new svgoImport.SVGOptimizer();
 
 
 beforeEach(() => {
@@ -43,30 +47,27 @@ beforeEach(() => {
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
 
-  inputs.ActionConfig.mockClear();
-
-  svgo.SVGOptimizer.mockClear();
-  svgo.OptimizerInstance.optimize.mockClear();
+  svgoImport.OptimizerInstance.optimize.mockClear();
 
   templating.formatCommitMessage.mockClear();
 });
 
 test("get the Pull Request number", async () => {
-  await main();
+  await main(client, config, svgo);
   expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
 });
 
 describe("Logging", () => {
 
   test("does some debug logging", async () => {
-    await main();
+    await main(client, config, svgo);
     expect(core.debug).toHaveBeenCalled();
   });
 
   test("summary for a Pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1/1 SVG(s)"));
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/1 SVG(s) skipped"));
   });
@@ -74,7 +75,7 @@ describe("Logging", () => {
   test("summary for a Pull Request with 1 skipped SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0/1 SVG(s)"));
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/1 SVG(s) skipped"));
   });
@@ -82,18 +83,18 @@ describe("Logging", () => {
   test("summary for a Pull Request with many changes", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 3/4 SVG(s)"));
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/4 SVG(s) skipped"));
   });
 
   test("don't log an error when everything is fine", async () => {
-    await main();
+    await main(client, config, svgo);
     expect(core.error).not.toHaveBeenCalled();
   });
 
   test("don't set a failed state when everything is fine", async () => {
-    await main();
+    await main(client, config, svgo);
     expect(core.setFailed).not.toHaveBeenCalled();
   });
 
@@ -101,11 +102,11 @@ describe("Logging", () => {
 
 describe("Configuration", () => {
 
-  test("use custom configuration file", async () => {
+  test.skip("use custom configuration file", async () => {
     const actionConfigFilePath = "svgo-action.yml";
     inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
   });
@@ -115,12 +116,10 @@ describe("Configuration", () => {
     actionConfig.isDryRun = true;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
-    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
   test("dry mode disabled", async () => {
@@ -128,28 +127,25 @@ describe("Configuration", () => {
     actionConfig.isDryRun = false;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(githubAPI.commitFiles).toHaveBeenCalled();
-    expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
-  test("use an SVGO options file in the repository", async () => {
+  test.skip("use an SVGO options file in the repository", async () => {
     const svgoOptionsPath = ".svgo.yml";
     const actionConfig = new inputs.ActionConfig();
     actionConfig.svgoOptionsPath = svgoOptionsPath;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
     when(githubAPI.getRepoFile)
       .calledWith(github.GitHubInstance, svgoOptionsPath)
       .mockResolvedValueOnce(contentPayloads[svgoOptionsPath]);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
-    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
+    expect(svgoImport.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
   });
 
   test.each([
@@ -161,9 +157,8 @@ describe("Configuration", () => {
     actionConfig.commitTitle = commitTitle;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       commitTitle,
@@ -176,18 +171,17 @@ describe("Configuration", () => {
     "This should be a commit body",
     "Shut up and take my money",
     "A templated commit title? {{filesList}}",
-  ])("custom commit message body (%s)", async (commitBoy) => {
+  ])("custom commit message body (%s)", async (commitBody) => {
     const actionConfig = new inputs.ActionConfig();
-    actionConfig.commitBody = commitBoy;
+    actionConfig.commitBody = commitBody;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       expect.any(String),
-      commitBoy,
+      commitBody,
       expect.any(Object),
     );
   });
@@ -195,11 +189,10 @@ describe("Configuration", () => {
   test("conventional-commits are enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.commitTitle = "chore: optimize {{optimizedCount}} SVG(s)";
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       actionConfig.commitTitle,
@@ -217,15 +210,14 @@ describe("Configuration", () => {
     actionConfig.ignoreGlob = "foo/*";
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(fileContent, fileEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fileEncoding);
@@ -259,7 +251,7 @@ describe("Manual Action control", () => {
   ])("comments on the Pull Request that don't disable the Action", async (...comments) => {
     githubAPI.getPrComments.mockResolvedValueOnce(comments);
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
@@ -273,7 +265,7 @@ describe("Manual Action control", () => {
       baseComments.map((comment) => strFormat(comment, "disable-svgo-action")),
     );
 
-    await main();
+    await main(client, config, svgo);
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
@@ -283,7 +275,7 @@ describe("Manual Action control", () => {
       ["I don't know what I'm doing but enable-svgo-action"],
     );
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
@@ -298,7 +290,7 @@ describe("Manual Action control", () => {
       // Oldest comment
     ]);
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
@@ -313,7 +305,7 @@ describe("Manual Action control", () => {
       // Oldest comment
     ]);
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
@@ -325,7 +317,7 @@ describe("Manual Action control", () => {
   ])("commit message that doesn't disables the Action (%s)", async (commitMessage) => {
     githubAPI.getCommitMessage.mockResolvedValueOnce(commitMessage);
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
@@ -338,7 +330,7 @@ describe("Manual Action control", () => {
     const commitMessage = strFormat(baseCommitMessage, "disable-svgo-action");
     githubAPI.getCommitMessage.mockResolvedValueOnce(commitMessage);
 
-    await main();
+    await main(client, config, svgo);
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
@@ -348,14 +340,14 @@ describe("Manual Action control", () => {
       "I don't know what I'm doing but enable-svgo-action",
     );
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
   });
 
   test("commit message that enables the action when it *is* disabled from the PR", async () => {
     // Verify the PR comment disables the Action
     githubAPI.getPrComments.mockResolvedValueOnce(["disable-svgo-action"]);
-    await main();
+    await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("disabled"));
 
     // Reset the info log so we can check it again
@@ -367,7 +359,7 @@ describe("Manual Action control", () => {
       "I don't know what I'm doing but enable-svgo-action",
     );
 
-    await main();
+    await main(client, config, svgo);
     expect(core.info).not.toHaveBeenCalledWith(expect.stringContaining("disabled"));
 
     // Make sure the ResolveValueOnce for getPrComments is resolved before the next test
@@ -385,7 +377,7 @@ describe("Comments", () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
@@ -395,9 +387,8 @@ describe("Comments", () => {
     actionConfig.enableComments = true;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
   });
@@ -407,9 +398,8 @@ describe("Comments", () => {
     actionConfig.enableComments = true;
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(githubAPI.createComment).toHaveBeenCalledTimes(1);
   });
@@ -422,9 +412,8 @@ describe("Comments", () => {
     actionConfig.enableComments = true;
 
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
@@ -437,9 +426,8 @@ describe("Comments", () => {
     actionConfig.enableComments = true;
 
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(githubAPI.createComment).not.toHaveBeenCalled();
   });
@@ -450,9 +438,8 @@ describe("Comments", () => {
     actionConfig.comment = "Hello world!";
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    inputs.ActionConfig.mockReturnValueOnce(actionConfig);
 
-    await main();
+    await main(client, actionConfig, svgo);
 
     expect(templating.formatComment).toHaveBeenCalledWith(
       actionConfig.comment,
@@ -482,13 +469,13 @@ describe("Payloads", () => {
   test("a Pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
@@ -514,13 +501,13 @@ describe("Payloads", () => {
   test("a Pull Request with 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
@@ -546,10 +533,10 @@ describe("Payloads", () => {
   test("a Pull Request with 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).not.toHaveBeenCalled();
-    expect(svgo.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
     expect(encoder.encode).not.toHaveBeenCalled();
     expect(githubAPI.createBlob).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
@@ -558,15 +545,15 @@ describe("Payloads", () => {
   test("a Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_MODIFY_REMOVE_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(2);
     expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(2);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(2);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(2);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
@@ -602,15 +589,15 @@ describe("Payloads", () => {
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(2);
     expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(2);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(2);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(2);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
@@ -644,10 +631,10 @@ describe("Payloads", () => {
   test("a Pull Request with 1 new file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).not.toHaveBeenCalled();
-    expect(svgo.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
     expect(encoder.encode).not.toHaveBeenCalled();
     expect(githubAPI.createBlob).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
@@ -656,10 +643,10 @@ describe("Payloads", () => {
   test("a Pull Request with 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MODIFY_FILE);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).not.toHaveBeenCalled();
-    expect(svgo.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
     expect(encoder.encode).not.toHaveBeenCalled();
     expect(githubAPI.createBlob).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
@@ -668,10 +655,10 @@ describe("Payloads", () => {
   test("a Pull Request with 1 removed file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.REMOVE_FILE);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).not.toHaveBeenCalled();
-    expect(svgo.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
     expect(encoder.encode).not.toHaveBeenCalled();
     expect(githubAPI.createBlob).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
@@ -680,13 +667,13 @@ describe("Payloads", () => {
   test("a Pull Request with 1 new SVG and 1 modified file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_MODIFY_FILE);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
@@ -712,13 +699,13 @@ describe("Payloads", () => {
   test("a Pull Request with 1 new file and 1 modified SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_MODIFY_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
@@ -744,13 +731,13 @@ describe("Payloads", () => {
   test("a Pull Request with 1 new SVG and 1 deleted file", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_REMOVE_FILE);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
     expect(encoder.decode).toHaveBeenCalledWith(complexSvgContent, complexSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(complexSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(complexSvgData);
 
     expect(encoder.encode).toHaveBeenCalledTimes(1);
     expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), complexSvgEncoding);
@@ -776,10 +763,10 @@ describe("Payloads", () => {
   test("a Pull Request with 1 new file and 1 deleted SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE_REMOVE_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).not.toHaveBeenCalled();
-    expect(svgo.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
     expect(encoder.encode).not.toHaveBeenCalled();
     expect(githubAPI.createBlob).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
@@ -788,17 +775,17 @@ describe("Payloads", () => {
   test("a Pull Request with multiple SVGs and multiple files", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(encoder.decode).toHaveBeenCalledTimes(4);
     expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
     expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
 
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(4);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(4);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
 
     expect(githubAPI.createBlob).toHaveBeenCalledTimes(3);
     expect(githubAPI.createBlob).toHaveBeenCalledWith(
@@ -835,7 +822,7 @@ describe("Payloads", () => {
   test("a Pull Request with 1 optimized SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_OPTIMIZED_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(/skipping.*optimized.svg/));
@@ -849,7 +836,7 @@ describe("Payloads", () => {
   ])("no new or changed SVGs (#%i)", async (prNumber) => {
     githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Found 0/.+ new or changed SVGs"));
   });
@@ -861,29 +848,23 @@ describe("Error scenarios", () => {
   test("the Pull Request number could not be found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);
 
-    await main();
-
-    expect(core.setFailed).toHaveBeenCalled();
+    await expect(main(client, config, svgo)).rejects.toBeDefined();
   });
 
   test("the Pull Request files could not be found", async () => {
     githubAPI.getPrFiles.mockRejectedValueOnce(new Error("Not found"));
 
-    await main();
-
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    await expect(main(client, config, svgo)).rejects.toBeDefined();
   });
 
   test("a particular file could not be found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
     githubAPI.getPrFile.mockRejectedValueOnce(new Error("Not found"));
 
-    await main();
-
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    await expect(main(client, config, svgo)).rejects.toBeDefined();
   });
 
-  test("the SVGO options file does not exist", async () => {
+  test.skip("the SVGO options file does not exist", async () => {
     const { svgoOptionsPath } = new inputs.ActionConfig();
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
@@ -891,14 +872,14 @@ describe("Error scenarios", () => {
       .calledWith(github.GitHubInstance, svgoOptionsPath)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main();
+    await main(client, config, svgo);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
     expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(`not found.*${svgoOptionsPath}`));
   });
 
-  test("the Action configuration file does not exist", async () => {
+  test.skip("the Action configuration file does not exist", async () => {
     const actionConfigPath = inputs.getConfigFilePath();
 
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
@@ -906,7 +887,7 @@ describe("Error scenarios", () => {
       .calledWith(github.GitHubInstance, actionConfigPath)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main();
+    await main(client, config, svgo);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
@@ -916,12 +897,12 @@ describe("Error scenarios", () => {
   test("an SVG file that does not contain SVG content", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FAKE_SVG);
 
-    await main();
+    await main(client, config, svgo);
 
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("cannot optimize"));
 
     expect(encoder.decode).toHaveBeenCalledTimes(1);
-    expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
   });
