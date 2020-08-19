@@ -29,6 +29,7 @@ const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 const client = github.getOctokit(token);
 const config = new inputs.ActionConfig();
 const svgo = new svgoImport.SVGOptimizer();
+const head: string = github.context.payload.pull_request?.head.ref;
 
 
 beforeEach(() => {
@@ -236,6 +237,7 @@ describe("Configuration", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: filePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -494,6 +496,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -526,6 +529,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: fooFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -580,6 +584,7 @@ describe("Payloads", () => {
         expect.objectContaining({ path: fooFilePath }),
         expect.objectContaining({ path: barFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -624,6 +629,7 @@ describe("Payloads", () => {
         expect.objectContaining({ path: fooFilePath }),
         expect.objectContaining({ path: foobarFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -692,6 +698,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -724,6 +731,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: testFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -756,6 +764,7 @@ describe("Payloads", () => {
       expect.arrayContaining([
         expect.objectContaining({ path: complexFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });
@@ -815,6 +824,7 @@ describe("Payloads", () => {
         expect.objectContaining({ path: barFilePath }),
         expect.objectContaining({ path: testFilePath }),
       ]),
+      `heads/${head}`,
       expect.any(String),
     );
   });

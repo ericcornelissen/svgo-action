@@ -1,4 +1,5 @@
 import * as core from "@actions/core";
+import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
@@ -18,8 +19,8 @@ import { ActionConfig } from "./inputs";
 import { SVGOptimizer } from "./svgo";
 import { formatComment, formatCommitMessage } from "./templating";
 import {
-  FileData,
   CommitData,
+  FileData,
 
   // Git
   CommitInfo,
@@ -28,6 +29,11 @@ import {
   GitFileInfo,
 } from "./types";
 
+
+function getHeadRef(): string {
+  const head: string = github.context.payload.pull_request?.head.ref;
+  return `heads/${head}`;
+}
 
 async function actionDisabledFromPR(
   client: Octokit,
@@ -49,7 +55,7 @@ async function actionDisabled(
   client: Octokit,
   prNumber: number,
 ): Promise<{ isDisabled: boolean; disabledFrom: string }> {
-  const commitMessage: string = await getCommitMessage(client);
+  const commitMessage: string = await getCommitMessage(client, getHeadRef());
   if (DISABLE_PATTERN.test(commitMessage)) {
     return { isDisabled: true, disabledFrom: "commit message" };
   }
@@ -175,9 +181,11 @@ async function doCommitChanges(
       commitData,
     );
 
+    core.debug(`committing ${commitData.optimizedCount} updated SVG(s)`);
     const commitInfo: CommitInfo = await commitFiles(
       client,
       blobs,
+      getHeadRef(),
       commitMessage,
     );
     core.debug(`commit successful (see ${commitInfo.url})`);

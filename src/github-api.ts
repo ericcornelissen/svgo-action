@@ -1,35 +1,14 @@
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
-import { GitGetCommitResponseData } from "@octokit/types";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
-import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
+import {
+  CommitInfo,
+  GitBlob,
+  GitFileData,
+  GitFileInfo,
+} from "./types";
 
-
-type GitCommit = GitGetCommitResponseData;
-
-
-function getHead(): string {
-  return github.context.payload.pull_request?.head.ref;
-}
-
-async function getCommit(client: Octokit): Promise<GitCommit> {
-  const ref = `heads/${getHead()}`;
-
-  const { data: refData } = await client.git.getRef({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    ref: ref,
-  });
-
-  const { data: commit } = await client.git.getCommit({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    commit_sha: refData.object.sha,
-  });
-
-  return commit;
-}
 
 function getCommitUrl(commitSha: string): string {
   const API_URL_START = "https://api.github.com/repos/";
@@ -54,10 +33,20 @@ function getCommitUrl(commitSha: string): string {
 export async function commitFiles(
   client: Octokit,
   blobs: GitBlob[],
+  ref: string,
   commitMessage: string,
 ): Promise<CommitInfo> {
-  const ref = `heads/${getHead()}`;
-  const previousCommit = await getCommit(client);
+  const { data: refData } = await client.git.getRef({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    ref: ref,
+  });
+
+  const { data: previousCommit } = await client.git.getCommit({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    commit_sha: refData.object.sha,
+  });
 
   const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
@@ -121,9 +110,39 @@ export async function createComment(
   });
 }
 
-export async function getCommitMessage(client: Octokit): Promise<string> {
-  const { message } = await getCommit(client);
-  return message;
+export async function getCommitFiles(
+  client: Octokit,
+  ref: string,
+): Promise<GitFileInfo[]> {
+  const { data } = await client.repos.getCommit({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    ref: ref,
+  });
+
+  return data.files.map((details) => ({
+    path: details.filename,
+    status: details.status,
+  }));
+}
+
+export async function getCommitMessage(
+  client: Octokit,
+  ref: string,
+): Promise<string> {
+  const { data: refData } = await client.git.getRef({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    ref: ref,
+  });
+
+  const { data: commit } = await client.git.getCommit({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    commit_sha: refData.object.sha,
+  });
+
+  return commit.message;
 }
 
 export async function getPrComments(
