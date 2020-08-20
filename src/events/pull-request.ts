@@ -79,7 +79,6 @@ async function run(
     config.ignoreGlob,
   );
 
-  core.info(`Found ${svgs.length} SVG(s) in Pull Request, optimizing...`);
   const optimizedSvgs = await doOptimizeSvgs(svgo, svgs);
 
   const commitData: CommitData = {

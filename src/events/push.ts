@@ -58,7 +58,6 @@ export default async function main(
     config.ignoreGlob,
   );
 
-  core.info(`Found ${svgs.length} SVG(s) in commit, optimizing...`);
   const optimizedSvgs = await doOptimizeSvgs(svgo, svgs);
 
   await doCommit(client, getHeadRef(), config, {

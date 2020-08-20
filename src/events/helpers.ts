@@ -118,6 +118,8 @@ export async function doOptimizeSvgs(
   svgo: SVGOptimizer,
   originalSvgs: FileData[],
 ): Promise<FileData[]> {
+  core.info(`Found ${originalSvgs.length} SVG(s), optimizing...`);
+
   const optimizedSvgs: FileData[] = [];
   for (const svg of originalSvgs) {
     try {
