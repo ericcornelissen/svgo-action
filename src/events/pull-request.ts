@@ -10,7 +10,7 @@ import {
   getPrFiles,
   getPrNumber,
 } from "../github-api";
-import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "../helpers";
+import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "./helpers";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { formatComment } from "../templating";

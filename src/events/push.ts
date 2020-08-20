@@ -4,7 +4,7 @@ import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN } from "../constants";
 import { getCommitFiles } from "../github-api";
-import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "../helpers";
+import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "./helpers";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { ContextInfo, GitFileInfo } from "../types";

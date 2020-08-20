@@ -135,8 +135,8 @@ export async function getCommitMessage(
   client: Octokit,
   ref: string,
 ): Promise<string> {
-  const commit = await getCommitAt(client, ref);
-  return commit.message;
+  const { message } = await getCommitAt(client, ref);
+  return message;
 }
 
 export async function getPrComments(
