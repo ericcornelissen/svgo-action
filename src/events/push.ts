@@ -21,7 +21,7 @@ function isDisabledForCommit(commitMessage: string): boolean {
 async function getFilesInCommits(client: Octokit): Promise<GitFileInfo[]> {
   const commitsFiles: GitFileInfo[] = [];
 
-  const commits = github.context.payload?.commits;
+  const commits = github.context.payload.commits;
   for (const commit of commits) {
     const commitId: string = commit.id;
 

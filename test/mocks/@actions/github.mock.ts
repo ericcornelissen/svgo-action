@@ -39,7 +39,14 @@ export const COMMIT_SHA = {
   NO_CHANGES: "no changes",
   MANY_CHANGES: "many changes",
   ADD_SVG: "add 1 SVG",
+  MODIFY_SVG: "modify 1 SVG",
+  REMOVE_SVG: "remove 1 SVG",
+  ADD_SVG_AND_SVG_IN_DIR: "add 1 SVG, add 1 SVG in dir",
+  ADD_FILE: "add 1 file",
+  MODIFY_FILE: "modify 1 file",
+  REMOVE_FILE: "remove 1 file",
   ADD_OPTIMIZED_SVG: "add 1 optimized SVG",
+  ADD_FAKE_SVG: "add fake SVG",
 };
 
 export const context = {
