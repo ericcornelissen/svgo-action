@@ -848,7 +848,7 @@ describe("Payloads", () => {
 
     await main(client, config, svgo);
 
-    expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Found 0/.+ new or changed SVGs"));
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
   });
 
 });

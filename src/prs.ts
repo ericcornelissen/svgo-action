@@ -3,31 +3,18 @@ import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
-import { decode, encode } from "./encoder";
-import { existingFiles, filesNotMatching, svgFiles } from "./filters";
 import {
-  commitFiles,
-  createBlob,
   createComment,
   getCommitMessage,
   getPrComments,
-  getPrFile,
   getPrFiles,
   getPrNumber,
 } from "./github-api";
+import { doFilterSvgsFromFiles, doOptimizeAndCommit } from "./helpers";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer } from "./svgo";
-import { formatComment, formatCommitMessage } from "./templating";
-import {
-  CommitData,
-  FileData,
-
-  // Git
-  CommitInfo,
-  GitBlob,
-  GitFileData,
-  GitFileInfo,
-} from "./types";
+import { formatComment } from "./templating";
+import { ContextInfo, CommitData, GitFileInfo } from "./types";
 
 
 function getHeadRef(): string {
@@ -74,128 +61,10 @@ async function getSvgsInPR(
   client: Octokit,
   prNumber: number,
   ignoreGlob: string,
-): Promise<{
-  fileCount: number;
-  ignoredCount: number;
-  svgCount: number;
-  svgs: FileData[];
-}> {
+): Promise<ContextInfo> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
-
   const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
-  const fileCount = prFiles.length;
-  core.debug(`the pull request contains ${fileCount} file(s)`);
-
-  const prSvgs: GitFileInfo[] = prFiles.filter(svgFiles).filter(existingFiles);
-  const svgCount = prSvgs.length;
-  core.debug(`the pull request contains ${svgCount} SVG(s)`);
-
-  const notGlobbedFiles = filesNotMatching(ignoreGlob);
-  const notIgnoredSvgs: GitFileInfo[] = prSvgs.filter(notGlobbedFiles);
-  const ignoredCount = svgCount - notIgnoredSvgs.length;
-  core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
-
-  const svgs: FileData[] = [];
-  for (const svg of notIgnoredSvgs) {
-    core.debug(`fetching file contents of '${svg.path}'`);
-    const fileData: GitFileData = await getPrFile(client, svg.path);
-
-    core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
-    const svgContent: string = decode(fileData.content, fileData.encoding);
-
-    svgs.push({
-      content: svgContent,
-      originalEncoding: fileData.encoding,
-      path: fileData.path,
-    });
-  }
-
-  return { fileCount, ignoredCount, svgCount, svgs };
-}
-
-async function doOptimizeSvgs(
-  svgo: SVGOptimizer,
-  originalSvgs: FileData[],
-): Promise<FileData[]> {
-  const optimizedSvgs: FileData[] = [];
-  for (const svg of originalSvgs) {
-    try {
-      core.debug(`optimizing '${svg.path}'`);
-      const optimizedSvg: string = await svgo.optimize(svg.content);
-      if (svg.content === optimizedSvg) {
-        core.debug(`skipping '${svg.path}', already optimized`);
-        continue;
-      }
-
-      optimizedSvgs.push({
-        content: optimizedSvg,
-        originalEncoding: svg.originalEncoding,
-        path: svg.path,
-      });
-    } catch(_) {
-      core.info(`SVGO cannot optimize '${svg.path}', source incorrect`);
-    }
-  }
-
-  return optimizedSvgs;
-}
-
-async function toBlobs(
-  client: Octokit,
-  files: FileData[],
-): Promise<GitBlob[]> {
-  const blobs: GitBlob[] = [];
-  for (const file of files) {
-    core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
-    const optimizedData: string = encode(file.content, file.originalEncoding);
-
-    core.debug(`creating blob for (updated) '${file.path}'`);
-    const svgBlob: GitBlob = await createBlob(
-      client,
-      file.path,
-      optimizedData,
-      file.originalEncoding,
-    );
-
-    blobs.push(svgBlob);
-  }
-
-  return blobs;
-}
-
-async function doCommitChanges(
-  client: Octokit,
-  prNumber: number,
-  config: ActionConfig,
-  commitData: CommitData,
-): Promise<void> {
-  if (!config.isDryRun && commitData.optimizedCount > 0) {
-    const blobs: GitBlob[] = await toBlobs(
-      client,
-      commitData.fileData.optimized,
-    );
-
-    const commitMessage: string = formatCommitMessage(
-      config.commitTitle,
-      config.commitBody,
-      commitData,
-    );
-
-    core.debug(`committing ${commitData.optimizedCount} updated SVG(s)`);
-    const commitInfo: CommitInfo = await commitFiles(
-      client,
-      blobs,
-      getHeadRef(),
-      commitMessage,
-    );
-    core.debug(`commit successful (see ${commitInfo.url})`);
-
-    if (config.enableComments) {
-      core.debug(`creating comment on pull request #${prNumber}`);
-      const comment: string = formatComment(config.comment, commitData);
-      await createComment(client, prNumber, comment);
-    }
-  }
+  return doFilterSvgsFromFiles(client, prFiles, ignoreGlob);
 }
 
 async function run(
@@ -204,31 +73,24 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const { fileCount, ignoredCount, svgCount, svgs } = await getSvgsInPR(
+  const context: ContextInfo = await getSvgsInPR(
     client,
     prNumber,
     config.ignoreGlob,
   );
 
-  if (svgCount > 0) {
-    core.info(`Found ${svgCount}/${fileCount} new or changed SVG(s)`);
-    const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);
-    const optimizedCount = optimizedSvgs.length;
-    const skippedCount = svgCount - optimizedSvgs.length;
+  const commitData: CommitData = await doOptimizeAndCommit(
+    client,
+    getHeadRef(),
+    config,
+    svgo,
+    context,
+  );
 
-    await doCommitChanges(client, prNumber, config, {
-      fileCount: fileCount,
-      fileData: { optimized: optimizedSvgs, original: svgs },
-      ignoredCount: ignoredCount,
-      optimizedCount: optimizedCount,
-      skippedCount: skippedCount,
-      svgCount: svgCount,
-    });
-
-    core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s)`);
-    core.info(`  (${skippedCount}/${svgCount} SVG(s) skipped)`);
-  } else {
-    core.info(`Found 0/${fileCount} new or changed SVGs, exiting`);
+  if (commitData.optimizedCount > 0 && config.enableComments) {
+    core.debug(`creating comment on pull request #${prNumber}`);
+    const comment: string = formatComment(config.comment, commitData);
+    await createComment(client, prNumber, comment);
   }
 }
 

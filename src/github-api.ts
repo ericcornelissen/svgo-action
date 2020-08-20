@@ -2,12 +2,7 @@ import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
-import {
-  CommitInfo,
-  GitBlob,
-  GitFileData,
-  GitFileInfo,
-} from "./types";
+import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
 
 
 function getCommitUrl(commitSha: string): string {

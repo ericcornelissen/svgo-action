@@ -21,6 +21,13 @@ export type CommitData = {
   readonly svgCount: number;
 }
 
+// Type representing the context w.r.t. files and SVGs the Action is running in.
+export type ContextInfo = {
+  readonly fileCount: number;
+  readonly ignoredCount: number;
+  readonly svgs: FileData[];
+}
+
 // Type representing an Action configuration file.
 export type RawActionConfig = {
   readonly comment?: boolean | string;
