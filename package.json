@@ -58,7 +58,7 @@
     "@types/svgo": "1.3.3",
     "@typescript-eslint/eslint-plugin": "3.9.1",
     "@typescript-eslint/parser": "3.9.1",
-    "@zeit/ncc": "0.22.3",
+    "@vercel/ncc": "^0.23.0",
     "editorconfig-checker": "3.1.0",
     "eslint": "7.7.0",
     "eslint-plugin-jest": "23.20.0",
