@@ -75,10 +75,8 @@ export async function doCommit(
     core.debug(`commit successful (see ${commitInfo.url})`);
   }
 
-  const optimizedRatio = `${optimizedCount}/${svgCount}`;
-  const skippedRatio = `${skippedCount}/${svgCount}`;
-  core.info(`Successfully optimized ${optimizedRatio} SVG(s)`);
-  core.info(`  (${skippedRatio} SVG(s) skipped)`);
+  core.info(`Successfully optimized ${optimizedCount}/${svgCount} SVG(s)`);
+  core.info(`  (${skippedCount}/${svgCount} SVG(s) skipped)`);
 }
 
 export async function doFilterSvgsFromFiles(
