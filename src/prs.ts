@@ -10,7 +10,7 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
-import { doFilterSvgsFromFiles, doOptimizeAndCommit } from "./helpers";
+import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "./helpers";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer } from "./svgo";
 import { formatComment } from "./templating";
@@ -73,21 +73,26 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const context: ContextInfo = await getSvgsInPR(
+  const { fileCount, svgs, ignoredCount } = await getSvgsInPR(
     client,
     prNumber,
     config.ignoreGlob,
   );
 
-  const commitData: CommitData = await doOptimizeAndCommit(
-    client,
-    getHeadRef(),
-    config,
-    svgo,
-    context,
-  );
+  core.info(`Found ${svgs.length} SVG(s) in Pull Request, optimizing...`);
+  const optimizedSvgs = await doOptimizeSvgs(svgo, svgs);
 
-  if (commitData.optimizedCount > 0 && config.enableComments) {
+  const commitData: CommitData = {
+    fileCount: fileCount,
+    fileData: { optimized: optimizedSvgs, original: svgs },
+    ignoredCount: ignoredCount,
+    optimizedCount: optimizedSvgs.length,
+    skippedCount: svgs.length - optimizedSvgs.length,
+    svgCount: svgs.length,
+  };
+
+  await doCommit(client, getHeadRef(), config, commitData);
+  if (config.enableComments && commitData.optimizedCount > 0) {
     core.debug(`creating comment on pull request #${prNumber}`);
     const comment: string = formatComment(config.comment, commitData);
     await createComment(client, prNumber, comment);

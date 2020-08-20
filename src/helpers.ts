@@ -43,33 +43,43 @@ async function toBlobs(
   return blobs;
 }
 
-async function doOptimizeSvgs(
-  svgo: SVGOptimizer,
-  originalSvgs: FileData[],
-): Promise<FileData[]> {
-  const optimizedSvgs: FileData[] = [];
-  for (const svg of originalSvgs) {
-    try {
-      core.debug(`optimizing '${svg.path}'`);
-      const optimizedSvg: string = await svgo.optimize(svg.content);
-      if (svg.content === optimizedSvg) {
-        core.debug(`skipping '${svg.path}', already optimized`);
-        continue;
-      }
 
-      optimizedSvgs.push({
-        content: optimizedSvg,
-        originalEncoding: svg.originalEncoding,
-        path: svg.path,
-      });
-    } catch (_) {
-      core.info(`SVGO cannot optimize '${svg.path}', source incorrect`);
-    }
+export async function doCommit(
+  client: Octokit,
+  ref: string,
+  config: ActionConfig,
+  commitData: CommitData,
+): Promise<void> {
+  const {
+    fileData: { optimized },
+    optimizedCount,
+    skippedCount,
+    svgCount,
+  } = commitData;
+
+  if (!config.isDryRun && optimized.length > 0) {
+    const blobs: GitBlob[] = await toBlobs(client, optimized);
+    const commitMessage: string = formatCommitMessage(
+      config.commitTitle,
+      config.commitBody,
+      commitData,
+    );
+
+    core.debug(`committing ${optimizedCount} updated SVG(s)`);
+    const commitInfo: CommitInfo = await commitFiles(
+      client,
+      blobs,
+      ref,
+      commitMessage,
+    );
+    core.debug(`commit successful (see ${commitInfo.url})`);
   }
 
-  return optimizedSvgs;
+  const optimizedRatio = `${optimizedCount}/${svgCount}`;
+  const skippedRatio = `${skippedCount}/${svgCount}`;
+  core.info(`Successfully optimized ${optimizedRatio} SVG(s)`);
+  core.info(`  (${skippedRatio} SVG(s) skipped)`);
 }
-
 
 export async function doFilterSvgsFromFiles(
   client: Octokit,
@@ -106,49 +116,29 @@ export async function doFilterSvgsFromFiles(
   return { fileCount, ignoredCount, svgs };
 }
 
-export async function doOptimizeAndCommit(
-  client: Octokit,
-  ref: string,
-  config: ActionConfig,
+export async function doOptimizeSvgs(
   svgo: SVGOptimizer,
-  context: ContextInfo,
-): Promise<CommitData> {
-  const { fileCount, ignoredCount, svgs } = context;
+  originalSvgs: FileData[],
+): Promise<FileData[]> {
+  const optimizedSvgs: FileData[] = [];
+  for (const svg of originalSvgs) {
+    try {
+      core.debug(`optimizing '${svg.path}'`);
+      const optimizedSvg: string = await svgo.optimize(svg.content);
+      if (svg.content === optimizedSvg) {
+        core.debug(`skipping '${svg.path}', already optimized`);
+        continue;
+      }
 
-  core.info(`Found ${svgs.length}/${fileCount} SVG(s), optimizing...`);
-  const optimizedSvgs: FileData[] = await doOptimizeSvgs(svgo, svgs);
-
-  const commitData: CommitData = {
-    fileCount: fileCount,
-    fileData: { optimized: optimizedSvgs, original: svgs },
-    ignoredCount: ignoredCount,
-    optimizedCount: optimizedSvgs.length,
-    skippedCount: svgs.length - optimizedSvgs.length,
-    svgCount: svgs.length,
-  };
-
-  if (!config.isDryRun && optimizedSvgs.length > 0) {
-    const blobs: GitBlob[] = await toBlobs(client, optimizedSvgs);
-    const commitMessage: string = formatCommitMessage(
-      config.commitTitle,
-      config.commitBody,
-      commitData,
-    );
-
-    core.debug(`committing ${optimizedSvgs.length} updated SVG(s)`);
-    const commitInfo: CommitInfo = await commitFiles(
-      client,
-      blobs,
-      ref,
-      commitMessage,
-    );
-    core.debug(`commit successful (see ${commitInfo.url})`);
+      optimizedSvgs.push({
+        content: optimizedSvg,
+        originalEncoding: svg.originalEncoding,
+        path: svg.path,
+      });
+    } catch (_) {
+      core.info(`SVGO cannot optimize '${svg.path}', source incorrect`);
+    }
   }
 
-  const optimizedRatio = `${optimizedSvgs.length}/${svgs.length}`;
-  const skippedRatio = `${svgs.length - optimizedSvgs.length}/${svgs.length}`;
-  core.info(`Successfully optimized ${optimizedRatio} SVG(s)`);
-  core.info(`  (${skippedRatio} SVG(s) skipped)`);
-
-  return commitData;
+  return optimizedSvgs;
 }

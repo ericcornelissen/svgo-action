@@ -4,7 +4,7 @@ import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN } from "./constants";
 import { getCommitFiles } from "./github-api";
-import { doFilterSvgsFromFiles, doOptimizeAndCommit } from "./helpers";
+import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "./helpers";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer } from "./svgo";
 import { ContextInfo, GitFileInfo } from "./types";
@@ -51,10 +51,20 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const context: ContextInfo = await getSvgsInCommits(
+  const { fileCount, svgs, ignoredCount } = await getSvgsInCommits(
     client,
     config.ignoreGlob,
   );
 
-  await doOptimizeAndCommit(client, getHeadRef(), config, svgo, context);
+  core.info(`Found ${svgs.length} SVG(s) in commit, optimizing...`);
+  const optimizedSvgs = await doOptimizeSvgs(svgo, svgs);
+
+  await doCommit(client, getHeadRef(), config, {
+    fileCount: fileCount,
+    fileData: { optimized: optimizedSvgs, original: svgs },
+    ignoredCount: ignoredCount,
+    optimizedCount: optimizedSvgs.length,
+    skippedCount: svgs.length - optimizedSvgs.length,
+    svgCount: svgs.length,
+  });
 }
