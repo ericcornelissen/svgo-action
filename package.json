@@ -7,10 +7,9 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "build": "run-s build:compile build:bundle build:fix-svgo-plugin",
+    "build": "run-s build:compile build:bundle",
     "build:bundle": "ncc build lib/main.js -m -o lib",
     "build:compile": "tsc",
-    "build:fix-svgo-plugin": "node script/fix-svgo-plugins.js",
     "clean": "run-p clean:reports",
     "clean:reports": "rimraf ./_reports",
     "format": "run-p format:js format:md",
