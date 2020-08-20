@@ -41,6 +41,16 @@ export const createBlob = jest.fn()
 export const createComment = jest.fn()
   .mockName("github-api.createComment");
 
+export const getCommitFiles = jest.fn()
+  .mockImplementation(async (_, sha) => {
+    const { data } = await client.repos.getCommit({ ref: sha });
+    return data.files.map((details) => ({
+      path: details.filename,
+      status: details.status,
+    }));
+  })
+  .mockName("github-api.getCommitFiles");
+
 export const getCommitMessage = jest.fn()
   .mockResolvedValue("This is a commit message")
   .mockName("github-api.getCommitMessage");

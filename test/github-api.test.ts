@@ -227,19 +227,19 @@ describe("::createComment", () => {
 describe("::getCommitFiles", () => {
 
   test("return value for a commit with many changes", async () => {
-    const files = await getCommitFiles(client, github.SHA.MANY_CHANGES);
+    const files = await getCommitFiles(client, github.COMMIT_SHA.MANY_CHANGES);
     expect(files).toBeDefined();
   });
 
   test("return value for a commit with no changes", async () => {
-    const files = await getCommitFiles(client, github.SHA.NO_CHANGES);
+    const files = await getCommitFiles(client, github.COMMIT_SHA.NO_CHANGES);
     expect(files).toBeDefined();
   });
 
   test("throw when commit is not found", async () => {
     github.GitHubInstance.repos.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
-    const promise = getCommitFiles(client, github.SHA.MANY_CHANGES);
+    const promise = getCommitFiles(client, github.COMMIT_SHA.MANY_CHANGES);
     await expect(promise).rejects.toBeDefined();
   });
 

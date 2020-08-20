@@ -23,12 +23,14 @@ async function getFilesInCommits(client: Octokit): Promise<GitFileInfo[]> {
 
   const commits = github.context.payload?.commits;
   for (const commit of commits) {
+    const commitId: string = commit.id;
+
     const commitMessage: string = commit.message;
     if (isDisabledForCommit(commitMessage)) {
+      core.info(`Action disabled for commit ${commitId}`);
       continue;
     }
 
-    const commitId: string = commit.id;
     const commitFiles: GitFileInfo[] = await getCommitFiles(client, commitId);
     commitsFiles.push(...commitFiles);
   }

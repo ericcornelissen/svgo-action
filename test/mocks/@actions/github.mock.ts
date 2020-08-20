@@ -35,20 +35,24 @@ export enum PR_NUMBER {
   ONE_HUNDRED_AND_THREE_COMMENTS,
 }
 
-export const SHA = {
-  NO_CHANGES: "no-changes",
-  MANY_CHANGES: "many-changes",
+export const COMMIT_SHA = {
+  NO_CHANGES: "no changes",
+  MANY_CHANGES: "many changes",
+  ADD_SVG: "add 1 SVG",
+  ADD_OPTIMIZED_SVG: "add 1 optimized SVG",
 };
 
 export const context = {
   eventName: EVENT_PULL_REQUEST,
   payload: {
+    commits: [{}],
     pull_request: {
       head: {
         ref: "branch-name",
       },
       number: PR_NUMBER.NO_CHANGES,
     },
+    ref: "refs/head/develop",
     repository: {
       commits_url: "https://api.github.com/repos/pikachu/svgo-action/git/commits{/sha}",
     },
