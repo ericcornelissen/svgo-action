@@ -1,3 +1,7 @@
+// Action events
+export const EVENT_PULL_REQUEST = "pull_request";
+export const EVENT_PUSH = "push";
+
 // Action configuration
 export const INPUT_NAME_COMMENT = "comment";
 export const INPUT_NAME_CONFIG_PATH = "configuration-path";

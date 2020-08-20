@@ -1,10 +1,7 @@
-import { when } from "jest-when";
 import { format as strFormat } from "util";
 
-import actionOptions from "./fixtures/svgo-action.json";
 import contentPayloads from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
-import svgoOptions from "./fixtures/svgo-options.json";
 
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
@@ -103,15 +100,6 @@ describe("Logging", () => {
 
 describe("Configuration", () => {
 
-  test.skip("use custom configuration file", async () => {
-    const actionConfigFilePath = "svgo-action.yml";
-    inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
-
-    await main(client, config, svgo);
-
-    expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
-  });
-
   test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.isDryRun = true;
@@ -132,21 +120,6 @@ describe("Configuration", () => {
     await main(client, actionConfig, svgo);
 
     expect(githubAPI.commitFiles).toHaveBeenCalled();
-  });
-
-  test.skip("use an SVGO options file in the repository", async () => {
-    const svgoOptionsPath = ".svgo.yml";
-    const actionConfig = new inputs.ActionConfig();
-    actionConfig.svgoOptionsPath = svgoOptionsPath;
-
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    when(githubAPI.getRepoFile)
-      .calledWith(github.GitHubInstance, svgoOptionsPath)
-      .mockResolvedValueOnce(contentPayloads[svgoOptionsPath]);
-
-    await main(client, actionConfig, svgo);
-
-    expect(svgoImport.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
   });
 
   test.each([
@@ -872,36 +845,6 @@ describe("Error scenarios", () => {
     githubAPI.getPrFile.mockRejectedValueOnce(new Error("Not found"));
 
     await expect(main(client, config, svgo)).rejects.toBeDefined();
-  });
-
-  test.skip("the SVGO options file does not exist", async () => {
-    const { svgoOptionsPath } = new inputs.ActionConfig();
-
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    when(githubAPI.getRepoFile)
-      .calledWith(github.GitHubInstance, svgoOptionsPath)
-      .mockRejectedValueOnce(new Error("Not found"));
-
-    await main(client, config, svgo);
-
-    expect(core.setFailed).not.toHaveBeenCalled();
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
-    expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(`not found.*${svgoOptionsPath}`));
-  });
-
-  test.skip("the Action configuration file does not exist", async () => {
-    const actionConfigPath = inputs.getConfigFilePath();
-
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    when(githubAPI.getRepoFile)
-      .calledWith(github.GitHubInstance, actionConfigPath)
-      .mockRejectedValueOnce(new Error("Not found"));
-
-    await main(client, config, svgo);
-
-    expect(core.setFailed).not.toHaveBeenCalled();
-    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
-    expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(`not found.*${actionConfigPath}`));
   });
 
   test("an SVG file that does not contain SVG content", async () => {

@@ -5,6 +5,8 @@ import { Octokit } from "@octokit/core";
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
 import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 
+import { EVENT_PULL_REQUEST } from "../../../src/constants";
+
 
 export enum PR_NUMBER {
   NO_CHANGES,
@@ -33,6 +35,7 @@ export enum PR_NUMBER {
 }
 
 export const context = {
+  eventName: EVENT_PULL_REQUEST,
   payload: {
     pull_request: {
       head: {
