@@ -17,6 +17,7 @@ import {
   commitFiles,
   createBlob,
   createComment,
+  getCommitFiles,
   getCommitMessage,
   getPrComments,
   getPrFile,
@@ -219,6 +220,27 @@ describe("::createComment", () => {
         "Hello world",
       ),
     ).rejects.toBeDefined();
+  });
+
+});
+
+describe("::getCommitFiles", () => {
+
+  test("return value for a commit with many changes", async () => {
+    const files = await getCommitFiles(client, github.REFS.MANY_CHANGES);
+    expect(files).toBeDefined();
+  });
+
+  test("return value for a commit with no changes", async () => {
+    const files = await getCommitFiles(client, github.REFS.NO_CHANGES);
+    expect(files).toBeDefined();
+  });
+
+  test("throw when file in ref does not exist", async () => {
+    github.GitHubInstance.repos.getCommit.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getCommitFiles(client, github.REFS.MANY_CHANGES);
+    await expect(promise).rejects.toBeDefined();
   });
 
 });

@@ -2,6 +2,7 @@
 
 import { Octokit } from "@octokit/core";
 
+import * as commitPayloads from "../../fixtures/commit-payloads.json";
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
 import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 
@@ -33,6 +34,11 @@ export enum PR_NUMBER {
   SEVENTEEN_COMMENTS,
   ONE_HUNDRED_AND_THREE_COMMENTS,
 }
+
+export const REFS = {
+  NO_CHANGES: "no-changes",
+  MANY_CHANGES: "many-changes",
+};
 
 export const context = {
   eventName: EVENT_PULL_REQUEST,
@@ -225,6 +231,11 @@ export const GitHubInstance = {
       .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
+    getCommit: jest.fn()
+      .mockImplementation(async ({ ref }) => {
+        return { data: commitPayloads[ref] };
+      })
+      .mockName("GitHub.repos.getCommit"),
     getContent: jest.fn()
       .mockImplementation(async ({ path }) => {
         return { data: contentPayloads[path] };

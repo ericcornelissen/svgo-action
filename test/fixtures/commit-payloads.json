@@ -1,0 +1,33 @@
+{
+  "no-changes": {
+    "files": []
+  },
+  "many-changes": {
+    "files": [
+      {
+        "sha": "8cef761674c705447f0ce449948ac6c0dd76f041",
+        "filename": "test.svg",
+        "status": "added",
+        "additions": 3,
+        "deletions": 0,
+        "changes": 3,
+        "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg",
+        "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/8b1cce9bdb84047ac090aecaec9810d53975781c/test.svg",
+        "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/test.svg?ref=8b1cce9bdb84047ac090aecaec9810d53975781c",
+        "patch": "@@ -0,0 +1,3 @@\n+<svg role=\"img\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n+  <title>Zeit icon</title><path d=\"M24 22.525H0l12-21.05 12 21.05z\"/>\n+</svg>\n\\ No newline at end of file"
+      },
+      {
+        "sha": "3ab8f089d00cba82d94f864810d4d2a1ef09cd04",
+        "filename": "foo.svg",
+        "status": "modified",
+        "additions": 1,
+        "deletions": 1,
+        "changes": 2,
+        "blob_url": "https://github.com/ericcornelissen/svgo-action/blob/2d3b7737b48f8331c3d17a6f07cdd40766bbccf5/foo.svg",
+        "raw_url": "https://github.com/ericcornelissen/svgo-action/raw/2d3b7737b48f8331c3d17a6f07cdd40766bbccf5/foo.svg",
+        "contents_url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/foo.svg?ref=2d3b7737b48f8331c3d17a6f07cdd40766bbccf5",
+        "patch": "@@ -1,3 +0 @@\n-<svg role=\"img\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\">\n-  <title>Zeit icon</title><path d=\"M24 22.525H0l12-21.05 12 21.05z\"/>\n-</svg>\n"
+      }
+    ]
+  }
+}
