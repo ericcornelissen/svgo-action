@@ -1,9 +1,29 @@
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
+import { GitGetCommitResponseData } from "@octokit/types";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
 import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
 
+
+type GitCommit = GitGetCommitResponseData;
+
+
+async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
+  const { data: refData } = await client.git.getRef({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    ref: ref,
+  });
+
+  const { data: commit } = await client.git.getCommit({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    commit_sha: refData.object.sha,
+  });
+
+  return commit;
+}
 
 function getCommitUrl(commitSha: string): string {
   const API_URL_START = "https://api.github.com/repos/";
@@ -31,17 +51,7 @@ export async function commitFiles(
   ref: string,
   commitMessage: string,
 ): Promise<CommitInfo> {
-  const { data: refData } = await client.git.getRef({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    ref: ref,
-  });
-
-  const { data: previousCommit } = await client.git.getCommit({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    commit_sha: refData.object.sha,
-  });
+  const previousCommit = await getCommitAt(client, ref);
 
   const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
@@ -107,12 +117,12 @@ export async function createComment(
 
 export async function getCommitFiles(
   client: Octokit,
-  ref: string,
+  sha: string,
 ): Promise<GitFileInfo[]> {
   const { data } = await client.repos.getCommit({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    ref: ref,
+    ref: sha,
   });
 
   return data.files.map((details) => ({
@@ -125,18 +135,7 @@ export async function getCommitMessage(
   client: Octokit,
   ref: string,
 ): Promise<string> {
-  const { data: refData } = await client.git.getRef({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    ref: ref,
-  });
-
-  const { data: commit } = await client.git.getCommit({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    commit_sha: refData.object.sha,
-  });
-
+  const commit = await getCommitAt(client, ref);
   return commit.message;
 }
 

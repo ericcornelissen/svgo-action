@@ -378,7 +378,7 @@ describe("ActionConfig", () => {
       );
     });
 
-    test.each(["true", "false"])("dry-run is true and commit is `%s`", (value) => {
+    test.each(["true", "false"])("dry-run is true and comment is `%s`", (value) => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
       mockCoreGetInput(INPUT_NAME_COMMENT, value);
 

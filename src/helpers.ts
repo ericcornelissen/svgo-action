@@ -1,9 +1,9 @@
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 
-import { commitFiles, createBlob, getPrFile } from "./github-api";
 import { decode, encode } from "./encoder";
 import { existingFiles, filesNotMatching, svgFiles } from "./filters";
+import { commitFiles, createBlob, getPrFile } from "./github-api";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer } from "./svgo";
 import { formatCommitMessage } from "./templating";

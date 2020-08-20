@@ -6,21 +6,21 @@ import svgoOptions from "./fixtures/svgo-options.json";
 
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
-import commitsMain from "./mocks/commits.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
-import prsMain from "./mocks/prs.mock";
+import prsMain from "./mocks/pull-request.mock";
+import pushMain from "./mocks/push.mock";
 import * as svgo from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
-jest.mock("../src/commits", () => commitsMain);
+jest.mock("../src/events/pull-request", () => prsMain);
+jest.mock("../src/events/push", () => pushMain);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
-jest.mock("../src/prs", () => prsMain);
 jest.mock("../src/svgo", () => svgo);
 
-import { EVENT_PUSH, EVENT_PULL_REQUEST } from "../src/constants";
+import { EVENT_PULL_REQUEST, EVENT_PUSH } from "../src/constants";
 import main from "../src/main";
 
 
@@ -30,8 +30,8 @@ const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
 beforeEach(() => {
   core.setFailed.mockClear();
 
-  commitsMain.mockClear();
   prsMain.mockClear();
+  pushMain.mockClear();
 
   svgo.SVGOptimizer.mockClear();
 });
@@ -40,7 +40,7 @@ test("push event", async () => {
   github.context.eventName = EVENT_PUSH;
 
   await main();
-  expect(commitsMain).toHaveBeenCalledTimes(1);
+  expect(pushMain).toHaveBeenCalledTimes(1);
 });
 
 test("pull_request event", async () => {
@@ -53,12 +53,12 @@ test("pull_request event", async () => {
 test("push event error", async () => {
   github.context.eventName = EVENT_PUSH;
 
-  commitsMain.mockImplementationOnce(() => {
+  pushMain.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
-  expect(commitsMain).toHaveBeenCalledTimes(1);
+  expect(pushMain).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 

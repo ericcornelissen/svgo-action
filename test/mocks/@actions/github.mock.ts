@@ -35,7 +35,7 @@ export enum PR_NUMBER {
   ONE_HUNDRED_AND_THREE_COMMENTS,
 }
 
-export const REFS = {
+export const SHA = {
   NO_CHANGES: "no-changes",
   MANY_CHANGES: "many-changes",
 };
