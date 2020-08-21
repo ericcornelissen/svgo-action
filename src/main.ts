@@ -2,6 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
+import { fetchYamlFile } from "./utils/fetch-yaml";
 import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
 import { decode, encode } from "./encoder";
 import { existingFiles, filesNotMatching, svgFiles } from "./filters";
@@ -15,11 +16,7 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
-import {
-  ActionConfig,
-  getConfigFilePath,
-  getRepoToken,
-} from "./inputs";
+import { ActionConfig, getConfigFilePath, getRepoToken } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { formatComment, formatCommitMessage } from "./templating";
 import {
@@ -33,9 +30,6 @@ import {
   GitFileData,
   GitFileInfo,
 } from "./types";
-
-import { fetchYamlFile } from "./utils/fetch-yaml";
-
 
 
 function getContext(): { client: Octokit; prNumber: number } {
