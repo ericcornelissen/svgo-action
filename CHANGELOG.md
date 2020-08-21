@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.0.2] - 2020-08-21
+
 - Skip large files. ([#239])
 - Update `js-yaml` from v3.13.1 to v3.14.0 ([#207])
 - Update `@actions/github` from 2.2.0 to 4.0.0 ([#223])
