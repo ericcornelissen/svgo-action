@@ -1,18 +1,19 @@
 import * as github from "@actions/github";
-import { Octokit } from "@octokit/rest";
+import { Octokit } from "@octokit/core";
+import { GitGetCommitResponseData } from "@octokit/types";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
 import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
 
 
-type GitCommit = Octokit.GitGetCommitResponse;
+type GitCommit = GitGetCommitResponseData;
 
 
 function getHead(): string {
   return github.context.payload.pull_request?.head.ref;
 }
 
-async function getCommit(client: github.GitHub): Promise<GitCommit> {
+async function getCommit(client: Octokit): Promise<GitCommit> {
   const ref = `heads/${getHead()}`;
 
   const { data: refData } = await client.git.getRef({
@@ -24,7 +25,7 @@ async function getCommit(client: github.GitHub): Promise<GitCommit> {
   const { data: commit } = await client.git.getCommit({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    commit_sha: refData.object.sha, // eslint-disable-line @typescript-eslint/camelcase
+    commit_sha: refData.object.sha,
   });
 
   return commit;
@@ -51,7 +52,7 @@ function getCommitUrl(commitSha: string): string {
 
 
 export async function commitFiles(
-  client: github.GitHub,
+  client: Octokit,
   blobs: GitBlob[],
   commitMessage: string,
 ): Promise<CommitInfo> {
@@ -61,7 +62,7 @@ export async function commitFiles(
   const { data: newTree } = await client.git.createTree({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    base_tree: previousCommit.tree.sha, // eslint-disable-line @typescript-eslint/camelcase
+    base_tree: previousCommit.tree.sha,
     tree: blobs,
   });
 
@@ -87,7 +88,7 @@ export async function commitFiles(
 }
 
 export async function createBlob(
-  client: github.GitHub,
+  client: Octokit,
   path: string,
   data: string,
   encoding: string,
@@ -108,25 +109,25 @@ export async function createBlob(
 }
 
 export async function createComment(
-  client: github.GitHub,
+  client: Octokit,
   prNumber: number,
   comment: string,
 ): Promise<void> {
   await client.issues.createComment({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    issue_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+    issue_number: prNumber,
     body: comment,
   });
 }
 
-export async function getCommitMessage(client: github.GitHub): Promise<string> {
+export async function getCommitMessage(client: Octokit): Promise<string> {
   const { message } = await getCommit(client);
   return message;
 }
 
 export async function getPrComments(
-  client: github.GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<string[]> {
   const PER_PAGE = 100;
@@ -134,7 +135,7 @@ export async function getPrComments(
   const { data } = await client.pulls.get({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+    pull_number: prNumber,
   });
 
   const prComments: string[] = [];
@@ -142,8 +143,8 @@ export async function getPrComments(
     const { data: comments } = await client.issues.listComments({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      issue_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
-      per_page: PER_PAGE, // eslint-disable-line @typescript-eslint/camelcase
+      issue_number: prNumber,
+      per_page: PER_PAGE,
       page: i,
     });
 
@@ -154,10 +155,10 @@ export async function getPrComments(
 }
 
 export async function getPrFile(
-  client: github.GitHub,
+  client: Octokit,
   path: string,
 ): Promise<GitFileData> {
-  const fileContents = await client.repos.getContents({
+  const fileContents = await client.repos.getContent({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
     path: path,
@@ -173,13 +174,13 @@ export async function getPrFile(
 }
 
 export async function getPrFiles(
-  client: github.GitHub,
+  client: Octokit,
   prNumber: number,
 ): Promise<GitFileInfo[]> {
   const prFilesDetails = await client.pulls.listFiles({
     owner: github.context.repo.owner,
     repo: github.context.repo.repo,
-    pull_number: prNumber, // eslint-disable-line @typescript-eslint/camelcase
+    pull_number: prNumber,
   });
 
   return prFilesDetails.data.map((details) => ({
@@ -198,7 +199,7 @@ export function getPrNumber(): number {
 }
 
 export async function getRepoFile(
-  client: github.GitHub,
+  client: Octokit,
   path: string,
 ): Promise<GitFileData> {
   return await getPrFile(client, path);

@@ -4,6 +4,8 @@
 [![Node.js CI][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Maintainability][maintainability-image]][maintainability-url]
+[![LGTM Alerts][lgtm-image]][lgtm-url]
+[![Snyk Status][snyk-image]][snyk-url]
 
 Automatically run [SVGO] on SVGs in Pull Requests.
 
@@ -23,7 +25,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v1.0.1
+    - uses: ericcornelissen/svgo-action@v1.0.2
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -145,14 +147,18 @@ jobs:
   ...
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.0.1
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.0.1-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.0.2
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.0.2-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
 [ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
+[lgtm-image]: https://img.shields.io/lgtm/alerts/g/ericcornelissen/svgo-action.svg?logo=lgtm&logoWidth=18
+[lgtm-url]: https://lgtm.com/projects/g/ericcornelissen/svgo-action/alerts/
+[snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
+[snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 
 [conventional commit]: https://www.conventionalcommits.org/
 [creating a workflow file]: https://help.github.com/en/articles/

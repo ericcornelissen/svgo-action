@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
+import { Octokit } from "@octokit/core";
+
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
 import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 
@@ -32,14 +34,14 @@ export enum PR_NUMBER {
 
 export const context = {
   payload: {
-    pull_request: { // eslint-disable-line @typescript-eslint/camelcase
+    pull_request: {
       head: {
         ref: "branch-name",
       },
       number: PR_NUMBER.NO_CHANGES,
     },
     repository: {
-      commits_url: "https://api.github.com/repos/ericcornelissen/svgo-action/git/commits{/sha}", // eslint-disable-line @typescript-eslint/camelcase
+      commits_url: "https://api.github.com/repos/pikachu/svgo-action/git/commits{/sha}",
     },
   },
   repo: {
@@ -118,8 +120,14 @@ export const GitHubInstance = {
     createComment: jest.fn()
       .mockName("GitHub.issues.createComment"),
     listComments: jest.fn()
-      .mockImplementation(async ({ issue_number: prNumber, per_page: perPage, page }) => {
-        const generateComments = (length) => Array.from({ length }).map((_, i) => ({ body: `${i}` }));
+      .mockImplementation(async ({
+        issue_number: prNumber,
+        per_page: perPage,
+        page,
+      }) => {
+        const generateComments = function(length) {
+          return Array.from({ length }).map((_, i) => ({ body: `${i}` }));
+        };
 
         let allComments: unknown[];
         switch (prNumber) {
@@ -178,7 +186,7 @@ export const GitHubInstance = {
           case PR_NUMBER.NO_CHANGES:
             return { data: [ ] };
           case PR_NUMBER.MANY_CHANGES:
-            return { data: prPayloads["add 1 SVG, modify 2 SVGs, remove 1 SVG, add 1 optimized SVG, add 1 file, modify 1 file"] }; // eslint-disable-line max-len
+            return { data: prPayloads["many changes"] };
           case PR_NUMBER.ADD_SVG:
             return { data: prPayloads["add 1 SVG"] };
           case PR_NUMBER.MODIFY_SVG:
@@ -214,14 +222,14 @@ export const GitHubInstance = {
       .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
-    getContents: jest.fn()
+    getContent: jest.fn()
       .mockImplementation(async ({ path }) => {
         return { data: contentPayloads[path] };
       })
-      .mockName("GitHub.repos.getContents"),
+      .mockName("GitHub.repos.getContent"),
   },
 };
 
-export const GitHub = jest.fn()
-  .mockReturnValue(GitHubInstance)
-  .mockName("github.GitHub");
+export function getOctokit(_: string): Octokit {
+  return (GitHubInstance as unknown) as Octokit;
+}

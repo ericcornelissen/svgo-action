@@ -28,7 +28,7 @@ import { GitBlob, GitFileData } from "../src/types";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
-const client = new github.GitHub(token);
+const client = github.getOctokit(token);
 
 describe("::commitFiles", () => {
 
@@ -147,7 +147,7 @@ describe("::commitFiles", () => {
     const promise = commitFiles(client, defaultBlobs, defaultCommitMessage);
     await expect(promise).rejects.toBeDefined();
 
-    github.context.payload.pull_request = backup; // eslint-disable-line @typescript-eslint/camelcase
+    github.context.payload.pull_request = backup;
   });
 
   test("the 'repository' is missing from context payload", async () => {
@@ -324,7 +324,7 @@ describe("::getPrFile", () => {
   });
 
   test("file is not found", async () => {
-    github.GitHubInstance.repos.getContents.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getPrFile(client, "foobar");
     await expect(promise).rejects.toBeDefined();
@@ -374,7 +374,7 @@ describe("::getPrNumber", () => {
     const actual: number = getPrNumber();
     expect(actual).toBe(PR_NOT_FOUND);
 
-    github.context.payload.pull_request = backup; // eslint-disable-line @typescript-eslint/camelcase
+    github.context.payload.pull_request = backup;
   });
 
 });
@@ -404,7 +404,7 @@ describe("::getRepoFile", () => {
   });
 
   test("throw for non-existent file", async () => {
-    github.GitHubInstance.repos.getContents.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getRepoFile(client, "9001");
     await expect(promise).rejects.toBeDefined();
