@@ -2,6 +2,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
+import { fetchYamlFile } from "./utils/fetch-yaml";
 import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "./constants";
 import { decode, encode } from "./encoder";
 import { existingFiles, filesNotMatching, svgFiles } from "./filters";
@@ -15,11 +16,7 @@ import {
   getPrFiles,
   getPrNumber,
 } from "./github-api";
-import {
-  ActionConfig,
-  getConfigFilePath,
-  getRepoToken,
-} from "./inputs";
+import { ActionConfig, getConfigFilePath, getRepoToken } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { formatComment, formatCommitMessage } from "./templating";
 import {
@@ -33,9 +30,6 @@ import {
   GitFileData,
   GitFileInfo,
 } from "./types";
-
-import { fetchYamlFile } from "./utils/fetch-yaml";
-
 
 
 function getContext(): { client: Octokit; prNumber: number } {
@@ -85,6 +79,32 @@ async function actionDisabled(
   return { isDisabled: false, disabledFrom: "" };
 }
 
+async function getSvgsContent(
+  client: Octokit,
+  svgList: GitFileInfo[],
+): Promise<FileData[]> {
+  const svgs: FileData[] = [];
+  for (const svg of svgList) {
+    try {
+      core.debug(`fetching file contents of '${svg.path}'`);
+      const fileData: GitFileData = await getPrFile(client, svg.path);
+
+      core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
+      const svgContent: string = decode(fileData.content, fileData.encoding);
+
+      svgs.push({
+        content: svgContent,
+        originalEncoding: fileData.encoding,
+        path: fileData.path,
+      });
+    } catch (err) {
+      core.warning(`SVG content could not be obtained (${err})`);
+    }
+  }
+
+  return svgs;
+}
+
 async function getSvgsInPR(
   client: Octokit,
   prNumber: number,
@@ -110,21 +130,7 @@ async function getSvgsInPR(
   const ignoredCount = svgCount - notIgnoredSvgs.length;
   core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
 
-  const svgs: FileData[] = [];
-  for (const svg of notIgnoredSvgs) {
-    core.debug(`fetching file contents of '${svg.path}'`);
-    const fileData: GitFileData = await getPrFile(client, svg.path);
-
-    core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
-    const svgContent: string = decode(fileData.content, fileData.encoding);
-
-    svgs.push({
-      content: svgContent,
-      originalEncoding: fileData.encoding,
-      path: fileData.path,
-    });
-  }
-
+  const svgs: FileData[] = await getSvgsContent(client, notIgnoredSvgs);
   return { fileCount, ignoredCount, svgCount, svgs };
 }
 
@@ -164,15 +170,19 @@ async function toBlobs(
     core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
 
-    core.debug(`creating blob for (updated) '${file.path}'`);
-    const svgBlob: GitBlob = await createBlob(
-      client,
-      file.path,
-      optimizedData,
-      file.originalEncoding,
-    );
+    try {
+      core.debug(`creating blob for (updated) '${file.path}'`);
+      const svgBlob: GitBlob = await createBlob(
+        client,
+        file.path,
+        optimizedData,
+        file.originalEncoding,
+      );
 
-    blobs.push(svgBlob);
+      blobs.push(svgBlob);
+    } catch (err) {
+      core.warning(`Blob could not be created (${err})`);
+    }
   }
 
   return blobs;

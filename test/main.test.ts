@@ -32,6 +32,7 @@ beforeEach(() => {
   core.error.mockClear();
   core.info.mockClear();
   core.setFailed.mockClear();
+  core.warning.mockClear();
 
   encoder.decode.mockClear();
   encoder.encode.mockClear();
@@ -874,15 +875,6 @@ describe("Error scenarios", () => {
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
-  test("a particular file could not be found", async () => {
-    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
-    githubAPI.getPrFile.mockRejectedValueOnce(new Error("Not found"));
-
-    await main();
-
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
-  });
-
   test("the SVGO options file does not exist", async () => {
     const { svgoOptionsPath } = new inputs.ActionConfig();
 
@@ -924,6 +916,26 @@ describe("Error scenarios", () => {
     expect(svgo.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
     expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+  });
+
+  test("blob size is too large", async () => {
+    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+
+    expect(core.setFailed).toHaveBeenCalledTimes(0);
+    expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("SVG content could not be obtained"));
+  });
+
+  test("optimized blob size is too large", async () => {
+    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+
+    expect(core.setFailed).toHaveBeenCalledTimes(0);
+    expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("Blob could not be created"));
   });
 
 });
