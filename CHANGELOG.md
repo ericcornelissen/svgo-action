@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Skip large files. ([#239])
 - Update `js-yaml` from v3.13.1 to v3.14.0 ([#207])
 - Update `@actions/github` from 2.2.0 to 4.0.0 ([#223])
 
@@ -141,3 +142,4 @@ Versioning].
 [#199]: https://github.com/ericcornelissen/svgo-action/pull/199
 [#207]: https://github.com/ericcornelissen/svgo-action/pull/207
 [#223]: https://github.com/ericcornelissen/svgo-action/pull/223
+[#239]: https://github.com/ericcornelissen/svgo-action/pull/239
