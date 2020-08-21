@@ -926,4 +926,13 @@ describe("Error scenarios", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
   });
 
+  test("blob size is too large", async () => {
+    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
+
+    await main();
+
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+  });
+
 });
