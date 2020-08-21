@@ -32,6 +32,7 @@ beforeEach(() => {
   core.error.mockClear();
   core.info.mockClear();
   core.setFailed.mockClear();
+  core.warning.mockClear();
 
   encoder.decode.mockClear();
   encoder.encode.mockClear();
@@ -932,7 +933,8 @@ describe("Error scenarios", () => {
 
     await main();
 
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledTimes(0);
+    expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("Blob could not be created"));
   });
 
 });

@@ -164,15 +164,19 @@ async function toBlobs(
     core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
 
-    core.debug(`creating blob for (updated) '${file.path}'`);
-    const svgBlob: GitBlob = await createBlob(
-      client,
-      file.path,
-      optimizedData,
-      file.originalEncoding,
-    );
+    try {
+      core.debug(`creating blob for (updated) '${file.path}'`);
+      const svgBlob: GitBlob = await createBlob(
+        client,
+        file.path,
+        optimizedData,
+        file.originalEncoding,
+      );
 
-    blobs.push(svgBlob);
+      blobs.push(svgBlob);
+    } catch (err) {
+      core.warning(`Blob could not be created (${err})`);
+    }
   }
 
   return blobs;
