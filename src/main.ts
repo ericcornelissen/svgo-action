@@ -112,17 +112,21 @@ async function getSvgsInPR(
 
   const svgs: FileData[] = [];
   for (const svg of notIgnoredSvgs) {
-    core.debug(`fetching file contents of '${svg.path}'`);
-    const fileData: GitFileData = await getPrFile(client, svg.path);
+    try {
+      core.debug(`fetching file contents of '${svg.path}'`);
+      const fileData: GitFileData = await getPrFile(client, svg.path);
 
-    core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
-    const svgContent: string = decode(fileData.content, fileData.encoding);
+      core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
+      const svgContent: string = decode(fileData.content, fileData.encoding);
 
-    svgs.push({
-      content: svgContent,
-      originalEncoding: fileData.encoding,
-      path: fileData.path,
-    });
+      svgs.push({
+        content: svgContent,
+        originalEncoding: fileData.encoding,
+        path: fileData.path,
+      });
+    } catch (err) {
+      core.warning(`SVG content could not be obtained (${err})`);
+    }
   }
 
   return { fileCount, ignoredCount, svgCount, svgs };
