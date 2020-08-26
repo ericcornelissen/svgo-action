@@ -377,6 +377,10 @@ describe("::getPrNumber", () => {
     github.PR_NUMBER.ADD_SVG,
     github.PR_NUMBER.MODIFY_SVG,
   ])("return value for Pull Request #%i", (prNumber: number) => {
+    if (!github.context.payload.pull_request) {
+      throw new Error("`github.context.payload.pull_request` cannot be null");
+    }
+
     github.context.payload.pull_request.number = prNumber;
 
     const actual: number = getPrNumber();

@@ -27,3 +27,5 @@ export const getInput = jest.fn()
 export const info = jest.fn().mockName("core.info");
 
 export const setFailed = jest.fn().mockName("core.setFailed");
+
+export const warning = jest.fn().mockName("core.warning");

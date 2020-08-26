@@ -49,7 +49,26 @@ export const COMMIT_SHA = {
   ADD_FAKE_SVG: "add fake SVG",
 };
 
-export const context = {
+export const context: {
+  eventName: string,
+  payload: {
+    commits: { id?: string, message?: string }[],
+    pull_request?: {
+      head: {
+        ref: string,
+      },
+      number: number,
+    },
+    ref: string,
+    repository?: {
+      commits_url: string,
+    },
+  },
+  repo: {
+    owner: string,
+    repo: string,
+  },
+} = {
   eventName: EVENT_PULL_REQUEST,
   payload: {
     commits: [{}],

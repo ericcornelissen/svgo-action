@@ -29,15 +29,19 @@ async function toBlobs(
     core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
 
-    core.debug(`creating blob for (updated) '${file.path}'`);
-    const svgBlob: GitBlob = await createBlob(
-      client,
-      file.path,
-      optimizedData,
-      file.originalEncoding,
-    );
+    try {
+      core.debug(`creating blob for (updated) '${file.path}'`);
+      const svgBlob: GitBlob = await createBlob(
+        client,
+        file.path,
+        optimizedData,
+        file.originalEncoding,
+      );
 
-    blobs.push(svgBlob);
+      blobs.push(svgBlob);
+    } catch (err) {
+      core.warning(`Blob could not be created (${err})`);
+    }
   }
 
   return blobs;
@@ -98,17 +102,21 @@ export async function doFilterSvgsFromFiles(
 
   const svgs: FileData[] = [];
   for (const svg of notIgnoredSvgs) {
-    core.debug(`fetching file contents of '${svg.path}'`);
-    const fileData: GitFileData = await getPrFile(client, svg.path);
+    try {
+      core.debug(`fetching file contents of '${svg.path}'`);
+      const fileData: GitFileData = await getPrFile(client, svg.path);
 
-    core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
-    const svgContent: string = decode(fileData.content, fileData.encoding);
+      core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
+      const svgContent: string = decode(fileData.content, fileData.encoding);
 
-    svgs.push({
-      content: svgContent,
-      originalEncoding: fileData.encoding,
-      path: fileData.path,
-    });
+      svgs.push({
+        content: svgContent,
+        originalEncoding: fileData.encoding,
+        path: fileData.path,
+      });
+    } catch (err) {
+      core.warning(`SVG content could not be obtained (${err})`);
+    }
   }
 
   return { fileCount, ignoredCount, svgs };
