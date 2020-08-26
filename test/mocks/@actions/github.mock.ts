@@ -36,13 +36,13 @@ export const context: {
   payload: {
     pull_request?: {
       head: {
-        ref: string
+        ref: string,
       },
       number: number,
     },
     repository?: {
-      commits_url: string
-    }
+      commits_url: string,
+    },
   },
   repo: {
     owner: string,
