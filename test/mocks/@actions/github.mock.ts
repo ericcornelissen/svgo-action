@@ -32,7 +32,23 @@ export enum PR_NUMBER {
   ONE_HUNDRED_AND_THREE_COMMENTS,
 }
 
-export const context = {
+export const context: {
+  payload: {
+    pull_request?: {
+      head: {
+        ref: string,
+      },
+      number: number,
+    },
+    repository?: {
+      commits_url: string,
+    },
+  },
+  repo: {
+    owner: string,
+    repo: string,
+  },
+} = {
   payload: {
     pull_request: {
       head: {
