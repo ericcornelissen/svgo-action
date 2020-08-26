@@ -8,3 +8,7 @@ hooks:
     git checkout -- lib/index.js &&
     git update-index --again &&
     git stash pop -q
+  pre-push: >
+    git stash -q --keep-index &&
+    npm run test &&
+    git stash pop -q
