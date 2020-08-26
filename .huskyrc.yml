@@ -1,7 +1,7 @@
 hooks:
   commit-msg: commitlint -E HUSKY_GIT_PARAMS
   pre-commit: >
-    git stash -q --keep-index &&
+    git stash -q -u --keep-index &&
     npm run format &&
     npm run build &&
     git checkout -- lib/.svgo.yml &&
@@ -9,6 +9,6 @@ hooks:
     git update-index --again &&
     git stash pop -q
   pre-push: >
-    git stash -q --keep-index &&
+    git stash -q -u --keep-index &&
     npm run test &&
-    git stash pop -q
+    git stash pop -q || true
