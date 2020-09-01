@@ -54,7 +54,7 @@ describe("Logging", () => {
     expect(core.debug).toHaveBeenCalled();
   });
 
-  test("summary for a Pull Request with 1 optimized SVG", async () => {
+  test("summary for commits with 1 optimized SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
 
     await main(client, config, svgo);
@@ -62,7 +62,7 @@ describe("Logging", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("0/1 SVG(s) skipped"));
   });
 
-  test("summary for a Pull Request with 1 skipped SVG", async () => {
+  test("summary for commits with 1 skipped SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_OPTIMIZED_SVG }];
 
     await main(client, config, svgo);
@@ -70,7 +70,7 @@ describe("Logging", () => {
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("1/1 SVG(s) skipped"));
   });
 
-  test("summary for a Pull Request with many changes", async () => {
+  test("summary for commits with many changes", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.MANY_CHANGES }];
 
     await main(client, config, svgo);
@@ -261,7 +261,7 @@ describe("Payloads", () => {
   const fooSvgData = files[fooFilePath];
   const testSvgData = files[testFilePath];
 
-  test("a Pull Request with 1 new SVG", async () => {
+  test("commits with 1 new SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
 
     await main(client, config, svgo);
@@ -294,7 +294,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 modified SVG", async () => {
+  test("commits with 1 modified SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.MODIFY_SVG }];
 
     await main(client, config, svgo);
@@ -327,7 +327,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 removed SVG", async () => {
+  test("commits with 1 removed SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.REMOVE_SVG }];
 
     await main(client, config, svgo);
@@ -339,7 +339,7 @@ describe("Payloads", () => {
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("a Pull Request with 1 new, 1 modified, and 1 removed SVG", async () => {
+  test("commits with 1 new, 1 modified, and 1 removed SVG", async () => {
     github.context.payload.commits = [
       { id: COMMIT_SHA.ADD_SVG },
       { id: COMMIT_SHA.MODIFY_SVG },
@@ -386,7 +386,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 new SVG and one new SVG in a directory", async () => {
+  test("commits with 1 new SVG and one new SVG in a directory", async () => {
     const foobarFilePath = "foo/bar.svg";
 
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG_AND_SVG_IN_DIR }];
@@ -431,7 +431,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 new file", async () => {
+  test("commits with 1 new file", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_FILE }];
 
     await main(client, config, svgo);
@@ -443,7 +443,7 @@ describe("Payloads", () => {
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("a Pull Request with 1 modified file", async () => {
+  test("commits with 1 modified file", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.MODIFY_FILE }];
 
     await main(client, config, svgo);
@@ -455,7 +455,7 @@ describe("Payloads", () => {
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("a Pull Request with 1 removed file", async () => {
+  test("commits with 1 removed file", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.REMOVE_FILE }];
 
     await main(client, config, svgo);
@@ -467,7 +467,7 @@ describe("Payloads", () => {
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("a Pull Request with 1 new SVG and 1 modified file", async () => {
+  test("commits with 1 new SVG and 1 modified file", async () => {
     github.context.payload.commits = [
       { id: COMMIT_SHA.ADD_SVG },
       { id: COMMIT_SHA.MODIFY_FILE },
@@ -503,7 +503,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 new file and 1 modified SVG", async () => {
+  test("commits with 1 new file and 1 modified SVG", async () => {
     github.context.payload.commits = [
       { id: COMMIT_SHA.ADD_FILE },
       { id: COMMIT_SHA.MODIFY_SVG },
@@ -539,7 +539,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 new SVG and 1 deleted file", async () => {
+  test("commits with 1 new SVG and 1 deleted file", async () => {
     github.context.payload.commits = [
       { id: COMMIT_SHA.ADD_SVG },
       { id: COMMIT_SHA.REMOVE_FILE },
@@ -575,7 +575,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 new file and 1 deleted SVG", async () => {
+  test("commits with 1 new file and 1 deleted SVG", async () => {
     github.context.payload.commits = [
       { id: COMMIT_SHA.ADD_FILE },
       { id: COMMIT_SHA.REMOVE_SVG },
@@ -590,7 +590,7 @@ describe("Payloads", () => {
     expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
-  test("a Pull Request with multiple SVGs and multiple files", async () => {
+  test("commits with multiple SVGs and multiple files", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.MANY_CHANGES }];
 
     await main(client, config, svgo);
@@ -638,7 +638,7 @@ describe("Payloads", () => {
     );
   });
 
-  test("a Pull Request with 1 optimized SVG", async () => {
+  test("commits with 1 optimized SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_OPTIMIZED_SVG }];
 
     await main(client, config, svgo);
@@ -660,11 +660,114 @@ describe("Payloads", () => {
     expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
   });
 
+  test("commits with a file removed THEN added", async () => {
+    github.context.payload.commits = [
+      { id: COMMIT_SHA.REMOVE_SVG_X },
+      { id: COMMIT_SHA.ADD_SVG_X },
+    ];
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
+
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      testFilePath,
+      expect.any(String),
+      testSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      headRef,
+      expect.any(String),
+    );
+  });
+
+  test("commits with a file added THEN removed", async () => {
+    github.context.payload.commits = [
+      { id: COMMIT_SHA.ADD_SVG_X },
+      { id: COMMIT_SHA.REMOVE_SVG_X },
+    ];
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+  });
+
+  test("commits with a file removed THEN added THEN removed", async () => {
+    github.context.payload.commits = [
+      { id: COMMIT_SHA.REMOVE_SVG_X },
+      { id: COMMIT_SHA.ADD_SVG_X },
+      { id: COMMIT_SHA.REMOVE_SVG_X },
+    ];
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+  });
+
+  test("commits with a file added THEN modified", async () => {
+    github.context.payload.commits = [
+      { id: COMMIT_SHA.ADD_SVG_X },
+      { id: COMMIT_SHA.MODIFY_SVG_X },
+    ];
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
+
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      testFilePath,
+      expect.any(String),
+      testSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      headRef,
+      expect.any(String),
+    );
+  });
+
 });
 
 describe("Error scenarios", () => {
 
-  test("the Pull Request files could not be found", async () => {
+  test("the commit files could not be found", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
     githubAPI.getCommitFiles.mockRejectedValueOnce(new Error("Not found"));
 

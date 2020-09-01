@@ -3,6 +3,7 @@ import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN } from "../constants";
+import { removedFiles } from "../filters";
 import { getCommitFiles } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
@@ -14,12 +15,40 @@ import {
   doOptimizeSvgs,
 } from "./helpers";
 
+
 function getHeadRef(): string {
   return github.context.payload.ref.replace("refs/", "");
 }
 
 function isDisabledForCommit(commitMessage: string): boolean {
   return DISABLE_PATTERN.test(commitMessage);
+}
+
+function samePathAs(ref: GitFileInfo): ((subject: GitFileInfo) => boolean) {
+  return function (subject: GitFileInfo): boolean {
+    return subject.path === ref.path;
+  };
+}
+
+function removed(
+  file: GitFileInfo,
+  index: number,
+  arr: GitFileInfo[],
+): boolean {
+  const subsequentEntries = arr.slice(index);
+  const removedEntries = subsequentEntries.filter(removedFiles);
+  const removedIndex = removedEntries.findIndex(samePathAs(file));
+  return removedIndex === -1;
+}
+
+function duplicates(
+  file: GitFileInfo,
+  index: number,
+  arr: GitFileInfo[],
+): boolean {
+  const subsequentEntries = arr.slice(index + 1);
+  const duplicateIndex = subsequentEntries.findIndex(samePathAs(file));
+  return duplicateIndex === -1;
 }
 
 async function getFilesInCommits(client: Octokit): Promise<GitFileInfo[]> {
@@ -39,7 +68,7 @@ async function getFilesInCommits(client: Octokit): Promise<GitFileInfo[]> {
     commitsFiles.push(...commitFiles);
   }
 
-  return commitsFiles; // TODO: filter duplicates
+  return commitsFiles.filter(removed).filter(duplicates);
 }
 
 async function getSvgsInCommits(

@@ -47,6 +47,9 @@ export const COMMIT_SHA = {
   REMOVE_FILE: "remove 1 file",
   ADD_OPTIMIZED_SVG: "add 1 optimized SVG",
   ADD_FAKE_SVG: "add fake SVG",
+  ADD_SVG_X: "add SVG x",
+  MODIFY_SVG_X: "modify SVG x",
+  REMOVE_SVG_X: "remove SVG x",
 };
 
 export const context: {

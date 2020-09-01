@@ -39,6 +39,7 @@ export const COMMIT_TYPE_BLOB = "blob";
 
 export const STATUS_ADDED = "added";
 export const STATUS_MODIFIED = "modified";
+export const STATUS_REMOVED = "removed";
 
 // Special values
 export const PR_NOT_FOUND = -1;
