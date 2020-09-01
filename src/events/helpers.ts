@@ -9,7 +9,7 @@ import { SVGOptimizer } from "../svgo";
 import { formatCommitMessage } from "../templating";
 import {
   CommitData,
-  ContextInfo,
+  ContextData,
   FileData,
 
   // Git
@@ -19,6 +19,32 @@ import {
   GitFileInfo,
 } from "../types";
 
+
+async function getSvgsContent(
+  client: Octokit,
+  svgList: GitFileInfo[],
+): Promise<FileData[]> {
+  const svgs: FileData[] = [];
+  for (const svg of svgList) {
+    try {
+      core.debug(`fetching file contents of '${svg.path}'`);
+      const fileData: GitFileData = await getPrFile(client, svg.path);
+
+      core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
+      const svgContent: string = decode(fileData.content, fileData.encoding);
+
+      svgs.push({
+        content: svgContent,
+        originalEncoding: fileData.encoding,
+        path: fileData.path,
+      });
+    } catch (err) {
+      core.warning(`SVG content could not be obtained (${err})`);
+    }
+  }
+
+  return svgs;
+}
 
 async function toBlobs(
   client: Octokit,
@@ -47,6 +73,22 @@ async function toBlobs(
   return blobs;
 }
 
+
+export function getCommitData(
+  context: ContextData,
+  optimizedSvgs: FileData[],
+): CommitData {
+  const { fileCount, svgs, ignoredCount } = context;
+
+  return {
+    fileCount: fileCount,
+    fileData: { optimized: optimizedSvgs, original: svgs },
+    ignoredCount: ignoredCount,
+    optimizedCount: optimizedSvgs.length,
+    skippedCount: svgs.length - optimizedSvgs.length,
+    svgCount: svgs.length,
+  };
+}
 
 export async function doCommit(
   client: Octokit,
@@ -87,7 +129,7 @@ export async function doFilterSvgsFromFiles(
   client: Octokit,
   files: GitFileInfo[],
   ignoreGlob: string,
-): Promise<ContextInfo> {
+): Promise<ContextData> {
   const fileCount = files.length;
   core.debug(`found ${fileCount} file(s)`);
 
@@ -100,25 +142,7 @@ export async function doFilterSvgsFromFiles(
   const ignoredCount = svgCount - notIgnoredSvgs.length;
   core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
 
-  const svgs: FileData[] = [];
-  for (const svg of notIgnoredSvgs) {
-    try {
-      core.debug(`fetching file contents of '${svg.path}'`);
-      const fileData: GitFileData = await getPrFile(client, svg.path);
-
-      core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
-      const svgContent: string = decode(fileData.content, fileData.encoding);
-
-      svgs.push({
-        content: svgContent,
-        originalEncoding: fileData.encoding,
-        path: fileData.path,
-      });
-    } catch (err) {
-      core.warning(`SVG content could not be obtained (${err})`);
-    }
-  }
-
+  const svgs: FileData[] = await getSvgsContent(client, notIgnoredSvgs);
   return { fileCount, ignoredCount, svgs };
 }
 

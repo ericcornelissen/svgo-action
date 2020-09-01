@@ -10,11 +10,16 @@ import {
   getPrFiles,
   getPrNumber,
 } from "../github-api";
-import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "./helpers";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { formatComment } from "../templating";
-import { ContextInfo, CommitData, GitFileInfo } from "../types";
+import { ContextData, GitFileInfo } from "../types";
+import {
+  getCommitData,
+  doCommit,
+  doFilterSvgsFromFiles,
+  doOptimizeSvgs,
+} from "./helpers";
 
 
 function getHeadRef(): string {
@@ -61,7 +66,7 @@ async function getSvgsInPR(
   client: Octokit,
   prNumber: number,
   ignoreGlob: string,
-): Promise<ContextInfo> {
+): Promise<ContextData> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
   const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
   return doFilterSvgsFromFiles(client, prFiles, ignoreGlob);
@@ -73,23 +78,9 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const { fileCount, svgs, ignoredCount } = await getSvgsInPR(
-    client,
-    prNumber,
-    config.ignoreGlob,
-  );
-
-  const optimizedSvgs = await doOptimizeSvgs(svgo, svgs);
-
-  const commitData: CommitData = {
-    fileCount: fileCount,
-    fileData: { optimized: optimizedSvgs, original: svgs },
-    ignoredCount: ignoredCount,
-    optimizedCount: optimizedSvgs.length,
-    skippedCount: svgs.length - optimizedSvgs.length,
-    svgCount: svgs.length,
-  };
-
+  const context = await getSvgsInPR(client, prNumber, config.ignoreGlob);
+  const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
+  const commitData = getCommitData(context, optimizedSvgs);
   await doCommit(client, getHeadRef(), config, commitData);
   if (config.enableComments && commitData.optimizedCount > 0) {
     core.debug(`creating comment on pull request #${prNumber}`);

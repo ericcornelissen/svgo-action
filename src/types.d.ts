@@ -22,7 +22,7 @@ export type CommitData = {
 }
 
 // Type representing the context w.r.t. files and SVGs the Action is running in.
-export type ContextInfo = {
+export type ContextData = {
   readonly fileCount: number;
   readonly ignoredCount: number;
   readonly svgs: FileData[];

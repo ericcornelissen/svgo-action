@@ -7,10 +7,10 @@ import { getRepoToken, getConfigFilePath, ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
 
-import { fetchYamlFile } from "./utils/fetch-yaml";
-
 import prEventMain from "./events/pull-request";
 import pushEventMain from "./events/push";
+
+import { fetchYamlFile } from "./utils/fetch-yaml";
 
 
 async function run(

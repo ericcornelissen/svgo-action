@@ -4,11 +4,15 @@ import { Octokit } from "@octokit/core";
 
 import { DISABLE_PATTERN } from "../constants";
 import { getCommitFiles } from "../github-api";
-import { doCommit, doFilterSvgsFromFiles, doOptimizeSvgs } from "./helpers";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
-import { ContextInfo, GitFileInfo } from "../types";
-
+import { ContextData, GitFileInfo } from "../types";
+import {
+  getCommitData,
+  doCommit,
+  doFilterSvgsFromFiles,
+  doOptimizeSvgs,
+} from "./helpers";
 
 function getHeadRef(): string {
   return github.context.payload.ref.replace("refs/", "");
@@ -41,7 +45,7 @@ async function getFilesInCommits(client: Octokit): Promise<GitFileInfo[]> {
 async function getSvgsInCommits(
   client: Octokit,
   ignoreGlob: string,
-): Promise<ContextInfo> {
+): Promise<ContextData> {
   core.debug("fetching changed files for pushed commits");
   const files: GitFileInfo[] = await getFilesInCommits(client);
   return doFilterSvgsFromFiles(client, files, ignoreGlob);
@@ -53,19 +57,8 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const { fileCount, svgs, ignoredCount } = await getSvgsInCommits(
-    client,
-    config.ignoreGlob,
-  );
-
-  const optimizedSvgs = await doOptimizeSvgs(svgo, svgs);
-
-  await doCommit(client, getHeadRef(), config, {
-    fileCount: fileCount,
-    fileData: { optimized: optimizedSvgs, original: svgs },
-    ignoredCount: ignoredCount,
-    optimizedCount: optimizedSvgs.length,
-    skippedCount: svgs.length - optimizedSvgs.length,
-    svgCount: svgs.length,
-  });
+  const context = await getSvgsInCommits(client, config.ignoreGlob);
+  const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
+  const commitData = getCommitData(context, optimizedSvgs);
+  await doCommit(client, getHeadRef(), config, commitData);
 }
