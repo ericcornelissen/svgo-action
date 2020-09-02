@@ -1,3 +1,7 @@
+// Action events
+export const EVENT_PULL_REQUEST = "pull_request";
+export const EVENT_PUSH = "push";
+
 // Action configuration
 export const INPUT_NAME_COMMENT = "comment";
 export const INPUT_NAME_CONFIG_PATH = "configuration-path";
@@ -35,6 +39,7 @@ export const COMMIT_TYPE_BLOB = "blob";
 
 export const STATUS_ADDED = "added";
 export const STATUS_MODIFIED = "modified";
+export const STATUS_REMOVED = "removed";
 
 // Special values
 export const PR_NOT_FOUND = -1;
