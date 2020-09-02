@@ -874,4 +874,17 @@ describe("Error scenarios", () => {
     expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("Blob could not be created"));
   });
 
+  test("missing head reference", async () => {
+    const backup = github.context.payload.pull_request;
+    delete github.context.payload.pull_request;
+
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_FILE);
+
+    await main(client, config, svgo);
+
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+
+    github.context.payload.pull_request = backup;
+  });
+
 });
