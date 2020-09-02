@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Run Action on push events. ([#236])
+- Fix the URL for the "Creating a Workflow file" link in the README. ([#247])
 
 ## [1.0.2] - 2020-08-21
 
@@ -148,3 +149,4 @@ Versioning].
 [#223]: https://github.com/ericcornelissen/svgo-action/pull/223
 [#239]: https://github.com/ericcornelissen/svgo-action/pull/239
 [#236]: https://github.com/ericcornelissen/svgo-action/pull/236
+[#247]: https://github.com/ericcornelissen/svgo-action/pull/247
