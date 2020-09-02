@@ -1,11 +1,13 @@
-import { STATUS_ADDED, STATUS_MODIFIED } from "../src/constants";
+import {
+  STATUS_ADDED,
+  STATUS_MODIFIED,
+  STATUS_REMOVED,
+} from "../src/constants";
 import { existingFiles, svgFiles } from "../src/filters";
 import { GitFileInfo } from "../src/types";
 
 
 const EMPTY_ARRAY = [];
-
-const STATUS_REMOVED = "removed";
 
 
 describe("::existingFiles", () => {
