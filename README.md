@@ -161,7 +161,7 @@ jobs:
 [snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 
 [conventional commit]: https://www.conventionalcommits.org/
-[creating a workflow file]: https://help.github.com/en/articles/
+[creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [in the workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
