@@ -17,9 +17,10 @@ jobs:
     - run: npm ci
     - run: npm run build
     - name: Push updates
-      uses: stefanzweifel/git-auto-commit-action@v4
+      uses: stefanzweifel/git-auto-commit-action@v4.4.1
       with:
         commit_message: "chore: update lib/index.js"
+        commit_options: "--no-verify"
         commit_user_name: github-actions[bot]
         commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
         commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>

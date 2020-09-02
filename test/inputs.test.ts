@@ -289,6 +289,8 @@ describe("ActionConfig", () => {
     });
 
     test("comment is not set at all", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+
       const defaultValue = "false";
       mockCoreGetInput(INPUT_NAME_COMMENT, defaultValue);
 
@@ -297,6 +299,7 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `'false'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig();
@@ -304,6 +307,7 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `'true'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
       const instance: ActionConfig = new ActionConfig();
@@ -311,6 +315,7 @@ describe("ActionConfig", () => {
     });
 
     test.each(nonBooleanStrings)("comment is `'%s'` in the Workflow file", (value) => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
       mockCoreGetInput(INPUT_NAME_COMMENT, value);
 
       const instance: ActionConfig = new ActionConfig();
@@ -321,6 +326,8 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `false` in the config object", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+
       const rawConfig = yaml.safeLoad("comment: false") as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
@@ -329,6 +336,8 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `true` in the config object", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+
       const rawConfig = yaml.safeLoad("comment: true") as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
@@ -337,6 +346,8 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `'false'` in the config object", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+
       const rawConfig = yaml.safeLoad("comment: 'false'") as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
@@ -345,6 +356,8 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `'true'` in the config object", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+
       const rawConfig = yaml.safeLoad("comment: 'true'") as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
@@ -353,6 +366,8 @@ describe("ActionConfig", () => {
     });
 
     test.each(nonBooleanStrings)("comment is `'%s'` in the config object", (value) => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+
       const rawConfig = yaml.safeLoad(`comment: '${value}'`) as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
@@ -361,6 +376,14 @@ describe("ActionConfig", () => {
       expect(core.info).toHaveBeenCalledWith(
         expect.stringContaining(`Unknown comment value '${value}'`),
       );
+    });
+
+    test.each(["true", "false"])("dry-run is true and comment is `%s`", (value) => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetInput(INPUT_NAME_COMMENT, value);
+
+      const instance: ActionConfig = new ActionConfig();
+      expect(instance.enableComments).toBe(false);
     });
 
   });

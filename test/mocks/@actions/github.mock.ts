@@ -2,8 +2,11 @@
 
 import { Octokit } from "@octokit/core";
 
+import * as commitPayloads from "../../fixtures/commit-payloads.json";
 import * as contentPayloads from "../../fixtures/contents-payloads.json";
 import * as prPayloads from "../../fixtures/pull-request-payloads.json";
+
+import { EVENT_PULL_REQUEST } from "../../../src/constants";
 
 
 export enum PR_NUMBER {
@@ -32,14 +35,53 @@ export enum PR_NUMBER {
   ONE_HUNDRED_AND_THREE_COMMENTS,
 }
 
-export const context = {
+export const COMMIT_SHA = {
+  NO_CHANGES: "no changes",
+  MANY_CHANGES: "many changes",
+  ADD_SVG: "add 1 SVG",
+  MODIFY_SVG: "modify 1 SVG",
+  REMOVE_SVG: "remove 1 SVG",
+  ADD_SVG_AND_SVG_IN_DIR: "add 1 SVG, add 1 SVG in dir",
+  ADD_FILE: "add 1 file",
+  MODIFY_FILE: "modify 1 file",
+  REMOVE_FILE: "remove 1 file",
+  ADD_OPTIMIZED_SVG: "add 1 optimized SVG",
+  ADD_FAKE_SVG: "add fake SVG",
+  ADD_SVG_X: "add SVG x",
+  MODIFY_SVG_X: "modify SVG x",
+  REMOVE_SVG_X: "remove SVG x",
+};
+
+export const context: {
+  eventName: string,
   payload: {
+    commits: { id?: string, message?: string }[],
+    pull_request?: {
+      head: {
+        ref: string,
+      },
+      number: number,
+    },
+    ref: string,
+    repository?: {
+      commits_url: string,
+    },
+  },
+  repo: {
+    owner: string,
+    repo: string,
+  },
+} = {
+  eventName: EVENT_PULL_REQUEST,
+  payload: {
+    commits: [{}],
     pull_request: {
       head: {
         ref: "branch-name",
       },
       number: PR_NUMBER.NO_CHANGES,
     },
+    ref: "refs/head/develop",
     repository: {
       commits_url: "https://api.github.com/repos/pikachu/svgo-action/git/commits{/sha}",
     },
@@ -222,6 +264,11 @@ export const GitHubInstance = {
       .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
+    getCommit: jest.fn()
+      .mockImplementation(async ({ ref }) => {
+        return { data: commitPayloads[ref] };
+      })
+      .mockName("GitHub.repos.getCommit"),
     getContent: jest.fn()
       .mockImplementation(async ({ path }) => {
         return { data: contentPayloads[path] };
