@@ -17,9 +17,12 @@ Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO action:
 
 ```yaml
-name: Pull Request SVGOptimizer
+name: SVGOptimizer
 on:
+# Disable the following line if you don't want the Action to run on PRs.
 - pull_request
+# Enable the following line if you want the Action to run on regular pushes.
+#- push
 
 jobs:
   triage:
@@ -137,11 +140,14 @@ To run this action only when SVG files are changed, update the `on:`
 configuration as follows:
 
 ```yaml
-name: Pull Request SVGOptimizer
+name: SVGOptimizer
 on:
   pull_request:
     paths:
-      - "**.svg"
+    - "**.svg"
+  push:
+    paths:
+    - "**.svg"
 
 jobs:
   ...
