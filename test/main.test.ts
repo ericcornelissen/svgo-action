@@ -77,6 +77,8 @@ test("unknown event", async () => {
   github.context.eventName = "UnKnOwN eVeNt";
 
   await main();
+  expect(pushMain).not.toHaveBeenCalled();
+  expect(prsMain).not.toHaveBeenCalled();
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 

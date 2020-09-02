@@ -53,8 +53,8 @@ async function actionDisabled(
   }
 
   if (!ENABLE_PATTERN.test(commitMessage)) {
-    const disabledFromPR = await actionDisabledFromPR(client, prNumber);
-    if (disabledFromPR) {
+    const disabled: boolean = await actionDisabledFromPR(client, prNumber);
+    if (disabled) {
       return { isDisabled: true, disabledFrom: "Pull Request" };
     }
   }

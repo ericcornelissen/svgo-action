@@ -35,9 +35,9 @@ function removed(
   index: number,
   arr: GitFileInfo[],
 ): boolean {
-  const subsequentEntries = arr.slice(index);
-  const removedEntries = subsequentEntries.filter(removedFiles);
-  const removedIndex = removedEntries.findIndex(samePathAs(file));
+  const subsequentEntries: GitFileInfo[] = arr.slice(index);
+  const removedEntries: GitFileInfo[] = subsequentEntries.filter(removedFiles);
+  const removedIndex: number = removedEntries.findIndex(samePathAs(file));
   return removedIndex === -1;
 }
 
@@ -46,8 +46,8 @@ function duplicates(
   index: number,
   arr: GitFileInfo[],
 ): boolean {
-  const subsequentEntries = arr.slice(index + 1);
-  const duplicateIndex = subsequentEntries.findIndex(samePathAs(file));
+  const subsequentEntries: GitFileInfo[] = arr.slice(index + 1);
+  const duplicateIndex: number = subsequentEntries.findIndex(samePathAs(file));
   return duplicateIndex === -1;
 }
 

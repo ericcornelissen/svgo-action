@@ -79,7 +79,6 @@ export function getCommitData(
   optimizedSvgs: FileData[],
 ): CommitData {
   const { fileCount, svgs, ignoredCount } = context;
-
   return {
     fileCount: fileCount,
     fileData: { optimized: optimizedSvgs, original: svgs },
