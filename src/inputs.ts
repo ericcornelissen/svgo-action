@@ -44,12 +44,13 @@ export class ActionConfig {
   public readonly svgoOptionsPath: string;
 
   constructor(config: RawActionConfig = { }) {
+    this.isDryRun = ActionConfig.getDryRunValue(config);
+
     this.comment = ActionConfig.getCommentValue(config);
     this.commitBody = ActionConfig.getCommitBody(config);
     this.commitTitle = ActionConfig.getCommitTitle(config);
-    this.enableComments = ActionConfig.getEnableCommentsValue(config);
+    this.enableComments = ActionConfig.getEnableComments(config, this.isDryRun);
     this.ignoreGlob = ActionConfig.getIgnoreGlob(config);
-    this.isDryRun = ActionConfig.getDryRunValue(config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
   }
 
@@ -95,12 +96,15 @@ export class ActionConfig {
     );
   }
 
-  private static getEnableCommentsValue(config: RawActionConfig): boolean {
+  private static getEnableComments(
+    config: RawActionConfig,
+    dryRun: boolean,
+  ): boolean {
     return this.normalizeBoolOption(
       config.comment as boolean,
       INPUT_NAME_COMMENT,
       true,
-    );
+    ) && !dryRun;
   }
 
   private static getIgnoreGlob(config: RawActionConfig): string {
@@ -118,7 +122,7 @@ export class ActionConfig {
   private static normalizeBoolOption(
     configValue: boolean | undefined,
     inputName: string,
-    assumptionValue: boolean,
+    defaultValue: boolean,
   ): boolean {
     const value = (configValue !== undefined) ?
       configValue : core.getInput(inputName, NOT_REQUIRED);
@@ -130,8 +134,11 @@ export class ActionConfig {
     } else if (value === TRUE) {
       return true;
     } else {
-      core.info(`Unknown ${inputName} value '${value}', assuming ${assumptionValue}`);
-      return assumptionValue;
+      core.info(
+        `Unknown ${inputName} value '${value}', ` +
+        `defaulting to '${defaultValue}'`,
+      );
+      return defaultValue;
     }
   }
 

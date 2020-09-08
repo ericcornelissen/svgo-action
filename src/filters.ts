@@ -1,6 +1,6 @@
 import { Minimatch, IMinimatch } from "minimatch";
 
-import { STATUS_ADDED, STATUS_MODIFIED } from "./constants";
+import { STATUS_ADDED, STATUS_MODIFIED, STATUS_REMOVED } from "./constants";
 import { GitFileInfo } from "./types";
 
 
@@ -19,4 +19,8 @@ export function filesNotMatching(glob: string): ((x: GitFileInfo) => boolean) {
 
 export function svgFiles(fileInfo: GitFileInfo): boolean {
   return fileInfo.path.endsWith(SVG_FILE_EXTENSION);
+}
+
+export function removedFiles(fileInfo: GitFileInfo): boolean {
+  return fileInfo.status === STATUS_REMOVED;
 }

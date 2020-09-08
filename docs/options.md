@@ -29,6 +29,9 @@ comments by the Action. By setting the value to a string, comments are enabled
 and the string will be used as the comment. The comment can be a template string
 as described in [the templating documentation].
 
+> :warning: This option only affects the behaviour of the Action when running on
+> a Pull Request.
+
 ### Examples
 
 To enable comments by the Action:

@@ -1,3 +1,7 @@
+// Action events
+export const EVENT_PULL_REQUEST = "pull_request";
+export const EVENT_PUSH = "push";
+
 // Action configuration
 export const INPUT_NAME_COMMENT = "comment";
 export const INPUT_NAME_CONFIG_PATH = "configuration-path";
@@ -16,10 +20,19 @@ export const DISABLE_PATTERN = /disable-svgo-action/;
 export const ENABLE_PATTERN = /enable-svgo-action/;
 
 // Action defaults
-export const CONVENTIONAL_COMMIT_TITLE = "chore: optimize {{optimizedCount}} SVG(s)";
-export const DEFAULT_COMMIT_BODY = "Optimized SVG(s):\n{{filesList}}";
-export const DEFAULT_COMMIT_TITLE = "Optimize {{optimizedCount}} SVG(s) with SVGO";
-export const DEFAULT_COMMENT = "SVG(s) automatically optimized using [SVGO](https://github.com/svg/svgo) :sparkles:\n\n{{filesTable}}";
+export const CONVENTIONAL_COMMIT_TITLE =
+  "chore: optimize {{optimizedCount}} SVG(s)";
+export const DEFAULT_COMMIT_BODY =
+  "Optimized SVG(s):\n{{filesList}}";
+export const DEFAULT_COMMIT_TITLE =
+  "Optimize {{optimizedCount}} SVG(s) with SVGO";
+export const DEFAULT_COMMENT = `
+  SVG(s) automatically optimized using [SVGO] :sparkles:
+
+  {{filesTable}}
+
+  [SVGO]: https://github.com/svg/svgo
+`;
 
 // File encodings
 export const BASE64 = "base64";
@@ -31,6 +44,7 @@ export const COMMIT_TYPE_BLOB = "blob";
 
 export const STATUS_ADDED = "added";
 export const STATUS_MODIFIED = "modified";
+export const STATUS_REMOVED = "removed";
 
 // Special values
 export const PR_NOT_FOUND = -1;

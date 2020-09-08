@@ -140,6 +140,16 @@ const values = {
         },
       ],
     },
+    originalMissing: {
+      optimized: [
+        {
+          content: "foo",
+          originalEncoding: "utf-8",
+          path: "foo.svg",
+        },
+      ],
+      original: [ ],
+    },
   },
   optimizedCount: [0, 1, 3, 36],
   ignoredCount: [0, 1, 6, 1337],
@@ -232,6 +242,13 @@ describe("::formatComment", () => {
       "| --- | --- | --- | --- |\n" +
       "| foo.svg | 0.006 KB | 0.003 KB | -50% |\n",
     );
+  });
+
+  test("template using {{filesTable}}, missing original SVG data", () => {
+    const data = Object.assign({ }, defaultData, { fileData: values.fileData.originalMissing });
+    const templateString = "{{filesTable}}";
+
+    expect(() => formatComment(templateString, data)).toThrow();
   });
 
   test.each(templates.ignoredCount)("template using '{{ignoredCount}}' (%s)", (templateString) => {

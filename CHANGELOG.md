@@ -9,6 +9,22 @@ Versioning].
 
 - _No changes yet_
 
+## [1.1.0] - 2020-09-02
+
+- Run Action on push events. ([#236])
+- Update `@actions/core` from v1.2.4 to v1.2.5 ([#245])
+- Fix the URL for the "Creating a Workflow file" link in the README. ([#247])
+
+## [1.0.2] - 2020-08-21
+
+- Skip large files. ([#239])
+- Update `js-yaml` from v3.13.1 to v3.14.0 ([#207])
+- Update `@actions/github` from 2.2.0 to 4.0.0 ([#223])
+
+## [1.0.1] - 2020-04-30
+
+- Update `@actions/http-client` from v1.0.6 to v1.0.8 ([#199])
+
 ## [1.0.0] - 2020-04-14
 
 - (!) Rename the `comments` option to `comment`. ([#190])
@@ -133,3 +149,10 @@ Versioning].
 [#187]: https://github.com/ericcornelissen/svgo-action/pull/187
 [#190]: https://github.com/ericcornelissen/svgo-action/pull/190
 [#191]: https://github.com/ericcornelissen/svgo-action/pull/191
+[#199]: https://github.com/ericcornelissen/svgo-action/pull/199
+[#207]: https://github.com/ericcornelissen/svgo-action/pull/207
+[#223]: https://github.com/ericcornelissen/svgo-action/pull/223
+[#236]: https://github.com/ericcornelissen/svgo-action/pull/236
+[#239]: https://github.com/ericcornelissen/svgo-action/pull/239
+[#245]: https://github.com/ericcornelissen/svgo-action/pull/245
+[#247]: https://github.com/ericcornelissen/svgo-action/pull/247
