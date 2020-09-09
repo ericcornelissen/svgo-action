@@ -269,9 +269,9 @@ dry-run: true
 
 ## Ignore
 
-| Name      | Default Value | Workflow file      | Config File        |
-| --------- | ------------- | ------------------ | ------------------ |
-| `ignored` | `""`          | :heavy_check_mark: | :heavy_check_mark: |
+| Name     | Default Value | Workflow file      | Config File        |
+| -------- | ------------- | ------------------ | ------------------ |
+| `ignore` | `""`          | :heavy_check_mark: | :heavy_check_mark: |
 
 The _ignore_ option allows you to specify what files should be ignored by the
 Action. By default, no files are ignored. The value is interpreted as a [glob].
