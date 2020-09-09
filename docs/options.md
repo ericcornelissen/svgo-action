@@ -4,8 +4,9 @@ This file contains the documentation for all options for the SVGO Action.
 
 - [Comment](#comment)
 - [Commit](#commit)
+- [Configuration Path](#configuration-path)
 - [Conventional Commits](#conventional-commits)
-- [Dry-run](#dry-run)
+- [Dry run](#dry-run)
 - [Ignore](#ignore)
 - [SVGO Options](#svgo-options)
 
@@ -90,7 +91,6 @@ as described in [the templating documentation].
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   title: This will be the commit message title
 ```
@@ -116,7 +116,6 @@ message `body`, but the `title` value will be ignored.
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   conventional: true
   title: This will be ignored
@@ -139,7 +138,6 @@ can be a template string as described in [the templating documentation].
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   body: This will be the commit message body
 ```
@@ -159,7 +157,6 @@ multiline strings].
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   body: |
     If you want a commit message that is a
@@ -184,7 +181,6 @@ empty string.
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   body: ""
 ```
@@ -197,7 +193,33 @@ Optimize 42 SVG(s) with SVGO
 
 ---
 
+## Configuration Path
+
+| Name                 | Default Value               | Workflow file      | Config File |
+| -------------------- | --------------------------- | ------------------ | ----------- |
+| `configuration-path` | `".github/svgo-action.yml"` | :heavy_check_mark: | :x:         |
+
+The _configuration path_ option can be used to change the location of the
+[configuration file].
+
+### Examples
+
+To enable comments by the Action:
+
+```yaml
+# .github/workflows/svgo.yml
+- uses: ericcornelissen/svgo-action@latest
+  with:
+    configuration-path: path/to/configuration/file.yml
+```
+
+---
+
 ## Conventional Commits
+
+| Name                   | Default Value | Workflow file      | Config File |
+| ---------------------- | ------------- | ------------------ | ----------- |
+| `conventional-commits` | `false`       | :heavy_check_mark: | :x:         |
 
 The _conventional commits_ option can be used to enable [conventional commit]
 message titles for commits.
@@ -214,21 +236,17 @@ To enable conventional commit titles:
 - uses: ericcornelissen/svgo-action@latest
   with:
     conventional-commits: true
-
-
-# .github/svgo-action.yml
-conventional-commits: true
 ```
 
 ---
 
-## Dry-run
+## Dry run
 
 | Name      | Default Value | Workflow file      | Config File        |
 | --------- | ------------- | ------------------ | ------------------ |
 | `dry-run` | `false`       | :heavy_check_mark: | :heavy_check_mark: |
 
-The _dry-run_ option can be used to run the Action without having it make any
+The _dry run_ option can be used to run the Action without having it make any
 commits to your repository. This can be useful for debugging or when you just
 want to give the Action a try.
 
@@ -251,9 +269,9 @@ dry-run: true
 
 ## Ignore
 
-| Name      | Default Value | Workflow file      | Config File        |
-| --------- | ------------- | ------------------ | ------------------ |
-| `ignored` | `""`          | :heavy_check_mark: | :heavy_check_mark: |
+| Name     | Default Value | Workflow file      | Config File        |
+| -------- | ------------- | ------------------ | ------------------ |
+| `ignore` | `""`          | :heavy_check_mark: | :heavy_check_mark: |
 
 The _ignore_ option allows you to specify what files should be ignored by the
 Action. By default, no files are ignored. The value is interpreted as a [glob].
@@ -317,6 +335,7 @@ To change the SVGO configuration file:
 svgo-options: my-svgo-options.yml
 ```
 
+[configuration file]: https://github.com/ericcornelissen/svgo-action#in-another-configuration-file
 [conventional commit]: https://www.conventionalcommits.org/
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new

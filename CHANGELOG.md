@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve options documentation. ([#251])
 
 ## [1.1.0] - 2020-09-02
 
@@ -156,3 +156,4 @@ Versioning].
 [#239]: https://github.com/ericcornelissen/svgo-action/pull/239
 [#245]: https://github.com/ericcornelissen/svgo-action/pull/245
 [#247]: https://github.com/ericcornelissen/svgo-action/pull/247
+[#251]: https://github.com/ericcornelissen/svgo-action/pull/251
