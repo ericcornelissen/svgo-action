@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import {
@@ -13,6 +14,9 @@ import {
   CONFIG_NAME_COMMIT_TITLE,
   CONFIG_NAME_COMMIT_BODY,
 } from "../../src/constants";
+import { ActionConfig } from "../../src/inputs";
+import { formatComment, formatCommitMessage } from "../../src/templating";
+import { CommitData, Inputs, RawActionConfig } from "../../src/types";
 
 import {
   // Strings
@@ -29,18 +33,26 @@ import {
 } from "./messages";
 
 
-type Commit = { conventional: boolean; body: string; title: string };
+type Commit = {
+  readonly body?: string;
+  readonly conventional?: boolean;
+  readonly title?: string;
+};
 
 type Jobs = [{ steps: any[] }];
 
-type Report = string[];
-
 
 const BOOLEAN = "boolean";
-const STRING = "string";
-
-const TRUE_STRING = "true";
 const FALSE_STRING = "false";
+const STRING = "string";
+const TRUE_STRING = "true";
+
+const DEFAULT_COMMENT = "false";
+const DEFAULT_CONFIGURATION_PATH = ".github/svgo-action.yml";
+const DEFAULT_CONVENTIONAL_COMMITS = "false";
+const DEFAULT_DRY_RUN = "false";
+const DEFAULT_IGNORE = "";
+const DEFAULT_SVGO_OPTIONS = ".svgo.yml";
 
 const ALLOWED_KEYS_FILE = [
   INPUT_NAME_COMMENT,
@@ -64,7 +76,119 @@ const ALLOWED_KEYS_WORKFLOW = [
   INPUT_NAME_SVGO_OPTIONS,
 ];
 
-const emptyString = (s: string): boolean => s !== "";
+const EXAMPLE_COMMIT_DATA: CommitData = {
+  fileCount: 5,
+  fileData: {
+    optimized: [
+      {
+        content: "foo",
+        originalEncoding: "base64",
+        path: "foo.bar",
+      },
+      {
+        content: "bar",
+        originalEncoding: "base64",
+        path: "bar.bar",
+      },
+      {
+        content: "foobar",
+        originalEncoding: "base64",
+        path: "foobar.bar",
+      },
+    ],
+    original: [
+      {
+        content: "foobar",
+        originalEncoding: "base64",
+        path: "foo.bar",
+      },
+      {
+        content: "foobar",
+        originalEncoding: "base64",
+        path: "bar.bar",
+      },
+      {
+        content: "foobarr",
+        originalEncoding: "base64",
+        path: "foobar.bar",
+      },
+      {
+        content: "",
+        originalEncoding: "base64",
+        path: "optimized.bar",
+      },
+    ],
+  },
+  ignoredCount: 0,
+  optimizedCount: 3,
+  skippedCount: 1,
+  svgCount: 4,
+};
+
+
+class Report {
+
+  readonly report: string[];
+  private readonly config?: ActionConfig;
+
+  constructor(report: string[], config?: ActionConfig) {
+    this.report = report.filter((s: string): boolean => s !== "");
+    this.config = config;
+  }
+
+  exampleComment(): string {
+    if (this.config === undefined) {
+      return "";
+    }
+
+    return formatComment(this.config.commitTitle, EXAMPLE_COMMIT_DATA);
+  }
+
+  exampleCommitMessage(): string {
+    if (this.config === undefined) {
+      return "";
+    }
+
+    return formatCommitMessage(
+      this.config.commitTitle,
+      this.config.commitBody,
+      EXAMPLE_COMMIT_DATA,
+    );
+  }
+
+}
+
+
+function getInputsInstance(configObject: RawActionConfig): Inputs {
+  return {
+    getInput(name: string, _: any): string {
+      const get = (v: any, f: string): string => v == undefined ? f : v;
+
+      switch (name) {
+        case INPUT_NAME_COMMENT:
+          return get(configObject.comment, DEFAULT_COMMENT);
+        case INPUT_NAME_CONFIG_PATH:
+          return get(
+            configObject["configuration-path"],
+            DEFAULT_CONFIGURATION_PATH,
+          );
+        case INPUT_NAME_CONVENTIONAL_COMMITS:
+          return get(
+            configObject["conventional-commits"],
+            DEFAULT_CONVENTIONAL_COMMITS,
+          );
+        case INPUT_NAME_DRY_RUN:
+          return get(configObject["dry-run"], DEFAULT_DRY_RUN);
+        case INPUT_NAME_IGNORE:
+          return get(configObject.ignore, DEFAULT_IGNORE);
+        case INPUT_NAME_SVGO_OPTIONS:
+          return get(configObject["svgo-options"], DEFAULT_SVGO_OPTIONS);
+        default:
+          return "";
+      }
+    },
+  };
+}
 
 
 function isBooleanString(value?: boolean | string): boolean {
@@ -97,7 +221,7 @@ function checkKeysInCommit(commitObject: any): string[] {
 }
 
 
-function checkValueOfComment(value?: string): string {
+function checkValueOfComment(value?: string | boolean): string {
   const keyName = "comment";
   if (value !== undefined) {
     if (typeof value === STRING) {
@@ -117,7 +241,7 @@ function checkValueOfComment(value?: string): string {
   return "";
 }
 
-function checkValueOfConfigurationPath(value?: string): string {
+function checkValueOfConfigPath(value?: string): string {
   const keyName = "configuration-path";
   if (value !== undefined) {
     if (typeof value !== STRING) {
@@ -132,7 +256,7 @@ function checkValueOfConfigurationPath(value?: string): string {
   return "";
 }
 
-function checkValueOfCommitConventional(value?: boolean | string): string {
+function checkValueOfConvCommit(value?: boolean | string): string {
   const keyName = "commit.conventional";
   if (value !== undefined) {
     if (typeof value === STRING) {
@@ -185,7 +309,7 @@ function checkValueOfCommitBody(value?: string): string {
 function checkValueOfCommit(commit?: Commit): string[] {
   const report: string[] = [];
   if (commit !== undefined) {
-    report.push(checkValueOfCommitConventional(commit.conventional));
+    report.push(checkValueOfConvCommit(commit.conventional));
     report.push(checkValueOfCommitTitle(commit.title, commit.conventional));
     report.push(checkValueOfCommitBody(commit.body));
   }
@@ -250,8 +374,8 @@ function checkValueOfSvgoOptions(value?: string): string {
 }
 
 
-function analyzeConfigFile(configObject: any): Report {
-  const report: Report = [];
+function analyzeConfigFile(configObject: RawActionConfig): Report {
+  const report: string[] = [];
   report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_FILE));
   report.push(...checkKeysInCommit(configObject.commit));
   report.push(...checkValueOfCommit(configObject.commit));
@@ -260,22 +384,28 @@ function analyzeConfigFile(configObject: any): Report {
   report.push(checkValueOfIgnore(configObject.ignore));
   report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
-  return report.filter(emptyString);
+  const defaultInputs: Inputs = getInputsInstance({});
+  const config: ActionConfig = new ActionConfig(defaultInputs, configObject);
+
+  return new Report(report, config);
 }
 
 function analyzeWorkflowFile(jobs: Jobs): Report {
-  function doAnalyze(configObject: any): Report {
-    const report: Report = [];
+  function doAnalyze(configObject: RawActionConfig): Report {
+    const report: string[] = [];
     report.push(...checkKeysInConfig(configObject, ALLOWED_KEYS_WORKFLOW));
     report.push(checkValueOfComment(configObject.comment));
-    report.push(checkValueOfConfigurationPath(configObject["configuration-path"]));
-    report.push(checkValueOfCommitConventional(configObject["conventional-commits"]));
+    report.push(checkValueOfConfigPath(configObject["configuration-path"]));
+    report.push(checkValueOfConvCommit(configObject["conventional-commits"]));
     report.push(checkValueOfDryRun(configObject["dry-run"]));
     report.push(checkValueOfIgnore(configObject.ignore));
     report.push(checkValueOfRepoToken(configObject["repo-token"]));
     report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
-    return report.filter(emptyString);
+    const inputs: Inputs = getInputsInstance(configObject);
+    const config: ActionConfig = new ActionConfig(inputs, {});
+
+    return new Report(report, config);
   }
 
   for (const pipeline of Object.values(jobs)) {
@@ -286,13 +416,15 @@ function analyzeWorkflowFile(jobs: Jobs): Report {
     }
   }
 
-  return ["[F] svgo-action not found in Workflow file"];
+  return new Report(["[F] svgo-action not found in Workflow file"]);
 }
 
-export function analyze(configObject: any): [string, Report] {
+export function analyze(configObject: any): [string, string[]] {
   if (configObject.jobs !== undefined) {
-    return ["Workflow", analyzeWorkflowFile(configObject.jobs)];
+    const report = analyzeWorkflowFile(configObject.jobs);
+    return ["Workflow", report.report];
   } else {
-    return ["Config", analyzeConfigFile(configObject)];
+    const report = analyzeConfigFile(configObject);
+    return ["Config", report.report];
   }
 }

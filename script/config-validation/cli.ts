@@ -1,4 +1,6 @@
-/* eslint-disable no-console, @typescript-eslint/no-explicit-any */
+/* eslint-disable no-console */
+/* eslint-disable security/detect-non-literal-fs-filename */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as fs from "fs";
 import * as yaml from "js-yaml";

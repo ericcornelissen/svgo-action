@@ -20,7 +20,11 @@ jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
 
-import { EVENT_PULL_REQUEST, EVENT_PUSH } from "../src/constants";
+import {
+  EVENT_PULL_REQUEST,
+  EVENT_PUSH,
+  INPUT_NAME_CONFIG_PATH,
+} from "../src/constants";
 import main from "../src/main";
 
 
@@ -97,11 +101,13 @@ test.each(ALL_EVENTS)("use custom configuration file (%s)", async (eventName) =>
   github.context.eventName = eventName;
 
   const actionConfigFilePath = "svgo-action.yml";
-  inputs.getConfigFilePath.mockReturnValueOnce(actionConfigFilePath);
+  when(core.getInput)
+    .calledWith(INPUT_NAME_CONFIG_PATH, { required: false })
+    .mockReturnValueOnce(actionConfigFilePath);
 
   await main();
 
-  expect(inputs.ActionConfig).toHaveBeenCalledWith(actionOptions);
+  expect(inputs.ActionConfig).toHaveBeenCalledWith(core, actionOptions);
 });
 
 test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (eventName) => {
@@ -120,7 +126,7 @@ test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (
 test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async (eventName) => {
   github.context.eventName = eventName;
 
-  const actionConfigPath = inputs.getConfigFilePath();
+  const actionConfigPath = core.getInput(INPUT_NAME_CONFIG_PATH);
   when(githubAPI.getRepoFile)
     .calledWith(github.GitHubInstance, actionConfigPath)
     .mockRejectedValueOnce(new Error("Not found"));
