@@ -6,7 +6,7 @@ This file contains the documentation for all options for the SVGO Action.
 - [Commit](#commit)
 - [Configuration Path](#configuration-path)
 - [Conventional Commits](#conventional-commits)
-- [Dry-run](#dry-run)
+- [Dry run](#dry-run)
 - [Ignore](#ignore)
 - [SVGO Options](#svgo-options)
 
@@ -240,13 +240,13 @@ To enable conventional commit titles:
 
 ---
 
-## Dry-run
+## Dry run
 
 | Name      | Default Value | Workflow file      | Config File        |
 | --------- | ------------- | ------------------ | ------------------ |
 | `dry-run` | `false`       | :heavy_check_mark: | :heavy_check_mark: |
 
-The _dry-run_ option can be used to run the Action without having it make any
+The _dry run_ option can be used to run the Action without having it make any
 commits to your repository. This can be useful for debugging or when you just
 want to give the Action a try.
 
