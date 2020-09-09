@@ -219,7 +219,7 @@ To enable comments by the Action:
 
 | Name                   | Default Value | Workflow file      | Config File |
 | ---------------------- | ------------- | ------------------ | ----------- |
-| `conventional-commits` | `true`        | :heavy_check_mark: | :x:         |
+| `conventional-commits` | `false`       | :heavy_check_mark: | :x:         |
 
 The _conventional commits_ option can be used to enable [conventional commit]
 message titles for commits.
