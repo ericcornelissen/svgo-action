@@ -4,6 +4,7 @@ This file contains the documentation for all options for the SVGO Action.
 
 - [Comment](#comment)
 - [Commit](#commit)
+- [Configuration Path](#configuration-path)
 - [Conventional Commits](#conventional-commits)
 - [Dry-run](#dry-run)
 - [Ignore](#ignore)
@@ -197,6 +198,29 @@ Optimize 42 SVG(s) with SVGO
 
 ---
 
+## Configuration Path
+
+| Name                 | Default Value               | Workflow file      | Config File |
+| -------------------- | --------------------------- | ------------------ | ----------- |
+| `configuration-path` | `".github/svgo-action.yml"` | :heavy_check_mark: | :x:         |
+
+The _configuration path_ option can be used to change the location of the
+[configuration file].
+
+### Examples
+
+To enable comments by the Action:
+
+```yaml
+# .github/workflows/svgo.yml
+
+- uses: ericcornelissen/svgo-action@latest
+  with:
+    configuration-path: path/to/configuration/file.yml
+```
+
+---
+
 ## Conventional Commits
 
 The _conventional commits_ option can be used to enable [conventional commit]
@@ -317,6 +341,7 @@ To change the SVGO configuration file:
 svgo-options: my-svgo-options.yml
 ```
 
+[configuration file]: https://github.com/ericcornelissen/svgo-action#in-another-configuration-file
 [conventional commit]: https://www.conventionalcommits.org/
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new
