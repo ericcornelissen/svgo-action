@@ -91,7 +91,6 @@ as described in [the templating documentation].
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   title: This will be the commit message title
 ```
@@ -117,7 +116,6 @@ message `body`, but the `title` value will be ignored.
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   conventional: true
   title: This will be ignored
@@ -140,7 +138,6 @@ can be a template string as described in [the templating documentation].
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   body: This will be the commit message body
 ```
@@ -160,7 +157,6 @@ multiline strings].
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   body: |
     If you want a commit message that is a
@@ -185,7 +181,6 @@ empty string.
 
 ```yaml
 # .github/svgo-action.yml
-
 commit:
   body: ""
 ```
@@ -213,7 +208,6 @@ To enable comments by the Action:
 
 ```yaml
 # .github/workflows/svgo.yml
-
 - uses: ericcornelissen/svgo-action@latest
   with:
     configuration-path: path/to/configuration/file.yml
@@ -239,7 +233,6 @@ To enable conventional commit titles:
 
 ```yaml
 # .github/workflows/svgo.yml
-
 - uses: ericcornelissen/svgo-action@latest
   with:
     conventional-commits: true
