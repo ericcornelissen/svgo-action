@@ -18,11 +18,15 @@ function getConfigObject(file: string): any {
 
 function main(configFile: string): void {
   const rawConfigObject: any = getConfigObject(configFile);
-  const [type, report] = analyze(rawConfigObject);
+  const { type, messages, comment, commit }= analyze(rawConfigObject);
 
-  console.log(`${type} file detected\n`);
+  console.log(`${type} file detected`);
   console.log("\nReport:\n=======");
-  console.log(report.join("\n"));
+  console.log(messages.join("\n"));
+  console.log("\nExample comment:\n================\n");
+  console.log(`~~~\n${comment}\n~~~\n`);
+  console.log("\nExample commit message:\n=======================\n");
+  console.log(`~~~\n${commit}\n~~~`);
 }
 
 main(process.argv[2]);

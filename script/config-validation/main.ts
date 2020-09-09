@@ -83,39 +83,39 @@ const EXAMPLE_COMMIT_DATA: CommitData = {
       {
         content: "foo",
         originalEncoding: "base64",
-        path: "foo.bar",
+        path: "foo.svg",
       },
       {
         content: "bar",
         originalEncoding: "base64",
-        path: "bar.bar",
+        path: "bar.svg",
       },
       {
         content: "foobar",
         originalEncoding: "base64",
-        path: "foobar.bar",
+        path: "foobar.svg",
       },
     ],
     original: [
       {
         content: "foobar",
         originalEncoding: "base64",
-        path: "foo.bar",
+        path: "foo.svg",
       },
       {
         content: "foobar",
         originalEncoding: "base64",
-        path: "bar.bar",
+        path: "bar.svg",
       },
       {
         content: "foobarr",
         originalEncoding: "base64",
-        path: "foobar.bar",
+        path: "foobar.svg",
       },
       {
         content: "",
         originalEncoding: "base64",
-        path: "optimized.bar",
+        path: "optimized.svg",
       },
     ],
   },
@@ -128,11 +128,11 @@ const EXAMPLE_COMMIT_DATA: CommitData = {
 
 class Report {
 
-  readonly report: string[];
+  readonly messages: string[];
   private readonly config?: ActionConfig;
 
-  constructor(report: string[], config?: ActionConfig) {
-    this.report = report.filter((s: string): boolean => s !== "");
+  constructor(messages: string[], config?: ActionConfig) {
+    this.messages = messages.filter((s: string): boolean => s !== "");
     this.config = config;
   }
 
@@ -141,7 +141,7 @@ class Report {
       return "";
     }
 
-    return formatComment(this.config.commitTitle, EXAMPLE_COMMIT_DATA);
+    return formatComment(this.config.comment, EXAMPLE_COMMIT_DATA);
   }
 
   exampleCommitMessage(): string {
@@ -419,12 +419,27 @@ function analyzeWorkflowFile(jobs: Jobs): Report {
   return new Report(["[F] svgo-action not found in Workflow file"]);
 }
 
-export function analyze(configObject: any): [string, string[]] {
+export function analyze(configObject: any): {
+  type: string,
+  messages: string[],
+  comment: string,
+  commit: string,
+} {
+  let report: Report;
+  let type: string;
+
   if (configObject.jobs !== undefined) {
-    const report = analyzeWorkflowFile(configObject.jobs);
-    return ["Workflow", report.report];
+    type = "Workflow";
+    report = analyzeWorkflowFile(configObject.jobs);
   } else {
-    const report = analyzeConfigFile(configObject);
-    return ["Config", report.report];
+    type = "Config";
+    report = analyzeConfigFile(configObject);
   }
+
+  return {
+    type: type,
+    messages: report.messages,
+    comment: report.exampleComment(),
+    commit: report.exampleCommitMessage(),
+  };
 }
