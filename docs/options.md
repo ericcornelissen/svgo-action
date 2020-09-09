@@ -223,6 +223,10 @@ To enable comments by the Action:
 
 ## Conventional Commits
 
+| Name                   | Default Value | Workflow file      | Config File |
+| ---------------------- | ------------- | ------------------ | ----------- |
+| `conventional-commits` | `true`        | :heavy_check_mark: | :x:         |
+
 The _conventional commits_ option can be used to enable [conventional commit]
 message titles for commits.
 
@@ -235,13 +239,10 @@ To enable conventional commit titles:
 
 ```yaml
 # .github/workflows/svgo.yml
+
 - uses: ericcornelissen/svgo-action@latest
   with:
     conventional-commits: true
-
-
-# .github/svgo-action.yml
-conventional-commits: true
 ```
 
 ---
