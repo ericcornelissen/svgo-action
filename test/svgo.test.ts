@@ -33,22 +33,19 @@ describe("SVGOptimizer", () => {
   describe(".optimize", () => {
 
     const optimizer: SVGOptimizer = new SVGOptimizer({ });
+    const svgs = Object.entries(files)
+      .filter(([key, _]) => key !== "fake.svg")
+      .filter(([key, _]) => key.endsWith(".svg"))
+      .map(([_, value]) => value)
+      .slice(0, 4);
 
-    const testSvgs = test.each(
-      Object.entries(files)
-        .filter(([key, _]) => key !== "fake.svg")
-        .filter(([key, _]) => key.endsWith(".svg"))
-        .map(([_, value]) => value)
-        .slice(0, 4),
-    );
-
-    testSvgs("return a (string) value", async (svg: string) => {
+    test.each(svgs)("return a (string) value", async (svg: string) => {
       const result = await optimizer.optimize(svg);
       expect(result).toBeDefined();
       expect(typeof result).toBe("string");
     });
 
-    testSvgs("change a (not optimized) SVG", async (svg: string) => {
+    test.each(svgs)("change a (not optimized) SVG", async (svg: string) => {
       const result = await optimizer.optimize(svg);
       expect(result).not.toEqual(svg);
     });

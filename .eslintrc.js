@@ -85,7 +85,6 @@ module.exports = {
     "jest/prefer-to-contain": ["error"],
     "jest/prefer-to-have-length": ["error"],
     "jest/prefer-todo": ["error"],
-    "jest/valid-title": "off",
 
     // eslint-plugin-mocha
     // https://github.com/lo1tuma/eslint-plugin-mocha
