@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.1.1] - 2020-09-11
+
 - Improve options documentation. ([#251])
 - Update `node-fetch` from v2.6.0 to v2.6.1 ([#255])
 
