@@ -102,6 +102,15 @@ module.exports = {
         "module": "readonly",
       },
     },
+    { // Script files
+      files: ["script/**/*.ts"],
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-module-boundary-types": ["error", {
+          allowArgumentsExplicitlyTypedAsAny: true,
+        }],
+      },
+    },
     { // Test files
       files: ["test/**/*.ts"],
       rules: {
