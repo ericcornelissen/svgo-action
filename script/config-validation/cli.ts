@@ -14,7 +14,6 @@ function getConfigObject(file: string): any {
   return yaml.safeLoad(configString);
 }
 
-
 function main(configFile: string): void {
   const rawConfigObject: any = getConfigObject(configFile);
   const { type, messages, comment, commit }= analyze(rawConfigObject);

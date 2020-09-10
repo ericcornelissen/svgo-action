@@ -381,7 +381,7 @@ function analyzeConfigFile(configObject: RawActionConfig): Report {
   report.push(checkValueOfIgnore(configObject.ignore));
   report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
-  const defaultInputs: Inputs = getInputsInstance({});
+  const defaultInputs: Inputs = getInputsInstance({ });
   const config: ActionConfig = new ActionConfig(defaultInputs, configObject);
 
   return new Report(report, config);
@@ -400,7 +400,7 @@ function analyzeWorkflowFile(jobs: Jobs): Report {
     report.push(checkValueOfSvgoOptions(configObject["svgo-options"]));
 
     const inputs: Inputs = getInputsInstance(configObject);
-    const config: ActionConfig = new ActionConfig(inputs, {});
+    const config: ActionConfig = new ActionConfig(inputs, { });
 
     return new Report(report, config);
   }
