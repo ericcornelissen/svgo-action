@@ -17,7 +17,7 @@
     "format:md": "npm run lint:md -- --fix",
     "lint": "run-p lint:js lint:md lint:ws",
     "lint:js": "eslint . --ext .js,.ts",
-    "lint:md": "markdownlint -c .markdownlintrc.json -i node_modules **/*.md",
+    "lint:md": "markdownlint -i node_modules **/*.md .github/**/*.md",
     "lint:ws": "editorconfig-checker",
     "test": "jest",
     "test:coverage": "jest --coverage",
