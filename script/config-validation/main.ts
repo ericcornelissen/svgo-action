@@ -138,6 +138,10 @@ class Report {
       return "";
     }
 
+    if (this.config.enableComments === false) {
+      return "[COMMENTS ARE DISABLED]";
+    }
+
     return formatComment(this.config.comment, EXAMPLE_COMMIT_DATA);
   }
 
@@ -201,7 +205,7 @@ function checkKeysInConfig(configObject: any, allowed: string[]): string[] {
   const report: string[] = [];
   for (const key of Object.keys(configObject)) {
     if (!allowed.includes(key)) {
-      report.push(unknownKey(`Unknown key '${key}'`));
+      report.push(unknownKey(key));
     }
   }
 
