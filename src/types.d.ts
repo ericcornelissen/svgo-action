@@ -1,3 +1,7 @@
+type InputOptions = {
+  required?: boolean;
+}
+
 type Mode = "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
 
 
@@ -66,4 +70,9 @@ export type GitFileData = {
 export type GitFileInfo = {
   readonly path: string;
   readonly status: string;
+}
+
+// Type representing an object from which the Action inputs can be obtained.
+export type Inputs = {
+  getInput(name: string, options: InputOptions): string;
 }

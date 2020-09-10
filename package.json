@@ -20,7 +20,8 @@
     "lint:md": "markdownlint -c .markdownlintrc.json -i node_modules **/*.md",
     "lint:ws": "editorconfig-checker",
     "test": "jest",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "validate-config": "npx ts-node ./script/config-validation/cli.ts"
   },
   "repository": {
     "type": "git",

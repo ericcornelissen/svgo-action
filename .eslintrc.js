@@ -18,7 +18,6 @@ module.exports = {
   ignorePatterns: [
     "node_modules/", // dependencies directory
     "lib/", // TypeScript generated files
-    "script/", // Utility files
   ],
 
   globals: {
@@ -99,6 +98,15 @@ module.exports = {
       files: ["*.js"],
       globals: {
         "module": "readonly",
+      },
+    },
+    { // Script files
+      files: ["script/**/*.ts"],
+      rules: {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/explicit-module-boundary-types": ["error", {
+          allowArgumentsExplicitlyTypedAsAny: true,
+        }],
       },
     },
     { // Test files

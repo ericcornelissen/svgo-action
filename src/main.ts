@@ -2,8 +2,13 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
-import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
-import { getRepoToken, getConfigFilePath, ActionConfig } from "./inputs";
+import {
+  EVENT_PULL_REQUEST,
+  EVENT_PUSH,
+  INPUT_NAME_CONFIG_PATH,
+  INPUT_NAME_REPO_TOKEN,
+} from "./constants";
+import { ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
 
@@ -12,6 +17,14 @@ import pushEventMain from "./events/push";
 
 import { fetchYamlFile } from "./utils/fetch-yaml";
 
+
+function getConfigFilePath(): string {
+  return core.getInput(INPUT_NAME_CONFIG_PATH, { required: false });
+}
+
+function getRepoToken(): string {
+  return core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
+}
 
 async function run(
   client: Octokit,
@@ -48,7 +61,7 @@ export default async function main(): Promise<void> {
     configFilePath,
   );
 
-  const config: ActionConfig = new ActionConfig(rawConfig);
+  const config: ActionConfig = new ActionConfig(core, rawConfig);
   if (config.isDryRun) {
     core.info("Dry mode enabled, no changes will be committed");
   }
