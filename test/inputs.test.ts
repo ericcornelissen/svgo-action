@@ -473,7 +473,7 @@ describe("ActionConfig", () => {
 
   describe(".ignoreGlob", () => {
 
-    const testGlobs = test.each(["file.svg", "dir/*", "folder/**/*"]);
+    const globs: string[] = ["file.svg", "dir/*", "folder/**/*"];
 
     test("dry-run is not set at all", () => {
       const defaultValue = "";
@@ -483,14 +483,14 @@ describe("ActionConfig", () => {
       expect(instance.ignoreGlob).toBe("");
     });
 
-    testGlobs("ignore is '%s' in the workflow file", (glob) => {
+    test.each(globs)("ignore is '%s' in the workflow file", (glob) => {
       mockCoreGetInput(INPUT_NAME_IGNORE, glob);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.ignoreGlob).toBe(glob);
     });
 
-    testGlobs("ignore is '%s' in the config file", (glob) => {
+    test.each(globs)("ignore is '%s' in the config file", (glob) => {
       const defaultValue = "";
       const rawConfig: RawActionConfig = { ignore: glob };
       mockCoreGetInput(INPUT_NAME_IGNORE, defaultValue);
@@ -515,7 +515,7 @@ describe("ActionConfig", () => {
 
   describe(".svgoOptionsPath", () => {
 
-    const testPaths = test.each([".svgo.yml", "foo.yml", "in/folder/config.yml"]);
+    const paths: string[] = [".svgo.yml", "foo.yml", "in/folder/config.yml"];
 
     test("svgo-options is not set at all", () => {
       const defaultValue = ".svgo.yml";
@@ -525,14 +525,14 @@ describe("ActionConfig", () => {
       expect(instance.svgoOptionsPath).toBe(defaultValue);
     });
 
-    testPaths("svgo-options is set (to '%s') in the workflow file", (path) => {
+    test.each(paths)("svgo-options is set (to '%s') in the workflow file", (path) => {
       mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, path);
 
       const instance: ActionConfig = new ActionConfig();
       expect(instance.svgoOptionsPath).toBe(path);
     });
 
-    testPaths("svgo-options is set (to '%s') in the config object", (path) => {
+    test.each(paths)("svgo-options is set (to '%s') in the config object", (path) => {
       mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, `dir/${path}`);
 
       const instance: ActionConfig = new ActionConfig({ "svgo-options": path });
