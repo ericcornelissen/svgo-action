@@ -39,7 +39,7 @@ To enable comments by the Action:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     comment: true
 
@@ -53,7 +53,7 @@ strings]):
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     comment: |
       {{optimizedCount}}/{{svgCount}} SVG(s) optimized :sparkles:
@@ -208,7 +208,7 @@ To enable comments by the Action:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     configuration-path: path/to/configuration/file.yml
 ```
@@ -233,7 +233,7 @@ To enable conventional commit titles:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     conventional-commits: true
 ```
@@ -256,7 +256,7 @@ To enable the dry-run mode:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     dry-run: true
 
@@ -286,7 +286,7 @@ To ignore all files in a specific folder:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     ignore: not/optimized/*
 
@@ -299,7 +299,7 @@ To ignore all files in a specific folder and all its subfolders:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     ignore: not/optimized/**/
 
@@ -326,7 +326,7 @@ To change the SVGO configuration file:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@latest
+- uses: ericcornelissen/svgo-action@v1
   with:
     svgo-options: my-svgo-options.yml
 

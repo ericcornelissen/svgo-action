@@ -28,7 +28,7 @@ jobs:
   triage:
     runs-on: ubuntu-latest
     steps:
-    - uses: ericcornelissen/svgo-action@v1.1.1
+    - uses: ericcornelissen/svgo-action@v1
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
