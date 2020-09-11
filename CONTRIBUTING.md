@@ -20,7 +20,7 @@ contribute anything, please use the following this workflow:
 ## New Features
 
 New features are welcomed, but we want to avoid feature creep. For this reason
-we recommend you open an issue with a feature request so you don't spend time
+we recommend you [open an issue with a feature request] so you don't spend time
 working on something that won't be included. Be sure to check if the feature
 hasn't been requested before!
 
@@ -52,12 +52,13 @@ explain how you fixed the bug as clearly as possible.
 
 ### Bug Reports
 
-If you report a bug, please [open a new issue] and provide as much details as
-possible. Consider providing the following information:
+If you want to report a bug, please [open an issue with a bug report] and
+provide as much details as possible. Consider providing the following
+information:
 
 * The version of SVGO Action you're using.
 * What is the expected behaviour and what is the actual behaviour.
-* A link to the Pull Request where the bug occurs.
+* A link to the action run where the bug occurs.
 
 To help us diagnose the problem, it is very helpful if you enable debug logging
 for Actions<sup>4</sup> in the repository where the bug occurs.
@@ -120,7 +121,8 @@ free to add it as a `devDependency`.
   Read more about [configuring ESLint].
 </details>
 
-[open a new issue]: https://github.com/ericcornelissen/svgo-action/issues/new
+[open an issue with a bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
+[open an issue with a feature request]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=enhancement&template=feature_request.md
 [eslint]: https://eslint.org/
 [forking a repository]: https://help.github.com/en/github/getting-started-with-github/fork-a-repo
 [using branches]: https://guides.github.com/introduction/flow/

@@ -11,6 +11,11 @@ export const INPUT_NAME_IGNORE = "ignore";
 export const INPUT_NAME_REPO_TOKEN = "repo-token";
 export const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 
+export const CONFIG_NAME_COMMIT = "commit";
+export const CONFIG_NAME_COMMIT_CONVENTIONAL = "conventional";
+export const CONFIG_NAME_COMMIT_TITLE= "title";
+export const CONFIG_NAME_COMMIT_BODY = "body";
+
 export const DISABLE_PATTERN = /disable-svgo-action/;
 export const ENABLE_PATTERN = /enable-svgo-action/;
 

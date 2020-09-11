@@ -9,6 +9,11 @@ Versioning].
 
 - _No changes yet_
 
+## [1.1.1] - 2020-09-11
+
+- Improve options documentation. ([#251])
+- Update `node-fetch` from v2.6.0 to v2.6.1 ([#255])
+
 ## [1.1.0] - 2020-09-02
 
 - Run Action on push events. ([#236])
@@ -156,3 +161,5 @@ Versioning].
 [#239]: https://github.com/ericcornelissen/svgo-action/pull/239
 [#245]: https://github.com/ericcornelissen/svgo-action/pull/245
 [#247]: https://github.com/ericcornelissen/svgo-action/pull/247
+[#251]: https://github.com/ericcornelissen/svgo-action/pull/251
+[#255]: https://github.com/ericcornelissen/svgo-action/pull/255

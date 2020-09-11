@@ -1,37 +1,24 @@
-import * as core from "@actions/core";
-
 import {
   CONVENTIONAL_COMMIT_TITLE,
   DEFAULT_COMMIT_BODY,
   DEFAULT_COMMIT_TITLE,
   DEFAULT_COMMENT,
   INPUT_NAME_COMMENT,
-  INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
-  INPUT_NAME_REPO_TOKEN,
   INPUT_NAME_SVGO_OPTIONS,
 } from "./constants";
-import { RawActionConfig } from "./types";
+import { Inputs, RawActionConfig } from "./types";
 
 
 const NOT_REQUIRED = { required: false };
-const REQUIRED = { required: true };
 
 const BOOLEAN = "boolean";
 const FALSE = "false";
 const STRING = "string";
 const TRUE = "true";
 
-
-export function getConfigFilePath(): string {
-  return core.getInput(INPUT_NAME_CONFIG_PATH, NOT_REQUIRED);
-}
-
-export function getRepoToken(): string {
-  return core.getInput(INPUT_NAME_REPO_TOKEN, REQUIRED);
-}
 
 export class ActionConfig {
 
@@ -43,20 +30,27 @@ export class ActionConfig {
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
 
-  constructor(config: RawActionConfig = { }) {
-    this.isDryRun = ActionConfig.getDryRunValue(config);
+  constructor(inputs: Inputs, config: RawActionConfig = { }) {
+    this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
 
-    this.comment = ActionConfig.getCommentValue(config);
+    this.comment = ActionConfig.getCommentValue(inputs, config);
     this.commitBody = ActionConfig.getCommitBody(config);
-    this.commitTitle = ActionConfig.getCommitTitle(config);
-    this.enableComments = ActionConfig.getEnableComments(config, this.isDryRun);
-    this.ignoreGlob = ActionConfig.getIgnoreGlob(config);
-    this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(config);
+    this.commitTitle = ActionConfig.getCommitTitle(inputs, config);
+    this.enableComments = ActionConfig.getEnableComments(
+      inputs,
+      config,
+      this.isDryRun,
+    );
+    this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
+    this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
   }
 
-  private static getCommentValue(config: RawActionConfig): string {
+  private static getCommentValue(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): string {
     const value = (config.comment !== undefined) ?
-      config.comment : core.getInput(INPUT_NAME_COMMENT, NOT_REQUIRED);
+      config.comment : inputs.getInput(INPUT_NAME_COMMENT, NOT_REQUIRED);
 
     if (typeof value === STRING && value !== TRUE) {
       // If the value is (the string) `"false"` comments will be disabled, so it
@@ -74,8 +68,12 @@ export class ActionConfig {
       config.commit.body : DEFAULT_COMMIT_BODY;
   }
 
-  private static getCommitTitle(config: RawActionConfig): string {
+  private static getCommitTitle(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): string {
     const useConventionalCommit = this.normalizeBoolOption(
+      inputs,
       config.commit?.conventional,
       INPUT_NAME_CONVENTIONAL_COMMITS,
       true,
@@ -88,8 +86,12 @@ export class ActionConfig {
     }
   }
 
-  private static getDryRunValue(config: RawActionConfig): boolean {
+  private static getDryRunValue(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): boolean {
     return this.normalizeBoolOption(
+      inputs,
       config["dry-run"],
       INPUT_NAME_DRY_RUN,
       true,
@@ -97,35 +99,44 @@ export class ActionConfig {
   }
 
   private static getEnableComments(
+    inputs: Inputs,
     config: RawActionConfig,
     dryRun: boolean,
   ): boolean {
     return this.normalizeBoolOption(
+      inputs,
       config.comment as boolean,
       INPUT_NAME_COMMENT,
       true,
     ) && !dryRun;
   }
 
-  private static getIgnoreGlob(config: RawActionConfig): string {
+  private static getIgnoreGlob(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): string {
     return (config.ignore !== undefined) ?
-      config.ignore : core.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
+      config.ignore : inputs.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
   }
 
-  private static getSvgoOptionsPath(config: RawActionConfig): string {
-    return config["svgo-options"] || core.getInput(
+  private static getSvgoOptionsPath(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): string {
+    return config["svgo-options"] || inputs.getInput(
       INPUT_NAME_SVGO_OPTIONS,
       NOT_REQUIRED,
     );
   }
 
   private static normalizeBoolOption(
+    inputs: Inputs,
     configValue: boolean | undefined,
     inputName: string,
     defaultValue: boolean,
   ): boolean {
     const value = (configValue !== undefined) ?
-      configValue : core.getInput(inputName, NOT_REQUIRED);
+      configValue : inputs.getInput(inputName, NOT_REQUIRED);
 
     if (typeof value === BOOLEAN) {
       return value as boolean;
@@ -134,10 +145,6 @@ export class ActionConfig {
     } else if (value === TRUE) {
       return true;
     } else {
-      core.info(
-        `Unknown ${inputName} value '${value}', ` +
-        `defaulting to '${defaultValue}'`,
-      );
       return defaultValue;
     }
   }
