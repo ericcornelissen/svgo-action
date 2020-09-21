@@ -204,7 +204,7 @@ The _configuration path_ option can be used to change the location of the
 
 ### Examples
 
-To enable comments by the Action:
+To change where the Action looks for a configuration file:
 
 ```yaml
 # .github/workflows/svgo.yml
