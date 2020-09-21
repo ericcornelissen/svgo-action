@@ -23,8 +23,9 @@ import {
 async function getSvgsContent(
   client: Octokit,
   svgList: GitFileInfo[],
-): Promise<FileData[]> {
+): Promise<{ svgs: FileData[], warnings: string[] }> {
   const svgs: FileData[] = [];
+  const warnings: string[] = [];
   for (const svg of svgList) {
     try {
       core.debug(`fetching file contents of '${svg.path}'`);
@@ -40,10 +41,11 @@ async function getSvgsContent(
       });
     } catch (err) {
       core.warning(`SVG content could not be obtained (${err})`);
+      warnings.push(`${svg.path}: ${err}`);
     }
   }
 
-  return svgs;
+  return { svgs, warnings };
 }
 
 async function toBlobs(
@@ -78,7 +80,7 @@ export function getCommitData(
   context: ContextData,
   optimizedSvgs: FileData[],
 ): CommitData {
-  const { fileCount, svgs, ignoredCount } = context;
+  const { fileCount, ignoredCount, svgs, warnings } = context;
   return {
     fileCount: fileCount,
     fileData: { optimized: optimizedSvgs, original: svgs },
@@ -86,6 +88,7 @@ export function getCommitData(
     optimizedCount: optimizedSvgs.length,
     skippedCount: svgs.length - optimizedSvgs.length,
     svgCount: svgs.length,
+    warnings: warnings,
   };
 }
 
@@ -141,8 +144,8 @@ export async function doFilterSvgsFromFiles(
   const ignoredCount = svgCount - notIgnoredSvgs.length;
   core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
 
-  const svgs: FileData[] = await getSvgsContent(client, notIgnoredSvgs);
-  return { fileCount, ignoredCount, svgs };
+  const { warnings, svgs } = await getSvgsContent(client, notIgnoredSvgs);
+  return { fileCount, ignoredCount, svgs, warnings };
 }
 
 export async function doOptimizeSvgs(
