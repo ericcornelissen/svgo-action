@@ -51,8 +51,9 @@ async function getSvgsContent(
 async function toBlobs(
   client: Octokit,
   files: FileData[],
-): Promise<GitBlob[]> {
+): Promise<{ blobs: GitBlob[], warnings: string[] }> {
   const blobs: GitBlob[] = [];
+  const warnings: string[] = [];
   for (const file of files) {
     core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
@@ -69,10 +70,11 @@ async function toBlobs(
       blobs.push(svgBlob);
     } catch (err) {
       core.warning(`Blob could not be created (${err})`);
+      warnings.push(`${file.path}: ${err}`);
     }
   }
 
-  return blobs;
+  return { blobs, warnings };
 }
 
 
@@ -106,7 +108,9 @@ export async function doCommit(
   } = commitData;
 
   if (!config.isDryRun && optimized.length > 0) {
-    const blobs: GitBlob[] = await toBlobs(client, optimized);
+    const { blobs, warnings } = await toBlobs(client, optimized);
+    commitData.warnings.push(...warnings);
+
     const commitMessage: string = formatCommitMessage(
       config.commitTitle,
       config.commitBody,
