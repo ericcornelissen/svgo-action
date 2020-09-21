@@ -787,23 +787,45 @@ describe("Error scenarios", () => {
   });
 
   test("blob size is too large", async () => {
-    github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
-    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    const errorMessage = "Blob too large";
+    github.context.payload.commits = [{ id: COMMIT_SHA.MANY_CHANGES }];
+    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error(errorMessage); });
 
     await main(client, config, svgo);
 
     expect(core.setFailed).toHaveBeenCalledTimes(0);
     expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("SVG content could not be obtained"));
+
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
+      expect.objectContaining({
+        warnings: expect.arrayContaining([
+          expect.stringContaining(errorMessage),
+        ]),
+      }),
+    );
   });
 
   test("optimized blob size is too large", async () => {
+    const errorMessage = "Blob too large";
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
-    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error(errorMessage); });
 
     await main(client, config, svgo);
 
     expect(core.setFailed).toHaveBeenCalledTimes(0);
     expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("Blob could not be created"));
+
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
+      expect.objectContaining({
+        warnings: expect.arrayContaining([
+          expect.stringContaining(errorMessage),
+        ]),
+      }),
+    );
   });
 
 });
