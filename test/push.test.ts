@@ -787,9 +787,8 @@ describe("Error scenarios", () => {
   });
 
   test("blob size is too large", async () => {
-    const errorMessage = "Blob too large";
     github.context.payload.commits = [{ id: COMMIT_SHA.MANY_CHANGES }];
-    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error(errorMessage); });
+    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
 
     await main(client, config, svgo);
 
@@ -808,9 +807,8 @@ describe("Error scenarios", () => {
   });
 
   test("optimized blob size is too large", async () => {
-    const errorMessage = "Blob too large";
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
-    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error(errorMessage); });
+    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
 
     await main(client, config, svgo);
 

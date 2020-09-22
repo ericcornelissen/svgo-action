@@ -854,8 +854,7 @@ describe("Error scenarios", () => {
   });
 
   test("blob size is too large", async () => {
-    const errorMessage = "Blob too large";
-    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error(errorMessage); });
+    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
     await main(client, config, svgo);
@@ -875,8 +874,7 @@ describe("Error scenarios", () => {
   });
 
   test("optimized blob size is too large", async () => {
-    const errorMessage = "Blob too large";
-    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error(errorMessage); });
+    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
 
     await main(client, config, svgo);
