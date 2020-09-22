@@ -24,8 +24,7 @@ async function getSvgsContent(
   client: Octokit,
   svgList: GitFileInfo[],
 ): Promise<{ svgs: FileData[], warnings: string[] }> {
-  const svgs: FileData[] = [];
-  const warnings: string[] = [];
+  const svgs: FileData[] = [], warnings: string[] = [];
   for (const svg of svgList) {
     try {
       core.debug(`fetching file contents of '${svg.path}'`);
@@ -39,9 +38,10 @@ async function getSvgsContent(
         originalEncoding: fileData.encoding,
         path: fileData.path,
       });
-    } catch (err) {
-      core.warning(`SVG content could not be obtained (${err})`);
-      warnings.push(`${svg.path}: ${err}`);
+    } catch (downloadError) {
+      const warningMsg = `SVG content of ${svg.path} could not be obtained`;
+      core.warning(`${warningMsg} (${downloadError})`);
+      warnings.push(warningMsg);
     }
   }
 
@@ -52,8 +52,7 @@ async function toBlobs(
   client: Octokit,
   files: FileData[],
 ): Promise<{ blobs: GitBlob[], warnings: string[] }> {
-  const blobs: GitBlob[] = [];
-  const warnings: string[] = [];
+  const blobs: GitBlob[] = [], warnings: string[] = [];
   for (const file of files) {
     core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
@@ -68,9 +67,10 @@ async function toBlobs(
       );
 
       blobs.push(svgBlob);
-    } catch (err) {
-      core.warning(`Blob could not be created (${err})`);
-      warnings.push(`${file.path}: ${err}`);
+    } catch (uploadError) {
+      const warningMsg = `Blob for ${file.path} could not be created`;
+      core.warning(`${warningMsg} (${uploadError})`);
+      warnings.push(warningMsg);
     }
   }
 

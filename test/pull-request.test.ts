@@ -861,14 +861,14 @@ describe("Error scenarios", () => {
     await main(client, config, svgo);
 
     expect(core.setFailed).toHaveBeenCalledTimes(0);
-    expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("SVG content could not be obtained"));
+    expect(core.warning).toHaveBeenCalledWith(expect.stringMatching("SVG content .*could not be obtained"));
 
     expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       expect.any(String),
       expect.any(String),
       expect.objectContaining({
         warnings: expect.arrayContaining([
-          expect.stringContaining(errorMessage),
+          expect.stringMatching("SVG content .*could not be obtained"),
         ]),
       }),
     );
@@ -882,14 +882,14 @@ describe("Error scenarios", () => {
     await main(client, config, svgo);
 
     expect(core.setFailed).toHaveBeenCalledTimes(0);
-    expect(core.warning).toHaveBeenCalledWith(expect.stringContaining("Blob could not be created"));
+    expect(core.warning).toHaveBeenCalledWith(expect.stringMatching("Blob.* could not be created"));
 
     expect(templating.formatCommitMessage).toHaveBeenCalledWith(
       expect.any(String),
       expect.any(String),
       expect.objectContaining({
         warnings: expect.arrayContaining([
-          expect.stringContaining(errorMessage),
+          expect.stringMatching("Blob.* could not be created"),
         ]),
       }),
     );
