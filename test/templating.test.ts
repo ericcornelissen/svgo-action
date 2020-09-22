@@ -44,6 +44,7 @@ const defaultData: CommitData = {
   optimizedCount: 3,
   skippedCount: 3,
   svgCount: 42,
+  warnings: [],
 };
 
 const templates = {
@@ -87,6 +88,12 @@ const templates = {
     "Optimize some SVGs, considered {{ svgCount }} SVG(s)",
     "foo b{{svgCount}}ar",
     "{{svgCount}}",
+  ],
+  warnings: [
+    "Warnings are {{warnings}}",
+    "Any warnings?: {{ warnings }}",
+    "wa{{warnings }}rn",
+    "{{warnings}}",
   ],
 };
 
@@ -315,6 +322,37 @@ describe("::formatComment", () => {
     expect(result).toEqual(`${svgCount} SVG(s) were considered`);
   });
 
+  test("template using {{warnings}}, no warnings", () => {
+    const data = Object.assign({}, defaultData, { warnings: [] });
+    const templateString = "{{warnings}}";
+
+    const result = formatComment(templateString, data);
+    expect(result).toBeDefined();
+    expect(result).toEqual("");
+  });
+
+  test("template using {{warnings}}, one warnings", () => {
+    const warning = "foo.svg could not be loaded, too big";
+    const data = Object.assign({}, defaultData, { warnings: [warning] });
+    const templateString = "{{warnings}}";
+
+    const result = formatComment(templateString, data);
+    expect(result).toBeDefined();
+    expect(result).toEqual(expect.stringContaining(warning));
+  });
+
+  test("template using {{warnings}}, multiple warnings", () => {
+    const warning1 = "foo.svg could not be loaded, too big";
+    const warning2 = "bar.svg could not be loaded, too big";
+    const data = Object.assign({}, defaultData, { warnings: [warning1, warning2] });
+    const templateString = "{{warnings}}";
+
+    const result = formatComment(templateString, data);
+    expect(result).toBeDefined();
+    expect(result).toEqual(expect.stringContaining(warning1));
+    expect(result).toEqual(expect.stringContaining(warning2));
+  });
+
 });
 
 describe("::formatCommitMessage", () => {
@@ -456,6 +494,14 @@ describe("::formatCommitMessage", () => {
 
       const resultTitle = result.split("\n\n")[0];
       expect(resultTitle).toEqual(`${svgCount} SVG(s) were considered`);
+    });
+
+    test.each(templates.warnings)("ignore '{{warnings}}' in '%s'", (templateString) => {
+      const result = formatCommitMessage(templateString, defaultBodyTemplate, defaultData);
+      expect(result).toBeDefined();
+
+      const resultTitle = result.split("\n\n")[0];
+      expect(resultTitle).toEqual(templateString);
     });
 
   });
@@ -655,6 +701,43 @@ describe("::formatCommitMessage", () => {
 
       const resultBody = result.split("\n\n")[1];
       expect(resultBody).toEqual(`${svgCount} SVG(s) were considered`);
+    });
+
+    test("template using {{warnings}}, no warnings", () => {
+      const data = Object.assign({}, defaultData, { warnings: [] });
+      const templateString = "Any warnings?:\n{{warnings}}";
+
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultBody = result.split("\n\n")[1];
+      expect(resultBody).toEqual("Any warnings?:");
+    });
+
+    test("template using {{warnings}}, one warnings", () => {
+      const warning = "foo.svg could not be loaded, too big";
+      const data = Object.assign({}, defaultData, { warnings: [warning] });
+      const templateString = "{{warnings}}";
+
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultBody = result.split("\n\n")[1];
+      expect(resultBody).toEqual(expect.stringContaining(warning));
+    });
+
+    test("template using {{warnings}}, multiple warnings", () => {
+      const warning1 = "foo.svg could not be loaded, too big";
+      const warning2 = "bar.svg could not be loaded, too big";
+      const data = Object.assign({}, defaultData, { warnings: [warning1, warning2] });
+      const templateString = "{{warnings}}";
+
+      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
+      expect(result).toBeDefined();
+
+      const resultBody = result.split("\n\n")[1];
+      expect(resultBody).toEqual(expect.stringContaining(warning1));
+      expect(resultBody).toEqual(expect.stringContaining(warning2));
     });
 
   });

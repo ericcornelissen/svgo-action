@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add warnings to commit messages and Pull Request comments. ([#258])
 
 ## [1.1.1] - 2020-09-11
 
@@ -163,3 +163,4 @@ Versioning].
 [#247]: https://github.com/ericcornelissen/svgo-action/pull/247
 [#251]: https://github.com/ericcornelissen/svgo-action/pull/251
 [#255]: https://github.com/ericcornelissen/svgo-action/pull/255
+[#258]: https://github.com/ericcornelissen/svgo-action/pull/258

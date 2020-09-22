@@ -16,6 +16,13 @@ SVGs, into these messages.
 | `optimizedCount` | The number of optimized SVGs              | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `skippedCount`   | The number of not-optimized SVGs          | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `svgCount`       | The number of SVGs found in the PR        | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
+| `warnings`       | A list of warnings that occurred          | :x:                | :heavy_check_mark: | :heavy_check_mark: |
+
+It is generally recommended to include `{{warnings}}` in either the commit body
+or Pull Request comment as it will alert you about any unexpected issues that
+occurred during a run. Note that, if there are no issues, `{{warnings}}` will be
+replaced by an empty string. Alternatively, you could rely on GitHub Action Logs
+to inform you about the issues that would be reported by `{{warnings}}`.
 
 ## Examples
 
@@ -33,9 +40,11 @@ commit:
     Details:
     {{fileCount}} file(s) in PR, {{svgCount}} SVG(s),
     {{skippedCount}} SVG(s) already optimized
+
+    {{warnings}}
 ```
 
-This will result in commit messages that look like:
+This will result in commit messages that look like (assuming no warnings):
 
 ```git
 Optimized 3/4 SVG(s)
@@ -59,9 +68,11 @@ comment: |
   {{optimizedCount}} SVG(s) were optimized! Here are some statistics:
 
   {{filesTable}}
+
+  {{warnings}}
 ```
 
-This will result in comment that look like:
+This will result in comment that look like (assuming no warnings):
 
 ---
 

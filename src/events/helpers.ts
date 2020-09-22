@@ -23,8 +23,8 @@ import {
 async function getSvgsContent(
   client: Octokit,
   svgList: GitFileInfo[],
-): Promise<FileData[]> {
-  const svgs: FileData[] = [];
+): Promise<{ svgs: FileData[], warnings: string[] }> {
+  const svgs: FileData[] = [], warnings: string[] = [];
   for (const svg of svgList) {
     try {
       core.debug(`fetching file contents of '${svg.path}'`);
@@ -38,19 +38,21 @@ async function getSvgsContent(
         originalEncoding: fileData.encoding,
         path: fileData.path,
       });
-    } catch (err) {
-      core.warning(`SVG content could not be obtained (${err})`);
+    } catch (downloadError) {
+      const warningMsg = `SVG content of ${svg.path} could not be obtained`;
+      core.warning(`${warningMsg} (${downloadError})`);
+      warnings.push(warningMsg);
     }
   }
 
-  return svgs;
+  return { svgs, warnings };
 }
 
 async function toBlobs(
   client: Octokit,
   files: FileData[],
-): Promise<GitBlob[]> {
-  const blobs: GitBlob[] = [];
+): Promise<{ blobs: GitBlob[], warnings: string[] }> {
+  const blobs: GitBlob[] = [], warnings: string[] = [];
   for (const file of files) {
     core.debug(`encoding (updated) '${file.path}' to ${file.originalEncoding}`);
     const optimizedData: string = encode(file.content, file.originalEncoding);
@@ -65,12 +67,14 @@ async function toBlobs(
       );
 
       blobs.push(svgBlob);
-    } catch (err) {
-      core.warning(`Blob could not be created (${err})`);
+    } catch (uploadError) {
+      const warningMsg = `Blob for ${file.path} could not be created`;
+      core.warning(`${warningMsg} (${uploadError})`);
+      warnings.push(warningMsg);
     }
   }
 
-  return blobs;
+  return { blobs, warnings };
 }
 
 
@@ -78,7 +82,7 @@ export function getCommitData(
   context: ContextData,
   optimizedSvgs: FileData[],
 ): CommitData {
-  const { fileCount, svgs, ignoredCount } = context;
+  const { fileCount, ignoredCount, svgs, warnings } = context;
   return {
     fileCount: fileCount,
     fileData: { optimized: optimizedSvgs, original: svgs },
@@ -86,6 +90,7 @@ export function getCommitData(
     optimizedCount: optimizedSvgs.length,
     skippedCount: svgs.length - optimizedSvgs.length,
     svgCount: svgs.length,
+    warnings: warnings,
   };
 }
 
@@ -103,7 +108,9 @@ export async function doCommit(
   } = commitData;
 
   if (!config.isDryRun && optimized.length > 0) {
-    const blobs: GitBlob[] = await toBlobs(client, optimized);
+    const { blobs, warnings } = await toBlobs(client, optimized);
+    commitData.warnings.push(...warnings);
+
     const commitMessage: string = formatCommitMessage(
       config.commitTitle,
       config.commitBody,
@@ -141,8 +148,8 @@ export async function doFilterSvgsFromFiles(
   const ignoredCount = svgCount - notIgnoredSvgs.length;
   core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
 
-  const svgs: FileData[] = await getSvgsContent(client, notIgnoredSvgs);
-  return { fileCount, ignoredCount, svgs };
+  const { warnings, svgs } = await getSvgsContent(client, notIgnoredSvgs);
+  return { fileCount, ignoredCount, svgs, warnings };
 }
 
 export async function doOptimizeSvgs(

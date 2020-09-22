@@ -23,6 +23,7 @@ export type CommitData = {
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
+  readonly warnings: string[];
 }
 
 // Type representing the context w.r.t. files and SVGs the Action is running in.
@@ -30,6 +31,7 @@ export type ContextData = {
   readonly fileCount: number;
   readonly ignoredCount: number;
   readonly svgs: FileData[];
+  readonly warnings: string[];
 }
 
 // Type representing an Action configuration file.
