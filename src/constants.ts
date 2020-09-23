@@ -23,13 +23,15 @@ export const ENABLE_PATTERN = /enable-svgo-action/;
 export const CONVENTIONAL_COMMIT_TITLE =
   "chore: optimize {{optimizedCount}} SVG(s)";
 export const DEFAULT_COMMIT_BODY =
-  "Optimized SVG(s):\n{{filesList}}";
+  "Optimized SVG(s):\n{{filesList}}\n\n{{warnings}}";
 export const DEFAULT_COMMIT_TITLE =
   "Optimize {{optimizedCount}} SVG(s) with SVGO";
 export const DEFAULT_COMMENT = `
   SVG(s) automatically optimized using [SVGO] :sparkles:
 
   {{filesTable}}
+
+  {{warnings}}
 
   [SVGO]: https://github.com/svg/svgo
 `;

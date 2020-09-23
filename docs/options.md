@@ -204,7 +204,7 @@ The _configuration path_ option can be used to change the location of the
 
 ### Examples
 
-To enable comments by the Action:
+To change where the Action looks for a configuration file:
 
 ```yaml
 # .github/workflows/svgo.yml
@@ -338,7 +338,7 @@ svgo-options: my-svgo-options.yml
 [configuration file]: https://github.com/ericcornelissen/svgo-action#in-another-configuration-file
 [conventional commit]: https://www.conventionalcommits.org/
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
-[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new
+[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
 [the templating documentation]: /docs/templating.md
 [yaml]: https://yaml.org/

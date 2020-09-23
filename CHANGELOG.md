@@ -9,6 +9,11 @@ Versioning].
 
 - _No changes yet_
 
+## [1.1.2] - 2020-09-23
+
+- Add warnings to commit messages and Pull Request comments. ([#258])
+- Fix mistake in configuration path documentation. ([8d8f516])
+
 ## [1.1.1] - 2020-09-11
 
 - Improve options documentation. ([#251])
@@ -163,3 +168,5 @@ Versioning].
 [#247]: https://github.com/ericcornelissen/svgo-action/pull/247
 [#251]: https://github.com/ericcornelissen/svgo-action/pull/251
 [#255]: https://github.com/ericcornelissen/svgo-action/pull/255
+[#258]: https://github.com/ericcornelissen/svgo-action/pull/258
+[8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
