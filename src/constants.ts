@@ -1,6 +1,7 @@
 // Action events
 export const EVENT_PULL_REQUEST = "pull_request";
 export const EVENT_PUSH = "push";
+export const EVENT_SCHEDULE = "schedule";
 
 // Action configuration
 export const INPUT_NAME_COMMENT = "comment";

@@ -10,12 +10,14 @@ import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
 import prsMain from "./mocks/pull-request.mock";
 import pushMain from "./mocks/push.mock";
+import scheduleMain from "./mocks/schedule.mock";
 import * as svgo from "./mocks/svgo.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 jest.mock("../src/events/pull-request", () => prsMain);
 jest.mock("../src/events/push", () => pushMain);
+jest.mock("../src/events/schedule", () => scheduleMain);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
@@ -23,12 +25,13 @@ jest.mock("../src/svgo", () => svgo);
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
+  EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
 } from "../src/constants";
 import main from "../src/main";
 
 
-const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
+const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE];
 
 
 beforeEach(() => {
@@ -36,6 +39,7 @@ beforeEach(() => {
 
   prsMain.mockClear();
   pushMain.mockClear();
+  scheduleMain.mockClear();
 
   svgo.SVGOptimizer.mockClear();
 });
@@ -54,6 +58,13 @@ test("pull_request event", async () => {
   expect(prsMain).toHaveBeenCalledTimes(1);
 });
 
+test("schedule event", async () => {
+  github.context.eventName = EVENT_SCHEDULE;
+
+  await main();
+  expect(scheduleMain).toHaveBeenCalledTimes(1);
+});
+
 test("push event error", async () => {
   github.context.eventName = EVENT_PUSH;
 
@@ -70,6 +81,17 @@ test("pull_request event error", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
 
   prsMain.mockImplementationOnce(() => {
+    throw new Error("Something went wrong");
+  });
+
+  await main();
+  expect(core.setFailed).toHaveBeenCalledTimes(1);
+});
+
+test("schedule event error", async () => {
+  github.context.eventName = EVENT_SCHEDULE;
+
+  scheduleMain.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
