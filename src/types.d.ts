@@ -74,6 +74,14 @@ export type GitFileInfo = {
   readonly status: string;
 }
 
+// Type representing the (relevant) information about an object (file or
+// directory) in git.
+export type GitObjectInfo = {
+  readonly path: string;
+  readonly status: string;
+  readonly type: "file" | "dir";
+}
+
 // Type representing an object from which the Action inputs can be obtained.
 export type Inputs = {
   getInput(name: string, options: InputOptions): string;

@@ -2,8 +2,19 @@ import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 import { GitGetCommitResponseData } from "@octokit/types";
 
-import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
-import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
+import {
+  COMMIT_MODE_FILE,
+  COMMIT_TYPE_BLOB,
+  PR_NOT_FOUND,
+  STATUS_ADDED,
+} from "./constants";
+import {
+  CommitInfo,
+  GitBlob,
+  GitFileData,
+  GitFileInfo,
+  GitObjectInfo,
+} from "./types";
 
 
 type GitCommit = GitGetCommitResponseData;
@@ -26,20 +37,14 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
 }
 
 function getCommitUrl(commitSha: string): string {
-  const API_URL_START = "https://api.github.com/repos/";
-  const SITE_URL_START = "https://github.com/";
-  const API_URL_END = "/commits{/sha}";
-  const SITE_URL_END = "/commit";
+  if (github.context.payload.repository === undefined) {
+    return commitSha;
+  }
 
-  // https://api.github.com/repos/{user}/{repo}/git/commits{/sha}
-  const apiCommitsUrl: string = github.context.payload.repository?.commits_url;
-
-  // https://github.com/{user}/{repo}/git/commits{/sha}
-  const mixedUrl: string = apiCommitsUrl.replace(API_URL_START, SITE_URL_START);
-
+  // https://github.com/{user}/{repo}
+  const baseRepoUrl = github.context.payload.repository?.url;
   // https://github.com/{user}/{repo}/git/commit
-  const baseCommitUrl: string = mixedUrl.replace(API_URL_END, SITE_URL_END);
-
+  const baseCommitUrl = `${baseRepoUrl}/git/commit`;
   // https://github.com/{user}/{repo}/git/commit/{commitSha}
   return `${baseCommitUrl}/${commitSha}`;
 }
@@ -137,6 +142,34 @@ export async function getCommitMessage(
 ): Promise<string> {
   const { message } = await getCommitAt(client, ref);
   return message;
+}
+
+export async function getContent(
+  client: Octokit,
+  path: string,
+): Promise<GitObjectInfo[]> {
+  const { data } = await client.repos.getContent({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    path: path,
+    ref: github.context.sha,
+  });
+
+  return data.map((item) => ({
+    path: item.path,
+    status: STATUS_ADDED,
+    type: item.type,
+  }));
+
+}
+
+export async function getDefaultBranch(client: Octokit): Promise<string> {
+  const { data } = await client.repos.get({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+  });
+
+  return data.default_branch;
 }
 
 export async function getPrComments(
