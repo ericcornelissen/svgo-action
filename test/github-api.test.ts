@@ -20,7 +20,7 @@ import {
   getCommitFiles,
   getCommitMessage,
   getPrComments,
-  getPrFile,
+  getFile,
   getPrFiles,
   getPrNumber,
   getRepoFile,
@@ -317,34 +317,34 @@ describe("::getPrComments", () => {
 
 });
 
-describe("::getPrFile", () => {
+describe("::getFile", () => {
 
   const filePaths: string[] = Object.keys(files).slice(0, 4);
 
   test.each(filePaths)("get an existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getPrFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, filePath);
     expect(fileData).toBeDefined();
   });
 
   test.each(filePaths)("'path' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getPrFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, filePath);
     expect(fileData.path).toBeDefined();
   });
 
   test.each(filePaths)("'content' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getPrFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, filePath);
     expect(fileData.content).toBeDefined();
   });
 
   test.each(filePaths)("'encoding' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getPrFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, filePath);
     expect(fileData.encoding).toBeDefined();
   });
 
   test("file is not found", async () => {
     github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
-    const promise = getPrFile(client, "foobar");
+    const promise = getFile(client, "foobar");
     await expect(promise).rejects.toBeDefined();
   });
 

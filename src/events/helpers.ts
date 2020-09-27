@@ -3,7 +3,7 @@ import { Octokit } from "@octokit/core";
 
 import { decode, encode } from "../encoder";
 import { existingFiles, filesNotMatching, svgFiles } from "../filters";
-import { commitFiles, createBlob, getPrFile } from "../github-api";
+import { commitFiles, createBlob, getFile } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { formatCommitMessage } from "../templating";
@@ -28,7 +28,7 @@ async function getSvgsContent(
   for (const svg of svgList) {
     try {
       core.debug(`fetching file contents of '${svg.path}'`);
-      const fileData: GitFileData = await getPrFile(client, svg.path);
+      const fileData: GitFileData = await getFile(client, svg.path);
 
       core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
       const svgContent: string = decode(fileData.content, fileData.encoding);

@@ -41,7 +41,7 @@ beforeEach(() => {
   githubAPI.commitFiles.mockClear();
   githubAPI.createBlob.mockClear();
   githubAPI.createComment.mockClear();
-  githubAPI.getPrFile.mockClear();
+  githubAPI.getFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
 
@@ -854,7 +854,7 @@ describe("Error scenarios", () => {
   });
 
   test("blob size is too large", async () => {
-    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    githubAPI.getFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
     await main(client, config, svgo);

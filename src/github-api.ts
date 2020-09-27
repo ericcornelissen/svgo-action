@@ -139,6 +139,25 @@ export async function getCommitMessage(
   return message;
 }
 
+export async function getFile(
+  client: Octokit,
+  path: string,
+): Promise<GitFileData> {
+  const fileContents = await client.repos.getContent({
+    owner: github.context.repo.owner,
+    repo: github.context.repo.repo,
+    path: path,
+    ref: github.context.sha,
+  });
+
+  const fileDetails = fileContents.data[0] || fileContents.data;
+  return {
+    content: fileDetails.content,
+    encoding: fileDetails.encoding,
+    path: fileDetails.path,
+  };
+}
+
 export async function getPrComments(
   client: Octokit,
   prNumber: number,
@@ -165,25 +184,6 @@ export async function getPrComments(
   }
 
   return prComments.reverse();
-}
-
-export async function getPrFile(
-  client: Octokit,
-  path: string,
-): Promise<GitFileData> {
-  const fileContents = await client.repos.getContent({
-    owner: github.context.repo.owner,
-    repo: github.context.repo.repo,
-    path: path,
-    ref: github.context.sha,
-  });
-
-  const fileDetails = fileContents.data[0] || fileContents.data;
-  return {
-    content: fileDetails.content,
-    encoding: fileDetails.encoding,
-    path: fileDetails.path,
-  };
 }
 
 export async function getPrFiles(
@@ -215,5 +215,5 @@ export async function getRepoFile(
   client: Octokit,
   path: string,
 ): Promise<GitFileData> {
-  return await getPrFile(client, path);
+  return await getFile(client, path);
 }
