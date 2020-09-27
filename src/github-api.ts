@@ -210,10 +210,3 @@ export function getPrNumber(): number {
 
   return pullRequest.number;
 }
-
-export async function getRepoFile(
-  client: Octokit,
-  path: string,
-): Promise<GitFileData> {
-  return await getFile(client, path);
-}

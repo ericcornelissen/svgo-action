@@ -23,7 +23,6 @@ import {
   getFile,
   getPrFiles,
   getPrNumber,
-  getRepoFile,
 } from "../src/github-api";
 import { GitBlob, GitFileData } from "../src/types";
 
@@ -397,39 +396,6 @@ describe("::getPrNumber", () => {
     expect(actual).toBe(PR_NOT_FOUND);
 
     github.context.payload.pull_request = backup;
-  });
-
-});
-
-describe("::getRepoFile", () => {
-
-  const filePaths: string[] = Object.keys(files).slice(0, 4);
-
-  test.each(filePaths)("return value for an existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getRepoFile(client, filePath);
-    expect(fileData).toBeDefined();
-  });
-
-  test.each(filePaths)("'path' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getRepoFile(client, filePath);
-    expect(fileData.path).toBeDefined();
-  });
-
-  test.each(filePaths)("'content' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getRepoFile(client, filePath);
-    expect(fileData.content).toBeDefined();
-  });
-
-  test.each(filePaths)("'encoding' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getRepoFile(client, filePath);
-    expect(fileData.encoding).toBeDefined();
-  });
-
-  test("throw for non-existent file", async () => {
-    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = getRepoFile(client, "9001");
-    await expect(promise).rejects.toBeDefined();
   });
 
 });
