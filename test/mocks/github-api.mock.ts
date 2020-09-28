@@ -13,7 +13,13 @@ const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 const client = github.getOctokit(token);
 
 async function getContent(path: string): Promise<GitFileData> {
-  const { data } = await client.repos.getContent({ path });
+  const { data } = await client.repos.getContent({
+    owner: "mew",
+    repo: "svg-action",
+    path,
+    ref: "heads/ref",
+  });
+
   return {
     path: data.path,
     content: data.content,
@@ -43,7 +49,12 @@ export const createComment = jest.fn()
 
 export const getCommitFiles = jest.fn()
   .mockImplementation(async (_, sha) => {
-    const { data } = await client.repos.getCommit({ ref: sha });
+    const { data } = await client.repos.getCommit({
+      owner: "mew",
+      repo: "svg-action",
+      ref: sha,
+    });
+
     return data.files.map((details) => ({
       path: details.filename,
       status: details.status,
@@ -66,6 +77,8 @@ export const getPrComments = jest.fn()
 export const getPrFiles = jest.fn()
   .mockImplementation(async (_, prNumber) => {
     const { data } = await client.pulls.listFiles({
+      owner: "mew",
+      repo: "svg-action",
       pull_number: prNumber,
     });
 

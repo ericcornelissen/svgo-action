@@ -14,7 +14,7 @@ const repo = github.context.repo.repo;
 
 async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
   const { data: refData } = await client.git.getRef({ owner, repo, ref });
-  const { data: commit } = await client.git.getCommit({ owner, ref,
+  const { data: commit } = await client.git.getCommit({ owner, repo,
     commit_sha: refData.object.sha,
   });
 
