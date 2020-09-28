@@ -27,15 +27,7 @@ type DirContents = {
   sha: string,
   size: number,
   url: string,
-  html_url: string;
-  git_url: string;
-  download_url: string;
   type: ContentType;
-  _links: {
-    self: string;
-    git: string;
-    html: string;
-  }
 }[];
 
 type FileContents = {
@@ -44,17 +36,9 @@ type FileContents = {
   sha: string;
   size: number;
   url: string;
-  html_url: string;
-  git_url: string;
-  download_url: string;
   type: ContentType;
   content: string
   encoding: string;
-  _links: {
-    self: string;
-    git: string;
-    html: string;
-  }
 }
 
 type GitCommit = GitGetCommitResponseData;
