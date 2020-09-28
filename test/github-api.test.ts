@@ -1,4 +1,4 @@
-import contentPayloads from "./fixtures/contents-payloads.json";
+import { files as contentPayloads } from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
 
 import * as core from "./mocks/@actions/core.mock";
@@ -148,11 +148,11 @@ describe("::commitFiles", () => {
 
 describe("::createBlob", () => {
 
-  const defaultPath = contentPayloads.files["test.svg"].path;
-  const defaultContent = contentPayloads.files["test.svg"].content;
-  const defaultEncoding = contentPayloads.files["test.svg"].encoding;
+  const defaultPath = contentPayloads["test.svg"].path;
+  const defaultContent = contentPayloads["test.svg"].content;
+  const defaultEncoding = contentPayloads["test.svg"].encoding;
 
-  const variousBlobs = Object.values(contentPayloads.files)
+  const variousBlobs = Object.values(contentPayloads)
     .map(({ path, content, encoding }) => [path, content, encoding])
     .slice(0, 4);
 
