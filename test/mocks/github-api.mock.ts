@@ -55,13 +55,13 @@ export const getCommitMessage = jest.fn()
   .mockResolvedValue("This is a commit message")
   .mockName("github-api.getCommitMessage");
 
-export const getPrComments = jest.fn()
-  .mockResolvedValue([])
-  .mockName("github-api.getPrComment");
-
 export const getFile = jest.fn()
   .mockImplementation(async (_, path) => await getContent(path))
   .mockName("github-api.getFile");
+
+export const getPrComments = jest.fn()
+  .mockResolvedValue([])
+  .mockName("github-api.getPrComment");
 
 export const getPrFiles = jest.fn()
   .mockImplementation(async (_, prNumber) => {
