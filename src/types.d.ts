@@ -79,7 +79,7 @@ export type GitFileInfo = {
 export type GitObjectInfo = {
   readonly path: string;
   readonly status: string;
-  readonly type: "file" | "dir";
+  readonly type: string;
 }
 
 // Type representing an object from which the Action inputs can be obtained.

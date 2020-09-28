@@ -1,6 +1,9 @@
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
-import { GitGetCommitResponseData } from "@octokit/types";
+import {
+  GitGetCommitResponseData,
+  ReposGetContentResponseData,
+} from "@octokit/types";
 
 import {
   COMMIT_MODE_FILE,
@@ -17,31 +20,13 @@ import {
 } from "./types";
 
 
-type Contents = FileContents | DirContents;
+type DirContents = ReposGetContentResponseData[];
 
-type ContentType = "dir" | "file";
-
-type DirContents = {
-  name: string,
-  path: string,
-  sha: string,
-  size: number,
-  url: string,
-  type: ContentType;
-}[];
-
-type FileContents = {
-  name: string;
-  path: string;
-  sha: string;
-  size: number;
-  url: string;
-  type: ContentType;
-  content: string
-  encoding: string;
-}
+type FileContents = ReposGetContentResponseData;
 
 type GitCommit = GitGetCommitResponseData;
+
+type RepoContents = FileContents | DirContents;
 
 
 const owner = github.context.repo.owner;
@@ -56,7 +41,10 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
   return commit;
 }
 
-async function getContents(client: Octokit, path: string): Promise<Contents> {
+async function getContents(
+  client: Octokit,
+  path: string,
+): Promise<RepoContents> {
   const { data } = await client.repos.getContent({ owner, repo, path,
     ref: github.context.sha,
   });
