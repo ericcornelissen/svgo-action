@@ -57,11 +57,11 @@ export const getCommitMessage = jest.fn()
 
 export const getPrComments = jest.fn()
   .mockResolvedValue([])
-  .mockName("github-api.getPrFile");
+  .mockName("github-api.getPrComment");
 
-export const getPrFile = jest.fn()
+export const getFile = jest.fn()
   .mockImplementation(async (_, path) => await getContent(path))
-  .mockName("github-api.getPrFile");
+  .mockName("github-api.getFile");
 
 export const getPrFiles = jest.fn()
   .mockImplementation(async (_, prNumber) => {
@@ -79,7 +79,3 @@ export const getPrFiles = jest.fn()
 export const getPrNumber = jest.fn()
   .mockReturnValue(github.PR_NUMBER.NO_CHANGES)
   .mockName("github-api.getPrNumber");
-
-export const getRepoFile = jest.fn()
-  .mockImplementation(async (_, path) => await getContent(path))
-  .mockName("github-api.getPrFile");
