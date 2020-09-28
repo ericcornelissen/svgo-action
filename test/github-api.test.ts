@@ -19,12 +19,14 @@ import {
   createComment,
   getCommitFiles,
   getCommitMessage,
-  getPrComments,
+  getContent,
+  getDefaultBranch,
   getFile,
+  getPrComments,
   getPrFiles,
   getPrNumber,
 } from "../src/github-api";
-import { GitBlob, GitFileData } from "../src/types";
+import { GitBlob, GitFileData, GitObjectInfo } from "../src/types";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
@@ -146,11 +148,11 @@ describe("::commitFiles", () => {
 
 describe("::createBlob", () => {
 
-  const defaultPath = contentPayloads["test.svg"].path;
-  const defaultContent = contentPayloads["test.svg"].content;
-  const defaultEncoding = contentPayloads["test.svg"].encoding;
+  const defaultPath = contentPayloads.files["test.svg"].path;
+  const defaultContent = contentPayloads.files["test.svg"].content;
+  const defaultEncoding = contentPayloads.files["test.svg"].encoding;
 
-  const variousBlobs = Object.values(contentPayloads)
+  const variousBlobs = Object.values(contentPayloads.files)
     .map(({ path, content, encoding }) => [path, content, encoding])
     .slice(0, 4);
 
@@ -272,36 +274,60 @@ describe("::getCommitMessage", () => {
 
 });
 
-describe("::getPrComments", () => {
+describe("::getContent", () => {
 
-  test("no comments", async () => {
-    const result = await getPrComments(client, github.PR_NUMBER.NO_COMMENTS);
-    expect(result).toHaveLength(0);
+  const defaultDir = "/";
+
+  test("get an existing directory", async () => {
+    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    expect(items).toBeDefined();
   });
 
-  test("1 comment", async () => {
-    const result = await getPrComments(client, github.PR_NUMBER.ONE_COMMENT);
-    expect(result).toHaveLength(1);
+  test("'path' is defined for each item", async () => {
+    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    expect(items).toBeDefined();
+
+    for (const item of items) {
+      expect(item.path).toBeDefined();
+    }
   });
 
-  test("10 comments", async () => {
-    const result = await getPrComments(client, github.PR_NUMBER.TEN_COMMENTS);
-    expect(result).toHaveLength(10);
+  test("'status' is defined for each item", async () => {
+    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    expect(items).toBeDefined();
+
+    for (const item of items) {
+      expect(item.status).toBeDefined();
+    }
   });
 
-  test("11 comments", async () => {
-    const result = await getPrComments(client, github.PR_NUMBER.ELEVEN_COMMENTS);
-    expect(result).toHaveLength(11);
+  test("'type' is defined for each item", async () => {
+    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    expect(items).toBeDefined();
+
+    for (const item of items) {
+      expect(item.type).toBeDefined();
+    }
   });
 
-  test("17 comments", async () => {
-    const result = await getPrComments(client, github.PR_NUMBER.SEVENTEEN_COMMENTS);
-    expect(result).toHaveLength(17);
+  test("directory is not found", async () => {
+    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getContent(client, "foobar");
+    await expect(promise).rejects.toBeDefined();
   });
 
-  test("103 comments", async () => {
-    const result = await getPrComments(client, github.PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS);
-    expect(result).toHaveLength(103);
+});
+
+describe("::getDefaultBranch", () => {
+
+  const names: string[] = ["main", "develop", "some-other-branch"];
+
+  test.each(names)("returns the repositories default_branch (%s)", async (name) => {
+    github.GitHubInstance.repos.get.mockResolvedValueOnce({ data: { default_branch: name } });
+
+    const defaultBranch: string = await getDefaultBranch(client);
+    expect(defaultBranch).toBe(name);
   });
 
 });
@@ -335,6 +361,40 @@ describe("::getFile", () => {
 
     const promise = getFile(client, "foobar");
     await expect(promise).rejects.toBeDefined();
+  });
+
+});
+
+describe("::getPrComments", () => {
+
+  test("no comments", async () => {
+    const result = await getPrComments(client, github.PR_NUMBER.NO_COMMENTS);
+    expect(result).toHaveLength(0);
+  });
+
+  test("1 comment", async () => {
+    const result = await getPrComments(client, github.PR_NUMBER.ONE_COMMENT);
+    expect(result).toHaveLength(1);
+  });
+
+  test("10 comments", async () => {
+    const result = await getPrComments(client, github.PR_NUMBER.TEN_COMMENTS);
+    expect(result).toHaveLength(10);
+  });
+
+  test("11 comments", async () => {
+    const result = await getPrComments(client, github.PR_NUMBER.ELEVEN_COMMENTS);
+    expect(result).toHaveLength(11);
+  });
+
+  test("17 comments", async () => {
+    const result = await getPrComments(client, github.PR_NUMBER.SEVENTEEN_COMMENTS);
+    expect(result).toHaveLength(17);
+  });
+
+  test("103 comments", async () => {
+    const result = await getPrComments(client, github.PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS);
+    expect(result).toHaveLength(103);
   });
 
 });

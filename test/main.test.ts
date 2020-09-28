@@ -1,7 +1,7 @@
 import { when } from "jest-when";
 
 import actionOptions from "./fixtures/svgo-action.json";
-import contentPayloads from "./fixtures/contents-payloads.json";
+import { files as contentPayloads } from "./fixtures/contents-payloads.json";
 import svgoOptions from "./fixtures/svgo-options.json";
 
 import * as core from "./mocks/@actions/core.mock";

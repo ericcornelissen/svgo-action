@@ -1,6 +1,6 @@
 import { format as strFormat } from "util";
 
-import contentPayloads from "./fixtures/contents-payloads.json";
+import { files as contentPayloads } from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
 
 import * as core from "./mocks/@actions/core.mock";

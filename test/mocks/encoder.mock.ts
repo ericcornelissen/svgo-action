@@ -1,4 +1,4 @@
-import contentPayloads from "../fixtures/contents-payloads.json";
+import { files as contentPayloads } from "../fixtures/contents-payloads.json";
 import files from "../fixtures/file-data.json";
 import optimizations from "../fixtures/optimizations.json";
 

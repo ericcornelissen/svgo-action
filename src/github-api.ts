@@ -17,6 +17,46 @@ import {
 } from "./types";
 
 
+type Contents = FileContents | DirContents;
+
+type ContentType = "dir" | "file";
+
+type DirContents = {
+  name: string,
+  path: string,
+  sha: string,
+  size: number,
+  url: string,
+  html_url: string;
+  git_url: string;
+  download_url: string;
+  type: ContentType;
+  _links: {
+    self: string;
+    git: string;
+    html: string;
+  }
+}[];
+
+type FileContents = {
+  name: string;
+  path: string;
+  sha: string;
+  size: number;
+  url: string;
+  html_url: string;
+  git_url: string;
+  download_url: string;
+  type: ContentType;
+  content: string
+  encoding: string;
+  _links: {
+    self: string;
+    git: string;
+    html: string;
+  }
+}
+
 type GitCommit = GitGetCommitResponseData;
 
 
@@ -30,6 +70,14 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
   });
 
   return commit;
+}
+
+async function getContents(client: Octokit, path: string): Promise<Contents> {
+  const { data } = await client.repos.getContent({ owner, repo, path,
+    ref: github.context.sha,
+  });
+
+  return data;
 }
 
 
@@ -118,10 +166,7 @@ export async function getContent(
   client: Octokit,
   path: string,
 ): Promise<GitObjectInfo[]> {
-  const { data } = await client.repos.getContent({ owner, repo, path,
-    ref: github.context.sha,
-  });
-
+  const data = await getContents(client, path) as DirContents;
   return data.map((item) => ({
     path: item.path,
     status: STATUS_ADDED,
@@ -139,11 +184,7 @@ export async function getFile(
   client: Octokit,
   path: string,
 ): Promise<GitFileData> {
-  const fileContents = await client.repos.getContent({ owner, repo, path,
-    ref: github.context.sha,
-  });
-
-  const fileDetails = fileContents.data[0] || fileContents.data;
+  const fileDetails = await getContents(client, path) as FileContents;
   return {
     content: fileDetails.content,
     encoding: fileDetails.encoding,

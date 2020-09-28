@@ -264,6 +264,11 @@ export const GitHubInstance = {
       .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
+    get: jest.fn()
+      .mockImplementation(async () => {
+        return { data: { default_branch: "main" } };
+      })
+      .mockName("GitHub.repos.get"),
     getCommit: jest.fn()
       .mockImplementation(async ({ ref }) => {
         return { data: commitPayloads[ref] };
@@ -271,7 +276,8 @@ export const GitHubInstance = {
       .mockName("GitHub.repos.getCommit"),
     getContent: jest.fn()
       .mockImplementation(async ({ path }) => {
-        return { data: contentPayloads[path] };
+        const data = contentPayloads.files[path] || contentPayloads.contents[path];
+        return { data };
       })
       .mockName("GitHub.repos.getContent"),
   },
