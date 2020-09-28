@@ -142,16 +142,6 @@ describe("::commitFiles", () => {
     await expect(promise).rejects.toBeDefined();
   });
 
-  test("the 'repository' is missing from context payload", async () => {
-    const backup = github.context.payload.repository;
-    delete github.context.payload.repository;
-
-    const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    await expect(promise).rejects.toBeDefined();
-
-    github.context.payload.repository = backup;
-  });
-
 });
 
 describe("::createBlob", () => {

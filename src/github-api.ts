@@ -21,25 +21,6 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
   return commit;
 }
 
-function getCommitUrl(commitSha: string): string {
-  const API_URL_START = "https://api.github.com/repos/";
-  const SITE_URL_START = "https://github.com/";
-  const API_URL_END = "/commits{/sha}";
-  const SITE_URL_END = "/commit";
-
-  // https://api.github.com/repos/{user}/{repo}/git/commits{/sha}
-  const apiCommitsUrl: string = github.context.payload.repository?.commits_url;
-
-  // https://github.com/{user}/{repo}/git/commits{/sha}
-  const mixedUrl: string = apiCommitsUrl.replace(API_URL_START, SITE_URL_START);
-
-  // https://github.com/{user}/{repo}/git/commit
-  const baseCommitUrl: string = mixedUrl.replace(API_URL_END, SITE_URL_END);
-
-  // https://github.com/{user}/{repo}/git/commit/{commitSha}
-  return `${baseCommitUrl}/${commitSha}`;
-}
-
 
 export async function commitFiles(
   client: Octokit,
@@ -66,7 +47,7 @@ export async function commitFiles(
 
   return {
     sha: result.object.sha,
-    url: getCommitUrl(result.object.sha),
+    url: `https://github.com/${owner}/${repo}/git/commit/${result.object.sha}`,
   };
 }
 
