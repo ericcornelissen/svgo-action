@@ -1,7 +1,7 @@
 import { when } from "jest-when";
 
 import actionOptions from "./fixtures/svgo-action.json";
-import { files as contentPayloads } from "./fixtures/contents-payloads.json";
+import contentPayloads from "./fixtures/contents-payloads.json";
 import svgoOptions from "./fixtures/svgo-options.json";
 
 import * as core from "./mocks/@actions/core.mock";
@@ -138,7 +138,7 @@ test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (
   const { svgoOptionsPath } = new inputs.ActionConfig();
   when(githubAPI.getFile)
     .calledWith(github.GitHubInstance, svgoOptionsPath)
-    .mockResolvedValueOnce(contentPayloads[".svgo.yml"]);
+    .mockResolvedValueOnce(contentPayloads.files[".svgo.yml"]);
 
   await main();
 

@@ -1,11 +1,11 @@
-import { files as contentPayloads } from "../fixtures/contents-payloads.json";
+import contentPayloads from "../fixtures/contents-payloads.json";
 import files from "../fixtures/file-data.json";
 import optimizations from "../fixtures/optimizations.json";
 
 
 export const decode = jest.fn()
   .mockImplementation((data, encoding) => {
-    for (const [filename, payload] of Object.entries(contentPayloads)) {
+    for (const [filename, payload] of Object.entries(contentPayloads.files)) {
       if (payload.content === data && payload.encoding === encoding) {
         return files[filename];
       }
@@ -17,7 +17,7 @@ export const encode = jest.fn()
   .mockImplementation((data, _) => {
     for (const [filename, svg] of Object.entries(files)) {
       if (svg === data) {
-        return contentPayloads[filename].content;
+        return contentPayloads.files[filename].content;
       }
     }
 
