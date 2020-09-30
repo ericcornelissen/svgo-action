@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 
+import { OBJECT_TYPE_DIR, OBJECT_TYPE_FILE } from "../constants";
 import { getContent, getDefaultBranch } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
@@ -12,9 +13,6 @@ import {
   doOptimizeSvgs,
 } from "./common";
 
-
-const OBJECT_TYPE_DIR = "dir";
-const OBJECT_TYPE_FILE = "file";
 
 function dirObject(objectInfo: GitObjectInfo): boolean {
   return objectInfo.type === OBJECT_TYPE_DIR;

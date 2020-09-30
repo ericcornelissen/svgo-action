@@ -1,18 +1,18 @@
-import * as core from "./@actions/core.mock";
 import * as github from "./@actions/github.mock";
 
 import {
   COMMIT_MODE_FILE,
   COMMIT_TYPE_BLOB,
-  INPUT_NAME_REPO_TOKEN,
+  STATUS_ADDED,
 } from "../../src/constants";
-import { GitFileData } from "../../src/types";
+import { GitFileData, GitObjectInfo } from "../../src/types";
+import { Octokit } from "@octokit/core";
 
 
-const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
-const client = github.getOctokit(token);
-
-async function getContent(path: string): Promise<GitFileData> {
+async function _getContent(
+  client: Octokit,
+  path: string,
+): Promise<GitFileData | GitObjectInfo[]> {
   const { data } = await client.repos.getContent({
     owner: "mew",
     repo: "svg-action",
@@ -20,11 +20,19 @@ async function getContent(path: string): Promise<GitFileData> {
     ref: "heads/ref",
   });
 
-  return {
-    path: data.path,
-    content: data.content,
-    encoding: data.encoding,
-  };
+  if (Array.isArray(data)) {
+    return data.map((item) => ({
+      path: item.path,
+      status: STATUS_ADDED,
+      type: item.type,
+    }));
+  } else {
+    return {
+      path: data.path,
+      content: data.content,
+      encoding: data.encoding,
+    };
+  }
 }
 
 
@@ -48,7 +56,7 @@ export const createComment = jest.fn()
   .mockName("github-api.createComment");
 
 export const getCommitFiles = jest.fn()
-  .mockImplementation(async (_, sha) => {
+  .mockImplementation(async (client, sha) => {
     const { data } = await client.repos.getCommit({
       owner: "mew",
       repo: "svg-action",
@@ -66,8 +74,16 @@ export const getCommitMessage = jest.fn()
   .mockResolvedValue("This is a commit message")
   .mockName("github-api.getCommitMessage");
 
+export const getContent = jest.fn()
+  .mockImplementation(_getContent)
+  .mockName("github-api.getContent");
+
+export const getDefaultBranch = jest.fn()
+  .mockReturnValue("main")
+  .mockName("github-api.getDefaultBranch");
+
 export const getFile = jest.fn()
-  .mockImplementation(async (_, path) => await getContent(path))
+  .mockImplementation(_getContent)
   .mockName("github-api.getFile");
 
 export const getPrComments = jest.fn()
@@ -75,7 +91,7 @@ export const getPrComments = jest.fn()
   .mockName("github-api.getPrComment");
 
 export const getPrFiles = jest.fn()
-  .mockImplementation(async (_, prNumber) => {
+  .mockImplementation(async (client, prNumber) => {
     const { data } = await client.pulls.listFiles({
       owner: "mew",
       repo: "svg-action",

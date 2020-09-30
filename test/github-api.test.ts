@@ -276,7 +276,7 @@ describe("::getCommitMessage", () => {
 
 describe("::getContent", () => {
 
-  const defaultDir = "/";
+  const defaultDir = "";
 
   test("get an existing directory", async () => {
     const items: GitObjectInfo[] = await getContent(client, defaultDir);
