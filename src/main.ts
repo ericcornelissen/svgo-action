@@ -33,13 +33,12 @@ async function run(
 ): Promise<void> {
   try {
     const event = github.context.eventName;
+    core.info(`Running SVGO Action in '${event}' context`);
     switch (event) {
       case EVENT_PULL_REQUEST:
-        core.info("Running SVGO Action in Pull Request context");
         await prEventMain(client, config, svgo);
         break;
       case EVENT_PUSH:
-        core.info("Running SVGO Action in push context");
         await pushEventMain(client, config, svgo);
         break;
       default:
