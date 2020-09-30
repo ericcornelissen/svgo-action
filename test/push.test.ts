@@ -788,7 +788,7 @@ describe("Error scenarios", () => {
 
   test("blob size is too large", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.MANY_CHANGES }];
-    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    githubAPI.getFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
 
     await main(client, config, svgo);
 

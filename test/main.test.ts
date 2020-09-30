@@ -115,7 +115,7 @@ test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (
   github.context.eventName = eventName;
 
   const { svgoOptionsPath } = new inputs.ActionConfig();
-  when(githubAPI.getRepoFile)
+  when(githubAPI.getFile)
     .calledWith(github.GitHubInstance, svgoOptionsPath)
     .mockResolvedValueOnce(contentPayloads[".svgo.yml"]);
 
@@ -128,7 +128,7 @@ test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async
   github.context.eventName = eventName;
 
   const actionConfigPath = core.getInput(INPUT_NAME_CONFIG_PATH);
-  when(githubAPI.getRepoFile)
+  when(githubAPI.getFile)
     .calledWith(github.GitHubInstance, actionConfigPath)
     .mockRejectedValueOnce(new Error("Not found"));
 
@@ -142,7 +142,7 @@ test.each(ALL_EVENTS)("the SVGO options file does not exist (%s)", async (eventN
   github.context.eventName = eventName;
 
   const { svgoOptionsPath } = new inputs.ActionConfig();
-  when(githubAPI.getRepoFile)
+  when(githubAPI.getFile)
     .calledWith(github.GitHubInstance, svgoOptionsPath)
     .mockRejectedValueOnce(new Error("Not found"));
 
