@@ -10,7 +10,7 @@ import {
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
-} from "./helpers";
+} from "./common";
 
 
 const OBJECT_TYPE_DIR = "dir";
