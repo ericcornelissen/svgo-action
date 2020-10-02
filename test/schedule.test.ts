@@ -23,6 +23,64 @@ import {
 import main from "../src/events/schedule";
 
 
+function mockGetContentsForFiles(files: string[]) {
+  const divider = "/";
+  const root = "";
+  const repo = {};
+  repo[root] = { data: [] };
+
+  for (const file of files) {
+    const parts = file.split(divider);
+
+    // Add file's first part to the root of the repo
+    const first = parts[0];
+    if (parts.length === 1) {
+      repo[root].data.push({
+        path: file,
+        status: STATUS_ADDED,
+        type: GIT_OBJECT_TYPE_FILE,
+      });
+    } else if (repo[root].data.findIndex(({ path }) => path === first) === -1) {
+      repo[root].data.push({
+        path: first,
+        status: STATUS_ADDED,
+        type: GIT_OBJECT_TYPE_DIR,
+      });
+    }
+
+    // Add every directory leading up to the file to the repo.
+    parts.slice(0, -1).forEach((_, index) => {
+      const path = parts.slice(0, index + 1).join(divider);
+      if (repo[path] === undefined) {
+        repo[path] = { data: [] };
+      }
+
+      const childPath = parts.slice(0, index + 2).join(divider);
+      if (index < parts.length - 2) {
+        repo[path].data.push({
+          path: childPath,
+          status: STATUS_ADDED,
+          type: GIT_OBJECT_TYPE_DIR,
+        });
+      } else if (repo[path].data.findIndex(({ path }) => path === childPath) === -1) {
+        repo[path].data.push({
+          path: childPath,
+          status: STATUS_ADDED,
+          type: GIT_OBJECT_TYPE_FILE,
+        });
+      }
+    });
+
+    // Add th file itself to the repo.
+    const fileName: string = parts.pop() as string;
+    let fileDir = parts.join(divider);
+    if (parts.length > 0) fileDir += divider;
+    repo[`${fileDir}${fileName}`] = { data: contentPayloads.files[fileName] };
+  }
+
+  return ({ path }) => repo[path];
+}
+
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 const client = github.getOctokit(token);
 const config = new inputs.ActionConfig();
@@ -57,15 +115,8 @@ describe("Logging", () => {
   });
 
   test("summary for commits with 1 optimized SVG", async () => {
-    client.repos.getContent.mockImplementationOnce(({ path }) => {
-      return{
-        "": {
-          data: [
-            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-      }[path];
-    });
+    const getContentsMock = mockGetContentsForFiles(["bar.svg"]);
+    client.repos.getContent.mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1/1 SVG(s)"));
@@ -73,15 +124,8 @@ describe("Logging", () => {
   });
 
   test("summary for commits with 1 skipped SVG", async () => {
-    client.repos.getContent.mockImplementationOnce(({ path }) => {
-      return {
-        "": {
-          data: [
-            { path: "optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-      }[path];
-    });
+    const getContentsMock = mockGetContentsForFiles(["optimized.svg"]);
+    client.repos.getContent.mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0/1 SVG(s)"));
@@ -89,31 +133,12 @@ describe("Logging", () => {
   });
 
   test("summary for commits with many changes", async () => {
-    client.repos.getContent.mockImplementation(({ path }) => {
-      return {
-        "": {
-          data: [
-            { path: "dir", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_DIR },
-            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-        "dir": {
-          data: [
-            { path: "dir/bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-            { path: "dir/optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-        "foo.svg": {
-          data: contentPayloads.files["foo.svg"],
-        },
-        "dir/bar.svg": {
-          data: contentPayloads.files["bar.svg"],
-        },
-        "dir/optimized.svg": {
-          data: contentPayloads.files["optimized.svg"],
-        },
-      }[path];
-    });
+    const getContentsMock = mockGetContentsForFiles([
+      "foo.svg",
+      "dir/bar.svg",
+      "dir/optimized.svg",
+    ]);
+    client.repos.getContent.mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 2/3 SVG(s)"));
@@ -203,31 +228,12 @@ describe("Configuration", () => {
     const fileContent = contentPayloads.files["foo.svg"].content;
     const fileEncoding = contentPayloads.files["foo.svg"].encoding;
 
-    client.repos.getContent.mockImplementation(({ path }) => {
-      return {
-        "": {
-          data: [
-            { path: "dir", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_DIR },
-            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-        "dir": {
-          data: [
-            { path: "dir/bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-            { path: "dir/optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-        "foo.svg": {
-          data: contentPayloads.files["foo.svg"],
-        },
-        "dir/bar.svg": {
-          data: contentPayloads.files["bar.svg"],
-        },
-        "dir/optimized.svg": {
-          data: contentPayloads.files["optimized.svg"],
-        },
-      }[path];
-    });
+    const getContentsMock = mockGetContentsForFiles([
+      "foo.svg",
+      "dir/bar.svg",
+      "dir/optimized.svg",
+    ]);
+    client.repos.getContent.mockImplementation(getContentsMock);
 
     const actionConfig = new inputs.ActionConfig();
     actionConfig.ignoreGlob = "dir/*";
@@ -254,18 +260,8 @@ describe("Error scenarios", () => {
   });
 
   test("an SVG file that does not contain SVG content", async () => {
-    client.repos.getContent.mockImplementation(({ path }) => {
-      return {
-        "": {
-          data: [
-            { path: "fake.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-        "fake.svg": {
-          data: contentPayloads.files["fake.svg"],
-        },
-      }[path];
-    });
+    const getContentsMock = mockGetContentsForFiles(["fake.svg"]);
+    client.repos.getContent.mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -278,22 +274,8 @@ describe("Error scenarios", () => {
   });
 
   test("blob size is too large", async () => {
-    client.repos.getContent.mockImplementation(({ path }) => {
-      return {
-        "": {
-          data: [
-            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-        "foo.svg": {
-          data: contentPayloads.files["foo.svg"],
-        },
-        "bar.svg": {
-          data: contentPayloads.files["bar.svg"],
-        },
-      }[path];
-    });
+    const getContentsMock = mockGetContentsForFiles(["foo.svg", "bar.svg"]);
+    client.repos.getContent.mockImplementation(getContentsMock);
 
     githubAPI.getFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
 
@@ -314,22 +296,8 @@ describe("Error scenarios", () => {
   });
 
   test("optimized blob size is too large", async () => {
-    client.repos.getContent.mockImplementation(({ path }) => {
-      return {
-        "": {
-          data: [
-            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-          ],
-        },
-        "foo.svg": {
-          data: contentPayloads.files["foo.svg"],
-        },
-        "bar.svg": {
-          data: contentPayloads.files["bar.svg"],
-        },
-      }[path];
-    });
+    const getContentsMock = mockGetContentsForFiles(["foo.svg", "bar.svg"]);
+    client.repos.getContent.mockImplementation(getContentsMock);
 
     githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
 
