@@ -12,12 +12,11 @@ jest.mock("../src/github-api", () => githubAPI);
 
 import {
   INPUT_NAME_REPO_TOKEN,
-  OBJECT_TYPE_DIR,
-  OBJECT_TYPE_FILE,
+  GIT_OBJECT_TYPE_DIR,
+  GIT_OBJECT_TYPE_FILE,
   STATUS_ADDED,
 } from "../src/constants";
 import main from "../src/events/schedule";
-
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
@@ -25,8 +24,8 @@ const client = github.getOctokit(token);
 const config = new inputs.ActionConfig();
 const svgo = new svgoImport.SVGOptimizer();
 
-
 const getContentMockBackup = client.repos.getContent;
+
 
 beforeEach(() => {
   core.debug.mockClear();
@@ -41,10 +40,6 @@ beforeEach(() => {
   svgoImport.OptimizerInstance.optimize.mockClear();
 });
 
-afterEach(() => {
-  client.repos.getContent = getContentMockBackup;
-});
-
 describe("Logging", () => {
 
   test("does some debug logging", async () => {
@@ -57,7 +52,7 @@ describe("Logging", () => {
       return{
         "": {
           data: [
-            { path: "bar.svg", status: STATUS_ADDED, type: OBJECT_TYPE_FILE },
+            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
           ],
         },
       }[path];
@@ -73,7 +68,7 @@ describe("Logging", () => {
       return {
         "": {
           data: [
-            { path: "optimized.svg", status: STATUS_ADDED, type: OBJECT_TYPE_FILE },
+            { path: "optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
           ],
         },
       }[path];
@@ -89,14 +84,14 @@ describe("Logging", () => {
       return {
         "": {
           data: [
-            { path: "dir", status: STATUS_ADDED, type: OBJECT_TYPE_DIR },
-            { path: "foo.svg", status: STATUS_ADDED, type: OBJECT_TYPE_FILE },
+            { path: "dir", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_DIR },
+            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
           ],
         },
         "dir": {
           data: [
-            { path: "bar.svg", status: STATUS_ADDED, type: OBJECT_TYPE_FILE },
-            { path: "optimized.svg", status: STATUS_ADDED, type: OBJECT_TYPE_FILE },
+            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+            { path: "optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
           ],
         },
         "foo.svg": {
@@ -126,4 +121,8 @@ describe("Logging", () => {
     expect(core.setFailed).not.toHaveBeenCalled();
   });
 
+});
+
+afterEach(() => {
+  client.repos.getContent = getContentMockBackup;
 });

@@ -144,7 +144,6 @@ export async function getContent(
     status: STATUS_ADDED,
     type: item.type,
   }));
-
 }
 
 export async function getDefaultBranch(client: Octokit): Promise<string> {

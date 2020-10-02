@@ -1,7 +1,7 @@
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 
-import { OBJECT_TYPE_DIR, OBJECT_TYPE_FILE } from "../constants";
+import { GIT_OBJECT_TYPE_DIR, GIT_OBJECT_TYPE_FILE } from "../constants";
 import { getContent, getDefaultBranch } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
@@ -15,11 +15,11 @@ import {
 
 
 function dirObject(objectInfo: GitObjectInfo): boolean {
-  return objectInfo.type === OBJECT_TYPE_DIR;
+  return objectInfo.type === GIT_OBJECT_TYPE_DIR;
 }
 
 function fileObject(objectInfo: GitObjectInfo): boolean {
-  return objectInfo.type === OBJECT_TYPE_FILE;
+  return objectInfo.type === GIT_OBJECT_TYPE_FILE;
 }
 
 async function getHeadRef(client: Octokit): Promise<string> {

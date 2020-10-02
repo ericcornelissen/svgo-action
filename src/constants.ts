@@ -45,8 +45,8 @@ export const UTF8 = "utf-8";
 export const COMMIT_MODE_FILE = "100644";
 export const COMMIT_TYPE_BLOB = "blob";
 
-export const OBJECT_TYPE_DIR = "dir";
-export const OBJECT_TYPE_FILE = "file";
+export const GIT_OBJECT_TYPE_DIR = "dir";
+export const GIT_OBJECT_TYPE_FILE = "file";
 
 export const STATUS_ADDED = "added";
 export const STATUS_MODIFIED = "modified";
