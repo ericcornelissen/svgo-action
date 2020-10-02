@@ -42,6 +42,8 @@ beforeEach(() => {
   githubAPI.createBlob.mockClear();
 
   svgoImport.OptimizerInstance.optimize.mockClear();
+
+  templating.formatCommitMessage.mockClear();
 });
 
 describe("Logging", () => {
