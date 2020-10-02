@@ -2,13 +2,17 @@ import contentPayloads from "./fixtures/contents-payloads.json";
 
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
+import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
 import * as svgoImport from "./mocks/svgo.mock";
+import * as templating from "./mocks/templating.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
+jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
+jest.mock("../src/templating", () => templating);
 
 import {
   INPUT_NAME_REPO_TOKEN,
@@ -34,10 +38,15 @@ beforeEach(() => {
   core.setFailed.mockClear();
   core.warning.mockClear();
 
+  encoder.decode.mockClear();
+  encoder.encode.mockClear();
+
   githubAPI.commitFiles.mockClear();
   githubAPI.createBlob.mockClear();
 
   svgoImport.OptimizerInstance.optimize.mockClear();
+
+  templating.formatCommitMessage.mockClear();
 });
 
 describe("Logging", () => {
@@ -90,17 +99,17 @@ describe("Logging", () => {
         },
         "dir": {
           data: [
-            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
-            { path: "optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+            { path: "dir/bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+            { path: "dir/optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
           ],
         },
         "foo.svg": {
           data: contentPayloads.files["foo.svg"],
         },
-        "bar.svg": {
+        "dir/bar.svg": {
           data: contentPayloads.files["bar.svg"],
         },
-        "optimized.svg": {
+        "dir/optimized.svg": {
           data: contentPayloads.files["optimized.svg"],
         },
       }[path];
@@ -119,6 +128,225 @@ describe("Logging", () => {
   test("don't set a failed state when everything is fine", async () => {
     await main(client, config, svgo);
     expect(core.setFailed).not.toHaveBeenCalled();
+  });
+
+});
+
+describe("Configuration", () => {
+
+  test("dry mode enabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.isDryRun = true;
+
+    await main(client, actionConfig, svgo);
+
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+  });
+
+  test("dry mode disabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.isDryRun = false;
+
+    await main(client, actionConfig, svgo);
+
+    expect(githubAPI.commitFiles).toHaveBeenCalled();
+  });
+
+  test.each([
+    "This should be a commit title",
+    "Why not Zoidberg",
+    "A templated commit title? {{optimizedCount}}",
+  ])("custom commit message title (%s)", async (commitTitle) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commitTitle = commitTitle;
+
+    await main(client, actionConfig, svgo);
+
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
+      commitTitle,
+      expect.any(String),
+      expect.any(Object),
+    );
+  });
+
+  test.each([
+    "This should be a commit body",
+    "Shut up and take my money",
+    "A templated commit title? {{filesList}}",
+  ])("custom commit message body (%s)", async (commitBody) => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commitBody = commitBody;
+
+    await main(client, actionConfig, svgo);
+
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      commitBody,
+      expect.any(Object),
+    );
+  });
+
+  test("conventional-commits are enabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commitTitle = "chore: optimize {{optimizedCount}} SVG(s)";
+
+    await main(client, actionConfig, svgo);
+
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
+      actionConfig.commitTitle,
+      expect.any(String),
+      expect.any(Object),
+    );
+  });
+
+  test("configure a glob to ignore files", async () => {
+    const fileContent = contentPayloads.files["foo.svg"].content;
+    const fileEncoding = contentPayloads.files["foo.svg"].encoding;
+
+    client.repos.getContent.mockImplementation(({ path }) => {
+      return {
+        "": {
+          data: [
+            { path: "dir", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_DIR },
+            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+          ],
+        },
+        "dir": {
+          data: [
+            { path: "dir/bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+            { path: "dir/optimized.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+          ],
+        },
+        "foo.svg": {
+          data: contentPayloads.files["foo.svg"],
+        },
+        "dir/bar.svg": {
+          data: contentPayloads.files["bar.svg"],
+        },
+        "dir/optimized.svg": {
+          data: contentPayloads.files["optimized.svg"],
+        },
+      }[path];
+    });
+
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.ignoreGlob = "dir/*";
+
+    await main(client, actionConfig, svgo);
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(fileContent, fileEncoding);
+
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+  });
+
+});
+
+describe("Error scenarios", () => {
+
+  test("the commit files could not be found", async () => {
+    githubAPI.getContent.mockRejectedValueOnce(new Error("Not found"));
+
+    await expect(main(client, config, svgo)).rejects.toBeDefined();
+  });
+
+  test("an SVG file that does not contain SVG content", async () => {
+    client.repos.getContent.mockImplementation(({ path }) => {
+      return {
+        "": {
+          data: [
+            { path: "fake.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+          ],
+        },
+        "fake.svg": {
+          data: contentPayloads.files["fake.svg"],
+        },
+      }[path];
+    });
+
+    await main(client, config, svgo);
+
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("cannot optimize"));
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(0);
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(0);
+  });
+
+  test("blob size is too large", async () => {
+    client.repos.getContent.mockImplementation(({ path }) => {
+      return {
+        "": {
+          data: [
+            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+          ],
+        },
+        "foo.svg": {
+          data: contentPayloads.files["foo.svg"],
+        },
+        "bar.svg": {
+          data: contentPayloads.files["bar.svg"],
+        },
+      }[path];
+    });
+
+    githubAPI.getFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+
+    await main(client, config, svgo);
+
+    expect(core.setFailed).toHaveBeenCalledTimes(0);
+    expect(core.warning).toHaveBeenCalledWith(expect.stringMatching("SVG content .*could not be obtained"));
+
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
+      expect.objectContaining({
+        warnings: expect.arrayContaining([
+          expect.stringMatching("SVG content .*could not be obtained"),
+        ]),
+      }),
+    );
+  });
+
+  test("optimized blob size is too large", async () => {
+    client.repos.getContent.mockImplementation(({ path }) => {
+      return {
+        "": {
+          data: [
+            { path: "foo.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+            { path: "bar.svg", status: STATUS_ADDED, type: GIT_OBJECT_TYPE_FILE },
+          ],
+        },
+        "foo.svg": {
+          data: contentPayloads.files["foo.svg"],
+        },
+        "bar.svg": {
+          data: contentPayloads.files["bar.svg"],
+        },
+      }[path];
+    });
+
+    githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+
+    await main(client, config, svgo);
+
+    expect(core.setFailed).toHaveBeenCalledTimes(0);
+    expect(core.warning).toHaveBeenCalledWith(expect.stringMatching("Blob.* could not be created"));
+
+    expect(templating.formatCommitMessage).toHaveBeenCalledWith(
+      expect.any(String),
+      expect.any(String),
+      expect.objectContaining({
+        warnings: expect.arrayContaining([
+          expect.stringMatching("Blob.* could not be created"),
+        ]),
+      }),
+    );
   });
 
 });
