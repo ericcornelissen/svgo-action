@@ -1,3 +1,5 @@
+import { Octokit } from "@octokit/core";
+
 import * as github from "./@actions/github.mock";
 
 import {
@@ -6,7 +8,6 @@ import {
   STATUS_ADDED,
 } from "../../src/constants";
 import { GitFileData, GitObjectInfo } from "../../src/types";
-import { Octokit } from "@octokit/core";
 
 
 async function _getContent(
