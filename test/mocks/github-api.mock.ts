@@ -1,18 +1,12 @@
-import * as core from "./@actions/core.mock";
+import { Octokit } from "@octokit/core";
+
 import * as github from "./@actions/github.mock";
 
-import {
-  COMMIT_MODE_FILE,
-  COMMIT_TYPE_BLOB,
-  INPUT_NAME_REPO_TOKEN,
-} from "../../src/constants";
+import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB } from "../../src/constants";
 import { GitFileData } from "../../src/types";
 
 
-const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
-const client = github.getOctokit(token);
-
-async function getContent(path: string): Promise<GitFileData> {
+async function getContent(client: Octokit, path: string): Promise<GitFileData> {
   const { data } = await client.repos.getContent({
     owner: "mew",
     repo: "svg-action",
@@ -48,7 +42,7 @@ export const createComment = jest.fn()
   .mockName("github-api.createComment");
 
 export const getCommitFiles = jest.fn()
-  .mockImplementation(async (_, sha) => {
+  .mockImplementation(async (client, sha) => {
     const { data } = await client.repos.getCommit({
       owner: "mew",
       repo: "svg-action",
@@ -67,7 +61,7 @@ export const getCommitMessage = jest.fn()
   .mockName("github-api.getCommitMessage");
 
 export const getFile = jest.fn()
-  .mockImplementation(async (_, path) => await getContent(path))
+  .mockImplementation(async (client, path) => await getContent(client, path))
   .mockName("github-api.getFile");
 
 export const getPrComments = jest.fn()
@@ -75,7 +69,7 @@ export const getPrComments = jest.fn()
   .mockName("github-api.getPrComment");
 
 export const getPrFiles = jest.fn()
-  .mockImplementation(async (_, prNumber) => {
+  .mockImplementation(async (client, prNumber) => {
     const { data } = await client.pulls.listFiles({
       owner: "mew",
       repo: "svg-action",
