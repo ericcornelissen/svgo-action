@@ -120,6 +120,7 @@ const EXAMPLE_COMMIT_DATA: CommitData = {
   optimizedCount: 3,
   skippedCount: 1,
   svgCount: 4,
+  warnings: [],
 };
 
 
