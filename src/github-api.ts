@@ -1,12 +1,27 @@
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
-import { GitGetCommitResponseData } from "@octokit/types";
+import {
+  GitGetCommitResponseData,
+  ReposGetContentResponseData,
+} from "@octokit/types";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
-import { CommitInfo, GitBlob, GitFileData, GitFileInfo } from "./types";
+import {
+  CommitInfo,
+  GitBlob,
+  GitFileData,
+  GitFileInfo,
+  GitObjectInfo,
+} from "./types";
 
+
+type DirContents = ReposGetContentResponseData[];
+
+type FileContents = ReposGetContentResponseData;
 
 type GitCommit = GitGetCommitResponseData;
+
+type RepoContents = FileContents | DirContents;
 
 
 const owner = github.context.repo.owner;
@@ -19,6 +34,17 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
   });
 
   return commit;
+}
+
+async function getContentFromRepo(
+  client: Octokit,
+  path: string,
+): Promise<RepoContents> {
+  const { data } = await client.repos.getContent({ owner, repo, path,
+    ref: github.context.sha,
+  });
+
+  return data;
 }
 
 
@@ -103,16 +129,27 @@ export async function getCommitMessage(
   return message;
 }
 
+export async function getContent(
+  client: Octokit,
+  path: string,
+): Promise<GitObjectInfo[]> {
+  const data = await getContentFromRepo(client, path) as DirContents;
+  return data.map((item) => ({
+    path: item.path,
+    type: item.type,
+  }));
+}
+
+export async function getDefaultBranch(client: Octokit): Promise<string> {
+  const { data } = await client.repos.get({ owner, repo });
+  return data.default_branch;
+}
+
 export async function getFile(
   client: Octokit,
   path: string,
 ): Promise<GitFileData> {
-  const fileContents = await client.repos.getContent({ owner, repo,
-    path: path,
-    ref: github.context.sha,
-  });
-
-  const fileDetails = fileContents.data[0] || fileContents.data;
+  const fileDetails = await getContentFromRepo(client, path) as FileContents;
   return {
     content: fileDetails.content,
     encoding: fileDetails.encoding,
