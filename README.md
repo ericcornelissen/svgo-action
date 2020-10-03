@@ -14,17 +14,17 @@ Automatically run [SVGO] on SVGs in Pull Requests.
 ### Install the Action
 
 Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
-Workflow file]) with the following content to utilize the SVGO action:
+Workflow file]) with the following content to utilize the SVGO Action:
 
 ```yaml
 name: SVGOptimizer
 on:
 # Disable the following line if you don't want the Action to run on PRs.
-- pull_request
+  pull_request:
 # Enable the following line if you want the Action to run on regular pushes.
-#- push
-# Enable the following line if you want the Action to run on a schedule.
-#- schedule:
+#  push:
+# Enable the following lines if you want the Action to run on a schedule.
+#  schedule:
 #  - cron:  '0 * * * 1'  # See https://crontab.guru/
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-_Note: This grants access to the `GITHUB_TOKEN` so the action can make calls to
+_Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
 GitHub's rest API_
 
 ### Configure the Action
@@ -56,7 +56,7 @@ configuration file]. The table below shows the options that can be configured.
 
 #### In the Workflow file
 
-The first way to configure the action is inside the Workflow file, after the
+The first way to configure the Action is inside the Workflow file, after the
 `repo-token`. For example:
 
 ```yaml
@@ -120,8 +120,8 @@ comment on the Pull Request.
 > :warning: This will stop the Action from optimizing SVGs in any subsequent
 > build for that Pull Request.
 
-If you want to enable the Action for a singe commit when it is disabled from the
-Pull Request comments, include the string "_enable-svgo-action_" anywhere in the
+If you want to enable the Action for a singe commit when it is disabled from a
+Pull Request comment, include the string "_enable-svgo-action_" anywhere in the
 commit message. Then, for that commit only, the Action will optimize SVGs.
 
 If instead you want to enable the Action again for all commits, include the
@@ -130,16 +130,16 @@ has been disabled, and the Action will start optimizing SVGs again.
 
 #### Limit Runs
 
-Even though this action won't do anything if a Pull Request does not touch any
-SVG files, you may want the action to run only when an SVG was actually changed.
-To do this you can change the Workflow file that uses this action to be
-triggered only when SVG files change.
+Even though this Action won't do anything if a push or Pull Request does not
+touch any SVG files, you may want the Action to run only when an SVG was
+actually changed. To do this you can change the Workflow file that uses this
+Action to be triggered only when SVG files change.
 
-> :warning: This will cause **any** action specified in the Workflow file to be
-> run only when an SVG changes. If there are actions that should run for every
-> Pull Request they must be specified in a separate Workflow file.
+> :warning: This will cause **any** Action specified in the Workflow file to be
+> run only when an SVG changes. If there are Actions that should run for every
+> push or Pull Request they must be specified in a separate Workflow file.
 
-To run this action only when SVG files are changed, update the `on:`
+To run this Action only when SVG files are changed, update the `on:`
 configuration as follows:
 
 ```yaml
@@ -151,9 +151,6 @@ on:
   push:
     paths:
     - "**.svg"
-
-jobs:
-  ...
 ```
 
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.1.2
