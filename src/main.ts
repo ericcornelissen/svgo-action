@@ -5,6 +5,7 @@ import { Octokit } from "@octokit/core";
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
+  EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
 } from "./constants";
@@ -14,6 +15,7 @@ import { RawActionConfig } from "./types";
 
 import prEventMain from "./events/pull-request";
 import pushEventMain from "./events/push";
+import scheduleEventMain from "./events/schedule";
 
 import { fetchYamlFile } from "./utils/fetch-yaml";
 
@@ -33,14 +35,16 @@ async function run(
 ): Promise<void> {
   try {
     const event = github.context.eventName;
+    core.info(`Running SVGO Action in '${event}' context`);
     switch (event) {
       case EVENT_PULL_REQUEST:
-        core.info("Running SVGO Action in Pull Request context");
         await prEventMain(client, config, svgo);
         break;
       case EVENT_PUSH:
-        core.info("Running SVGO Action in push context");
         await pushEventMain(client, config, svgo);
+        break;
+      case EVENT_SCHEDULE:
+        await scheduleEventMain(client, config, svgo);
         break;
       default:
         throw new Error(`Event '${event}' not supported`);

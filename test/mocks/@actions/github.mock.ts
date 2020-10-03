@@ -9,6 +9,17 @@ import * as prPayloads from "../../fixtures/pull-request-payloads.json";
 import { EVENT_PULL_REQUEST } from "../../../src/constants";
 
 
+function anyAreUndefined(values: unknown[]): boolean {
+  for (const value of values) {
+    if (value === undefined) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+
 export enum PR_NUMBER {
   NO_CHANGES,
   MANY_CHANGES,
@@ -71,6 +82,7 @@ export const context: {
     owner: string,
     repo: string,
   },
+  sha: string,
 } = {
   eventName: EVENT_PULL_REQUEST,
   payload: {
@@ -90,12 +102,17 @@ export const context: {
     owner: "pickachu",
     repo: "svgo-action",
   },
+  sha: "60e82798538f1853144300adaaa00650c9a6ab4d",
 };
 
 export const GitHubInstance = {
   git: {
     createBlob: jest.fn()
-      .mockImplementation(async () => {
+      .mockImplementation(async ({ owner, repo, content, encoding }) => {
+        if (anyAreUndefined([owner, repo, content, encoding])) {
+          throw Error("Missing parameter(s)");
+        }
+
         return {
           data: {
             sha: "b23aa12490660754aff4920ff23909dc324cc1dd",
@@ -104,7 +121,11 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.createBlob"),
     createCommit: jest.fn()
-      .mockImplementation(async () => {
+      .mockImplementation(async ({ owner, repo, message, tree, parents }) => {
+        if (anyAreUndefined([owner, repo, message, tree, parents])) {
+          throw Error("Missing parameter(s)");
+        }
+
         return {
           data: {
             sha: "8482592589d34923489284f3940776702123aaf3",
@@ -113,7 +134,11 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.createCommit"),
     createTree: jest.fn()
-      .mockImplementation(async () => {
+      .mockImplementation(async ({ owner, repo, base_tree, tree }) => {
+        if (anyAreUndefined([owner, repo, base_tree, tree])) {
+          throw Error("Missing parameter(s)");
+        }
+
         return {
           data: {
             sha: "ccaf32432ff32754aff4920ff23909dc33788965",
@@ -122,7 +147,11 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.createTree"),
     getCommit: jest.fn()
-      .mockImplementation(async () => {
+      .mockImplementation(async ({ owner, repo, commit_sha }) => {
+        if (anyAreUndefined([owner, repo, commit_sha])) {
+          throw Error("Missing parameter(s)");
+        }
+
         return {
           data: {
             message: "This is a commit message",
@@ -134,8 +163,14 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.getCommit"),
     getRef: jest.fn()
-      .mockImplementation(async ({ ref }) => {
-        if (ref.endsWith("undefined")) throw new Error("Invalid ref");
+      .mockImplementation(async ({ owner, repo, ref }) => {
+        if (anyAreUndefined([owner, repo, ref])) {
+          throw Error("Missing parameter(s)");
+        }
+
+        if (ref.endsWith("undefined")) {
+          throw new Error("Invalid ref");
+        }
 
         return {
           data: {
@@ -147,7 +182,11 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.git.getRef"),
     updateRef: jest.fn()
-      .mockImplementation(async () => {
+      .mockImplementation(async ({ owner, repo, ref, sha }) => {
+        if (anyAreUndefined([owner, repo, ref, sha])) {
+          throw Error("Missing parameter(s)");
+        }
+
         return {
           data: {
             object: {
@@ -160,13 +199,24 @@ export const GitHubInstance = {
   },
   issues: {
     createComment: jest.fn()
+      .mockImplementation(async ({ owner, repo, issue_number, body }) => {
+        if (anyAreUndefined([owner, repo, issue_number, body])) {
+          throw Error("Missing parameter(s)");
+        }
+      })
       .mockName("GitHub.issues.createComment"),
     listComments: jest.fn()
       .mockImplementation(async ({
+        owner,
+        repo,
         issue_number: prNumber,
         per_page: perPage,
         page,
       }) => {
+        if (anyAreUndefined([owner, repo, prNumber, perPage, page])) {
+          throw Error("Missing parameter(s)");
+        }
+
         const generateComments = function(length) {
           return Array.from({ length }).map((_, i) => ({ body: `${i}` }));
         };
@@ -203,7 +253,11 @@ export const GitHubInstance = {
   },
   pulls: {
     get: jest.fn()
-      .mockImplementation(async ({ pull_number: prNumber }) => {
+      .mockImplementation(async ({ owner, repo, pull_number: prNumber }) => {
+        if (anyAreUndefined([owner, repo, prNumber])) {
+          throw Error("Missing parameter(s)");
+        }
+
         switch (prNumber) {
           case PR_NUMBER.NO_COMMENTS:
             return { data: { comments: 0 } };
@@ -223,7 +277,11 @@ export const GitHubInstance = {
       })
       .mockName("GitHub.pulls.get"),
     listFiles: jest.fn()
-      .mockImplementation(async ({ pull_number: prNumber }) => {
+      .mockImplementation(async ({ owner, repo, pull_number: prNumber }) => {
+        if (anyAreUndefined([owner, repo, prNumber])) {
+          throw Error("Missing parameter(s)");
+        }
+
         switch (prNumber) {
           case PR_NUMBER.NO_CHANGES:
             return { data: [ ] };
@@ -264,14 +322,32 @@ export const GitHubInstance = {
       .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
+    get: jest.fn()
+      .mockImplementation(async ({ owner, repo }) => {
+        if (anyAreUndefined([owner, repo])) {
+          throw Error("Missing parameter(s)");
+        }
+
+        return { data: { default_branch: "main" } };
+      })
+      .mockName("GitHub.repos.get"),
     getCommit: jest.fn()
-      .mockImplementation(async ({ ref }) => {
+      .mockImplementation(async ({ owner, repo, ref }) => {
+        if (anyAreUndefined([owner, repo, ref])) {
+          throw Error("Missing parameter(s)");
+        }
+
         return { data: commitPayloads[ref] };
       })
       .mockName("GitHub.repos.getCommit"),
     getContent: jest.fn()
-      .mockImplementation(async ({ path }) => {
-        return { data: contentPayloads[path] };
+      .mockImplementation(async ({ owner, repo, path, ref }) => {
+        if (anyAreUndefined([owner, repo, path, ref])) {
+          throw Error("Missing parameter(s)");
+        }
+
+        const data = contentPayloads.files[path] || contentPayloads.contents[path];
+        return { data };
       })
       .mockName("GitHub.repos.getContent"),
   },

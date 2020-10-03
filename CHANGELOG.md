@@ -9,6 +9,12 @@ Versioning].
 
 - _No changes yet_
 
+## [1.2.0] - 2020-10-03
+
+- Run Action on schedule. ([#262])
+- Improve README. ([#270])
+- Document behavior for each supported event. ([#272])
+
 ## [1.1.2] - 2020-09-23
 
 - Add warnings to commit messages and Pull Request comments. ([#258])
@@ -169,4 +175,7 @@ Versioning].
 [#251]: https://github.com/ericcornelissen/svgo-action/pull/251
 [#255]: https://github.com/ericcornelissen/svgo-action/pull/255
 [#258]: https://github.com/ericcornelissen/svgo-action/pull/258
+[#262]: https://github.com/ericcornelissen/svgo-action/pull/262
+[#270]: https://github.com/ericcornelissen/svgo-action/pull/270
+[#272]: https://github.com/ericcornelissen/svgo-action/pull/272
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

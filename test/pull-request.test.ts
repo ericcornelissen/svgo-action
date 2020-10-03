@@ -41,7 +41,7 @@ beforeEach(() => {
   githubAPI.commitFiles.mockClear();
   githubAPI.createBlob.mockClear();
   githubAPI.createComment.mockClear();
-  githubAPI.getPrFile.mockClear();
+  githubAPI.getFile.mockClear();
   githubAPI.getPrFiles.mockClear();
   githubAPI.getPrNumber.mockClear();
 
@@ -177,7 +177,7 @@ describe("Configuration", () => {
 
   test("configure a glob to ignore files", async () => {
     const filePath = "foo.svg";
-    const { content: fileContent, encoding: fileEncoding } = contentPayloads[filePath];
+    const { content: fileContent, encoding: fileEncoding } = contentPayloads.files[filePath];
     const fooSvgData = files[filePath];
 
     const actionConfig = new inputs.ActionConfig();
@@ -431,10 +431,10 @@ describe("Payloads", () => {
   const fooFilePath = "foo.svg";
   const testFilePath = "test.svg";
 
-  const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads[barFilePath];
-  const { content: complexSvgContent, encoding: complexSvgEncoding } = contentPayloads[complexFilePath];
-  const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads[fooFilePath];
-  const { content: testSvgContent, encoding: testSvgEncoding } = contentPayloads[testFilePath];
+  const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads.files[barFilePath];
+  const { content: complexSvgContent, encoding: complexSvgEncoding } = contentPayloads.files[complexFilePath];
+  const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads.files[fooFilePath];
+  const { content: testSvgContent, encoding: testSvgEncoding } = contentPayloads.files[testFilePath];
 
   const barSvgData = files[barFilePath];
   const complexSvgData = files[complexFilePath];
@@ -854,7 +854,7 @@ describe("Error scenarios", () => {
   });
 
   test("blob size is too large", async () => {
-    githubAPI.getPrFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
+    githubAPI.getFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
 
     await main(client, config, svgo);

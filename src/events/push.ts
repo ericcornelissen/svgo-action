@@ -13,7 +13,7 @@ import {
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
-} from "./helpers";
+} from "./common";
 
 
 function getHeadRef(): string {

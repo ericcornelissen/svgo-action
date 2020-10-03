@@ -8,14 +8,17 @@ import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
-import prsMain from "./mocks/pull-request.mock";
-import pushMain from "./mocks/push.mock";
 import * as svgo from "./mocks/svgo.mock";
+
+const prEventMain = jest.fn().mockName("pull-request.ts::main");
+const pushEventMain = jest.fn().mockName("push.ts::main");
+const scheduleEventMain = jest.fn().mockName("schedule.ts::main");
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
-jest.mock("../src/events/pull-request", () => prsMain);
-jest.mock("../src/events/push", () => pushMain);
+jest.mock("../src/events/pull-request", () => prEventMain);
+jest.mock("../src/events/push", () => pushEventMain);
+jest.mock("../src/events/schedule", () => scheduleEventMain);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
@@ -23,19 +26,21 @@ jest.mock("../src/svgo", () => svgo);
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
+  EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
 } from "../src/constants";
 import main from "../src/main";
 
 
-const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
+const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE];
 
 
 beforeEach(() => {
   core.setFailed.mockClear();
 
-  prsMain.mockClear();
-  pushMain.mockClear();
+  prEventMain.mockClear();
+  pushEventMain.mockClear();
+  scheduleEventMain.mockClear();
 
   svgo.SVGOptimizer.mockClear();
 });
@@ -44,32 +49,50 @@ test("push event", async () => {
   github.context.eventName = EVENT_PUSH;
 
   await main();
-  expect(pushMain).toHaveBeenCalledTimes(1);
+  expect(pushEventMain).toHaveBeenCalledTimes(1);
 });
 
 test("pull_request event", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
 
   await main();
-  expect(prsMain).toHaveBeenCalledTimes(1);
+  expect(prEventMain).toHaveBeenCalledTimes(1);
+});
+
+test("schedule event", async () => {
+  github.context.eventName = EVENT_SCHEDULE;
+
+  await main();
+  expect(scheduleEventMain).toHaveBeenCalledTimes(1);
 });
 
 test("push event error", async () => {
   github.context.eventName = EVENT_PUSH;
 
-  pushMain.mockImplementationOnce(() => {
+  pushEventMain.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
-  expect(pushMain).toHaveBeenCalledTimes(1);
+  expect(pushEventMain).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
 test("pull_request event error", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
 
-  prsMain.mockImplementationOnce(() => {
+  prEventMain.mockImplementationOnce(() => {
+    throw new Error("Something went wrong");
+  });
+
+  await main();
+  expect(core.setFailed).toHaveBeenCalledTimes(1);
+});
+
+test("schedule event error", async () => {
+  github.context.eventName = EVENT_SCHEDULE;
+
+  scheduleEventMain.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
@@ -81,8 +104,8 @@ test("unknown event", async () => {
   github.context.eventName = "UnKnOwN eVeNt";
 
   await main();
-  expect(pushMain).not.toHaveBeenCalled();
-  expect(prsMain).not.toHaveBeenCalled();
+  expect(pushEventMain).not.toHaveBeenCalled();
+  expect(prEventMain).not.toHaveBeenCalled();
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
@@ -114,9 +137,9 @@ test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (
   github.context.eventName = eventName;
 
   const { svgoOptionsPath } = new inputs.ActionConfig();
-  when(githubAPI.getRepoFile)
+  when(githubAPI.getFile)
     .calledWith(github.GitHubInstance, svgoOptionsPath)
-    .mockResolvedValueOnce(contentPayloads[".svgo.yml"]);
+    .mockResolvedValueOnce(contentPayloads.files[".svgo.yml"]);
 
   await main();
 
@@ -127,7 +150,7 @@ test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async
   github.context.eventName = eventName;
 
   const actionConfigPath = core.getInput(INPUT_NAME_CONFIG_PATH);
-  when(githubAPI.getRepoFile)
+  when(githubAPI.getFile)
     .calledWith(github.GitHubInstance, actionConfigPath)
     .mockRejectedValueOnce(new Error("Not found"));
 
@@ -141,7 +164,7 @@ test.each(ALL_EVENTS)("the SVGO options file does not exist (%s)", async (eventN
   github.context.eventName = eventName;
 
   const { svgoOptionsPath } = new inputs.ActionConfig();
-  when(githubAPI.getRepoFile)
+  when(githubAPI.getFile)
     .calledWith(github.GitHubInstance, svgoOptionsPath)
     .mockRejectedValueOnce(new Error("Not found"));
 
