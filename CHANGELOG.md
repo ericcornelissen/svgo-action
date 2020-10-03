@@ -13,6 +13,7 @@ Versioning].
 
 - Run Action on schedule. ([#262])
 - Improve README. ([#270])
+- Document behavior for each supported event. ([#272])
 
 ## [1.1.2] - 2020-09-23
 
@@ -176,4 +177,5 @@ Versioning].
 [#258]: https://github.com/ericcornelissen/svgo-action/pull/258
 [#262]: https://github.com/ericcornelissen/svgo-action/pull/262
 [#270]: https://github.com/ericcornelissen/svgo-action/pull/270
+[#272]: https://github.com/ericcornelissen/svgo-action/pull/272
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
