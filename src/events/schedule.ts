@@ -1,7 +1,11 @@
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 
-import { GIT_OBJECT_TYPE_DIR, GIT_OBJECT_TYPE_FILE } from "../constants";
+import {
+  GIT_OBJECT_TYPE_DIR,
+  GIT_OBJECT_TYPE_FILE,
+  STATUS_EXISTS,
+} from "../constants";
 import { getContent, getDefaultBranch } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
@@ -27,6 +31,13 @@ async function getHeadRef(client: Octokit): Promise<string> {
   return `heads/${defaultBranch}`;
 }
 
+function objectInfoToFileInfo(objectInfo: GitObjectInfo): GitFileInfo {
+  return {
+    path: objectInfo.path,
+    status: STATUS_EXISTS,
+  };
+}
+
 async function getFilesInRepo(client: Octokit): Promise<GitFileInfo[]> {
   const files: GitFileInfo[] = [];
 
@@ -38,7 +49,7 @@ async function getFilesInRepo(client: Octokit): Promise<GitFileInfo[]> {
     const dirs = items.filter(dirObject).map((item) => item.path);
     paths.push(...dirs);
 
-    const dirFiles = items.filter(fileObject);
+    const dirFiles= items.filter(fileObject).map(objectInfoToFileInfo);
     files.push(...dirFiles);
   }
 

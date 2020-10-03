@@ -5,12 +5,7 @@ import {
   ReposGetContentResponseData,
 } from "@octokit/types";
 
-import {
-  COMMIT_MODE_FILE,
-  COMMIT_TYPE_BLOB,
-  PR_NOT_FOUND,
-  STATUS_ADDED,
-} from "./constants";
+import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
 import {
   CommitInfo,
   GitBlob,
@@ -41,7 +36,7 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
   return commit;
 }
 
-async function getContents(
+async function getContentFromRepo(
   client: Octokit,
   path: string,
 ): Promise<RepoContents> {
@@ -138,10 +133,9 @@ export async function getContent(
   client: Octokit,
   path: string,
 ): Promise<GitObjectInfo[]> {
-  const data = await getContents(client, path) as DirContents;
+  const data = await getContentFromRepo(client, path) as DirContents;
   return data.map((item) => ({
     path: item.path,
-    status: STATUS_ADDED,
     type: item.type,
   }));
 }
@@ -155,7 +149,7 @@ export async function getFile(
   client: Octokit,
   path: string,
 ): Promise<GitFileData> {
-  const fileDetails = await getContents(client, path) as FileContents;
+  const fileDetails = await getContentFromRepo(client, path) as FileContents;
   return {
     content: fileDetails.content,
     encoding: fileDetails.encoding,

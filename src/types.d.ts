@@ -78,7 +78,6 @@ export type GitFileInfo = {
 // directory) in git.
 export type GitObjectInfo = {
   readonly path: string;
-  readonly status: string;
   readonly type: string;
 }
 

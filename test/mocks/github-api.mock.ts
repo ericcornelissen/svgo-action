@@ -2,11 +2,7 @@ import { Octokit } from "@octokit/core";
 
 import * as github from "./@actions/github.mock";
 
-import {
-  COMMIT_MODE_FILE,
-  COMMIT_TYPE_BLOB,
-  STATUS_ADDED,
-} from "../../src/constants";
+import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB } from "../../src/constants";
 import { GitFileData, GitObjectInfo } from "../../src/types";
 
 
@@ -24,7 +20,6 @@ async function _getContent(
   if (Array.isArray(data)) {
     return data.map((item) => ({
       path: item.path,
-      status: STATUS_ADDED,
       type: item.type,
     }));
   } else {

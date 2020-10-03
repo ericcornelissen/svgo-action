@@ -292,15 +292,6 @@ describe("::getContent", () => {
     }
   });
 
-  test("'status' is defined for each item", async () => {
-    const items: GitObjectInfo[] = await getContent(client, defaultDir);
-    expect(items).toBeDefined();
-
-    for (const item of items) {
-      expect(item.status).toBeDefined();
-    }
-  });
-
   test("'type' is defined for each item", async () => {
     const items: GitObjectInfo[] = await getContent(client, defaultDir);
     expect(items).toBeDefined();

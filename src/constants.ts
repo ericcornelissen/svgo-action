@@ -49,6 +49,7 @@ export const GIT_OBJECT_TYPE_DIR = "dir";
 export const GIT_OBJECT_TYPE_FILE = "file";
 
 export const STATUS_ADDED = "added";
+export const STATUS_EXISTS = "exists";
 export const STATUS_MODIFIED = "modified";
 export const STATUS_REMOVED = "removed";
 
