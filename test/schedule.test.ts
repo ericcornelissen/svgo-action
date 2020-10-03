@@ -1,4 +1,5 @@
 import contentPayloads from "./fixtures/contents-payloads.json";
+import files from "./fixtures/file-data.json";
 
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
@@ -249,6 +250,215 @@ describe("Configuration", () => {
     expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
   });
 
+});
+
+describe("Payloads", () => {
+
+  const barFilePath = "bar.svg";
+  const fooFilePath = "foo.svg";
+  const testFilePath = "test.svg";
+
+  const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads.files[barFilePath];
+  const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads.files[fooFilePath];
+  const { content: testSvgContent, encoding: testSvgEncoding } = contentPayloads.files[testFilePath];
+
+  const barSvgData = files[barFilePath];
+  const fooSvgData = files[fooFilePath];
+  const testSvgData = files[testFilePath];
+
+  test("empty repository", async () => {
+    const getContentsMock = mockGetContentsForFiles([]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+  });
+
+  test("repository without SVGs", async () => {
+    const getContentsMock = mockGetContentsForFiles(["README.md", "LICENSE"]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).not.toHaveBeenCalled();
+    expect(svgoImport.OptimizerInstance.optimize).not.toHaveBeenCalled();
+    expect(encoder.encode).not.toHaveBeenCalled();
+    expect(githubAPI.createBlob).not.toHaveBeenCalled();
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
+  });
+
+  test("repository with 1 SVG", async () => {
+    const getContentsMock = mockGetContentsForFiles([fooFilePath]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
+
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      fooFilePath,
+      expect.any(String),
+      fooSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+      ]),
+      expect.any(String),
+      expect.any(String),
+    );
+  });
+
+  test("repository with files and 1 SVG", async () => {
+    const getContentsMock = mockGetContentsForFiles([
+      "README.md",
+      "LICENSE",
+      fooFilePath,
+    ]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
+
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      fooFilePath,
+      expect.any(String),
+      fooSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: fooFilePath }),
+      ]),
+      expect.any(String),
+      expect.any(String),
+    );
+  });
+
+  test("repository with files and 1 SVG in a subdirectory", async () => {
+    const getContentsMock = mockGetContentsForFiles([
+      "README.md",
+      "LICENSE",
+      `foo/${barFilePath}`,
+    ]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).toHaveBeenCalledTimes(1);
+    expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
+
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(1);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(1);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), barSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(1);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      barFilePath,
+      expect.any(String),
+      barSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: barFilePath }),
+      ]),
+      expect.any(String),
+      expect.any(String),
+    );
+  });
+
+  test("repository with many SVGs in various subdirectory", async () => {
+    const getContentsMock = mockGetContentsForFiles([
+      `.hidden/${testFilePath}`,
+      `foo/${barFilePath}`,
+      fooFilePath,
+    ]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(encoder.decode).toHaveBeenCalledTimes(3);
+    expect(encoder.decode).toHaveBeenCalledWith(barSvgContent, barSvgEncoding);
+    expect(encoder.decode).toHaveBeenCalledWith(fooSvgContent, fooSvgEncoding);
+    expect(encoder.decode).toHaveBeenCalledWith(testSvgContent, testSvgEncoding);
+
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledTimes(3);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(barSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(fooSvgData);
+    expect(svgoImport.OptimizerInstance.optimize).toHaveBeenCalledWith(testSvgData);
+
+    expect(encoder.encode).toHaveBeenCalledTimes(3);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), barSvgEncoding);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), fooSvgEncoding);
+    expect(encoder.encode).toHaveBeenCalledWith(expect.any(String), testSvgEncoding);
+
+    expect(githubAPI.createBlob).toHaveBeenCalledTimes(3);
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      barFilePath,
+      expect.any(String),
+      barSvgEncoding,
+    );
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      fooFilePath,
+      expect.any(String),
+      fooSvgEncoding,
+    );
+    expect(githubAPI.createBlob).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      testFilePath,
+      expect.any(String),
+      testSvgEncoding,
+    );
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      github.GitHubInstance,
+      expect.arrayContaining([
+        expect.objectContaining({ path: barFilePath }),
+        expect.objectContaining({ path: fooFilePath }),
+        expect.objectContaining({ path: testFilePath }),
+      ]),
+      expect.any(String),
+      expect.any(String),
+    );
+  });
 });
 
 describe("Error scenarios", () => {
