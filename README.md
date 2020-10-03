@@ -20,9 +20,9 @@ Workflow file]) with the following content to utilize the SVGO action:
 name: SVGOptimizer
 on:
 # Disable the following line if you don't want the Action to run on PRs.
-- pull_request
+  pull_request:
 # Enable the following line if you want the Action to run on regular pushes.
-#- push
+#  push:
 
 jobs:
   triage:
