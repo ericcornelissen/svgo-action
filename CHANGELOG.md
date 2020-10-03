@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.2.0] - 2020-10-03
+
 - Run Action on schedule. ([#262])
 - Improve README. ([#270])
 
