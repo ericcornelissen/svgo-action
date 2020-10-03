@@ -40,9 +40,9 @@ The following [options] have an effect in the `pull_request` context.
 ## `on: push`
 
 In the `push` context, the SVGO Action will optimize all SVGs that have been
-added or modified in a the commit(s) being pushed. This means that if multiple
+added or modified in the commit(s) being pushed. This means that if multiple
 commits are pushed at once, the Action run will cover all the added and modified
-SVGs in all the commits pushed.
+SVGs in all the commits being pushed.
 
 The Action will not change SVGs that are not part of any of the commits, SVGs
 that are already optimized or [SVGs that are ignored].
