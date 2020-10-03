@@ -87,6 +87,12 @@ const client = github.getOctokit(token);
 const config = new inputs.ActionConfig();
 const svgo = new svgoImport.SVGOptimizer();
 
+const barFilePath = "bar.svg";
+const fakeFilePath = "fake.svg";
+const fooFilePath = "foo.svg";
+const optimizedFilePath = "optimized.svg";
+const testFilePath = "test.svg";
+
 const getContentMockBackup = client.repos.getContent;
 
 
@@ -116,7 +122,7 @@ describe("Logging", () => {
   });
 
   test("summary for commits with 1 optimized SVG", async () => {
-    const getContentsMock = mockGetContentsForFiles(["bar.svg"]);
+    const getContentsMock = mockGetContentsForFiles([barFilePath]);
     client.repos.getContent.mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
@@ -125,7 +131,7 @@ describe("Logging", () => {
   });
 
   test("summary for commits with 1 skipped SVG", async () => {
-    const getContentsMock = mockGetContentsForFiles(["optimized.svg"]);
+    const getContentsMock = mockGetContentsForFiles([optimizedFilePath]);
     client.repos.getContent.mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
@@ -135,9 +141,9 @@ describe("Logging", () => {
 
   test("summary for commits with many changes", async () => {
     const getContentsMock = mockGetContentsForFiles([
-      "foo.svg",
-      "dir/bar.svg",
-      "dir/optimized.svg",
+      fooFilePath,
+      `dir/${barFilePath}`,
+      `dir/${optimizedFilePath}`,
     ]);
     client.repos.getContent.mockImplementation(getContentsMock);
 
@@ -230,9 +236,9 @@ describe("Configuration", () => {
     const fileEncoding = contentPayloads.files["foo.svg"].encoding;
 
     const getContentsMock = mockGetContentsForFiles([
-      "foo.svg",
-      "dir/bar.svg",
-      "dir/optimized.svg",
+      fooFilePath,
+      `dir/${barFilePath}`,
+      `dir/${optimizedFilePath}`,
     ]);
     client.repos.getContent.mockImplementation(getContentsMock);
 
@@ -253,10 +259,6 @@ describe("Configuration", () => {
 });
 
 describe("Payloads", () => {
-
-  const barFilePath = "bar.svg";
-  const fooFilePath = "foo.svg";
-  const testFilePath = "test.svg";
 
   const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads.files[barFilePath];
   const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads.files[fooFilePath];
@@ -470,7 +472,7 @@ describe("Error scenarios", () => {
   });
 
   test("an SVG file that does not contain SVG content", async () => {
-    const getContentsMock = mockGetContentsForFiles(["fake.svg"]);
+    const getContentsMock = mockGetContentsForFiles([fakeFilePath]);
     client.repos.getContent.mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
@@ -484,7 +486,7 @@ describe("Error scenarios", () => {
   });
 
   test("blob size is too large", async () => {
-    const getContentsMock = mockGetContentsForFiles(["foo.svg", "bar.svg"]);
+    const getContentsMock = mockGetContentsForFiles([barFilePath, fooFilePath]);
     client.repos.getContent.mockImplementation(getContentsMock);
 
     githubAPI.getFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
@@ -506,7 +508,7 @@ describe("Error scenarios", () => {
   });
 
   test("optimized blob size is too large", async () => {
-    const getContentsMock = mockGetContentsForFiles(["foo.svg", "bar.svg"]);
+    const getContentsMock = mockGetContentsForFiles([barFilePath, fooFilePath]);
     client.repos.getContent.mockImplementation(getContentsMock);
 
     githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
