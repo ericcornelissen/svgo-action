@@ -19,12 +19,14 @@ import {
   createComment,
   getCommitFiles,
   getCommitMessage,
-  getPrComments,
+  getContent,
+  getDefaultBranch,
   getFile,
+  getPrComments,
   getPrFiles,
   getPrNumber,
 } from "../src/github-api";
-import { GitBlob, GitFileData } from "../src/types";
+import { GitBlob, GitFileData, GitObjectInfo } from "../src/types";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
@@ -146,11 +148,11 @@ describe("::commitFiles", () => {
 
 describe("::createBlob", () => {
 
-  const defaultPath = contentPayloads["test.svg"].path;
-  const defaultContent = contentPayloads["test.svg"].content;
-  const defaultEncoding = contentPayloads["test.svg"].encoding;
+  const defaultPath = contentPayloads.files["test.svg"].path;
+  const defaultContent = contentPayloads.files["test.svg"].content;
+  const defaultEncoding = contentPayloads.files["test.svg"].encoding;
 
-  const variousBlobs = Object.values(contentPayloads)
+  const variousBlobs = Object.values(contentPayloads.files)
     .map(({ path, content, encoding }) => [path, content, encoding])
     .slice(0, 4);
 
@@ -268,6 +270,55 @@ describe("::getCommitMessage", () => {
 
     const promise = getCommitMessage(client, ref);
     await expect(promise).rejects.toBeDefined();
+  });
+
+});
+
+describe("::getContent", () => {
+
+  const defaultDir = "";
+
+  test("get an existing directory", async () => {
+    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    expect(items).toBeDefined();
+  });
+
+  test("'path' is defined for each item", async () => {
+    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    expect(items).toBeDefined();
+
+    for (const item of items) {
+      expect(item.path).toBeDefined();
+    }
+  });
+
+  test("'type' is defined for each item", async () => {
+    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    expect(items).toBeDefined();
+
+    for (const item of items) {
+      expect(item.type).toBeDefined();
+    }
+  });
+
+  test("directory is not found", async () => {
+    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
+
+    const promise = getContent(client, "foobar");
+    await expect(promise).rejects.toBeDefined();
+  });
+
+});
+
+describe("::getDefaultBranch", () => {
+
+  const names: string[] = ["main", "develop", "some-other-branch"];
+
+  test.each(names)("returns the repositories default_branch (%s)", async (name) => {
+    github.GitHubInstance.repos.get.mockResolvedValueOnce({ data: { default_branch: name } });
+
+    const defaultBranch: string = await getDefaultBranch(client);
+    expect(defaultBranch).toBe(name);
   });
 
 });

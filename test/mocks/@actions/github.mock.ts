@@ -322,6 +322,15 @@ export const GitHubInstance = {
       .mockName("GitHub.pulls.listFiles"),
   },
   repos: {
+    get: jest.fn()
+      .mockImplementation(async ({ owner, repo }) => {
+        if (anyAreUndefined([owner, repo])) {
+          throw Error("Missing parameter(s)");
+        }
+
+        return { data: { default_branch: "main" } };
+      })
+      .mockName("GitHub.repos.get"),
     getCommit: jest.fn()
       .mockImplementation(async ({ owner, repo, ref }) => {
         if (anyAreUndefined([owner, repo, ref])) {
@@ -337,7 +346,8 @@ export const GitHubInstance = {
           throw Error("Missing parameter(s)");
         }
 
-        return { data: contentPayloads[path] };
+        const data = contentPayloads.files[path] || contentPayloads.contents[path];
+        return { data };
       })
       .mockName("GitHub.repos.getContent"),
   },

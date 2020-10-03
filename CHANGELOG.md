@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Run Action on schedule. ([#262])
 
 ## [1.1.2] - 2020-09-23
 
@@ -169,4 +169,5 @@ Versioning].
 [#251]: https://github.com/ericcornelissen/svgo-action/pull/251
 [#255]: https://github.com/ericcornelissen/svgo-action/pull/255
 [#258]: https://github.com/ericcornelissen/svgo-action/pull/258
+[#262]: https://github.com/ericcornelissen/svgo-action/pull/262
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

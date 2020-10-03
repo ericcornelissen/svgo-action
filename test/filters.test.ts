@@ -1,5 +1,6 @@
 import {
   STATUS_ADDED,
+  STATUS_EXISTS,
   STATUS_MODIFIED,
   STATUS_REMOVED,
 } from "../src/constants";
@@ -63,6 +64,23 @@ describe("::existingFiles", () => {
       { path: ".gitignore", status: STATUS_MODIFIED },
       { path: "test.svg", status: STATUS_ADDED },
       { path: "main.ts", status: STATUS_MODIFIED },
+    ]);
+  });
+
+  test(`with ${STATUS_EXISTS} files`, () => {
+    const files: GitFileInfo[] = [
+      { path: "foo.bar", status: STATUS_EXISTS },
+      { path: "jest.config.js", status: STATUS_EXISTS },
+      { path: "optimized.svg", status: STATUS_EXISTS },
+      { path: ".editorconfig", status: STATUS_EXISTS },
+    ];
+
+    const result = files.filter(existingFiles);
+    expect(result).toEqual([
+      { path: "foo.bar", status: STATUS_EXISTS },
+      { path: "jest.config.js", status: STATUS_EXISTS },
+      { path: "optimized.svg", status: STATUS_EXISTS },
+      { path: ".editorconfig", status: STATUS_EXISTS },
     ]);
   });
 

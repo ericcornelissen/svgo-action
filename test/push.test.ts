@@ -42,6 +42,8 @@ beforeEach(() => {
   githubAPI.createBlob.mockClear();
 
   svgoImport.OptimizerInstance.optimize.mockClear();
+
+  templating.formatCommitMessage.mockClear();
 });
 
 describe("Logging", () => {
@@ -172,7 +174,7 @@ describe("Configuration", () => {
 
   test("configure a glob to ignore files", async () => {
     const filePath = "foo.svg";
-    const { content: fileContent, encoding: fileEncoding } = contentPayloads[filePath];
+    const { content: fileContent, encoding: fileEncoding } = contentPayloads.files[filePath];
     const fooSvgData = files[filePath];
 
     const actionConfig = new inputs.ActionConfig();
@@ -252,9 +254,9 @@ describe("Payloads", () => {
   const fooFilePath = "foo.svg";
   const testFilePath = "test.svg";
 
-  const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads[barFilePath];
-  const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads[fooFilePath];
-  const { content: testSvgContent, encoding: testSvgEncoding } = contentPayloads[testFilePath];
+  const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads.files[barFilePath];
+  const { content: fooSvgContent, encoding: fooSvgEncoding } = contentPayloads.files[fooFilePath];
+  const { content: testSvgContent, encoding: testSvgEncoding } = contentPayloads.files[testFilePath];
 
   const barSvgData = files[barFilePath];
   const fooSvgData = files[fooFilePath];

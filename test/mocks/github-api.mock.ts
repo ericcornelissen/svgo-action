@@ -3,10 +3,13 @@ import { Octokit } from "@octokit/core";
 import * as github from "./@actions/github.mock";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB } from "../../src/constants";
-import { GitFileData } from "../../src/types";
+import { GitFileData, GitObjectInfo } from "../../src/types";
 
 
-async function getContent(client: Octokit, path: string): Promise<GitFileData> {
+async function _getContent(
+  client: Octokit,
+  path: string,
+): Promise<GitFileData | GitObjectInfo[]> {
   const { data } = await client.repos.getContent({
     owner: "mew",
     repo: "svg-action",
@@ -14,11 +17,18 @@ async function getContent(client: Octokit, path: string): Promise<GitFileData> {
     ref: "heads/ref",
   });
 
-  return {
-    path: data.path,
-    content: data.content,
-    encoding: data.encoding,
-  };
+  if (Array.isArray(data)) {
+    return data.map((item) => ({
+      path: item.path,
+      type: item.type,
+    }));
+  } else {
+    return {
+      path: data.path,
+      content: data.content,
+      encoding: data.encoding,
+    };
+  }
 }
 
 
@@ -60,8 +70,16 @@ export const getCommitMessage = jest.fn()
   .mockResolvedValue("This is a commit message")
   .mockName("github-api.getCommitMessage");
 
+export const getContent = jest.fn()
+  .mockImplementation(_getContent)
+  .mockName("github-api.getContent");
+
+export const getDefaultBranch = jest.fn()
+  .mockReturnValue("main")
+  .mockName("github-api.getDefaultBranch");
+
 export const getFile = jest.fn()
-  .mockImplementation(async (client, path) => await getContent(client, path))
+  .mockImplementation(_getContent)
   .mockName("github-api.getFile");
 
 export const getPrComments = jest.fn()

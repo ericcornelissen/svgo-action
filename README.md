@@ -23,6 +23,9 @@ on:
 - pull_request
 # Enable the following line if you want the Action to run on regular pushes.
 #- push
+# Enable the following line if you want the Action to run on a schedule.
+#- schedule:
+#  - cron:  '0 * * * 1'  # See https://crontab.guru/
 
 jobs:
   triage:
