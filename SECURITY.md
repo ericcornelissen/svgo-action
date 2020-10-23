@@ -27,4 +27,4 @@ We would like to publicly thank the following reporters:
 
 - _None yet_
 
-[security@ericcornelissen.dev]: mailto:ssecurity@ericcornelissen.dev?subject=SECURITY%20%28wordrow%29
+[security@ericcornelissen.dev]: mailto:security@ericcornelissen.dev?subject=SECURITY%20%28SVGO%20Action%29
