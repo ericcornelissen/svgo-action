@@ -50,7 +50,7 @@
   "devDependencies": {
     "@commitlint/cli": "11.0.0",
     "@commitlint/config-conventional": "11.0.0",
-    "@types/jest": "26.0.17",
+    "@types/jest": "26.0.18",
     "@types/jest-when": "2.7.2",
     "@types/js-yaml": "3.12.5",
     "@types/minimatch": "3.0.3",
