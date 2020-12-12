@@ -17,7 +17,7 @@
     "format:md": "npm run lint:md -- --fix",
     "lint": "run-p lint:js lint:md lint:ws",
     "lint:js": "eslint . --ext .js,.ts",
-    "lint:md": "markdownlint -i node_modules **/*.md .github/ISSUE_TEMPLATES/*.md",
+    "lint:md": "markdownlint -i node_modules **/*.md .github/**/*.md",
     "lint:ws": "editorconfig-checker",
     "postinstall": "husky install script/hooks",
     "test": "jest",

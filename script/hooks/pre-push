@@ -4,8 +4,9 @@
 # Stash unstaged files
 git stash -q -u --keep-index
 
-# Ensure tests pass
+# Ensure tests and linting pass
 npm run test
+npm run lint
 
 # Restore unstaged files
 git stash pop -q || true
