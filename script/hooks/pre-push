@@ -1,0 +1,11 @@
+#!/bin/sh
+. "$(dirname $0)/_/husky.sh"
+
+# Stash unstaged files
+git stash -q -u --keep-index
+
+# Ensure tests pass
+npm run test
+
+# Restore unstaged files
+git stash pop -q || true
