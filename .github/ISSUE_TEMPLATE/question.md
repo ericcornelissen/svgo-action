@@ -10,7 +10,7 @@ labels: question
 - **SVGO Action version**: <!-- e.g. v1.1.0 -->
 
 <!-- The context in which the action is running -->
-- **On**: <!-- choose from: 'push', 'pull_request' -->
+- **On**: <!-- choose from: 'push', 'pull_request', 'schedule', or 'any' -->
 
 ## Description
 
