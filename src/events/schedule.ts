@@ -4,11 +4,11 @@ import { Octokit } from "@octokit/core";
 import {
   GIT_OBJECT_TYPE_DIR,
   GIT_OBJECT_TYPE_FILE,
-  STATUS_EXISTS,
   OUTPUT_NAME_DID_OPTIMIZE,
   OUTPUT_NAME_OPTIMIZED_COUNT,
   OUTPUT_NAME_SKIPPED_COUNT,
   OUTPUT_NAME_SVG_COUNT,
+  STATUS_EXISTS,
 } from "../constants";
 import { getContent, getDefaultBranch } from "../github-api";
 import { ActionConfig } from "../inputs";

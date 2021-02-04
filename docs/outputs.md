@@ -24,5 +24,8 @@ steps:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
 - name: Consume output
   run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
-                    # ^^^^ This should be the id given to the SVGO Action step
+                    # ^            ^
+                    # |            | The name of the output you need
+                    # |
+                    # | The id of the SVGO Action step
 ```

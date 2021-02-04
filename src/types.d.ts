@@ -4,6 +4,7 @@ type InputOptions = {
 
 type Mode = "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
 
+// Type representing the possible names of values outputted by the Action.
 type OutputName =
   "DID_OPTIMIZE" |
   "OPTIMIZED_COUNT" |
