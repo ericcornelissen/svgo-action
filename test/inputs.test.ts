@@ -10,6 +10,7 @@ import {
   DEFAULT_COMMIT_TITLE,
   DEFAULT_COMMENT,
   INPUT_NAME_COMMENT,
+  INPUT_NAME_COMMIT,
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
@@ -95,6 +96,110 @@ describe("ActionConfig", () => {
 
   });
 
+  describe(".commit", () => {
+
+    beforeEach(() => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+    });
+
+    test("commit is set to `'true'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMIT, "true");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commit).toBe(true);
+    });
+
+    test("commit is set to `'true'` in the Workflow file, with dry-run", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetInput(INPUT_NAME_COMMIT, "true");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commit).toBe(false);
+    });
+
+    test("commit is set to `'false'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commit).toBe(false);
+    });
+
+    test("commit is set to `'false'` in the Workflow file, with dry-run", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commit).toBe(false);
+    });
+
+    test.each(nonBooleanStrings)("commit is set to '%s' in the Workflow file", (value) => {
+      mockCoreGetInput(INPUT_NAME_COMMIT, value);
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commit).toBe(true);
+    });
+
+    test.each(nonBooleanStrings)("commit is set to '%s' in the Workflow file, with dry-run", (value) => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetInput(INPUT_NAME_COMMIT, value);
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commit).toBe(false);
+    });
+
+    test("commit is `true` in the config object", () => {
+      const rawConfig = yaml.load("commit: true") as RawActionConfig;
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.commit).toBe(true);
+    });
+
+    test("commit is `true` in the config object, with dry-run", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+
+      const rawConfig = yaml.load("commit: true") as RawActionConfig;
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.commit).toBe(false);
+    });
+
+    test("commit is `false` in the config object", () => {
+      const rawConfig = yaml.load("commit: false") as RawActionConfig;
+      mockCoreGetInput(INPUT_NAME_COMMIT, "true");
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.commit).toBe(false);
+    });
+
+    test("commit is `false` in the config object, with dry-run", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+
+      const rawConfig = yaml.load("commit: false") as RawActionConfig;
+      mockCoreGetInput(INPUT_NAME_COMMIT, "true");
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.commit).toBe(false);
+    });
+
+    test("commit is an object in the config object", () => {
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core, { commit: {} });
+      expect(instance.commit).toBe(true);
+    });
+
+    test("commit is an object in the config object, with dry-run", () => {
+      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core, { commit: {} });
+      expect(instance.commit).toBe(false);
+    });
+
+  });
+
   describe(".commitBody", () => {
 
     test("commit is not defined in the config object", () => {
@@ -120,6 +225,21 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig(core, { commit: { body: "" } });
       expect(instance.commitBody).toBeDefined();
       expect(instance.commitBody).toEqual("");
+    });
+
+    test("commit is set to `'true'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMIT, "true");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commitBody).toEqual(DEFAULT_COMMIT_BODY);
+    });
+
+    test("commit is `true` in the config object", () => {
+      const rawConfig = yaml.load("commit: true") as RawActionConfig;
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.commitBody).toEqual(DEFAULT_COMMIT_BODY);
     });
 
   });
@@ -250,6 +370,21 @@ describe("ActionConfig", () => {
       expect(instance.commitTitle).toBeDefined();
       expect(instance.commitTitle).not.toEqual("");
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
+    });
+
+    test("commit is set to `'true'` in the Workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_COMMIT, "true");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
+    });
+
+    test("commit is `true` in the config object", () => {
+      const rawConfig = yaml.load("commit: true") as RawActionConfig;
+      mockCoreGetInput(INPUT_NAME_COMMIT, "false");
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
     });
 
   });
