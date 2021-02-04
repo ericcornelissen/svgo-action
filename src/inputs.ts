@@ -37,7 +37,7 @@ export class ActionConfig {
     this.isDryRun = isDryRun;
 
     this.comment = ActionConfig.getCommentValue(inputs, config);
-    this.commit = ActionConfig.getEnableCommitting(inputs, config, isDryRun);
+    this.commit = ActionConfig.getEnableCommits(inputs, config, isDryRun);
     this.commitBody = ActionConfig.getCommitBody(config);
     this.commitTitle = ActionConfig.getCommitTitle(inputs, config);
     this.enableComments = ActionConfig.getEnableComments(
@@ -65,26 +65,6 @@ export class ActionConfig {
     } else {
       return DEFAULT_COMMENT;
     }
-  }
-
-  private static getEnableCommitting(
-    inputs: Inputs,
-    config: RawActionConfig,
-    dryRun: boolean,
-  ): boolean {
-    let configValue: boolean | undefined;
-    if (typeof config.commit === "boolean") {
-      configValue = config.commit as boolean;
-    } else if (config.commit !== undefined) {
-      configValue = true;
-    }
-
-    return this.normalizeBoolOption(
-      inputs,
-      configValue,
-      INPUT_NAME_COMMIT,
-      true,
-    ) && !dryRun;
   }
 
   private static getCommitBody(config: RawActionConfig): string {
@@ -142,6 +122,26 @@ export class ActionConfig {
       inputs,
       config.comment as boolean,
       INPUT_NAME_COMMENT,
+      true,
+    ) && !dryRun;
+  }
+
+  private static getEnableCommits(
+    inputs: Inputs,
+    config: RawActionConfig,
+    dryRun: boolean,
+  ): boolean {
+    let configValue: boolean | undefined;
+    if (typeof config.commit === "boolean") {
+      configValue = config.commit as boolean;
+    } else if (config.commit !== undefined) {
+      configValue = true;
+    }
+
+    return this.normalizeBoolOption(
+      inputs,
+      configValue,
+      INPUT_NAME_COMMIT,
       true,
     ) && !dryRun;
   }

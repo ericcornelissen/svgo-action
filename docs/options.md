@@ -72,13 +72,14 @@ comment: |
 
 ## Commit
 
-| Name     | Default Value | Workflow file | Config File        |
-| -------- | ------------- | ------------- | ------------------ |
-| `commit` | `true`        | :x:           | :heavy_check_mark: |
+| Name     | Default Value | Workflow file            | Config File        |
+| -------- | ------------- | ------------------------ | ------------------ |
+| `commit` | `true`        | :heavy_check_mark: / :x: | :heavy_check_mark: |
 
 The _commit_ option can be used to either 1) disable commits or 2) configure the
-commits created by the Action. Because it is a complex option, it can only be
-configured in a configuration file.
+commits created by the Action. You can disable commits in both the Workflow file
+and the configuration file. However, you can configure the commit only in the
+configuration file because it is a complex option.
 
 - [Disable Commits](#commit-title)
 - [Commit Title](#commit-title)
