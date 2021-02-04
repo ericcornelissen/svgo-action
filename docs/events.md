@@ -3,7 +3,7 @@
 This file contains the documentation for all GitHub Actions events that the SVGO
 Action supports.
 
-- [`on: pull_request`](#on-pull_request)
+- [`on: pull_request` & `on: pull_request_event`](#on-pull_request--on-pull_request_event)
 - [`on: push`](#on-push)
 - [`on: schedule`](#on-schedule)
 
