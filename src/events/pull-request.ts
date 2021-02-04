@@ -21,14 +21,22 @@ import {
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { formatComment } from "../templating";
-import { CommitData, ContextData, GitFileInfo } from "../types";
+import { ContextData, GitFileInfo, OutputName } from "../types";
 import {
   getCommitData,
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
+  setOutputValues,
 } from "./common";
 
+
+const OUTPUT_NAMES: OutputName[] = [
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+];
 
 function getHeadRef(): string {
   const head: string = github.context.payload.pull_request?.head.ref;
@@ -80,13 +88,6 @@ async function getSvgsInPR(
   return doFilterSvgsFromFiles(client, prFiles, ignoreGlob);
 }
 
-function setOutputValues(commitData: CommitData): void {
-  core.setOutput(OUTPUT_NAME_DID_OPTIMIZE, `${commitData.optimizedCount > 0}`);
-  core.setOutput(OUTPUT_NAME_OPTIMIZED_COUNT, `${commitData.optimizedCount}`);
-  core.setOutput(OUTPUT_NAME_SKIPPED_COUNT, `${commitData.skippedCount}`);
-  core.setOutput(OUTPUT_NAME_SVG_COUNT, `${commitData.svgCount}`);
-}
-
 async function run(
   client: Octokit,
   config: ActionConfig,
@@ -102,7 +103,7 @@ async function run(
     const comment: string = formatComment(config.comment, commitData);
     await createComment(client, prNumber, comment);
   }
-  setOutputValues(commitData);
+  setOutputValues(commitData, OUTPUT_NAMES);
 }
 
 
