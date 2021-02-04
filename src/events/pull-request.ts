@@ -2,7 +2,15 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
-import { DISABLE_PATTERN, ENABLE_PATTERN, PR_NOT_FOUND } from "../constants";
+import {
+  DISABLE_PATTERN,
+  ENABLE_PATTERN,
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+  PR_NOT_FOUND,
+} from "../constants";
 import {
   createComment,
   getCommitMessage,
@@ -13,7 +21,7 @@ import {
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { formatComment } from "../templating";
-import { ContextData, GitFileInfo } from "../types";
+import { CommitData, ContextData, GitFileInfo } from "../types";
 import {
   getCommitData,
   doCommit,
@@ -72,6 +80,13 @@ async function getSvgsInPR(
   return doFilterSvgsFromFiles(client, prFiles, ignoreGlob);
 }
 
+function setOutputValues(commitData: CommitData): void {
+  core.setOutput(OUTPUT_NAME_DID_OPTIMIZE, `${commitData.optimizedCount > 0}`);
+  core.setOutput(OUTPUT_NAME_OPTIMIZED_COUNT, `${commitData.optimizedCount}`);
+  core.setOutput(OUTPUT_NAME_SKIPPED_COUNT, `${commitData.skippedCount}`);
+  core.setOutput(OUTPUT_NAME_SVG_COUNT, `${commitData.svgCount}`);
+}
+
 async function run(
   client: Octokit,
   config: ActionConfig,
@@ -87,6 +102,7 @@ async function run(
     const comment: string = formatComment(config.comment, commitData);
     await createComment(client, prNumber, comment);
   }
+  setOutputValues(commitData);
 }
 
 

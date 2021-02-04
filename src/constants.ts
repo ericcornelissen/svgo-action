@@ -53,5 +53,12 @@ export const STATUS_EXISTS = "exists";
 export const STATUS_MODIFIED = "modified";
 export const STATUS_REMOVED = "removed";
 
+// Output keys
+
+export const OUTPUT_NAME_DID_OPTIMIZE = "DID_OPTIMIZE";
+export const OUTPUT_NAME_OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
+export const OUTPUT_NAME_SKIPPED_COUNT = "SKIPPED_COUNT";
+export const OUTPUT_NAME_SVG_COUNT = "SVG_COUNT";
+
 // Special values
 export const PR_NOT_FOUND = -1;

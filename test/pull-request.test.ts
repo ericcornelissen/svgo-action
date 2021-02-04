@@ -18,7 +18,14 @@ jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/templating", () => templating);
 
-import { INPUT_NAME_REPO_TOKEN, PR_NOT_FOUND } from "../src/constants";
+import {
+  INPUT_NAME_REPO_TOKEN,
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+  PR_NOT_FOUND,
+} from "../src/constants";
 import main from "../src/events/pull-request";
 
 
@@ -33,6 +40,7 @@ beforeEach(() => {
   core.error.mockClear();
   core.info.mockClear();
   core.setFailed.mockClear();
+  core.setOutput.mockClear();
   core.warning.mockClear();
 
   encoder.decode.mockClear();
@@ -419,6 +427,75 @@ describe("Comments", () => {
     expect(templating.formatComment).toHaveBeenCalledWith(
       actionConfig.comment,
       expect.any(Object),
+    );
+  });
+
+});
+
+describe("Outputs", () => {
+
+  const OUTPUTS_COUNT = 4;
+
+  test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "true"`, async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.MANY_CHANGES);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_DID_OPTIMIZE,
+      "true",
+    );
+  });
+
+  test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "false"`, async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.NO_CHANGES);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_DID_OPTIMIZE,
+      "false",
+    );
+  });
+
+  test(`${OUTPUT_NAME_OPTIMIZED_COUNT} is set correctly`, async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_OPTIMIZED_COUNT,
+      "2",
+    );
+  });
+
+  test.each([
+    [PR_NUMBER.ADD_SVG, 0],
+    [PR_NUMBER.ADD_OPTIMIZED_SVG, 1],
+  ])(`${OUTPUT_NAME_SKIPPED_COUNT} is set correctly`, async (prNumber, count) => {
+    githubAPI.getPrNumber.mockReturnValueOnce(prNumber);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_SKIPPED_COUNT,
+      `${count}`,
+    );
+  });
+
+  test(`${OUTPUT_NAME_SVG_COUNT} is set correctly`, async () => {
+    githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_SVG_COUNT,
+      "2",
     );
   });
 
