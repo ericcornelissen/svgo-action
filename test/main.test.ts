@@ -65,6 +65,13 @@ test("pull_request event", async () => {
   expect(prEventMain).toHaveBeenCalledTimes(1);
 });
 
+test("pull_request_target event", async () => {
+  github.context.eventName = EVENT_PULL_REQUEST_TARGET;
+
+  await main();
+  expect(prEventMain).toHaveBeenCalledTimes(1);
+});
+
 test("schedule event", async () => {
   github.context.eventName = EVENT_SCHEDULE;
 
@@ -86,6 +93,17 @@ test("push event error", async () => {
 
 test("pull_request event error", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
+
+  prEventMain.mockImplementationOnce(() => {
+    throw new Error("Something went wrong");
+  });
+
+  await main();
+  expect(core.setFailed).toHaveBeenCalledTimes(1);
+});
+
+test("pull_request_target event error", async () => {
+  github.context.eventName = EVENT_PULL_REQUEST_TARGET;
 
   prEventMain.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
