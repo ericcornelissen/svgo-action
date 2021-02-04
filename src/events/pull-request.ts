@@ -15,10 +15,10 @@ import { SVGOptimizer } from "../svgo";
 import { formatComment } from "../templating";
 import { ContextData, GitFileInfo } from "../types";
 import {
-  getCommitData,
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
+  getCommitData,
 } from "./common";
 
 

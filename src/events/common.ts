@@ -78,22 +78,6 @@ async function toBlobs(
 }
 
 
-export function getCommitData(
-  context: ContextData,
-  optimizedSvgs: FileData[],
-): CommitData {
-  const { fileCount, ignoredCount, svgs, warnings } = context;
-  return {
-    fileCount: fileCount,
-    fileData: { optimized: optimizedSvgs, original: svgs },
-    ignoredCount: ignoredCount,
-    optimizedCount: optimizedSvgs.length,
-    skippedCount: svgs.length - optimizedSvgs.length,
-    svgCount: svgs.length,
-    warnings: warnings,
-  };
-}
-
 export async function doCommit(
   client: Octokit,
   ref: string,
@@ -179,4 +163,20 @@ export async function doOptimizeSvgs(
   }
 
   return optimizedSvgs;
+}
+
+export function getCommitData(
+  context: ContextData,
+  optimizedSvgs: FileData[],
+): CommitData {
+  const { fileCount, ignoredCount, svgs, warnings } = context;
+  return {
+    fileCount: fileCount,
+    fileData: { optimized: optimizedSvgs, original: svgs },
+    ignoredCount: ignoredCount,
+    optimizedCount: optimizedSvgs.length,
+    skippedCount: svgs.length - optimizedSvgs.length,
+    svgCount: svgs.length,
+    warnings: warnings,
+  };
 }
