@@ -49,7 +49,7 @@ configuration file]. The table below shows the options that can be configured.
 | Name                   | Description                              | Default       | Documentation                                 |
 | ---------------------- | ---------------------------------------- | ------------- | --------------------------------------------- |
 | `comment`              | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comment)              |
-| `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
+| `commit`               | Configure the Action's commit messages   | `true`        | [docs](/docs/options.md#commit)               |
 | `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
 | `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
 | `ignore`               | A [glob] of SVGs that should be ignored  | `""`          | [docs](/docs/options.md#ignore)               |
@@ -64,6 +64,7 @@ The first way to configure the Action is inside the Workflow file, after the
 with:
   repo-token: ${{ secrets.GITHUB_TOKEN }}
   comment: true
+  commit: true
   conventional-commits: true
   dry-run: true
   ignore: do/not/optimize/**/*.svg

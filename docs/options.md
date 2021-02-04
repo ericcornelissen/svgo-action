@@ -74,14 +74,30 @@ comment: |
 
 | Name     | Default Value | Workflow file | Config File        |
 | -------- | ------------- | ------------- | ------------------ |
-| `commit` | n/a           | :x:           | :heavy_check_mark: |
+| `commit` | `true`        | :x:           | :heavy_check_mark: |
 
-The _commit_ option can be used to configure the commits created by the Action.
-Because it is a complex option, it can only be configured in a configuration
-file.
+The _commit_ option can be used to either 1) disable commits or 2) configure the
+commits created by the Action. Because it is a complex option, it can only be
+configured in a configuration file.
 
+- [Disable Commits](#commit-title)
 - [Commit Title](#commit-title)
 - [Commit Body](#commit-body)
+
+### Disable Commits
+
+To disable commits by the Action:
+
+```yaml
+# .github/workflows/svgo.yml
+- uses: ericcornelissen/svgo-action@v1
+  with:
+    commit: false
+
+
+# .github/svgo-action.yml
+commit: false
+```
 
 ### Commit Title
 
