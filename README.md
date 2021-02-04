@@ -20,8 +20,10 @@ also check [what the Action does for each `on` event](/docs/events.md).
 ```yaml
 name: SVGOptimizer
 on:
-# Disable the following line if you don't want the Action to run on PRs.
-  pull_request:
+# Disable the following line if you don't want the Action to run on all PRs.
+  pull_request_target:
+# Enable the following line if you want the Action to run on local PRs only.
+#  pull_request:
 # Enable the following line if you want the Action to run on regular pushes.
 #  push:
 # Enable the following lines if you want the Action to run on a schedule.

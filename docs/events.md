@@ -12,7 +12,7 @@ to improve the documentation.
 
 ---
 
-## `on: pull_request`
+## `on: pull_request` & `on: pull_request_event`
 
 In the `pull_request` context, the SVGO Action will optimize all SVGs that have
 been added or modified in a Pull Request. This means that an Action run covers
@@ -22,9 +22,13 @@ Request.
 The Action will not change SVGs that are not part of the Pull Request, SVGs that
 are already optimized or [SVGs that are ignored].
 
+You can use `pull_request_event` instead of `pull_request` if you want the SVGO
+Action to run on Pull Requests from forks.
+
 ### Configuration
 
-The following [options] have an effect in the `pull_request` context.
+The following [options] have an effect in the `pull_request` and
+`pull_request_target` contexts.
 
 | Name                   | Supported          |
 | ---------------------- | ------------------ |
