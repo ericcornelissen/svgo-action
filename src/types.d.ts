@@ -37,7 +37,7 @@ export type ContextData = {
 // Type representing an Action configuration file.
 export type RawActionConfig = {
   readonly comment?: boolean | string;
-  readonly commit?: {
+  readonly commit?: boolean | {
     readonly conventional?: boolean;
     readonly title?: string;
     readonly body?: string;

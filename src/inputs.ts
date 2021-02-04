@@ -4,6 +4,7 @@ import {
   DEFAULT_COMMIT_TITLE,
   DEFAULT_COMMENT,
   INPUT_NAME_COMMENT,
+  INPUT_NAME_COMMIT,
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
@@ -23,6 +24,7 @@ const TRUE = "true";
 export class ActionConfig {
 
   public readonly comment: string;
+  public readonly commit: boolean;
   public readonly commitBody: string;
   public readonly commitTitle: string;
   public readonly enableComments: boolean;
@@ -31,15 +33,17 @@ export class ActionConfig {
   public readonly svgoOptionsPath: string;
 
   constructor(inputs: Inputs, config: RawActionConfig = { }) {
-    this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
+    const isDryRun = ActionConfig.getDryRunValue(inputs, config);
+    this.isDryRun = isDryRun;
 
     this.comment = ActionConfig.getCommentValue(inputs, config);
+    this.commit = ActionConfig.getEnableCommitting(inputs, config, isDryRun);
     this.commitBody = ActionConfig.getCommitBody(config);
     this.commitTitle = ActionConfig.getCommitTitle(inputs, config);
     this.enableComments = ActionConfig.getEnableComments(
       inputs,
       config,
-      this.isDryRun,
+      isDryRun,
     );
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
@@ -63,7 +67,31 @@ export class ActionConfig {
     }
   }
 
+  private static getEnableCommitting(
+    inputs: Inputs,
+    config: RawActionConfig,
+    dryRun: boolean,
+  ): boolean {
+    let configValue: boolean | undefined;
+    if (typeof config.commit === "boolean") {
+      configValue = config.commit as boolean;
+    } else if (config.commit !== undefined) {
+      configValue = true;
+    }
+
+    return this.normalizeBoolOption(
+      inputs,
+      configValue,
+      INPUT_NAME_COMMIT,
+      true,
+    ) && !dryRun;
+  }
+
   private static getCommitBody(config: RawActionConfig): string {
+    if (typeof config.commit === "boolean") {
+      return DEFAULT_COMMIT_BODY;
+    }
+
     return (config.commit?.body !== undefined) ?
       config.commit.body : DEFAULT_COMMIT_BODY;
   }
@@ -72,15 +100,22 @@ export class ActionConfig {
     inputs: Inputs,
     config: RawActionConfig,
   ): string {
+    let conventional: boolean | undefined;
+    if (typeof config.commit !== "boolean") {
+      conventional = config.commit?.conventional;
+    }
+
     const useConventionalCommit = this.normalizeBoolOption(
       inputs,
-      config.commit?.conventional,
+      conventional,
       INPUT_NAME_CONVENTIONAL_COMMITS,
       true,
     );
 
     if (useConventionalCommit) {
       return CONVENTIONAL_COMMIT_TITLE;
+    } else if (typeof config.commit === "boolean") {
+      return DEFAULT_COMMIT_TITLE;
     } else {
       return config.commit?.title || DEFAULT_COMMIT_TITLE;
     }

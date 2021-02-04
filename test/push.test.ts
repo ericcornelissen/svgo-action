@@ -97,26 +97,26 @@ describe("Logging", () => {
 
 describe("Configuration", () => {
 
-  test("dry mode enabled", async () => {
+  test("committing is enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
-    actionConfig.isDryRun = true;
-
-    github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
-
-    await main(client, actionConfig, svgo);
-
-    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
-  });
-
-  test("dry mode disabled", async () => {
-    const actionConfig = new inputs.ActionConfig();
-    actionConfig.isDryRun = false;
+    actionConfig.commit = true;
 
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
 
     await main(client, actionConfig, svgo);
 
     expect(githubAPI.commitFiles).toHaveBeenCalled();
+  });
+
+  test("committing is disabled", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.commit = false;
+
+    github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
+
+    await main(client, actionConfig, svgo);
+
+    expect(githubAPI.commitFiles).not.toHaveBeenCalled();
   });
 
   test.each([

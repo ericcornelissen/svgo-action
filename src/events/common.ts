@@ -107,7 +107,7 @@ export async function doCommit(
     svgCount,
   } = commitData;
 
-  if (!config.isDryRun && optimized.length > 0) {
+  if (config.commit && optimized.length > 0) {
     const { blobs, warnings } = await toBlobs(client, optimized);
     commitData.warnings.push(...warnings);
 
