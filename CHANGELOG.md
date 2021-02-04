@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add option to disable creating a commit. ([#310])
 
 ## [1.2.0] - 2020-10-03
 
@@ -178,4 +178,5 @@ Versioning].
 [#262]: https://github.com/ericcornelissen/svgo-action/pull/262
 [#270]: https://github.com/ericcornelissen/svgo-action/pull/270
 [#272]: https://github.com/ericcornelissen/svgo-action/pull/272
+[#310]: https://github.com/ericcornelissen/svgo-action/pull/310
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
