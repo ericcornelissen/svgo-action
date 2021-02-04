@@ -70,6 +70,7 @@ export const context: {
     pull_request?: {
       head: {
         ref: string,
+        sha: string,
       },
       number: number,
     },
@@ -90,6 +91,7 @@ export const context: {
     pull_request: {
       head: {
         ref: "branch-name",
+        sha: "60e82798538f1853144300adaaa00650c9a6ab4d",
       },
       number: PR_NUMBER.NO_CHANGES,
     },

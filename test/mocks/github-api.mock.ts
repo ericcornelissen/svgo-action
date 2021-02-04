@@ -8,13 +8,14 @@ import { GitFileData, GitObjectInfo } from "../../src/types";
 
 async function _getContent(
   client: Octokit,
+  ref: string,
   path: string,
 ): Promise<GitFileData | GitObjectInfo[]> {
   const { data } = await client.repos.getContent({
     owner: "mew",
     repo: "svg-action",
     path,
-    ref: "heads/ref",
+    ref,
   });
 
   if (Array.isArray(data)) {

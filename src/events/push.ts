@@ -73,11 +73,12 @@ async function getFilesInCommits(client: Octokit): Promise<GitFileInfo[]> {
 
 async function getSvgsInCommits(
   client: Octokit,
+  ref: string,
   ignoreGlob: string,
 ): Promise<ContextData> {
   core.debug("fetching changed files for pushed commits");
   const files: GitFileInfo[] = await getFilesInCommits(client);
-  return doFilterSvgsFromFiles(client, files, ignoreGlob);
+  return doFilterSvgsFromFiles(client, files, ignoreGlob, ref);
 }
 
 
@@ -86,7 +87,8 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const context = await getSvgsInCommits(client, config.ignoreGlob);
+  const ref: string = github.context.sha;
+  const context = await getSvgsInCommits(client, ref, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
   await doCommit(client, getHeadRef(), config, commitData);

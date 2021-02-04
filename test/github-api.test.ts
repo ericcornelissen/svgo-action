@@ -277,14 +277,15 @@ describe("::getCommitMessage", () => {
 describe("::getContent", () => {
 
   const defaultDir = "";
+  const defaultRef = github.context.sha;
 
   test("get an existing directory", async () => {
-    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    const items: GitObjectInfo[] = await getContent(client, defaultRef, defaultDir);
     expect(items).toBeDefined();
   });
 
   test("'path' is defined for each item", async () => {
-    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    const items: GitObjectInfo[] = await getContent(client, defaultRef, defaultDir);
     expect(items).toBeDefined();
 
     for (const item of items) {
@@ -293,7 +294,7 @@ describe("::getContent", () => {
   });
 
   test("'type' is defined for each item", async () => {
-    const items: GitObjectInfo[] = await getContent(client, defaultDir);
+    const items: GitObjectInfo[] = await getContent(client, defaultRef, defaultDir);
     expect(items).toBeDefined();
 
     for (const item of items) {
@@ -304,7 +305,7 @@ describe("::getContent", () => {
   test("directory is not found", async () => {
     github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
-    const promise = getContent(client, "foobar");
+    const promise = getContent(client, defaultRef, "foobar");
     await expect(promise).rejects.toBeDefined();
   });
 
@@ -326,31 +327,32 @@ describe("::getDefaultBranch", () => {
 describe("::getFile", () => {
 
   const filePaths: string[] = Object.keys(files).slice(0, 4);
+  const defaultRef = github.context.sha;
 
   test.each(filePaths)("get an existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
     expect(fileData).toBeDefined();
   });
 
   test.each(filePaths)("'path' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
     expect(fileData.path).toBeDefined();
   });
 
   test.each(filePaths)("'content' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
     expect(fileData.content).toBeDefined();
   });
 
   test.each(filePaths)("'encoding' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, filePath);
+    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
     expect(fileData.encoding).toBeDefined();
   });
 
   test("file is not found", async () => {
     github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
-    const promise = getFile(client, "foobar");
+    const promise = getFile(client, defaultRef, "foobar");
     await expect(promise).rejects.toBeDefined();
   });
 

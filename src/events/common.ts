@@ -22,13 +22,14 @@ import {
 
 async function getSvgsContent(
   client: Octokit,
+  ref: string,
   svgList: GitFileInfo[],
 ): Promise<{ svgs: FileData[], warnings: string[] }> {
   const svgs: FileData[] = [], warnings: string[] = [];
   for (const svg of svgList) {
     try {
       core.debug(`fetching file contents of '${svg.path}'`);
-      const fileData: GitFileData = await getFile(client, svg.path);
+      const fileData: GitFileData = await getFile(client, ref, svg.path);
 
       core.debug(`decoding ${fileData.encoding}-encoded '${svg.path}'`);
       const svgContent: string = decode(fileData.content, fileData.encoding);
@@ -135,6 +136,7 @@ export async function doFilterSvgsFromFiles(
   client: Octokit,
   files: GitFileInfo[],
   ignoreGlob: string,
+  ref: string,
 ): Promise<ContextData> {
   const fileCount = files.length;
   core.debug(`found ${fileCount} file(s)`);
@@ -148,7 +150,7 @@ export async function doFilterSvgsFromFiles(
   const ignoredCount = svgCount - notIgnoredSvgs.length;
   core.debug(`${ignoredCount} SVG(s) matching '${ignoreGlob}' will be ignored`);
 
-  const { warnings, svgs } = await getSvgsContent(client, notIgnoredSvgs);
+  const { warnings, svgs } = await getSvgsContent(client, ref, notIgnoredSvgs);
   return { fileCount, ignoredCount, svgs, warnings };
 }
 

@@ -1,3 +1,4 @@
+import * as github from "@actions/github";
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 
@@ -38,13 +39,16 @@ function objectInfoToFileInfo(objectInfo: GitObjectInfo): GitFileInfo {
   };
 }
 
-async function getFilesInRepo(client: Octokit): Promise<GitFileInfo[]> {
+async function getFilesInRepo(
+  client: Octokit,
+  ref: string,
+): Promise<GitFileInfo[]> {
   const files: GitFileInfo[] = [];
 
   const paths: string[] = [""];
   while (paths.length > 0) {
     const path: string = paths.shift() || "";
-    const items: GitObjectInfo[] = await getContent(client, path);
+    const items: GitObjectInfo[] = await getContent(client, ref, path);
 
     const dirs = items.filter(dirObject).map((item) => item.path);
     paths.push(...dirs);
@@ -60,9 +64,11 @@ async function getSvgsInRepo(
   client: Octokit,
   ignoreGlob: string,
 ): Promise<ContextData> {
+  const ref: string = github.context.sha;
+
   core.debug("fetching files in repository");
-  const files: GitFileInfo[] = await getFilesInRepo(client);
-  return doFilterSvgsFromFiles(client, files, ignoreGlob);
+  const files: GitFileInfo[] = await getFilesInRepo(client, ref);
+  return doFilterSvgsFromFiles(client, files, ignoreGlob, ref);
 }
 
 
