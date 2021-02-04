@@ -27,35 +27,20 @@ const client = github.getOctokit(token);
 const config = new inputs.ActionConfig();
 const svgo = new svgoImport.SVGOptimizer();
 
-
-beforeEach(() => {
-  core.debug.mockClear();
-  core.error.mockClear();
-  core.info.mockClear();
-  core.setFailed.mockClear();
-  core.warning.mockClear();
-
-  encoder.decode.mockClear();
-  encoder.encode.mockClear();
-
-  githubAPI.commitFiles.mockClear();
-  githubAPI.createBlob.mockClear();
-  githubAPI.createComment.mockClear();
-  githubAPI.getFile.mockClear();
-  githubAPI.getPrFiles.mockClear();
+test("get the Pull Request number", async () => {
   githubAPI.getPrNumber.mockClear();
 
-  svgoImport.OptimizerInstance.optimize.mockClear();
-
-  templating.formatCommitMessage.mockClear();
-});
-
-test("get the Pull Request number", async () => {
   await main(client, config, svgo);
   expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
 });
 
 describe("Logging", () => {
+
+  beforeEach(() => {
+    core.debug.mockClear();
+    core.error.mockClear();
+    core.info.mockClear();
+  });
 
   test("does some debug logging", async () => {
     await main(client, config, svgo);
@@ -99,6 +84,18 @@ describe("Logging", () => {
 });
 
 describe("Configuration", () => {
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
@@ -218,6 +215,12 @@ describe("Configuration", () => {
 });
 
 describe("Manual Action control", () => {
+
+  beforeEach(() => {
+    core.info.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+  });
 
   test.each([
     ["But why is the rum gone"],
@@ -345,6 +348,10 @@ describe("Manual Action control", () => {
 
 describe("Comments", () => {
 
+  beforeEach(() => {
+    githubAPI.createComment.mockClear();
+  });
+
   test("don't comment if comments are disabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.enableComments = false;
@@ -440,6 +447,16 @@ describe("Payloads", () => {
   const complexSvgData = files[complexFilePath];
   const fooSvgData = files[fooFilePath];
   const testSvgData = files[testFilePath];
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+  });
 
   test("a Pull Request with 1 new SVG", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NUMBER.ADD_SVG);
@@ -827,6 +844,22 @@ describe("Payloads", () => {
 });
 
 describe("Error scenarios", () => {
+
+  beforeEach(() => {
+    core.setFailed.mockClear();
+    core.warning.mockClear();
+
+    encoder.decode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+    githubAPI.getFile.mockClear();
+    githubAPI.getPrFiles.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("the Pull Request number could not be found", async () => {
     githubAPI.getPrNumber.mockReturnValueOnce(PR_NOT_FOUND);

@@ -28,25 +28,13 @@ const config = new inputs.ActionConfig();
 const svgo = new svgoImport.SVGOptimizer();
 
 
-beforeEach(() => {
-  core.debug.mockClear();
-  core.error.mockClear();
-  core.info.mockClear();
-  core.setFailed.mockClear();
-  core.warning.mockClear();
-
-  encoder.decode.mockClear();
-  encoder.encode.mockClear();
-
-  githubAPI.commitFiles.mockClear();
-  githubAPI.createBlob.mockClear();
-
-  svgoImport.OptimizerInstance.optimize.mockClear();
-
-  templating.formatCommitMessage.mockClear();
-});
-
 describe("Logging", () => {
+
+  beforeEach(() => {
+    core.debug.mockClear();
+    core.error.mockClear();
+    core.info.mockClear();
+  });
 
   test("does some debug logging", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
@@ -96,6 +84,18 @@ describe("Logging", () => {
 });
 
 describe("Configuration", () => {
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
@@ -216,6 +216,12 @@ describe("Configuration", () => {
 
 describe("Manual Action control", () => {
 
+  beforeEach(() => {
+    core.info.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+  });
+
   test.each([
     ["But why is the rum gone"],
     ["It's dangerous to go alone!"],
@@ -261,6 +267,16 @@ describe("Payloads", () => {
   const barSvgData = files[barFilePath];
   const fooSvgData = files[fooFilePath];
   const testSvgData = files[testFilePath];
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+  });
 
   test("commits with 1 new SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
@@ -767,6 +783,22 @@ describe("Payloads", () => {
 });
 
 describe("Error scenarios", () => {
+
+  beforeEach(() => {
+    core.setFailed.mockClear();
+    core.warning.mockClear();
+
+    encoder.decode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+    githubAPI.getFile.mockClear();
+    githubAPI.getPrFiles.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("the commit files could not be found", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
