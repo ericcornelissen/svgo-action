@@ -4,6 +4,7 @@ import { Octokit } from "@octokit/core";
 
 import {
   EVENT_PULL_REQUEST,
+  EVENT_PULL_REQUEST_TARGET,
   EVENT_PUSH,
   EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
@@ -38,6 +39,7 @@ async function run(
     core.info(`Running SVGO Action in '${event}' context`);
     switch (event) {
       case EVENT_PULL_REQUEST:
+      case EVENT_PULL_REQUEST_TARGET:
         await prEventMain(client, config, svgo);
         break;
       case EVENT_PUSH:

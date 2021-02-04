@@ -1,5 +1,6 @@
 // Action events
 export const EVENT_PULL_REQUEST = "pull_request";
+export const EVENT_PULL_REQUEST_TARGET = "pull_request_target";
 export const EVENT_PUSH = "push";
 export const EVENT_SCHEDULE = "schedule";
 

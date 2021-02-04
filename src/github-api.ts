@@ -40,8 +40,13 @@ async function getContentFromRepo(
   client: Octokit,
   path: string,
 ): Promise<RepoContents> {
+  let ref = github.context.sha;
+  if (github.context.eventName === "pull_request_target") {
+    ref = github.context.payload.pull_request?.head.sha;
+  }
+
   const { data } = await client.repos.getContent({ owner, repo, path,
-    ref: github.context.sha,
+    ref: ref,
   });
 
   return data;
