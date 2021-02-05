@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.2.1] - 2021-02-05
+
 - Output basic information about the Action run. ([#312])
 - Update project description. ([#317])
 
