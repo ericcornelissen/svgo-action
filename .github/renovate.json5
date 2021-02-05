@@ -27,7 +27,7 @@
     enabled: true,
 
     // This schedule should be the same as the general schedule!
-    schedule: "on the 2nd and 4th day instance on tuesday",
+    schedule: "on the first day of the month",
   },
 
   // Enable automerging of Renovate Pull Requests
