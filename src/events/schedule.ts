@@ -53,14 +53,14 @@ function objectInfoToFileInfo(objectInfo: GitObjectInfo): GitFileInfo {
 
 async function getFilesInRepo(
   client: Octokit,
-  ref: string,
+  contextRef: string,
 ): Promise<GitFileInfo[]> {
   const files: GitFileInfo[] = [];
 
   const paths: string[] = [""];
   while (paths.length > 0) {
     const path: string = paths.shift() || "";
-    const items: GitObjectInfo[] = await getContent(client, ref, path);
+    const items: GitObjectInfo[] = await getContent(client, contextRef, path);
 
     const dirs = items.filter(dirObject).map((item) => item.path);
     paths.push(...dirs);
@@ -74,13 +74,12 @@ async function getFilesInRepo(
 
 async function getSvgsInRepo(
   client: Octokit,
+  contextRef: string,
   ignoreGlob: string,
 ): Promise<ContextData> {
-  const ref: string = github.context.sha;
-
   core.debug("fetching files in repository");
-  const files: GitFileInfo[] = await getFilesInRepo(client, ref);
-  return doFilterSvgsFromFiles(client, ref, files, ignoreGlob);
+  const files: GitFileInfo[] = await getFilesInRepo(client, contextRef);
+  return doFilterSvgsFromFiles(client, contextRef, files, ignoreGlob);
 }
 
 
@@ -89,10 +88,12 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const context = await getSvgsInRepo(client, config.ignoreGlob);
+  const contextRef: string = github.context.sha;
+  const headRef = await getHeadRef(client);
+
+  const context = await getSvgsInRepo(client, contextRef, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
-  const ref = await getHeadRef(client);
-  await doCommit(client, ref, config, commitData);
+  await doCommit(client, headRef, config, commitData);
   setOutputValues(commitData, OUTPUT_NAMES);
 }

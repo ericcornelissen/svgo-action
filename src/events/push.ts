@@ -38,10 +38,8 @@ function isDisabledForCommit(commitMessage: string): boolean {
   return DISABLE_PATTERN.test(commitMessage);
 }
 
-function samePathAs(ref: GitFileInfo): ((subject: GitFileInfo) => boolean) {
-  return function (subject: GitFileInfo): boolean {
-    return subject.path === ref.path;
-  };
+function samePathAs(a: GitFileInfo): ((subject: GitFileInfo) => boolean) {
+  return (b: GitFileInfo): boolean => a.path === b.path;
 }
 
 function removed(
@@ -87,12 +85,12 @@ async function getFilesInCommits(client: Octokit): Promise<GitFileInfo[]> {
 
 async function getSvgsInCommits(
   client: Octokit,
-  ref: string,
+  contextRef: string,
   ignoreGlob: string,
 ): Promise<ContextData> {
   core.debug("fetching changed files for pushed commits");
   const files: GitFileInfo[] = await getFilesInCommits(client);
-  return doFilterSvgsFromFiles(client, ref, files, ignoreGlob);
+  return doFilterSvgsFromFiles(client, contextRef, files, ignoreGlob);
 }
 
 
@@ -101,8 +99,8 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const ref: string = github.context.sha;
-  const context = await getSvgsInCommits(client, ref, config.ignoreGlob);
+  const contextRef: string = github.context.sha;
+  const context = await getSvgsInCommits(client, contextRef, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
   await doCommit(client, getHeadRef(), config, commitData);
