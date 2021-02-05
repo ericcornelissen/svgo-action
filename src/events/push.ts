@@ -92,7 +92,7 @@ async function getSvgsInCommits(
 ): Promise<ContextData> {
   core.debug("fetching changed files for pushed commits");
   const files: GitFileInfo[] = await getFilesInCommits(client);
-  return doFilterSvgsFromFiles(client, files, ignoreGlob, ref);
+  return doFilterSvgsFromFiles(client, ref, files, ignoreGlob);
 }
 
 

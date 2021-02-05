@@ -86,7 +86,7 @@ async function getSvgsInPR(
 ): Promise<ContextData> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
   const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
-  return doFilterSvgsFromFiles(client, prFiles, ignoreGlob, ref);
+  return doFilterSvgsFromFiles(client, ref, prFiles, ignoreGlob);
 }
 
 async function run(

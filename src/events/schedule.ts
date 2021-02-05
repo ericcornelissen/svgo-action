@@ -80,7 +80,7 @@ async function getSvgsInRepo(
 
   core.debug("fetching files in repository");
   const files: GitFileInfo[] = await getFilesInRepo(client, ref);
-  return doFilterSvgsFromFiles(client, files, ignoreGlob, ref);
+  return doFilterSvgsFromFiles(client, ref, files, ignoreGlob);
 }
 
 

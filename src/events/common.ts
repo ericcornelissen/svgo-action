@@ -154,9 +154,9 @@ export async function doCommit(
 
 export async function doFilterSvgsFromFiles(
   client: Octokit,
+  ref: string,
   files: GitFileInfo[],
   ignoreGlob: string,
-  ref: string,
 ): Promise<ContextData> {
   const fileCount = files.length;
   core.debug(`found ${fileCount} file(s)`);
