@@ -12,7 +12,7 @@
   packageRules: [
     {
       // Configure automerge: exclude semver major changes
-      updateTypes: ["minor", "patch", "pin", "digest"],
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },
   ],
