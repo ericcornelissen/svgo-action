@@ -15,7 +15,8 @@ Automatically run [SVGO] on SVGs in Pull Requests.
 
 Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO Action. You can
-also check [what the Action does for each `on` event](/docs/events.md).
+check [what the Action does for each `on` event](/docs/events.md). The SVGO
+Action also [outputs some values](/docs/outputs.md) for subsequent steps.
 
 ```yaml
 name: SVGOptimizer

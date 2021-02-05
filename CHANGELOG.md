@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Run Action on `pull_request_target`. ([#309])
+- Output basic information about the Action run. ([#312])
 
 ## [1.2.0] - 2020-10-03
 
@@ -179,4 +180,5 @@ Versioning].
 [#270]: https://github.com/ericcornelissen/svgo-action/pull/270
 [#272]: https://github.com/ericcornelissen/svgo-action/pull/272
 [#309]: https://github.com/ericcornelissen/svgo-action/pull/309
+[#312]: https://github.com/ericcornelissen/svgo-action/pull/312
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

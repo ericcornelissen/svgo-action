@@ -4,6 +4,12 @@ type InputOptions = {
 
 type Mode = "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
 
+// Type representing the possible names of values outputted by the Action.
+type OutputName =
+  "DID_OPTIMIZE" |
+  "OPTIMIZED_COUNT" |
+  "SKIPPED_COUNT" |
+  "SVG_COUNT";
 
 // Type representing the data of a file that is being processed by the Action.
 export type FileData = {
