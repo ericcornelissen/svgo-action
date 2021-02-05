@@ -1,7 +1,5 @@
 # SVGO Action Outputs
 
-This file contains the documentation about the output values of the SVGO Action.
-
 The table below list every output available to you in the steps following the
 SVGO Action.
 
@@ -24,8 +22,8 @@ steps:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
 - name: Consume output
   run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
-                    # ^            ^
-                    # |            | The name of the output you need
-                    # |
-                    # | The id of the SVGO Action step
+  #                   ^            ^
+  #                   |            | The name of the output you need
+  #                   |
+  #                   | The id of the SVGO Action step
 ```
