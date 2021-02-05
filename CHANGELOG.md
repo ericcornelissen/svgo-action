@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Output basic information about the Action run. ([#312])
+- Update project description. ([#317])
 
 ## [1.2.0] - 2020-10-03
 
@@ -179,4 +180,5 @@ Versioning].
 [#270]: https://github.com/ericcornelissen/svgo-action/pull/270
 [#272]: https://github.com/ericcornelissen/svgo-action/pull/272
 [#312]: https://github.com/ericcornelissen/svgo-action/pull/312
+[#317]: https://github.com/ericcornelissen/svgo-action/pull/317
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
