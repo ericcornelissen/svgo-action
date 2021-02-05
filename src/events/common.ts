@@ -1,6 +1,12 @@
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 
+import {
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+} from "../constants";
 import { decode, encode } from "../encoder";
 import { existingFiles, filesNotMatching, svgFiles } from "../filters";
 import { commitFiles, createBlob, getFile } from "../github-api";
@@ -11,6 +17,7 @@ import {
   CommitData,
   ContextData,
   FileData,
+  OutputName,
 
   // Git
   CommitInfo,
@@ -19,6 +26,19 @@ import {
   GitFileInfo,
 } from "../types";
 
+
+function getOutputValueFor(name: OutputName, commitData: CommitData): string {
+  switch (name) {
+    case OUTPUT_NAME_DID_OPTIMIZE:
+      return `${commitData.optimizedCount > 0}`;
+    case OUTPUT_NAME_OPTIMIZED_COUNT:
+      return `${commitData.optimizedCount}`;
+    case OUTPUT_NAME_SKIPPED_COUNT:
+      return `${commitData.skippedCount}`;
+    case OUTPUT_NAME_SVG_COUNT:
+      return `${commitData.svgCount}`;
+  }
+}
 
 async function getSvgsContent(
   client: Octokit,
@@ -179,4 +199,14 @@ export async function doOptimizeSvgs(
   }
 
   return optimizedSvgs;
+}
+
+export function setOutputValues(
+  commitData: CommitData,
+  names: OutputName[],
+): void {
+  names.forEach((name) => {
+    const value = getOutputValueFor(name, commitData);
+    core.setOutput(name, value);
+  });
 }

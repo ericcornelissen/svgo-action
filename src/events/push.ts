@@ -2,19 +2,33 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
 
-import { DISABLE_PATTERN } from "../constants";
+import {
+  DISABLE_PATTERN,
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+} from "../constants";
 import { removedFiles } from "../filters";
 import { getCommitFiles } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
-import { ContextData, GitFileInfo } from "../types";
+import { ContextData, GitFileInfo, OutputName } from "../types";
 import {
   getCommitData,
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
+  setOutputValues,
 } from "./common";
 
+
+const OUTPUT_NAMES: OutputName[] = [
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+];
 
 function getHeadRef(): string {
   return github.context.payload.ref.replace("refs/", "");
@@ -90,4 +104,5 @@ export default async function main(
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
   await doCommit(client, getHeadRef(), config, commitData);
+  setOutputValues(commitData, OUTPUT_NAMES);
 }

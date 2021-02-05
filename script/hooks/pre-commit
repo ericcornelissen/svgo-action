@@ -1,0 +1,17 @@
+#!/bin/sh
+. "$(dirname $0)/_/husky.sh"
+
+# Stash unstaged files
+git stash -q -u --keep-index
+
+# Format source code and update staged files
+npm run format
+git update-index --again
+
+# Verify building is possible, but ignore built files
+npm run build
+git checkout -- lib/.svgo.yml
+git checkout -- lib/index.js
+
+# Restore unstaged files
+git stash pop -q

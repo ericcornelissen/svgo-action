@@ -11,13 +11,13 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Use Node.js 10.x
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v2
       with:
         node-version: 10.x
     - run: npm ci
     - run: npm run build
     - name: Push updates
-      uses: stefanzweifel/git-auto-commit-action@v4.4.1
+      uses: stefanzweifel/git-auto-commit-action@v4.8.0
       with:
         commit_message: "chore: update lib/index.js"
         commit_options: "--no-verify"

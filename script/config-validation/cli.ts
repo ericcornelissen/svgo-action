@@ -11,7 +11,7 @@ import { analyze } from "./main";
 function getConfigObject(file: string): any {
   const configFile: string = path.resolve(__dirname, "../..", file);
   const configString: string = fs.readFileSync(configFile).toString();
-  return yaml.safeLoad(configString);
+  return yaml.load(configString);
 }
 
 function main(configFile: string): void {

@@ -17,7 +17,7 @@ export async function fetchYamlFile(
     core.debug(`found '${filePath}', decoding and loading YAML`);
 
     const rawActionConfig: string = decode(content, encoding);
-    return yaml.safeLoad(rawActionConfig);
+    return yaml.load(rawActionConfig);
   } catch(_) {
     core.debug(`file not found ('${filePath}')`);
     return { };
