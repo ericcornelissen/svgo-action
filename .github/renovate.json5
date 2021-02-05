@@ -12,7 +12,7 @@
   packageRules: [
     {
       // Configure automerge: exclude semver major changes
-      updateTypes: ["minor", "patch", "pin", "digest"],
+      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },
   ],
@@ -27,7 +27,7 @@
     enabled: true,
 
     // This schedule should be the same as the general schedule!
-    schedule: "on the 2nd and 4th day instance on tuesday",
+    schedule: "on the first day of the month",
   },
 
   // Enable automerging of Renovate Pull Requests
@@ -35,7 +35,7 @@
   automergeType: "pr",
 
   // Schedule PRs to be created once every two weeks
-  schedule: "on the 2nd and 4th day instance on tuesday",
+  schedule: "on the first day of the month",
 
   // Apply the 'dependencies' label to all Pull Requests created by Renovate
   labels: ["dependencies"],

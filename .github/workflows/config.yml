@@ -1,0 +1,19 @@
+name: Verify Configurations
+
+on:
+  pull_request:
+    paths:
+    - '.github/renovate.json5'
+
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - run: npm install -g renovate
+    - run: renovate-config-validator

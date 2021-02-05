@@ -1,5 +1,5 @@
 name: 'SVGO action'
-description: 'Automatically run SVGO on SVGs in Pull Requests'
+description: 'Automatically run SVGO with GitHub Actions'
 author: 'Eric Cornelissen'
 
 inputs:
