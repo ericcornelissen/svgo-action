@@ -48,3 +48,37 @@ jobs:
           node-version: 10.x
       - run: npm install
       - run: npm run lint
+
+  integration:
+    name: Integration test
+    needs: [build, test]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js 10.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 10.x
+    - name: Install dependencies
+      run: npm install
+    - name: Build Action
+      run: npm run build
+    - name: Move SVGO Action
+      shell: bash
+      run: |
+        mkdir ./../action
+        mv ./lib ./action.yml ./../action
+    # Just verify that the Action can be invoked successfully
+    - name: Run SVGO Action
+      id: svgo
+      uses: ./../action
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        dry-run: true
+    # And outputs things...
+    - name: Check SVGO Action output
+      run: |
+        if ! [ "${{ steps.svgo.outputs.SKIPPED_COUNT }}" = "0" ]; then
+            exit 1
+        fi
