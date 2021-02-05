@@ -7,7 +7,7 @@
 [![LGTM Alerts][lgtm-image]][lgtm-url]
 [![Snyk Status][snyk-image]][snyk-url]
 
-Automatically run [SVGO] on SVGs in Pull Requests.
+Automatically run [SVGO] with GitHub Actions.
 
 ## Usage
 
