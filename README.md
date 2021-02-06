@@ -1,7 +1,7 @@
 # SVGO Action
 
 [![GitHub Marketplace][marketplace-image]][marketplace-url]
-[![Node.js CI][ci-image]][ci-url]
+[![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Maintainability][maintainability-image]][maintainability-url]
 [![LGTM Alerts][lgtm-image]][lgtm-url]
@@ -157,8 +157,8 @@ on:
 
 [marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.2.1
 [marketplace-image]: https://img.shields.io/badge/Marketplace-v1.2.1-undefined.svg?logo=github&logoColor=white&style=flat
-[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
-[ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
+[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Adevelop
+[ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/develop?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability

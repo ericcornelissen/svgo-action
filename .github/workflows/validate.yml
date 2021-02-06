@@ -1,0 +1,86 @@
+name: Code Validation
+on: [push]
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - name: Install dependencies
+      run: npm ci
+    - name: Build SVGO Action
+      run: npm run build
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - name: Install dependencies
+      run: npm ci
+    - name: Lint source
+      run: npm run lint
+  test-unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - name: Install dependencies
+      run: npm ci
+    - name: Run tests
+      run: npm run test:coverage
+      env:
+        CI: true
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: ./_reports/coverage/lcov.info
+  test-integration:
+    name: Integration test
+    needs: [build, test-unit]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - name: Install dependencies
+      run: npm ci
+    - name: Build SVGO Action
+      run: npm run build
+    - name: Move SVGO Action
+      shell: bash
+      run: |
+        mkdir ./../action
+        mv ./lib ./action.yml ./../action
+    # Just verify that the Action can be invoked successfully
+    - name: Run SVGO Action
+      id: svgo
+      uses: ./../action
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        dry-run: true
+    # And outputs things...
+    - name: Check SVGO Action output
+      run: |
+        if ! [ "${{ steps.svgo.outputs.SKIPPED_COUNT }}" = "0" ]; then
+            exit 1
+        fi
