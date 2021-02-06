@@ -50,7 +50,6 @@ jobs:
       uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-        yml: ./.github/codecov.yml
         file: ./_reports/coverage/lcov.info
   test-integration:
     name: Integration test
