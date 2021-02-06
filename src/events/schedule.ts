@@ -4,19 +4,31 @@ import { Octokit } from "@octokit/core";
 import {
   GIT_OBJECT_TYPE_DIR,
   GIT_OBJECT_TYPE_FILE,
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
   STATUS_EXISTS,
 } from "../constants";
 import { getContent, getDefaultBranch } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
-import { ContextData, GitFileInfo, GitObjectInfo } from "../types";
+import { ContextData, GitFileInfo, GitObjectInfo, OutputName } from "../types";
 import {
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
   getCommitData,
+  setOutputValues,
 } from "./common";
 
+
+const OUTPUT_NAMES: OutputName[] = [
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+];
 
 function dirObject(objectInfo: GitObjectInfo): boolean {
   return objectInfo.type === GIT_OBJECT_TYPE_DIR;
@@ -76,4 +88,5 @@ export default async function main(
   const commitData = getCommitData(context, optimizedSvgs);
   const ref = await getHeadRef(client);
   await doCommit(client, ref, config, commitData);
+  setOutputValues(commitData, OUTPUT_NAMES);
 }

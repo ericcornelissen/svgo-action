@@ -19,6 +19,10 @@ import {
   INPUT_NAME_REPO_TOKEN,
   GIT_OBJECT_TYPE_DIR,
   GIT_OBJECT_TYPE_FILE,
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
   STATUS_ADDED,
 } from "../src/constants";
 import main from "../src/events/schedule";
@@ -96,25 +100,13 @@ const testFilePath = "test.svg";
 const getContentMockBackup = client.repos.getContent;
 
 
-beforeEach(() => {
-  core.debug.mockClear();
-  core.error.mockClear();
-  core.info.mockClear();
-  core.setFailed.mockClear();
-  core.warning.mockClear();
-
-  encoder.decode.mockClear();
-  encoder.encode.mockClear();
-
-  githubAPI.commitFiles.mockClear();
-  githubAPI.createBlob.mockClear();
-
-  svgoImport.OptimizerInstance.optimize.mockClear();
-
-  templating.formatCommitMessage.mockClear();
-});
-
 describe("Logging", () => {
+
+  beforeEach(() => {
+    core.debug.mockClear();
+    core.error.mockClear();
+    core.info.mockClear();
+  });
 
   test("does some debug logging", async () => {
     await main(client, config, svgo);
@@ -165,6 +157,18 @@ describe("Logging", () => {
 });
 
 describe("Configuration", () => {
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
@@ -258,6 +262,84 @@ describe("Configuration", () => {
 
 });
 
+describe("Outputs", () => {
+
+  const OUTPUTS_COUNT = 4;
+
+  beforeEach(() => {
+    core.setOutput.mockClear();
+  });
+
+  test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "true"`, async () => {
+    const getContentsMock = mockGetContentsForFiles([fooFilePath]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_DID_OPTIMIZE,
+      "true",
+    );
+  });
+
+  test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "false"`, async () => {
+    const getContentsMock = mockGetContentsForFiles([]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_DID_OPTIMIZE,
+      "false",
+    );
+  });
+
+  test(`${OUTPUT_NAME_OPTIMIZED_COUNT} is set correctly`, async () => {
+    const getContentsMock = mockGetContentsForFiles([fooFilePath, barFilePath]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_OPTIMIZED_COUNT,
+      "2",
+    );
+  });
+
+  test.each([
+    [[fooFilePath, barFilePath], 0],
+    [[optimizedFilePath], 1],
+  ])(`${OUTPUT_NAME_SKIPPED_COUNT} is set correctly`, async (files, count) => {
+    const getContentsMock = mockGetContentsForFiles(files);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_SKIPPED_COUNT,
+      `${count}`,
+    );
+  });
+
+  test(`${OUTPUT_NAME_SVG_COUNT} is set correctly`, async () => {
+    const getContentsMock = mockGetContentsForFiles([fooFilePath, barFilePath]);
+    client.repos.getContent.mockImplementation(getContentsMock);
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_SVG_COUNT,
+      "2",
+    );
+  });
+
+});
+
 describe("Payloads", () => {
 
   const { content: barSvgContent, encoding: barSvgEncoding } = contentPayloads.files[barFilePath];
@@ -267,6 +349,16 @@ describe("Payloads", () => {
   const barSvgData = files[barFilePath];
   const fooSvgData = files[fooFilePath];
   const testSvgData = files[testFilePath];
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+  });
 
   test("empty repository", async () => {
     const getContentsMock = mockGetContentsForFiles([]);
@@ -464,6 +556,22 @@ describe("Payloads", () => {
 });
 
 describe("Error scenarios", () => {
+
+  beforeEach(() => {
+    core.setFailed.mockClear();
+    core.warning.mockClear();
+
+    encoder.decode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+    githubAPI.getFile.mockClear();
+    githubAPI.getPrFiles.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("the commit files could not be found", async () => {
     githubAPI.getContent.mockRejectedValueOnce(new Error("Not found"));

@@ -1,0 +1,46 @@
+name: Validate Configurations
+on:
+  pull_request:
+    paths:
+    - '.github/renovate.json5'
+    - 'package*.json'
+
+jobs:
+  npm-manifest:
+    name: NPM Manifest
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - name: Install package-json-validator
+      run: npm install -g package-json-validator
+    - name: Validate package.json
+      run: pjv -w -r --spec npm
+    - name: Validate package-lock.json
+      run: |
+        # `npm install` changes the lockfile metadata if it doesn't match
+        # package.json
+        npm install
+
+        # Which we detect by checking if the checkout is dirty
+        if [ ! -z "$(git status --porcelain)" ]; then
+          exit 1
+        fi
+  renovate:
+    name: Renovate
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Use Node.js 12.x
+      uses: actions/setup-node@v2
+      with:
+        node-version: 12.x
+    - name: Install Renovate CLI
+      run: npm install -g renovate
+    - name: Validate Renovate Configuration
+      run: renovate-config-validator

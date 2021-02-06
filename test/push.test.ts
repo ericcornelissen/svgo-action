@@ -18,7 +18,13 @@ jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/templating", () => templating);
 
-import { INPUT_NAME_REPO_TOKEN } from "../src/constants";
+import {
+  INPUT_NAME_REPO_TOKEN,
+  OUTPUT_NAME_DID_OPTIMIZE,
+  OUTPUT_NAME_OPTIMIZED_COUNT,
+  OUTPUT_NAME_SKIPPED_COUNT,
+  OUTPUT_NAME_SVG_COUNT,
+} from "../src/constants";
 import main from "../src/events/push";
 
 
@@ -28,25 +34,13 @@ const config = new inputs.ActionConfig();
 const svgo = new svgoImport.SVGOptimizer();
 
 
-beforeEach(() => {
-  core.debug.mockClear();
-  core.error.mockClear();
-  core.info.mockClear();
-  core.setFailed.mockClear();
-  core.warning.mockClear();
-
-  encoder.decode.mockClear();
-  encoder.encode.mockClear();
-
-  githubAPI.commitFiles.mockClear();
-  githubAPI.createBlob.mockClear();
-
-  svgoImport.OptimizerInstance.optimize.mockClear();
-
-  templating.formatCommitMessage.mockClear();
-});
-
 describe("Logging", () => {
+
+  beforeEach(() => {
+    core.debug.mockClear();
+    core.error.mockClear();
+    core.info.mockClear();
+  });
 
   test("does some debug logging", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
@@ -96,6 +90,18 @@ describe("Logging", () => {
 });
 
 describe("Configuration", () => {
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
@@ -216,6 +222,12 @@ describe("Configuration", () => {
 
 describe("Manual Action control", () => {
 
+  beforeEach(() => {
+    core.info.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+  });
+
   test.each([
     ["But why is the rum gone"],
     ["It's dangerous to go alone!"],
@@ -248,6 +260,79 @@ describe("Manual Action control", () => {
 
 });
 
+describe("Outputs", () => {
+
+  const OUTPUTS_COUNT = 4;
+
+  beforeEach(() => {
+    core.setOutput.mockClear();
+  });
+
+  test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "true"`, async () => {
+    github.context.payload.commits = [{ id: COMMIT_SHA.MANY_CHANGES }];
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_DID_OPTIMIZE,
+      "true",
+    );
+  });
+
+  test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "false"`, async () => {
+    github.context.payload.commits = [{ id: COMMIT_SHA.NO_CHANGES }];
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_DID_OPTIMIZE,
+      "false",
+    );
+  });
+
+  test(`${OUTPUT_NAME_OPTIMIZED_COUNT} is set correctly`, async () => {
+    github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG_AND_SVG_IN_DIR }];
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_OPTIMIZED_COUNT,
+      "2",
+    );
+  });
+
+  test.each([
+    [COMMIT_SHA.ADD_SVG, 0],
+    [COMMIT_SHA.ADD_OPTIMIZED_SVG, 1],
+  ])(`${OUTPUT_NAME_SKIPPED_COUNT} is set correctly`, async (commitId, count) => {
+    github.context.payload.commits = [{ id: commitId }];
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_SKIPPED_COUNT,
+      `${count}`,
+    );
+  });
+
+  test(`${OUTPUT_NAME_SVG_COUNT} is set correctly`, async () => {
+    github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG_AND_SVG_IN_DIR }];
+
+    await main(client, config, svgo);
+
+    expect(core.setOutput).toHaveBeenCalledTimes(OUTPUTS_COUNT);
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_SVG_COUNT,
+      "2",
+    );
+  });
+
+});
+
 describe("Payloads", () => {
 
   const barFilePath = "bar.svg";
@@ -261,6 +346,16 @@ describe("Payloads", () => {
   const barSvgData = files[barFilePath];
   const fooSvgData = files[fooFilePath];
   const testSvgData = files[testFilePath];
+
+  beforeEach(() => {
+    encoder.decode.mockClear();
+    encoder.encode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+  });
 
   test("commits with 1 new SVG", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
@@ -767,6 +862,22 @@ describe("Payloads", () => {
 });
 
 describe("Error scenarios", () => {
+
+  beforeEach(() => {
+    core.setFailed.mockClear();
+    core.warning.mockClear();
+
+    encoder.decode.mockClear();
+
+    githubAPI.commitFiles.mockClear();
+    githubAPI.createBlob.mockClear();
+    githubAPI.getFile.mockClear();
+    githubAPI.getPrFiles.mockClear();
+
+    svgoImport.OptimizerInstance.optimize.mockClear();
+
+    templating.formatCommitMessage.mockClear();
+  });
 
   test("the commit files could not be found", async () => {
     github.context.payload.commits = [{ id: COMMIT_SHA.ADD_SVG }];
