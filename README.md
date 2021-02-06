@@ -52,6 +52,7 @@ configuration file]. The table below shows the options that can be configured.
 | `comment`              | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comment)              |
 | `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
 | `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
+| `branch`               | Select branch for scheduled runs         | -             | [docs](/docs/options.md#branch) |
 | `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
 | `ignore`               | A [glob] of SVGs that should be ignored  | `""`          | [docs](/docs/options.md#ignore)               |
 | `svgo-options`         | Specify the [SVGO] configuration file    | `".svgo.yml"` | [docs](/docs/options.md#svgo-options)         |
@@ -66,6 +67,7 @@ with:
   repo-token: ${{ secrets.GITHUB_TOKEN }}
   comment: true
   conventional-commits: true
+  branch: branch-name
   dry-run: true
   ignore: do/not/optimize/**/*.svg
   svgo-options: path/to/svgo-options.yml
@@ -78,6 +80,7 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
+branch: branch-name
 comment: true
 dry-run: true
 ignore: do/not/optimize/**/*.svg

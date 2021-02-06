@@ -34,6 +34,7 @@ The following [options] have an effect in the `pull_request` context.
 | `comment`              | :heavy_check_mark: |
 | `commit`               | :heavy_check_mark: |
 | `conventional-commits` | :heavy_check_mark: |
+| `branch`               | :x:                |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
@@ -62,6 +63,7 @@ The following [options] have an effect in the `push` context.
 | `comment`              | :heavy_check_mark: |
 | `commit`               | :heavy_check_mark: |
 | `conventional-commits` | :heavy_check_mark: |
+| `branch`               | :x:                |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
@@ -87,6 +89,7 @@ The following [options] have an effect in the `schedule` context.
 | `comment`              | :x:                |
 | `commit`               | :heavy_check_mark: |
 | `conventional-commits` | :heavy_check_mark: |
+| `branch`               | :heavy_check_mark: |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
