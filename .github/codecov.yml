@@ -15,7 +15,6 @@ comment:
   require_changes: true  # only post the comment if coverage changes
   require_base: no
   require_head: yes
-  branches: "!master"  # never post comments for releases
 
 ignore:
   - "lib/*"
