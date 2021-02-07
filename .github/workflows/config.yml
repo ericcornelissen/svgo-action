@@ -2,10 +2,23 @@ name: Validate Configurations
 on:
   pull_request:
     paths:
+    - '.github/codecov.yml'
     - '.github/renovate.json5'
     - 'package*.json'
 
 jobs:
+  codecov:
+    name: Codecov
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Validate .github/codecov.yml
+      run: |
+        RESULT=$(curl -s -o /dev/null -w "%{http_code}" --data-binary @./.github/codecov.yml https://codecov.io/validate)
+        if ! [[ $RESULT == "200" ]]; then
+          exit 1
+        fi
   npm-manifest:
     name: NPM Manifest
     runs-on: ubuntu-latest
