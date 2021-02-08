@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.2.2] - 2021-02-08
+
 - Allow scheduled runs on any branch. ([#321])
 
 ## [1.2.1] - 2021-02-05
