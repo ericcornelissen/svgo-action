@@ -6,6 +6,7 @@
 [![Maintainability][maintainability-image]][maintainability-url]
 [![LGTM Alerts][lgtm-image]][lgtm-url]
 [![Snyk Status][snyk-image]][snyk-url]
+[![FOSSA Status][fossa-image]][fossa-url]
 
 Automatically run [SVGO] with GitHub Actions.
 
@@ -170,6 +171,8 @@ on:
 [lgtm-url]: https://lgtm.com/projects/g/ericcornelissen/svgo-action/alerts/
 [snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
 [snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
+[fossa-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield
+[fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
 [conventional commit]: https://www.conventionalcommits.org/
 [creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
