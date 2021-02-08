@@ -2,17 +2,44 @@
 
 This file contains the documentation for all options for the SVGO Action.
 
+- [Branch](#branch)
 - [Comment](#comment)
 - [Commit](#commit)
 - [Configuration Path](#configuration-path)
 - [Conventional Commits](#conventional-commits)
-- [Branch](#branch)
 - [Dry run](#dry-run)
 - [Ignore](#ignore)
 - [SVGO Options](#svgo-options)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
+
+---
+
+## Branch
+
+| Name      | Default Value    | Workflow file      | Config File        |
+| --------- | ---------------- | ------------------ | ------------------ |
+| `branch`  | _default branch_ | :heavy_check_mark: | :heavy_check_mark: |
+
+The _branch_ option can be used to configure the branch on which a scheduled
+Action run should operate. If it is not set the default branch of the repository
+will be used.
+
+### Examples
+
+To run scheduled runs on a specific branch:
+
+```yaml
+# .github/workflows/svgo.yml
+- uses: ericcornelissen/svgo-action@v1
+  with:
+    branch: branch-name
+
+
+# .github/svgo-action.yml
+branch: branch-name
+```
 
 ---
 
@@ -237,33 +264,6 @@ To enable conventional commit titles:
 - uses: ericcornelissen/svgo-action@v1
   with:
     conventional-commits: true
-```
-
----
-
-## Branch
-
-| Name      | Default Value    | Workflow file      | Config File        |
-| --------- | ---------------- | ------------------ | ------------------ |
-| `branch`  | _default branch_ | :heavy_check_mark: | :heavy_check_mark: |
-
-The _branch_ option can be used to configure the branch on which a scheduled
-Action run should operate. If it is not set the default branch of the repository
-will be used.
-
-### Examples
-
-To run scheduled runs on a specific branch:
-
-```yaml
-# .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
-  with:
-    branch: branch-name
-
-
-# .github/svgo-action.yml
-branch: branch-name
 ```
 
 ---

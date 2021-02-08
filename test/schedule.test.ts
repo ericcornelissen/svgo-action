@@ -171,16 +171,6 @@ describe("Configuration", () => {
   });
 
   test("custom branch", async () => {
-    // const fileContent = contentPayloads.files["foo.svg"].content;
-    // const fileEncoding = contentPayloads.files["foo.svg"].encoding;
-
-    // const getContentsMock = mockGetContentsForFiles([
-    //   fooFilePath,
-    //   `dir/${barFilePath}`,
-    //   `dir/${optimizedFilePath}`,
-    // ]);
-    // client.repos.getContent.mockImplementation(getContentsMock);
-
     const actionConfig = new inputs.ActionConfig();
     actionConfig.branch = "foobar";
 
