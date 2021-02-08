@@ -59,7 +59,6 @@ describe("::commitFiles", () => {
   const defaultCommitMessage = "This is a commit message";
 
   beforeEach(() => {
-    client.git.createBlob.mockClear();
     client.git.createCommit.mockClear();
     client.git.createTree.mockClear();
     client.git.getCommit.mockClear();

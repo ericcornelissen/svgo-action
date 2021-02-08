@@ -1,4 +1,3 @@
-import * as github from "@actions/github";
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 
@@ -39,9 +38,12 @@ function fileObject(objectInfo: GitObjectInfo): boolean {
   return objectInfo.type === GIT_OBJECT_TYPE_FILE;
 }
 
-async function getHeadRef(client: Octokit): Promise<string> {
-  const defaultBranch = await getDefaultBranch(client);
-  return `heads/${defaultBranch}`;
+async function getHeadRef(
+  client: Octokit,
+  config: ActionConfig,
+): Promise<string> {
+  const branchName = config.branch || await getDefaultBranch(client);
+  return `heads/${branchName}`;
 }
 
 function objectInfoToFileInfo(objectInfo: GitObjectInfo): GitFileInfo {
@@ -88,12 +90,10 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const contextRef: string = github.context.sha;
-  const headRef = await getHeadRef(client);
-
+  const contextRef = await getHeadRef(client, config);
   const context = await getSvgsInRepo(client, contextRef, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
-  await doCommit(client, headRef, config, commitData);
+  await doCommit(client, contextRef, config, commitData);
   setOutputValues(commitData, OUTPUT_NAMES);
 }

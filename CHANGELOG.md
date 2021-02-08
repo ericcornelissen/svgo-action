@@ -8,7 +8,15 @@ Versioning].
 ## [Unreleased]
 
 - Run Action on `pull_request_target`. ([#309])
+
+## [1.2.2] - 2021-02-08
+
+- Allow scheduled runs on any branch. ([#321])
+
+## [1.2.1] - 2021-02-05
+
 - Output basic information about the Action run. ([#312])
+- Update project description. ([#317])
 
 ## [1.2.0] - 2020-10-03
 
@@ -181,4 +189,6 @@ Versioning].
 [#272]: https://github.com/ericcornelissen/svgo-action/pull/272
 [#309]: https://github.com/ericcornelissen/svgo-action/pull/309
 [#312]: https://github.com/ericcornelissen/svgo-action/pull/312
+[#317]: https://github.com/ericcornelissen/svgo-action/pull/317
+[#321]: https://github.com/ericcornelissen/svgo-action/pull/321
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

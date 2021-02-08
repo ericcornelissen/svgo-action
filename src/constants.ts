@@ -5,6 +5,7 @@ export const EVENT_PUSH = "push";
 export const EVENT_SCHEDULE = "schedule";
 
 // Action configuration
+export const INPUT_NAME_BRANCH = "branch";
 export const INPUT_NAME_COMMENT = "comment";
 export const INPUT_NAME_CONFIG_PATH = "configuration-path";
 export const INPUT_NAME_CONVENTIONAL_COMMITS = "conventional-commits";

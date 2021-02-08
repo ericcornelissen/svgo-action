@@ -58,12 +58,14 @@ async function run(
 
 
 export default async function main(): Promise<void> {
+  const contextRef: string = github.context.sha;
   const token: string = getRepoToken();
   const client: Octokit = github.getOctokit(token);
 
   const configFilePath: string = getConfigFilePath();
   const rawConfig: RawActionConfig = await fetchYamlFile(
     client,
+    contextRef,
     configFilePath,
   );
 
@@ -74,6 +76,7 @@ export default async function main(): Promise<void> {
 
   const svgoOptions: SVGOptions = await fetchYamlFile(
     client,
+    contextRef,
     config.svgoOptionsPath,
   );
   const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);

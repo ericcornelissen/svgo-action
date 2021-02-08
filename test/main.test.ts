@@ -47,8 +47,6 @@ beforeEach(() => {
   prEventMain.mockClear();
   pushEventMain.mockClear();
   scheduleEventMain.mockClear();
-
-  svgo.SVGOptimizer.mockClear();
 });
 
 test("push event", async () => {
@@ -158,6 +156,8 @@ test.each(ALL_EVENTS)("use custom configuration file (%s)", async (eventName) =>
 });
 
 test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (eventName) => {
+  svgo.SVGOptimizer.mockClear();
+
   github.context.eventName = eventName;
 
   const { svgoOptionsPath } = new inputs.ActionConfig();

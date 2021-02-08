@@ -132,12 +132,7 @@ export async function getContent(
   ref: string,
   path: string,
 ): Promise<GitObjectInfo[]> {
-  const data = await getContentFromRepo(
-    client,
-    ref,
-    path,
-  ) as DirContents;
-
+  const data = await getContentFromRepo(client, ref, path) as DirContents;
   return data.map((item) => ({
     path: item.path,
     type: item.type,
@@ -154,16 +149,11 @@ export async function getFile(
   ref: string,
   path: string,
 ): Promise<GitFileData> {
-  const fileDetails = await getContentFromRepo(
-    client,
-    ref,
-    path,
-  ) as FileContents;
-
+  const contents = await getContentFromRepo(client, ref, path) as FileContents;
   return {
-    content: fileDetails.content,
-    encoding: fileDetails.encoding,
-    path: fileDetails.path,
+    content: contents.content,
+    encoding: contents.encoding,
+    path: contents.path,
   };
 }
 

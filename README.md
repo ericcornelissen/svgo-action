@@ -1,13 +1,14 @@
 # SVGO Action
 
 [![GitHub Marketplace][marketplace-image]][marketplace-url]
-[![Node.js CI][ci-image]][ci-url]
+[![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Maintainability][maintainability-image]][maintainability-url]
 [![LGTM Alerts][lgtm-image]][lgtm-url]
 [![Snyk Status][snyk-image]][snyk-url]
+[![FOSSA Status][fossa-image]][fossa-url]
 
-Automatically run [SVGO] on SVGs in Pull Requests.
+Automatically run [SVGO] with GitHub Actions.
 
 ## Usage
 
@@ -51,6 +52,7 @@ configuration file]. The table below shows the options that can be configured.
 
 | Name                   | Description                              | Default       | Documentation                                 |
 | ---------------------- | ---------------------------------------- | ------------- | --------------------------------------------- |
+| `branch`               | Select branch for scheduled runs         | -             | [docs](/docs/options.md#branch)               |
 | `comment`              | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comment)              |
 | `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
 | `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
@@ -66,6 +68,7 @@ The first way to configure the Action is inside the Workflow file, after the
 ```yaml
 with:
   repo-token: ${{ secrets.GITHUB_TOKEN }}
+  branch: branch-name
   comment: true
   conventional-commits: true
   dry-run: true
@@ -80,6 +83,7 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
+branch: branch-name
 comment: true
 dry-run: true
 ignore: do/not/optimize/**/*.svg
@@ -157,10 +161,10 @@ on:
     - "**.svg"
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.2.0
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.2.0-undefined.svg?logo=github&logoColor=white&style=flat
-[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Node.js+CI%22+branch%3Adevelop
-[ci-image]: https://github.com/ericcornelissen/svgo-action/workflows/Node.js%20CI/badge.svg
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.2.2
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.2.2-undefined.svg?logo=github&logoColor=white&style=flat
+[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Adevelop
+[ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/develop?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
@@ -169,6 +173,8 @@ on:
 [lgtm-url]: https://lgtm.com/projects/g/ericcornelissen/svgo-action/alerts/
 [snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
 [snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
+[fossa-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield
+[fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
 [conventional commit]: https://www.conventionalcommits.org/
 [creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
