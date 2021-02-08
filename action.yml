@@ -6,6 +6,10 @@ inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
     required: true
+  branch:
+    description: 'The branch to use when the Action is scheduled'
+    default: 'default branch'
+    required: false
   comment:
     description: 'Enable comments on Pull Requests with an optimization summary'
     default: false

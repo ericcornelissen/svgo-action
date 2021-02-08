@@ -170,6 +170,21 @@ describe("Configuration", () => {
     templating.formatCommitMessage.mockClear();
   });
 
+  test("custom branch", async () => {
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.branch = "foobar";
+
+    await main(client, actionConfig, svgo);
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      client,
+      expect.any(Object),
+      `heads/${actionConfig.branch}`,
+      expect.any(String),
+    );
+  });
+
   test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.isDryRun = true;
