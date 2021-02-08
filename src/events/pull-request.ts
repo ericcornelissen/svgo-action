@@ -80,12 +80,13 @@ async function actionDisabled(
 
 async function getSvgsInPR(
   client: Octokit,
+  ref: string,
   prNumber: number,
   ignoreGlob: string,
 ): Promise<ContextData> {
   core.debug(`fetching changed files for pull request #${prNumber}`);
   const prFiles: GitFileInfo[] = await getPrFiles(client, prNumber);
-  return doFilterSvgsFromFiles(client, prFiles, ignoreGlob);
+  return doFilterSvgsFromFiles(client, ref, prFiles, ignoreGlob);
 }
 
 async function run(
@@ -94,7 +95,8 @@ async function run(
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
-  const context = await getSvgsInPR(client, prNumber, config.ignoreGlob);
+  const ref: string = github.context.sha;
+  const context = await getSvgsInPR(client, ref, prNumber, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
   await doCommit(client, getHeadRef(), config, commitData);

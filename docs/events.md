@@ -31,6 +31,7 @@ The following [options] have an effect in the `pull_request` context.
 
 | Name                   | Supported          |
 | ---------------------- | ------------------ |
+| `branch`               | :x:                |
 | `comment`              | :heavy_check_mark: |
 | `commit`               | :heavy_check_mark: |
 | `conventional-commits` | :heavy_check_mark: |
@@ -59,6 +60,7 @@ The following [options] have an effect in the `push` context.
 
 | Name                   | Supported          |
 | ---------------------- | ------------------ |
+| `branch`               | :x:                |
 | `comment`              | :heavy_check_mark: |
 | `commit`               | :heavy_check_mark: |
 | `conventional-commits` | :heavy_check_mark: |
@@ -84,6 +86,7 @@ The following [options] have an effect in the `schedule` context.
 
 | Name                   | Supported          |
 | ---------------------- | ------------------ |
+| `branch`               | :heavy_check_mark: |
 | `comment`              | :x:                |
 | `commit`               | :heavy_check_mark: |
 | `conventional-commits` | :heavy_check_mark: |

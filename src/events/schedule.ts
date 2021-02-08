@@ -38,9 +38,12 @@ function fileObject(objectInfo: GitObjectInfo): boolean {
   return objectInfo.type === GIT_OBJECT_TYPE_FILE;
 }
 
-async function getHeadRef(client: Octokit): Promise<string> {
-  const defaultBranch = await getDefaultBranch(client);
-  return `heads/${defaultBranch}`;
+async function getHeadRef(
+  client: Octokit,
+  config: ActionConfig,
+): Promise<string> {
+  const branchName = config.branch || await getDefaultBranch(client);
+  return `heads/${branchName}`;
 }
 
 function objectInfoToFileInfo(objectInfo: GitObjectInfo): GitFileInfo {
@@ -50,13 +53,16 @@ function objectInfoToFileInfo(objectInfo: GitObjectInfo): GitFileInfo {
   };
 }
 
-async function getFilesInRepo(client: Octokit): Promise<GitFileInfo[]> {
+async function getFilesInRepo(
+  client: Octokit,
+  ref: string,
+): Promise<GitFileInfo[]> {
   const files: GitFileInfo[] = [];
 
   const paths: string[] = [""];
   while (paths.length > 0) {
     const path: string = paths.shift() || "";
-    const items: GitObjectInfo[] = await getContent(client, path);
+    const items: GitObjectInfo[] = await getContent(client, ref, path);
 
     const dirs = items.filter(dirObject).map((item) => item.path);
     paths.push(...dirs);
@@ -70,11 +76,12 @@ async function getFilesInRepo(client: Octokit): Promise<GitFileInfo[]> {
 
 async function getSvgsInRepo(
   client: Octokit,
+  ref: string,
   ignoreGlob: string,
 ): Promise<ContextData> {
   core.debug("fetching files in repository");
-  const files: GitFileInfo[] = await getFilesInRepo(client);
-  return doFilterSvgsFromFiles(client, files, ignoreGlob);
+  const files: GitFileInfo[] = await getFilesInRepo(client, ref);
+  return doFilterSvgsFromFiles(client, ref, files, ignoreGlob);
 }
 
 
@@ -83,10 +90,10 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const context = await getSvgsInRepo(client, config.ignoreGlob);
+  const ref = await getHeadRef(client, config);
+  const context = await getSvgsInRepo(client, ref, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
-  const ref = await getHeadRef(client);
   await doCommit(client, ref, config, commitData);
   setOutputValues(commitData, OUTPUT_NAMES);
 }

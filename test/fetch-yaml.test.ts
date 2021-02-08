@@ -17,14 +17,15 @@ const client = github.getOctokit(token);
 describe("::fetchYamlFile", () => {
 
   const paths: string[] = Object.keys(files).filter((filePath) => filePath.endsWith(".yml"));
+  const ref = github.context.sha;
 
   test("an unknown file", async () => {
-    const result = await fetchYamlFile(client, "this is definitely not a file");
+    const result = await fetchYamlFile(client, ref, "this is definitely not a file");
     expect(result).toEqual({ });
   });
 
   test.each(paths)("a file in the repository ('%s')", async (filePath) => {
-    const result = await fetchYamlFile(client, filePath);
+    const result = await fetchYamlFile(client, ref, filePath);
     expect(result).not.toEqual({ });
   });
 
