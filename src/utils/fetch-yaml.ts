@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import * as github from "@actions/github";
 import * as core from "@actions/core";
 import { Octokit } from "@octokit/core";
 import * as yaml from "js-yaml";
@@ -13,7 +14,8 @@ export async function fetchYamlFile(
   filePath: string,
 ): Promise<any> {
   try {
-    const { content, encoding } = await getFile(client, filePath);
+    const ref: string = github.context.sha;
+    const { content, encoding } = await getFile(client, ref, filePath);
     core.debug(`found '${filePath}', decoding and loading YAML`);
 
     const rawActionConfig: string = decode(content, encoding);

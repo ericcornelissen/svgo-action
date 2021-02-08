@@ -129,8 +129,8 @@ export async function getCommitMessage(
 
 export async function getContent(
   client: Octokit,
+  ref: string,
   path: string,
-  ref: string = github.context.sha,
 ): Promise<GitObjectInfo[]> {
   const data = await getContentFromRepo(client, ref, path) as DirContents;
   return data.map((item) => ({
@@ -146,9 +146,9 @@ export async function getDefaultBranch(client: Octokit): Promise<string> {
 
 export async function getFile(
   client: Octokit,
+  ref: string,
   path: string,
 ): Promise<GitFileData> {
-  const ref = github.context.sha;
   const contents = await getContentFromRepo(client, ref, path) as FileContents;
   return {
     content: contents.content,
