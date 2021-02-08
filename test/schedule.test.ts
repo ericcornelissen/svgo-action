@@ -170,6 +170,31 @@ describe("Configuration", () => {
     templating.formatCommitMessage.mockClear();
   });
 
+  test("custom branch", async () => {
+    // const fileContent = contentPayloads.files["foo.svg"].content;
+    // const fileEncoding = contentPayloads.files["foo.svg"].encoding;
+
+    // const getContentsMock = mockGetContentsForFiles([
+    //   fooFilePath,
+    //   `dir/${barFilePath}`,
+    //   `dir/${optimizedFilePath}`,
+    // ]);
+    // client.repos.getContent.mockImplementation(getContentsMock);
+
+    const actionConfig = new inputs.ActionConfig();
+    actionConfig.branch = "foobar";
+
+    await main(client, actionConfig, svgo);
+
+    expect(githubAPI.commitFiles).toHaveBeenCalledTimes(1);
+    expect(githubAPI.commitFiles).toHaveBeenCalledWith(
+      client,
+      expect.any(Object),
+      `heads/${actionConfig.branch}`,
+      expect.any(String),
+    );
+  });
+
   test("dry mode enabled", async () => {
     const actionConfig = new inputs.ActionConfig();
     actionConfig.isDryRun = true;
