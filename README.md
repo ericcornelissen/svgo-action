@@ -6,6 +6,7 @@
 [![Maintainability][maintainability-image]][maintainability-url]
 [![LGTM Alerts][lgtm-image]][lgtm-url]
 [![Snyk Status][snyk-image]][snyk-url]
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield)
 
 Automatically run [SVGO] with GitHub Actions.
 
@@ -175,3 +176,7 @@ on:
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
 [in another configuration file]: #in-another-configuration-file
 [svgo]: https://github.com/svg/svgo
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_large)
