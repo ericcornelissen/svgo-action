@@ -1,5 +1,4 @@
-name: CodeQL
-
+name: Analysis
 on:
   push:
     branches: [develop, master]
@@ -9,9 +8,9 @@ on:
     - cron: '0 7 * * 3'
 
 jobs:
-  analyze:
+  codeql:
+    name: CodeQL
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -19,6 +18,6 @@ jobs:
       uses: github/codeql-action/init@v1
       with:
         config-file: ./.github/codeql-config.yml
-        languages: 'javascript'
+        languages: javascript
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v1

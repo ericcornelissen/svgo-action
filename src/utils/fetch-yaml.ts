@@ -10,10 +10,11 @@ import { getFile } from "../github-api";
 
 export async function fetchYamlFile(
   client: Octokit,
+  ref: string,
   filePath: string,
 ): Promise<any> {
   try {
-    const { content, encoding } = await getFile(client, filePath);
+    const { content, encoding } = await getFile(client, ref, filePath);
     core.debug(`found '${filePath}', decoding and loading YAML`);
 
     const rawActionConfig: string = decode(content, encoding);

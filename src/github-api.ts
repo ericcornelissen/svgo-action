@@ -38,12 +38,10 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
 
 async function getContentFromRepo(
   client: Octokit,
+  ref: string,
   path: string,
 ): Promise<RepoContents> {
-  const { data } = await client.repos.getContent({ owner, repo, path,
-    ref: github.context.sha,
-  });
-
+  const { data } = await client.repos.getContent({ owner, repo, path, ref });
   return data;
 }
 
@@ -131,9 +129,10 @@ export async function getCommitMessage(
 
 export async function getContent(
   client: Octokit,
+  ref: string,
   path: string,
 ): Promise<GitObjectInfo[]> {
-  const data = await getContentFromRepo(client, path) as DirContents;
+  const data = await getContentFromRepo(client, ref, path) as DirContents;
   return data.map((item) => ({
     path: item.path,
     type: item.type,
@@ -147,13 +146,14 @@ export async function getDefaultBranch(client: Octokit): Promise<string> {
 
 export async function getFile(
   client: Octokit,
+  ref: string,
   path: string,
 ): Promise<GitFileData> {
-  const fileDetails = await getContentFromRepo(client, path) as FileContents;
+  const contents = await getContentFromRepo(client, ref, path) as FileContents;
   return {
-    content: fileDetails.content,
-    encoding: fileDetails.encoding,
-    path: fileDetails.path,
+    content: contents.content,
+    encoding: contents.encoding,
+    path: contents.path,
   };
 }
 
