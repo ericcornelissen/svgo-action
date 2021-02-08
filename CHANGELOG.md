@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Allow scheduled runs on any branch. ([#321])
 
 ## [1.2.1] - 2021-02-05
 
@@ -185,4 +185,5 @@ Versioning].
 [#272]: https://github.com/ericcornelissen/svgo-action/pull/272
 [#312]: https://github.com/ericcornelissen/svgo-action/pull/312
 [#317]: https://github.com/ericcornelissen/svgo-action/pull/317
+[#321]: https://github.com/ericcornelissen/svgo-action/pull/321
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
