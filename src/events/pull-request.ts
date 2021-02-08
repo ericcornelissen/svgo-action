@@ -91,11 +91,11 @@ async function getSvgsInPR(
 
 async function run(
   client: Octokit,
-  ref: string,
   config: ActionConfig,
   svgo: SVGOptimizer,
   prNumber: number,
 ): Promise<void> {
+  const ref: string = github.context.sha;
   const context = await getSvgsInPR(client, ref, prNumber, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
@@ -123,7 +123,6 @@ export default async function main(
   if (isDisabled) {
     core.info(`Action disabled from ${disabledFrom}, exiting`);
   } else {
-    const commitSha: string = github.context.sha;
-    await run(client, commitSha, config, svgo, prNumber);
+    await run(client, config, svgo, prNumber);
   }
 }
