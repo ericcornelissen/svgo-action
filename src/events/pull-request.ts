@@ -23,10 +23,10 @@ import { SVGOptimizer } from "../svgo";
 import { formatComment } from "../templating";
 import { ContextData, GitFileInfo, OutputName } from "../types";
 import {
-  getCommitData,
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
+  getCommitData,
   setOutputValues,
 } from "./common";
 
