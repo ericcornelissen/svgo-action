@@ -15,10 +15,10 @@ import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { ContextData, GitFileInfo, GitObjectInfo, OutputName } from "../types";
 import {
-  getCommitData,
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
+  getCommitData,
   setOutputValues,
 } from "./common";
 

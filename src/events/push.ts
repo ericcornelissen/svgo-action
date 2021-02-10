@@ -15,10 +15,10 @@ import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
 import { ContextData, GitFileInfo, OutputName } from "../types";
 import {
-  getCommitData,
   doCommit,
   doFilterSvgsFromFiles,
   doOptimizeSvgs,
+  getCommitData,
   setOutputValues,
 } from "./common";
 
@@ -38,10 +38,8 @@ function isDisabledForCommit(commitMessage: string): boolean {
   return DISABLE_PATTERN.test(commitMessage);
 }
 
-function samePathAs(ref: GitFileInfo): ((subject: GitFileInfo) => boolean) {
-  return function (subject: GitFileInfo): boolean {
-    return subject.path === ref.path;
-  };
+function samePathAs(a: GitFileInfo): ((subject: GitFileInfo) => boolean) {
+  return (b: GitFileInfo): boolean => a.path === b.path;
 }
 
 function removed(
