@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.2.3] - 2021-02-10
+
 - Prevent GitHub Actions warning about `ignore` input. ([#327])
 
 ## [1.2.2] - 2021-02-08

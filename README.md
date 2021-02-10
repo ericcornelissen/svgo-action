@@ -159,8 +159,8 @@ on:
     - "**.svg"
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.2.2
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.2.2-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.2.3
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.2.3-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Adevelop
 [ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/develop?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
