@@ -22,7 +22,7 @@ inputs:
     description: 'Run the action in dry mode (i.e. do not commit)'
     default: false
     required: false
-  ignored:
+  ignore:
     description: 'A glob of SVGs that should not be optimized'
     default: ''
     required: false
