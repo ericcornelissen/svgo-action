@@ -9,7 +9,6 @@ import {
   DEFAULT_COMMIT_BODY,
   DEFAULT_COMMIT_TITLE,
   DEFAULT_COMMENT,
-  INPUT_NAME_BRANCH,
   INPUT_NAME_COMMENT,
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
@@ -44,41 +43,6 @@ describe("ActionConfig", () => {
     test("construct with an object specifying dry-run", () => {
       const config: RawActionConfig = { "dry-run": true };
       expect(() => new ActionConfig(core, config)).not.toThrow();
-    });
-
-  });
-
-  describe(".branch", () => {
-
-    test.each([
-      "main",
-      "develop",
-      "svgs",
-    ])("branch is set in the Workflow file", (branch) => {
-      mockCoreGetInput(INPUT_NAME_BRANCH, branch);
-
-      const instance: ActionConfig = new ActionConfig(core);
-      expect(instance.branch).toEqual(branch);
-    });
-
-    test.each([
-      "main",
-      "develop",
-      "svgs",
-    ])("branch is set to '%s' in the config object", (branch) => {
-      const instance: ActionConfig = new ActionConfig(core, { branch });
-      expect(instance.branch).toEqual(branch);
-    });
-
-    test.each([
-      ["master", "main"],
-      ["devel", "develop"],
-      ["svgz", "svgs"],
-    ])("branch set to '%s' in Workflow and '%s' in the config", (branchA, branchB) => {
-      mockCoreGetInput(INPUT_NAME_BRANCH, branchA);
-
-      const instance: ActionConfig = new ActionConfig(core, { branch: branchB });
-      expect(instance.branch).toEqual(branchB);
     });
 
   });

@@ -38,11 +38,8 @@ function fileObject(objectInfo: GitObjectInfo): boolean {
   return objectInfo.type === GIT_OBJECT_TYPE_FILE;
 }
 
-async function getHeadRef(
-  client: Octokit,
-  config: ActionConfig,
-): Promise<string> {
-  const branchName = config.branch || await getDefaultBranch(client);
+async function getHeadRef(client: Octokit): Promise<string> {
+  const branchName = await getDefaultBranch(client);
   return `heads/${branchName}`;
 }
 
@@ -90,7 +87,7 @@ export default async function main(
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
-  const ref = await getHeadRef(client, config);
+  const ref = await getHeadRef(client);
   const context = await getSvgsInRepo(client, ref, config.ignoreGlob);
   const optimizedSvgs = await doOptimizeSvgs(svgo, context.svgs);
   const commitData = getCommitData(context, optimizedSvgs);
