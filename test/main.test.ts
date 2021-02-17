@@ -10,15 +10,11 @@ import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
 import * as svgo from "./mocks/svgo.mock";
 
-const prEventMain = jest.fn().mockName("pull-request.ts::main");
-const pushEventMain = jest.fn().mockName("push.ts::main");
-const scheduleEventMain = jest.fn().mockName("schedule.ts::main");
+const optimizeMock = jest.fn().mockName("optimize.ts::default");
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
-jest.mock("../src/events/pull-request", () => prEventMain);
-jest.mock("../src/optimize", () => pushEventMain);
-jest.mock("../src/events/schedule", () => scheduleEventMain);
+jest.mock("../src/optimize", () => optimizeMock);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/svgo", () => svgo);
@@ -38,63 +34,63 @@ const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE];
 beforeEach(() => {
   core.setFailed.mockClear();
 
-  prEventMain.mockClear();
-  pushEventMain.mockClear();
-  scheduleEventMain.mockClear();
+  optimizeMock.mockClear();
 });
 
 test("push event", async () => {
   github.context.eventName = EVENT_PUSH;
 
   await main();
-  expect(pushEventMain).toHaveBeenCalledTimes(1);
+  expect(optimizeMock).toHaveBeenCalledTimes(1);
 });
 
 test("pull_request event", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
 
   await main();
-  expect(prEventMain).toHaveBeenCalledTimes(1);
+  expect(optimizeMock).toHaveBeenCalledTimes(1);
 });
 
 test("schedule event", async () => {
   github.context.eventName = EVENT_SCHEDULE;
 
   await main();
-  expect(scheduleEventMain).toHaveBeenCalledTimes(1);
+  expect(optimizeMock).toHaveBeenCalledTimes(1);
 });
 
 test("push event error", async () => {
   github.context.eventName = EVENT_PUSH;
 
-  pushEventMain.mockImplementationOnce(() => {
+  optimizeMock.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
-  expect(pushEventMain).toHaveBeenCalledTimes(1);
+  expect(optimizeMock).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
 test("pull_request event error", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
 
-  prEventMain.mockImplementationOnce(() => {
+  optimizeMock.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
+  expect(optimizeMock).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
 test("schedule event error", async () => {
   github.context.eventName = EVENT_SCHEDULE;
 
-  scheduleEventMain.mockImplementationOnce(() => {
+  optimizeMock.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
+  expect(optimizeMock).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
@@ -102,8 +98,7 @@ test("unknown event", async () => {
   github.context.eventName = "UnKnOwN eVeNt";
 
   await main();
-  expect(pushEventMain).not.toHaveBeenCalled();
-  expect(prEventMain).not.toHaveBeenCalled();
+  expect(optimizeMock).not.toHaveBeenCalled();
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 

@@ -14,9 +14,7 @@ import { ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
 
-import prEventMain from "./events/pull-request";
-import pushEventMain from "./optimize";
-import scheduleEventMain from "./events/schedule";
+import optimize from "./optimize";
 
 import { fetchYamlFile } from "./utils/fetch-yaml";
 
@@ -30,7 +28,7 @@ function getRepoToken(): string {
 }
 
 async function run(
-  client: Octokit,
+  _: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
@@ -39,13 +37,13 @@ async function run(
     core.info(`Running SVGO Action in '${event}' context`);
     switch (event) {
       case EVENT_PULL_REQUEST:
-        await prEventMain(client, config, svgo);
+        await optimize(fs, config, svgo);
         break;
       case EVENT_PUSH:
-        await pushEventMain(fs, config, svgo);
+        await optimize(fs, config, svgo);
         break;
       case EVENT_SCHEDULE:
-        await scheduleEventMain(client, config, svgo);
+        await optimize(fs, config, svgo);
         break;
       default:
         throw new Error(`Event '${event}' not supported`);
