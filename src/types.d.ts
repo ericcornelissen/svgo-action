@@ -33,7 +33,6 @@ export type FileData = {
 
 // Type representing the data for the Action to create a commit.
 export type CommitData = {
-  readonly fileCount: number;
   readonly fileData: {
     readonly optimized: FileData[];
     readonly original: FileData[];
@@ -47,7 +46,6 @@ export type CommitData = {
 
 // Type representing the context w.r.t. files and SVGs the Action is running in.
 export type ContextData = {
-  readonly fileCount: number;
   readonly ignoredCount: number;
   readonly svgs: FileData[];
   readonly warnings: string[];

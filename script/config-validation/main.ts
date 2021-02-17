@@ -74,7 +74,6 @@ const ALLOWED_KEYS_WORKFLOW = [
 ];
 
 const EXAMPLE_COMMIT_DATA: CommitData = {
-  fileCount: 5,
   fileData: {
     optimized: [
       {

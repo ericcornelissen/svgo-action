@@ -6,7 +6,6 @@ import { getFileSizeInKB } from "./utils/file-size";
 import { toPercentage } from "./utils/percentages";
 
 
-const FILE_COUNT_EXP = /\{\{\s*fileCount\s*\}\}/;
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
 const FILES_TABLE_EXP = /\{\{\s*filesTable\s*\}\}/;
 const IGNORED_COUNT_EXP = /\{\{\s*ignoredCount\s*\}\}/;
@@ -15,7 +14,6 @@ const SKIPPED_COUNT_EXP = /\{\{\s*skippedCount\s*\}\}/;
 const SVG_COUNT_EXP = /\{\{\s*svgCount\s*\}\}/;
 const WARNINGS_EXP = /\{\{\s*warnings\s*\}\}/;
 
-const FILE_COUNT_KEY = "fileCount";
 const FILE_DATA_KEY = "fileData";
 const IGNORED_COUNT_KEY = "ignoredCount";
 const OPTIMIZED_COUNT_KEY = "optimizedCount";
@@ -34,12 +32,6 @@ const FILES_TABLE_HEADER =
 const FILES_TABLE_ROW = "| %s | %s KB | %s KB | %s%% |\n";
 
 const formatters = [
-  {
-    key: FILE_COUNT_KEY,
-    fn: (template: string, value: number): string => {
-      return template.replace(FILE_COUNT_EXP, value.toString());
-    },
-  },
   {
     key: FILE_DATA_KEY,
     fn: (template: string, value: CommitData["fileData"]): string => {

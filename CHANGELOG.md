@@ -9,6 +9,7 @@ Versioning].
 
 - BREAKING: work on local clone of the repository.
 - BREAKING: remove branch configuration option for scheduled runs.
+- BREAKING: Remove `fileCount` as templating variable.
 
 ## [Unreleased]
 
