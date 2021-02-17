@@ -9,12 +9,13 @@ import {
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
 } from "./constants";
+import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
 
 import prEventMain from "./events/pull-request";
-import pushEventMain from "./events/push";
+import pushEventMain from "./optimize";
 import scheduleEventMain from "./events/schedule";
 
 import { fetchYamlFile } from "./utils/fetch-yaml";
@@ -41,7 +42,7 @@ async function run(
         await prEventMain(client, config, svgo);
         break;
       case EVENT_PUSH:
-        await pushEventMain(client, config, svgo);
+        await pushEventMain(fs, config, svgo);
         break;
       case EVENT_SCHEDULE:
         await scheduleEventMain(client, config, svgo);
