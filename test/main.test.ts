@@ -8,6 +8,7 @@ import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
+import * as outputs from "./mocks/outputs.mock";
 import * as svgo from "./mocks/svgo.mock";
 
 const optimizeMock = jest.fn().mockName("optimize.ts::default");
@@ -17,6 +18,7 @@ jest.mock("@actions/github", () => github);
 jest.mock("../src/optimize", () => optimizeMock);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
+jest.mock("../src/outputs", () => outputs);
 jest.mock("../src/svgo", () => svgo);
 
 import {

@@ -4,6 +4,19 @@ type InputOptions = {
 
 type Mode = "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
 
+export type OptimizeFileData = {
+  contentAfter: string;
+  contentBefore: string;
+  path: string;
+}
+
+export type OptimizeProjectData = {
+  readonly files: OptimizeFileData[];
+  readonly svgCount: number;
+  readonly optimizedCount: number;
+  readonly skippedCount: number;
+}
+
 // Type representing the possible names of values outputted by the Action.
 type OutputName =
   "DID_OPTIMIZE" |
