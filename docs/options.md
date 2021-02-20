@@ -351,14 +351,11 @@ the latest v2.x.x release.
 
 You need to change this option based on the format of the configuration file for
 SVGO that you're using. We recommend updating your configuration file and
-setting this option to `2` as soon as possible. For more information see [this
-post about the v2 release](https://github.com/svg/svgo/releases/tag/v2.0.0).
+setting this option to `2` as soon as possible. For more information see [the
+release notes of SVGO v2](https://github.com/svg/svgo/releases/tag/v2.0.0).
 
 If you're not using a configuration file it is recommended to set this option to
 `2`.
-
-> :information_source: The SVGO Action will support v1.x.x of [SVGO] as long as
-> it is not deprecated.
 
 ### Examples
 

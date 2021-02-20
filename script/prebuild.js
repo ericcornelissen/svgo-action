@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
  * @fileoverview
- * Adjusts a
+ * Script to be run before bundling with NCC. Currently, it fixes a minor issue
+ * in SVGO v2's source that causes NCC to error.
  */
 
 const fs = require("fs");
