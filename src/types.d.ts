@@ -61,8 +61,8 @@ export type RawActionConfig = {
   };
   readonly "dry-run"?: boolean;
   readonly ignore?: string;
-  readonly "svgo-version"?: number;
   readonly "svgo-options"?: string;
+  readonly "svgo-version"?: number;
 }
 
 // Type representing the (relevant) data about a commit.

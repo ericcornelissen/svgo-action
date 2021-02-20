@@ -40,7 +40,7 @@ To enable comments by the Action:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     comment: true
 
@@ -54,7 +54,7 @@ strings]):
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     comment: |
       {{optimizedCount}}/{{svgCount}} SVG(s) optimized :sparkles:
@@ -209,7 +209,7 @@ To change where the Action looks for a configuration file:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     configuration-path: path/to/configuration/file.yml
 ```
@@ -234,7 +234,7 @@ To enable conventional commit titles:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     conventional-commits: true
 ```
@@ -257,7 +257,7 @@ To enable the dry-run mode:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     dry-run: true
 
@@ -287,7 +287,7 @@ To ignore all files in a specific folder:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     ignore: not/optimized/*
 
@@ -300,7 +300,7 @@ To ignore all files in a specific folder and all its subfolders:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     ignore: not/optimized/**/
 
@@ -328,7 +328,7 @@ To change the SVGO configuration file:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     svgo-options: my-svgo-options.js
 
@@ -361,7 +361,7 @@ To change the SVGO major version to v1.x.x:
 
 ```yaml
 # .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   with:
     svgo-version: 1
     svgo-options: .svgo.yml
