@@ -89,7 +89,7 @@ describe("SVGOptimizer (v2)", () => {
     });
 
     test("does not throw when given configuration", () => {
-      expect(() => new SVGOptimizer(2, svgoV1Options as SVGOptions)).not.toThrow();
+      expect(() => new SVGOptimizer(2, svgoV2Options as SVGOptions)).not.toThrow();
     });
 
   });

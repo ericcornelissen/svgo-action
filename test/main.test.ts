@@ -191,6 +191,7 @@ test.each([1, 2])("set SVGO version", async (svgoVersion) => {
   await main();
 
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, expect.any(Object));
+  expect(core.info).toHaveBeenCalledWith(expect.stringMatching(`SVGO.*${svgoVersion}`));
 });
 
 test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async (eventName) => {
