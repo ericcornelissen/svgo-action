@@ -19,6 +19,7 @@
     "lint:ws": "editorconfig-checker",
     "postinstall": "is-ci || husky install script/hooks",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "validate-config": "npx ts-node ./script/config-validation/cli.ts"
   },
   "repository": {
