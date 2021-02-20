@@ -468,13 +468,13 @@ describe("ActionConfig", () => {
 
   describe(".svgoVersion", () => {
 
-    const defaultValue = "1";
+    const defaultValue = "2";
 
     test("not configured", () => {
       mockCoreGetInput(INPUT_NAME_SVGO_VERSION, defaultValue);
 
       const instance: ActionConfig = new ActionConfig(core);
-      expect(instance.svgoVersion).toBe(1);
+      expect(instance.svgoVersion).toBe(2);
     });
 
     test("set to `'1'` in workflow file", () => {
@@ -495,7 +495,7 @@ describe("ActionConfig", () => {
       mockCoreGetInput(INPUT_NAME_SVGO_VERSION, "3");
 
       const instance: ActionConfig = new ActionConfig(core);
-      expect(instance.svgoVersion).toBe(1);
+      expect(instance.svgoVersion).toBe(2);
     });
 
     test("set to `1` in config file", () => {
@@ -536,7 +536,7 @@ describe("ActionConfig", () => {
       const rawConfig: RawActionConfig = { "svgo-version": 3 };
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
-      expect(instance.svgoVersion).toBe(1);
+      expect(instance.svgoVersion).toBe(2);
     });
 
     test("set to `1` in config file and something else in workflow file", () => {

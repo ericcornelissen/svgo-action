@@ -141,7 +141,7 @@ test.each(ALL_EVENTS)("use a YAML SVGO options file in the repository (%s)", asy
 
   await main();
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoV1Options);
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoV1Options);
 });
 
 test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
@@ -150,7 +150,7 @@ test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)
   github.context.eventName = eventName;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.js", svgoVersion: 1 };
+    return { svgoOptionsPath: ".svgo.js", svgoVersion: 2 };
   });
 
   when(githubAPI.getFile)
@@ -159,7 +159,7 @@ test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)
 
   await main();
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoV2Options);
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoV2Options);
 });
 
 test("use a JavaScript SVGO options file that does not exist", async () => {
@@ -168,7 +168,7 @@ test("use a JavaScript SVGO options file that does not exist", async () => {
   github.context.eventName = EVENT_PUSH;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.js", svgoVersion: 1 };
+    return { svgoOptionsPath: ".svgo.js", svgoVersion: 2 };
   });
 
   when(githubAPI.getFile)
@@ -177,7 +177,7 @@ test("use a JavaScript SVGO options file that does not exist", async () => {
 
   await main();
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, expect.any(Object));
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, expect.any(Object));
 });
 
 test.each([1, 2])("set SVGO version", async (svgoVersion) => {

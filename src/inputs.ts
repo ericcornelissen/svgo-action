@@ -21,7 +21,7 @@ const NUMBER = "number";
 const STRING = "string";
 const TRUE = "true";
 
-const DEFAULT_SVGO_VERSION = 1;
+const DEFAULT_SVGO_VERSION = 2;
 
 
 export class ActionConfig {

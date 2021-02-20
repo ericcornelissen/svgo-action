@@ -4,7 +4,7 @@ export const ActionConfig = jest.fn()
     commitTitle: "Optimize {{optimizedCount}} SVG(s) with SVGO",
     ignoreGlob: "",
     isDryRun: false,
-    svgoVersion: 1,
+    svgoVersion: 2,
     svgoOptionsPath: "404",
   }))
   .mockName("inputs.ActionConfig");

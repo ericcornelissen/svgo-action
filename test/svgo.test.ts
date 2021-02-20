@@ -20,62 +20,6 @@ const svgs = Object.entries(files)
   .slice(0, 4);
 
 
-describe("SVGOptimizer (v1)", () => {
-
-  describe("::constructor", () => {
-
-    test("does not throw when given no configuration", () => {
-      expect(() => new SVGOptimizer(1)).not.toThrow();
-    });
-
-    test("does not throw when given empty configuration", () => {
-      expect(() => new SVGOptimizer(1, { })).not.toThrow();
-    });
-
-    test("does not throw when given configuration", () => {
-      expect(() => new SVGOptimizer(1, svgoV1Options as SVGOptions)).not.toThrow();
-    });
-
-  });
-
-  describe(".optimize", () => {
-
-    const optimizer: SVGOptimizer = new SVGOptimizer(1, { });
-
-    test.each(svgs)("return a (string) value", async (svg: string) => {
-      const result = await optimizer.optimize(svg);
-      expect(result).toBeDefined();
-      expect(typeof result).toBe("string");
-    });
-
-    test.each(svgs)("change a (not optimized) SVG", async (svg: string) => {
-      const result = await optimizer.optimize(svg);
-      expect(result).not.toEqual(svg);
-    });
-
-    test("return value for a previously optimized SVG", async () => {
-      const optimized = await optimizer.optimize(files["test.svg"]);
-      const result = await optimizer.optimize(optimized);
-      expect(result).toEqual(optimized);
-    });
-
-    test("optimizing with different configurations (default vs. fixture)", async () => {
-      const optimizer2: SVGOptimizer = new SVGOptimizer(svgoV1Options as SVGOptions);
-
-      const optimized1 = await optimizer.optimize(files["complex.svg"]);
-      const optimized2 = await optimizer2.optimize(files["complex.svg"]);
-      expect(optimized1).not.toEqual(optimized2);
-    });
-
-    test("not an svg", async () => {
-      const promise = optimizer.optimize(files["fake.svg"]);
-      await expect(promise).rejects.toBeDefined();
-    });
-
-  });
-
-});
-
 describe("SVGOptimizer (v2)", () => {
 
   describe("::constructor", () => {
@@ -117,6 +61,62 @@ describe("SVGOptimizer (v2)", () => {
 
     test("optimizing with different configurations (default vs. fixture)", async () => {
       const optimizer2: SVGOptimizer = new SVGOptimizer(2, svgoV2Options as SVGOptions);
+
+      const optimized1 = await optimizer.optimize(files["complex.svg"]);
+      const optimized2 = await optimizer2.optimize(files["complex.svg"]);
+      expect(optimized1).not.toEqual(optimized2);
+    });
+
+    test("not an svg", async () => {
+      const promise = optimizer.optimize(files["fake.svg"]);
+      await expect(promise).rejects.toBeDefined();
+    });
+
+  });
+
+});
+
+describe("SVGOptimizer (v1)", () => {
+
+  describe("::constructor", () => {
+
+    test("does not throw when given no configuration", () => {
+      expect(() => new SVGOptimizer(1)).not.toThrow();
+    });
+
+    test("does not throw when given empty configuration", () => {
+      expect(() => new SVGOptimizer(1, {})).not.toThrow();
+    });
+
+    test("does not throw when given configuration", () => {
+      expect(() => new SVGOptimizer(1, svgoV1Options as SVGOptions)).not.toThrow();
+    });
+
+  });
+
+  describe(".optimize", () => {
+
+    const optimizer: SVGOptimizer = new SVGOptimizer(1, {});
+
+    test.each(svgs)("return a (string) value", async (svg: string) => {
+      const result = await optimizer.optimize(svg);
+      expect(result).toBeDefined();
+      expect(typeof result).toBe("string");
+    });
+
+    test.each(svgs)("change a (not optimized) SVG", async (svg: string) => {
+      const result = await optimizer.optimize(svg);
+      expect(result).not.toEqual(svg);
+    });
+
+    test("return value for a previously optimized SVG", async () => {
+      const optimized = await optimizer.optimize(files["test.svg"]);
+      const result = await optimizer.optimize(optimized);
+      expect(result).toEqual(optimized);
+    });
+
+    test("optimizing with different configurations (default vs. fixture)", async () => {
+      const optimizer2: SVGOptimizer = new SVGOptimizer(svgoV1Options as SVGOptions);
 
       const optimized1 = await optimizer.optimize(files["complex.svg"]);
       const optimized2 = await optimizer2.optimize(files["complex.svg"]);
