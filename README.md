@@ -59,8 +59,8 @@ configuration file]. The table below shows the options that can be configured.
 | `conventional-commits` | Use [conventional commit] message titles | `false`            | [docs](/docs/options.md#conventional-commits) |
 | `dry-run`              | Prevent the Action from making commits   | `false`            | [docs](/docs/options.md#dry-run)              |
 | `ignore`               | A [glob] of SVGs that should be ignored  | `""`               | [docs](/docs/options.md#ignore)               |
-| `svgo-version`         | The (major) version of [SVGO] to use     | `2`                | [docs](/docs/options.md#svgo-version)         |
 | `svgo-options`         | Specify the [SVGO] configuration file    | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
+| `svgo-version`         | The (major) version of [SVGO] to use     | `2`                | [docs](/docs/options.md#svgo-version)         |
 
 #### In the Workflow file
 
@@ -74,8 +74,8 @@ with:
   conventional-commits: true
   dry-run: true
   ignore: do/not/optimize/**/*.svg
-  svgo-version: 2
   svgo-options: path/to/svgo-options.js
+  svgo-version: 2
 ```
 
 #### In `.github/svgo-action.yml`
@@ -88,8 +88,8 @@ you can configure the Action inside this file. For example:
 comment: true
 dry-run: true
 ignore: do/not/optimize/**/*.svg
-svgo-version: 2
 svgo-options: path/to/svgo-options.js
+svgo-version: 2
 commit:
   conventional: false
   title: Optimized {{optimizedCount}} SVG(s)

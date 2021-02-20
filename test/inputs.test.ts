@@ -13,8 +13,8 @@ import {
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
-  INPUT_NAME_SVGO_VERSION,
   INPUT_NAME_SVGO_OPTIONS,
+  INPUT_NAME_SVGO_VERSION,
 } from "../src/constants";
 import { ActionConfig } from "../src/inputs";
 import { RawActionConfig } from "../src/types";
@@ -466,6 +466,34 @@ describe("ActionConfig", () => {
 
   });
 
+  describe(".svgoOptionsPath", () => {
+
+    const paths: string[] = ["svgo.config.js", "foo.js", "in/folder/config.js"];
+
+    test("svgo-options is not set at all", () => {
+      const defaultValue = "svgo.config.js";
+      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, defaultValue);
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.svgoOptionsPath).toBe(defaultValue);
+    });
+
+    test.each(paths)("svgo-options is set (to '%s') in the workflow file", (path) => {
+      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, path);
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.svgoOptionsPath).toBe(path);
+    });
+
+    test.each(paths)("svgo-options is set (to '%s') in the config object", (path) => {
+      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, `dir/${path}`);
+
+      const instance: ActionConfig = new ActionConfig(core, { "svgo-options": path });
+      expect(instance.svgoOptionsPath).toBe(path);
+    });
+
+  });
+
   describe(".svgoVersion", () => {
 
     const defaultValue = "2";
@@ -553,34 +581,6 @@ describe("ActionConfig", () => {
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.svgoVersion).toBe(2);
-    });
-
-  });
-
-  describe(".svgoOptionsPath", () => {
-
-    const paths: string[] = ["svgo.config.js", "foo.js", "in/folder/config.js"];
-
-    test("svgo-options is not set at all", () => {
-      const defaultValue = "svgo.config.js";
-      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, defaultValue);
-
-      const instance: ActionConfig = new ActionConfig(core);
-      expect(instance.svgoOptionsPath).toBe(defaultValue);
-    });
-
-    test.each(paths)("svgo-options is set (to '%s') in the workflow file", (path) => {
-      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, path);
-
-      const instance: ActionConfig = new ActionConfig(core);
-      expect(instance.svgoOptionsPath).toBe(path);
-    });
-
-    test.each(paths)("svgo-options is set (to '%s') in the config object", (path) => {
-      mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, `dir/${path}`);
-
-      const instance: ActionConfig = new ActionConfig(core, { "svgo-options": path });
-      expect(instance.svgoOptionsPath).toBe(path);
     });
 
   });
