@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.0] - 2021-02-21
+
 - Add support for using SVGO v2. ([#330])
 - Add support for JavaScript based SVGO configuration files. ([#330])
 
