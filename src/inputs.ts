@@ -8,6 +8,7 @@ import {
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
+  INPUT_NAME_SVGO_VERSION,
   INPUT_NAME_SVGO_OPTIONS,
 } from "./constants";
 import { Inputs, RawActionConfig } from "./types";
@@ -20,6 +21,8 @@ const FALSE = "false";
 const STRING = "string";
 const TRUE = "true";
 
+const DEFAULT_SVGO_VERSION = 1;
+
 
 export class ActionConfig {
 
@@ -30,6 +33,7 @@ export class ActionConfig {
   public readonly enableComments: boolean;
   public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
+  public readonly svgoVersion: 1 | 2;
   public readonly svgoOptionsPath: string;
 
   constructor(inputs: Inputs, config: RawActionConfig = { }) {
@@ -45,6 +49,7 @@ export class ActionConfig {
       this.isDryRun,
     );
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
+    this.svgoVersion = ActionConfig.getSvgoVersion(inputs, config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
   }
 
@@ -130,6 +135,34 @@ export class ActionConfig {
   ): string {
     return (config.ignore !== undefined) ?
       config.ignore : inputs.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
+  }
+
+  private static getSvgoVersion(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): 1 | 2 {
+    let configVersion = config["svgo"];
+    if (configVersion !== undefined) {
+      if (typeof configVersion === "string") {
+        configVersion = parseInt(configVersion, 10);
+      }
+      if (configVersion === 1 || configVersion === 2) {
+        return configVersion;
+      }
+    } else {
+      const rawInputVersion = inputs.getInput(
+        INPUT_NAME_SVGO_VERSION,
+        NOT_REQUIRED,
+      );
+      const inputVersion = parseInt(rawInputVersion, 10);
+      if (inputVersion !== undefined) {
+        if (inputVersion === 1 || inputVersion === 2) {
+          return inputVersion;
+        }
+      }
+    }
+
+    return DEFAULT_SVGO_VERSION;
   }
 
   private static getSvgoOptionsPath(
