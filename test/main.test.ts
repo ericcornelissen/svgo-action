@@ -146,6 +146,16 @@ test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoOptions);
 });
 
+test.each([1, 2])("set SVGO version", async (svgoVersion) => {
+  inputs.ActionConfig.mockImplementationOnce(() => {
+    return { svgoVersion: svgoVersion };
+  });
+
+  await main();
+
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, expect.any(Object));
+});
+
 test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async (eventName) => {
   github.context.eventName = eventName;
 
