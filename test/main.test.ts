@@ -2,7 +2,7 @@ import { when } from "jest-when";
 
 import actionOptions from "./fixtures/svgo-action.json";
 import contentPayloads from "./fixtures/contents-payloads.json";
-import svgoOptions from "./fixtures/svgo-options.json";
+import svgoV1Options from "./fixtures/svgo-v1-options.json";
 import svgoV2Options from "./fixtures/svgo-v2-options.json";
 
 import * as core from "./mocks/@actions/core.mock";
@@ -144,7 +144,7 @@ test.each(ALL_EVENTS)("use a YAML SVGO options file in the repository (%s)", asy
 
   await main();
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoOptions);
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoV1Options);
 });
 
 test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
@@ -163,6 +163,24 @@ test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)
   await main();
 
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoV2Options);
+});
+
+test("use a JavaScript SVGO options file that does not exist", async () => {
+  svgo.SVGOptimizer.mockClear();
+
+  github.context.eventName = EVENT_PUSH;
+
+  inputs.ActionConfig.mockImplementationOnce(() => {
+    return { svgoOptionsPath: ".svgo.js", svgoVersion: 1 };
+  });
+
+  when(githubAPI.getFile)
+    .calledWith(github.GitHubInstance, github.context.sha, ".svgo.js")
+    .mockRejectedValueOnce(new Error("Not found"));
+
+  await main();
+
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, expect.any(Object));
 });
 
 test.each([1, 2])("set SVGO version", async (svgoVersion) => {
