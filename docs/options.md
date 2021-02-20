@@ -9,6 +9,7 @@ This file contains the documentation for all options for the SVGO Action.
 - [Conventional Commits](#conventional-commits)
 - [Dry run](#dry-run)
 - [Ignore](#ignore)
+- [SVGO](#svgo)
 - [SVGO Options](#svgo-options)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
@@ -335,6 +336,28 @@ To ignore all files in a specific folder and all its subfolders:
 # .github/svgo-action.yml
 ignore: not/optimized/**/*
 ```
+
+---
+
+## SVGO
+
+| Name   | Default Value | Workflow file      | Config File        |
+| ------ | ------------- | ------------------ | ------------------ |
+| `svgo` | `1`           | :heavy_check_mark: | :heavy_check_mark: |
+
+The _SVGO_ option allows you to specify the major version of [SVGO] that you
+want to use. This can be either `1` for the latest v1.x.x release, or `2` for
+the latest v2.x.x release.
+
+You need to change this option based on the format of the configuration file for
+SVGO that you're using. We recommend updating your configuration file and
+setting this option to `2` as soon as possible.
+
+If you're note using a configuration file it is recommended to set this option
+to `2`.
+
+> :information_source: The SVGO Action will support v1.x.x of [SVGO] as long as
+> it is not deprecated.
 
 ---
 
