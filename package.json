@@ -8,6 +8,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "ncc build src/main.ts -m -o lib",
+    "tmp": "tsc",
     "clean": "run-p clean:reports",
     "clean:reports": "rm -rf ./_reports",
     "format": "run-p format:js format:md",
@@ -45,7 +46,7 @@
     "js-yaml": "4.0.0",
     "minimatch": "3.0.4",
     "svgo-v1": "npm:svgo@1.3.2",
-    "svgo-v2": "npm:svgo@2.0.2"
+    "svgo-v2": "npm:svgo@2.0.3"
   },
   "devDependencies": {
     "@commitlint/cli": "11.0.0",

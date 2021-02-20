@@ -33,11 +33,13 @@ export class SVGOptimizer {
   }
 
   private async optimizeV2(originalSvg: string): Promise<string> {
-    const { data: optimizedSvg } = svgo.optimize(originalSvg, this.options);
+    const { data: optimizedSvg, error } = svgo.optimize(
+      originalSvg,
+      this.options,
+    );
 
-    // See https://github.com/svg/svgo/issues/1346
-    if (optimizedSvg === "" && originalSvg !== "") {
-      throw new Error("Not an SVG");
+    if (error) {
+      throw new Error(error);
     }
 
     return optimizedSvg;
