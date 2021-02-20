@@ -51,6 +51,7 @@ export type RawActionConfig = {
   };
   readonly "dry-run"?: boolean;
   readonly ignore?: string;
+  readonly "svgo-version"?: number;
   readonly "svgo-options"?: string;
 }
 

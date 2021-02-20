@@ -8,6 +8,7 @@ import {
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
+  INPUT_NAME_SVGO_VERSION,
   INPUT_NAME_SVGO_OPTIONS,
 } from "./constants";
 import { Inputs, RawActionConfig } from "./types";
@@ -17,8 +18,11 @@ const NOT_REQUIRED = { required: false };
 
 const BOOLEAN = "boolean";
 const FALSE = "false";
+const NUMBER = "number";
 const STRING = "string";
 const TRUE = "true";
+
+const DEFAULT_SVGO_VERSION = 1;
 
 
 export class ActionConfig {
@@ -30,6 +34,7 @@ export class ActionConfig {
   public readonly enableComments: boolean;
   public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
+  public readonly svgoVersion: 1 | 2;
   public readonly svgoOptionsPath: string;
 
   constructor(inputs: Inputs, config: RawActionConfig = { }) {
@@ -45,6 +50,7 @@ export class ActionConfig {
       this.isDryRun,
     );
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
+    this.svgoVersion = ActionConfig.getSvgoVersion(inputs, config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
   }
 
@@ -132,6 +138,24 @@ export class ActionConfig {
       config.ignore : inputs.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
   }
 
+  private static getSvgoVersion(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): 1 | 2 {
+    const version = ActionConfig.normalizeIntegerOption(
+      inputs,
+      config["svgo-version"],
+      INPUT_NAME_SVGO_VERSION,
+      DEFAULT_SVGO_VERSION,
+    );
+
+    if (version === 1 || version === 2) {
+      return version;
+    }
+
+    return DEFAULT_SVGO_VERSION;
+  }
+
   private static getSvgoOptionsPath(
     inputs: Inputs,
     config: RawActionConfig,
@@ -157,6 +181,24 @@ export class ActionConfig {
       return false;
     } else if (value === TRUE) {
       return true;
+    } else {
+      return defaultValue;
+    }
+  }
+
+  private static normalizeIntegerOption(
+    inputs: Inputs,
+    configValue: number | undefined,
+    inputName: string,
+    defaultValue: number,
+  ): number {
+    const value = (configValue !== undefined) ?
+      configValue : inputs.getInput(inputName, NOT_REQUIRED);
+
+    if (typeof value === NUMBER) {
+      return value as number;
+    } else if (typeof value === STRING) {
+      return parseInt(value as string, 10);
     } else {
       return defaultValue;
     }
