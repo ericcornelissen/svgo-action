@@ -11,10 +11,6 @@ Versioning].
 - BREAKING: remove branch configuration option for scheduled runs.
 - BREAKING: Remove `fileCount` as templating variable.
 
-## [Unreleased]
-
-- Prevent GitHub Actions warning about `ignore` input. ([#327])
-
 ## [1.2.2] - 2021-02-08
 
 - Allow scheduled runs on any branch. ([#321])
@@ -196,5 +192,4 @@ Versioning].
 [#312]: https://github.com/ericcornelissen/svgo-action/pull/312
 [#317]: https://github.com/ericcornelissen/svgo-action/pull/317
 [#321]: https://github.com/ericcornelissen/svgo-action/pull/321
-[#327]: https://github.com/ericcornelissen/svgo-action/pull/327
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

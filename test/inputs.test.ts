@@ -14,6 +14,7 @@ import {
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
   INPUT_NAME_SVGO_OPTIONS,
+  INPUT_NAME_SVGO_VERSION,
 } from "../src/constants";
 import { ActionConfig } from "../src/inputs";
 import { RawActionConfig } from "../src/types";
@@ -467,10 +468,10 @@ describe("ActionConfig", () => {
 
   describe(".svgoOptionsPath", () => {
 
-    const paths: string[] = [".svgo.yml", "foo.yml", "in/folder/config.yml"];
+    const paths: string[] = ["svgo.config.js", "foo.js", "in/folder/config.js"];
 
     test("svgo-options is not set at all", () => {
-      const defaultValue = ".svgo.yml";
+      const defaultValue = "svgo.config.js";
       mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, defaultValue);
 
       const instance: ActionConfig = new ActionConfig(core);
@@ -489,6 +490,97 @@ describe("ActionConfig", () => {
 
       const instance: ActionConfig = new ActionConfig(core, { "svgo-options": path });
       expect(instance.svgoOptionsPath).toBe(path);
+    });
+
+  });
+
+  describe(".svgoVersion", () => {
+
+    const defaultValue = "2";
+
+    test("not configured", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, defaultValue);
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.svgoVersion).toBe(2);
+    });
+
+    test("set to `'1'` in workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, "1");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.svgoVersion).toBe(1);
+    });
+
+    test("set to `'2'` in workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, "2");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.svgoVersion).toBe(2);
+    });
+
+    test("set to neither `'1'` or `'2'` in workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, "3");
+
+      const instance: ActionConfig = new ActionConfig(core);
+      expect(instance.svgoVersion).toBe(2);
+    });
+
+    test("set to `1` in config file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, defaultValue);
+      const rawConfig: RawActionConfig = { "svgo-version": 1 };
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.svgoVersion).toBe(1);
+    });
+
+    test("set to `2` in config file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, defaultValue);
+      const rawConfig: RawActionConfig = { "svgo-version": 2 };
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.svgoVersion).toBe(2);
+    });
+
+    test("set to `'1'` in config file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, defaultValue);
+      const rawConfig = { "svgo-version": "1" } as unknown as RawActionConfig;
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.svgoVersion).toBe(1);
+    });
+
+    test("set to `'2'` in config file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, defaultValue);
+      const rawConfig = { "svgo-version": "2" } as unknown as RawActionConfig;
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.svgoVersion).toBe(2);
+    });
+
+    test("set to neither `1` or `2` in config file", () => {
+      const defaultValue = "1";
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, defaultValue);
+      const rawConfig: RawActionConfig = { "svgo-version": 3 };
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.svgoVersion).toBe(2);
+    });
+
+    test("set to `1` in config file and something else in workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, "2");
+      const rawConfig: RawActionConfig = { "svgo-version": 1 };
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.svgoVersion).toBe(1);
+    });
+
+    test("set to `2` in config file and something else in workflow file", () => {
+      mockCoreGetInput(INPUT_NAME_SVGO_VERSION, "1");
+      const rawConfig: RawActionConfig = { "svgo-version": 2 };
+
+      const instance: ActionConfig = new ActionConfig(core, rawConfig);
+      expect(instance.svgoVersion).toBe(2);
     });
 
   });

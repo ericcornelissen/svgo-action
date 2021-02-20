@@ -36,6 +36,7 @@ The following [options] have an effect in the `pull_request` context.
 | `conventional-commits` | :heavy_check_mark: |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
+| `svgo-version`         | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
 
 ---
@@ -64,6 +65,7 @@ The following [options] have an effect in the `push` context.
 | `conventional-commits` | :heavy_check_mark: |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
+| `svgo-version`         | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
 
 ---
@@ -89,6 +91,7 @@ The following [options] have an effect in the `schedule` context.
 | `conventional-commits` | :heavy_check_mark: |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
+| `svgo-version`         | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
 
 [`pull_request` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request

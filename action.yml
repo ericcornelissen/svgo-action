@@ -28,7 +28,11 @@ inputs:
     required: false
   svgo-options:
     description: 'The path of the configuration file for SVGO'
-    default: '.svgo.yml'
+    default: 'svgo.config.js'
+    required: false
+  svgo-version:
+    description: 'The (major) SVGO version to be used (`1` or `2`)'
+    default: 2
     required: false
 
 runs:

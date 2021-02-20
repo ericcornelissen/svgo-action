@@ -36,6 +36,24 @@
     ]
   },
   "files": {
+    "svgo.config.js": {
+      "name": "svgo.config.js",
+      "path": "svgo.config.js",
+      "sha": "555aacba391dbd22e48a24467b1fb40eaef2434c",
+      "size": 1774,
+      "url": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/svgo.config.js?ref=dddf3133f1dbd22e48a24467bfb40eee31387569",
+      "html_url": "https://github.com/ericcornelissen/svgo-action/blob/dddf3133f1dbd22e48a24467bfb40eee31387569/svgo.config.js",
+      "git_url": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/555aacba391dbd22e48a24467b1fb40eaef2434c",
+      "download_url": "https://raw.githubusercontent.com/ericcornelissen/svgo-action/dddf3133f1dbd22e48a24467bfb40eee31387569/svgo.config.js?token=AJ7VCKXEYNGYRCUAOZ6ECC26IKXSHAVPNFXHG5DBNRWGC5DJN5XF62LEZZPAI7JVWFUW443UMFWGYYLUNFXW4X3UPFYGLPKTMNXXAZLEJFXHIZLHOJQXI2LPNZEW443UMFWGYYLUNFXW4",
+      "type": "file",
+      "content": "bW9kdWxlLmV4cG9ydHMgPSB7CiAgIm11bHRpcGFzcyI6IHRydWUsCiAgInBsdWdpbnMiOiBbCiAgICB7CiAgICAgICJuYW1lIjogImNvbnZlcnRQYXRoRGF0YSIsCiAgICAgICJwYXJhbXMiOiB7CiAgICAgICAgImZsb2F0UHJlY2lzaW9uIjogMywKICAgICAgICAibm9TcGFjZUFmdGVyRmxhZ3MiOiBmYWxzZQogICAgICB9CiAgICB9LAogICAgewogICAgICAibmFtZSI6ICJzb3J0QXR0cnMiLAogICAgICAicGFyYW1zIjogewogICAgICAgICJvcmRlciI6IFsKICAgICAgICAgICJyb2xlIiwKICAgICAgICAgICJ2aWV3Qm94IgogICAgICAgIF0sCiAgICAgICAgInhtbG5zT3JkZXIiOiAiZW5kIgogICAgICB9CiAgICB9LAogICAgewogICAgICAibmFtZSI6ICJjb252ZXJ0U2hhcGVUb1BhdGgiLAogICAgICAicGFyYW1zIjogewogICAgICAgICJjb252ZXJ0QXJjcyI6IHRydWUKICAgICAgfQogICAgfSwKICAgIHsKICAgICAgIm5hbWUiOiAibWVyZ2VQYXRocyIsCiAgICAgICJwYXJhbXMiOiB7CiAgICAgICAgImZvcmNlIjogdHJ1ZSwKICAgICAgICAibm9TcGFjZUFmdGVyRmxhZ3MiOiBmYWxzZQogICAgICB9CiAgICB9LAogICAgewogICAgICAibmFtZSI6ICJyZW1vdmVUaXRsZSIKICAgIH0sCiAgICB7CiAgICAgICJuYW1lIjogImFkZEF0dHJpYnV0ZXNUb1NWR0VsZW1lbnQiLAogICAgICAicGFyYW1zIjogewogICAgICAgICJhdHRyaWJ1dGVzIjogWwogICAgICAgICAgewogICAgICAgICAgICAicm9sZSI6ICJpbWciCiAgICAgICAgICB9CiAgICAgICAgXQogICAgICB9CiAgICB9CiAgXQp9Cg==",
+      "encoding": "base64",
+      "_links": {
+        "self": "https://api.github.com/repos/ericcornelissen/svgo-action/contents/svgo.config.js?ref=dddf3133f1dbd22e48a24467bfb40eee31387569",
+        "git": "https://api.github.com/repos/ericcornelissen/svgo-action/git/blobs/555aacba391dbd22e48a24467b1fb40eaef2434c",
+        "html": "https://github.com/ericcornelissen/svgo-action/blob/dddf3133f1dbd22e48a24467bfb40eee31387569/svgo.config.js"
+      }
+    },
     ".svgo.yml": {
       "name": ".svgo.yml",
       "path": ".svgo.yml",
