@@ -366,10 +366,12 @@ To change the SVGO major version to v2.x.x:
 - uses: ericcornelissen/svgo-action@v1
   with:
     svgo-version: 2
+    svgo-options: .svgo.js
 
 
 # .github/svgo-action.yml
 svgo-version: 2
+svgo-options: .svgo.js
 ```
 
 ---
