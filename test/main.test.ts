@@ -153,12 +153,12 @@ test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)
   github.context.eventName = eventName;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.js", svgoVersion: 1 };
+    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 1 };
   });
 
   when(githubAPI.getFile)
-    .calledWith(github.GitHubInstance, github.context.sha, ".svgo.js")
-    .mockResolvedValueOnce(contentPayloads.files[".svgo.js"]);
+    .calledWith(github.GitHubInstance, github.context.sha, "svgo.config.js")
+    .mockResolvedValueOnce(contentPayloads.files["svgo.config.js"]);
 
   await main();
 
@@ -171,11 +171,11 @@ test("use a JavaScript SVGO options file that does not exist", async () => {
   github.context.eventName = EVENT_PUSH;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.js", svgoVersion: 1 };
+    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 1 };
   });
 
   when(githubAPI.getFile)
-    .calledWith(github.GitHubInstance, github.context.sha, ".svgo.js")
+    .calledWith(github.GitHubInstance, github.context.sha, "svgo.config.js")
     .mockRejectedValueOnce(new Error("Not found"));
 
   await main();

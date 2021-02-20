@@ -8,8 +8,8 @@ import {
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
-  INPUT_NAME_SVGO_VERSION,
   INPUT_NAME_SVGO_OPTIONS,
+  INPUT_NAME_SVGO_VERSION,
 } from "./constants";
 import { Inputs, RawActionConfig } from "./types";
 
@@ -34,8 +34,8 @@ export class ActionConfig {
   public readonly enableComments: boolean;
   public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
-  public readonly svgoVersion: 1 | 2;
   public readonly svgoOptionsPath: string;
+  public readonly svgoVersion: 1 | 2;
 
   constructor(inputs: Inputs, config: RawActionConfig = { }) {
     this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
@@ -50,8 +50,8 @@ export class ActionConfig {
       this.isDryRun,
     );
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
-    this.svgoVersion = ActionConfig.getSvgoVersion(inputs, config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
+    this.svgoVersion = ActionConfig.getSvgoVersion(inputs, config);
   }
 
   private static getBranch(
@@ -138,6 +138,16 @@ export class ActionConfig {
       config.ignore : inputs.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
   }
 
+  private static getSvgoOptionsPath(
+    inputs: Inputs,
+    config: RawActionConfig,
+  ): string {
+    return config["svgo-options"] || inputs.getInput(
+      INPUT_NAME_SVGO_OPTIONS,
+      NOT_REQUIRED,
+    );
+  }
+
   private static getSvgoVersion(
     inputs: Inputs,
     config: RawActionConfig,
@@ -154,16 +164,6 @@ export class ActionConfig {
     }
 
     return DEFAULT_SVGO_VERSION;
-  }
-
-  private static getSvgoOptionsPath(
-    inputs: Inputs,
-    config: RawActionConfig,
-  ): string {
-    return config["svgo-options"] || inputs.getInput(
-      INPUT_NAME_SVGO_OPTIONS,
-      NOT_REQUIRED,
-    );
   }
 
   private static normalizeBoolOption(

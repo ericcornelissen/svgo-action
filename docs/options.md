@@ -9,8 +9,8 @@ This file contains the documentation for all options for the SVGO Action.
 - [Conventional Commits](#conventional-commits)
 - [Dry run](#dry-run)
 - [Ignore](#ignore)
-- [SVGO Version](#svgo-version)
 - [SVGO Options](#svgo-options)
+- [SVGO Version](#svgo-version)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -339,6 +339,34 @@ ignore: not/optimized/**/*
 
 ---
 
+## SVGO Options
+
+| Name           | Default Value | Workflow file      | Config File        |
+| -------------- | ------------- | ------------------ | ------------------ |
+| `svgo-options` | `".svgo.yml"` | :heavy_check_mark: | :heavy_check_mark: |
+
+The _SVG Options_ option allows you to specify the configuration file for
+[SVGO]. This configuration file must be a JavaScript file or in the [YAML]
+format. If the specified file is not found the Action will fall back on SVGO's
+default configuration.
+
+### Examples
+
+To change the SVGO configuration file:
+
+```yaml
+# .github/workflows/svgo.yml
+- uses: ericcornelissen/svgo-action@v1
+  with:
+    svgo-options: my-svgo-options.yml
+
+
+# .github/svgo-action.yml
+svgo-options: my-svgo-options.yml
+```
+
+---
+
 ## SVGO Version
 
 | Name           | Default Value | Workflow file      | Config File        |
@@ -366,39 +394,12 @@ To change the SVGO major version to v2.x.x:
 - uses: ericcornelissen/svgo-action@v1
   with:
     svgo-version: 2
-    svgo-options: .svgo.js
+    svgo-options: svgo.config.js
 
 
 # .github/svgo-action.yml
 svgo-version: 2
-svgo-options: .svgo.js
-```
-
----
-
-## SVGO Options
-
-| Name           | Default Value | Workflow file      | Config File        |
-| -------------- | ------------- | ------------------ | ------------------ |
-| `svgo-options` | `".svgo.yml"` | :heavy_check_mark: | :heavy_check_mark: |
-
-The _SVG Options_ option allows you to specify the configuration file for
-[SVGO]. This configuration file must be in the [YAML] format. If the specified
-file is not found the Action will fall back on SVGO's default configuration.
-
-### Examples
-
-To change the SVGO configuration file:
-
-```yaml
-# .github/workflows/svgo.yml
-- uses: ericcornelissen/svgo-action@v1
-  with:
-    svgo-options: my-svgo-options.yml
-
-
-# .github/svgo-action.yml
-svgo-options: my-svgo-options.yml
+svgo-options: svgo.config.js
 ```
 
 [configuration file]: https://github.com/ericcornelissen/svgo-action#in-another-configuration-file
