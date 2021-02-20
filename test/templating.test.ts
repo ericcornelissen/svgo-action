@@ -3,7 +3,6 @@ import { CommitData } from "../src/types";
 
 
 const defaultData: CommitData = {
-  fileCount: 1337,
   fileData: {
     optimized: [
       {
@@ -53,12 +52,6 @@ const templates = {
     "This isn't even my final form",
     "Rick Astley - Never gonne give you up",
   ],
-  fileCount: [
-    "For this commit {{fileCount}} file(s) were considered",
-    "Optimize some SVGs out of {{ fileCount }} file(s)",
-    "Lo{{fileCount}}rem ipsum",
-    "{{fileCount}}",
-  ],
   filesList: [
     "Optimized SVG(s):\n{{filesList}}",
     "This commit contains optimization for the following SVGs:\n{{ filesList }}",
@@ -98,7 +91,6 @@ const templates = {
 };
 
 const values = {
-  fileCount: [0, 1, 2, 80085],
   filesList: [
     ["test.svg"],
     ["foo.svg", "bar.svg"],
@@ -177,22 +169,6 @@ describe("::formatComment", () => {
   test.each(templates.noTemplateValues)("no template values (%s)", (templateString) => {
     const result = formatComment(templateString, defaultData);
     expect(result).toEqual(templateString);
-  });
-
-  test.each(templates.fileCount)("template using '{{fileCount}}' (%s)", (templateString) => {
-    const result = formatComment(templateString, defaultData);
-    expect(result).not.toEqual(templateString);
-
-    const expected = templateString.replace(/\{\{\s*fileCount\s*\}\}/, defaultData.fileCount.toString());
-    expect(result).toEqual(expected);
-  });
-
-  test.each(values.fileCount)("different values for `fileCount` (%i)", (fileCount) => {
-    const data = Object.assign({ }, defaultData, { fileCount });
-    const templateString = "The PR contains {{fileCount}} files";
-
-    const result = formatComment(templateString, data);
-    expect(result).toEqual(`The PR contains ${fileCount} files`);
   });
 
   test.each(templates.filesList)("template using '{{filesList}}' (%s)", (templateString) => {
@@ -375,28 +351,6 @@ describe("::formatCommitMessage", () => {
       expect(resultTitle).toEqual(templateString);
     });
 
-    test.each(templates.fileCount)("template using '{{fileCount}}' (%s)", (templateString) => {
-      const result = formatCommitMessage(templateString, defaultBodyTemplate, defaultData);
-      expect(result).toBeDefined();
-
-      const resultTitle = result.split("\n\n")[0];
-      expect(resultTitle).not.toEqual(templateString);
-
-      const expectedTitle = templateString.replace(/\{\{\s*fileCount\s*\}\}/, defaultData.fileCount.toString());
-      expect(resultTitle).toEqual(expectedTitle);
-    });
-
-    test.each(values.fileCount)("different values for `fileCount` (%i)", (fileCount) => {
-      const data = Object.assign({ }, defaultData, { fileCount });
-      const templateString = "The PR contains {{fileCount}} file(s)";
-
-      const result = formatCommitMessage(templateString, defaultBodyTemplate, data);
-      expect(result).toBeDefined();
-
-      const resultTitle = result.split("\n\n")[0];
-      expect(resultTitle).toEqual(`The PR contains ${fileCount} file(s)`);
-    });
-
     test.each(templates.filesList)("ignore '{{filesList}}' in '%s'", (templateString) => {
       const result = formatCommitMessage(templateString, defaultBodyTemplate, defaultData);
       expect(result).toBeDefined();
@@ -519,28 +473,6 @@ describe("::formatCommitMessage", () => {
 
       const resultBody = result.split("\n\n")[1];
       expect(resultBody).toEqual(templateString);
-    });
-
-    test.each(templates.fileCount)("template using '{{fileCount}}' (%s)", (templateString) => {
-      const result = formatCommitMessage(defaultTitleTemplate, templateString, defaultData);
-      expect(result).toBeDefined();
-
-      const resultBody = result.split("\n\n")[1];
-      expect(resultBody).not.toEqual(templateString);
-
-      const expectedBody = templateString.replace(/\{\{\s*fileCount\s*\}\}/, defaultData.fileCount.toString());
-      expect(resultBody).toEqual(expectedBody);
-    });
-
-    test.each(values.fileCount)("different values for `fileCount` (%i)", (fileCount) => {
-      const data = Object.assign({ }, defaultData, { fileCount });
-      const templateString = "The PR contains {{fileCount}} files";
-
-      const result = formatCommitMessage(defaultTitleTemplate, templateString, data);
-      expect(result).toBeDefined();
-
-      const resultBody = result.split("\n\n")[1];
-      expect(resultBody).toEqual(`The PR contains ${fileCount} files`);
     });
 
     test.each(templates.filesList)("template using '{{filesList}}' (%s)", (templateString) => {

@@ -9,17 +9,22 @@ import {
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
 } from "./constants";
+import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
-
-import prEventMain from "./events/pull-request";
-import pushEventMain from "./events/push";
-import scheduleEventMain from "./events/schedule";
+import optimize from "./optimize";
+import { getOutputNamesFor, setOutputValues } from "./outputs";
 
 import { fetchJsFile } from "./utils/fetch-js";
 import { fetchYamlFile } from "./utils/fetch-yaml";
 
+
+const SUPPORTED_EVENTS: string[] = [
+  EVENT_PULL_REQUEST,
+  EVENT_PUSH,
+  EVENT_SCHEDULE,
+];
 
 function getConfigFilePath(): string {
   return core.getInput(INPUT_NAME_CONFIG_PATH, { required: false });
@@ -42,26 +47,21 @@ async function getSvgoConfigFile(
 }
 
 async function run(
-  client: Octokit,
+  _: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
 ): Promise<void> {
   try {
     const event = github.context.eventName;
     core.info(`Running SVGO Action in '${event}' context`);
-    switch (event) {
-      case EVENT_PULL_REQUEST:
-        await prEventMain(client, config, svgo);
-        break;
-      case EVENT_PUSH:
-        await pushEventMain(client, config, svgo);
-        break;
-      case EVENT_SCHEDULE:
-        await scheduleEventMain(client, config, svgo);
-        break;
-      default:
-        throw new Error(`Event '${event}' not supported`);
+    if (!SUPPORTED_EVENTS.includes(event)) {
+      throw new Error(`Event '${event}' not supported`);
     }
+
+    const optimizeData = await optimize(fs, config, svgo);
+
+    const outputNames = getOutputNamesFor(event);
+    setOutputValues(outputNames, optimizeData);
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
   }

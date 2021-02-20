@@ -9,7 +9,6 @@ SVGs, into these messages.
 
 | Name             | Value                                     | Commit Title       | Commit Body        | Comments           |
 | ---------------- | ----------------------------------------- | ------------------ | ------------------ | ------------------ |
-| `fileCount`      | The number of files found in the PR       | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
 | `filesList`      | A bullet list of the optimized SVG files  | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 | `filesTable`     | A table of optimized files and statistics | :x:                | :heavy_check_mark: | :heavy_check_mark: |
 | `ignoredCount`   | The number of ignored SVGs                | :heavy_check_mark: | :heavy_check_mark: | :heavy_check_mark: |
@@ -38,8 +37,8 @@ commit:
     {{filesList}}
 
     Details:
-    {{fileCount}} file(s) in PR, {{svgCount}} SVG(s),
-    {{skippedCount}} SVG(s) already optimized
+    {{svgCount}} SVG(s) in PR, {{optimizedCount}} SVG(s) were
+    optimized, {{skippedCount}} SVG(s) already optimized.
 
     {{warnings}}
 ```
@@ -55,8 +54,8 @@ Namely:
 - foobar.svg
 
 Details:
-5 file(s) in PR, 4 SVG(s),
-1 SVG(s) already optimized
+4 SVG(s) in PR, 3 SVG(s) were
+optimized, 1 SVG(s) already optimized.
 ```
 
 To use templating values in Pull Request comments:

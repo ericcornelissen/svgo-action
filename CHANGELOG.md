@@ -5,9 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased]
+## [2.0.0] - TBD
 
-- Add support for using SVGO v2. ([#330])
+- BREAKING: work on local clone of the repository.
+- BREAKING: remove branch configuration option for scheduled runs.
+- BREAKING: Remove `fileCount` as templating variable.
 
 ## [1.2.2] - 2021-02-08
 
@@ -190,5 +192,4 @@ Versioning].
 [#312]: https://github.com/ericcornelissen/svgo-action/pull/312
 [#317]: https://github.com/ericcornelissen/svgo-action/pull/317
 [#321]: https://github.com/ericcornelissen/svgo-action/pull/321
-[#330]: https://github.com/ericcornelissen/svgo-action/pull/330
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

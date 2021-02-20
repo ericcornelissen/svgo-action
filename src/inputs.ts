@@ -3,7 +3,6 @@ import {
   DEFAULT_COMMIT_BODY,
   DEFAULT_COMMIT_TITLE,
   DEFAULT_COMMENT,
-  INPUT_NAME_BRANCH,
   INPUT_NAME_COMMENT,
   INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
@@ -27,7 +26,6 @@ const DEFAULT_SVGO_VERSION = 1;
 
 export class ActionConfig {
 
-  public readonly branch: string | null;
   public readonly comment: string;
   public readonly commitBody: string;
   public readonly commitTitle: string;
@@ -40,7 +38,6 @@ export class ActionConfig {
   constructor(inputs: Inputs, config: RawActionConfig = { }) {
     this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
 
-    this.branch = ActionConfig.getBranch(inputs, config);
     this.comment = ActionConfig.getCommentValue(inputs, config);
     this.commitBody = ActionConfig.getCommitBody(config);
     this.commitTitle = ActionConfig.getCommitTitle(inputs, config);
@@ -52,16 +49,6 @@ export class ActionConfig {
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
     this.svgoVersion = ActionConfig.getSvgoVersion(inputs, config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
-  }
-
-  private static getBranch(
-    inputs: Inputs,
-    config: RawActionConfig,
-  ): string | null {
-    const value = (config.branch !== undefined) ?
-      config.branch : inputs.getInput(INPUT_NAME_BRANCH, NOT_REQUIRED);
-
-    return value || null;
   }
 
   private static getCommentValue(

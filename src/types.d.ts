@@ -4,6 +4,19 @@ type InputOptions = {
 
 type Mode = "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
 
+export type OptimizeFileData = {
+  contentAfter: string;
+  contentBefore: string;
+  path: string;
+}
+
+export type OptimizeProjectData = {
+  readonly files: OptimizeFileData[];
+  readonly svgCount: number;
+  readonly optimizedCount: number;
+  readonly skippedCount: number;
+}
+
 // Type representing the possible names of values outputted by the Action.
 type OutputName =
   "DID_OPTIMIZE" |
@@ -20,7 +33,6 @@ export type FileData = {
 
 // Type representing the data for the Action to create a commit.
 export type CommitData = {
-  readonly fileCount: number;
   readonly fileData: {
     readonly optimized: FileData[];
     readonly original: FileData[];
@@ -34,7 +46,6 @@ export type CommitData = {
 
 // Type representing the context w.r.t. files and SVGs the Action is running in.
 export type ContextData = {
-  readonly fileCount: number;
   readonly ignoredCount: number;
   readonly svgs: FileData[];
   readonly warnings: string[];
@@ -42,7 +53,6 @@ export type ContextData = {
 
 // Type representing an Action configuration file.
 export type RawActionConfig = {
-  readonly branch?: string;
   readonly comment?: boolean | string;
   readonly commit?: {
     readonly conventional?: boolean;
