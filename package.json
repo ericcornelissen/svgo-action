@@ -7,8 +7,8 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
+    "prebuild": "node script/prebuild.js",
     "build": "ncc build src/main.ts -m -o lib",
-    "tmp": "tsc",
     "clean": "run-p clean:reports",
     "clean:reports": "rm -rf ./_reports",
     "format": "run-p format:js format:md",
