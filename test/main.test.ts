@@ -109,7 +109,7 @@ test.each(ALL_EVENTS)("dry mode enabled (%s)", async (eventName) => {
   github.context.eventName = eventName;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.yml", isDryRun: true };
+    return { svgoOptionsPath: "svgo.config.js", isDryRun: true };
   });
 
   await main();
@@ -129,6 +129,24 @@ test.each(ALL_EVENTS)("use custom configuration file (%s)", async (eventName) =>
   expect(inputs.ActionConfig).toHaveBeenCalledWith(core, actionOptions);
 });
 
+test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
+  svgo.SVGOptimizer.mockClear();
+
+  github.context.eventName = eventName;
+
+  inputs.ActionConfig.mockImplementationOnce(() => {
+    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 2 };
+  });
+
+  when(githubAPI.getFile)
+    .calledWith(github.GitHubInstance, github.context.sha, "svgo.config.js")
+    .mockResolvedValueOnce(contentPayloads.files["svgo.config.js"]);
+
+  await main();
+
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoV2Options);
+});
+
 test.each(ALL_EVENTS)("use a YAML SVGO options file in the repository (%s)", async (eventName) => {
   svgo.SVGOptimizer.mockClear();
 
@@ -144,35 +162,17 @@ test.each(ALL_EVENTS)("use a YAML SVGO options file in the repository (%s)", asy
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoV1Options);
 });
 
-test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
-  svgo.SVGOptimizer.mockClear();
-
-  github.context.eventName = eventName;
-
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.js", svgoVersion: 2 };
-  });
-
-  when(githubAPI.getFile)
-    .calledWith(github.GitHubInstance, github.context.sha, ".svgo.js")
-    .mockResolvedValueOnce(contentPayloads.files[".svgo.js"]);
-
-  await main();
-
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoV2Options);
-});
-
 test("use a JavaScript SVGO options file that does not exist", async () => {
   svgo.SVGOptimizer.mockClear();
 
   github.context.eventName = EVENT_PUSH;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.js", svgoVersion: 2 };
+    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 2 };
   });
 
   when(githubAPI.getFile)
-    .calledWith(github.GitHubInstance, github.context.sha, ".svgo.js")
+    .calledWith(github.GitHubInstance, github.context.sha, "svgo.config.js")
     .mockRejectedValueOnce(new Error("Not found"));
 
   await main();
@@ -182,7 +182,7 @@ test("use a JavaScript SVGO options file that does not exist", async () => {
 
 test.each([1, 2])("set SVGO version", async (svgoVersion) => {
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: ".svgo.yml", svgoVersion: svgoVersion };
+    return { svgoOptionsPath: "svgo.config.js", svgoVersion: svgoVersion };
   });
 
   await main();

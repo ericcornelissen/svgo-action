@@ -32,7 +32,7 @@ inputs:
     required: false
   svgo-options:
     description: 'The path of the configuration file for SVGO'
-    default: '.svgo.yml'
+    default: 'svgo.config.js'
     required: false
 
 runs:

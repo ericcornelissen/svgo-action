@@ -323,9 +323,9 @@ the latest v1.x.x release.
 
 You need to change this option based on the format of the configuration file for
 SVGO that you're using. If you're not yet using [SVGO] v2 you _can_ use this
-option to use v1. However, we recommend updating your configuration file For
-more information see [the release notes of SVGO
-v2](https://github.com/svg/svgo/releases/tag/v2.0.0).
+option to use v1. However, we recommend updating your configuration file. See
+[the release notes of SVGO v2](https://github.com/svg/svgo/releases/tag/v2.0.0)
+for more information.
 
 ### Examples
 
@@ -348,13 +348,14 @@ svgo-options: .svgo.yml
 
 ## SVGO Options
 
-| Name           | Default Value | Workflow file      | Config File        |
-| -------------- | ------------- | ------------------ | ------------------ |
-| `svgo-options` | `".svgo.yml"` | :heavy_check_mark: | :heavy_check_mark: |
+| Name           | Default Value      | Workflow file      | Config File        |
+| -------------- | ------------------ | ------------------ | ------------------ |
+| `svgo-options` | `"svgo.config.js"` | :heavy_check_mark: | :heavy_check_mark: |
 
 The _SVG Options_ option allows you to specify the configuration file for
-[SVGO]. This configuration file must be in the [YAML] format. If the specified
-file is not found the Action will fall back on SVGO's default configuration.
+[SVGO]. This configuration file must be a JavaScript file or in the [YAML]
+format. If the specified file is not found the Action will fall back on SVGO's
+default configuration.
 
 ### Examples
 
@@ -364,11 +365,11 @@ To change the SVGO configuration file:
 # .github/workflows/svgo.yml
 - uses: ericcornelissen/svgo-action@v1
   with:
-    svgo-options: my-svgo-options.yml
+    svgo-options: my-svgo-options.js
 
 
 # .github/svgo-action.yml
-svgo-options: my-svgo-options.yml
+svgo-options: my-svgo-options.js
 ```
 
 [configuration file]: https://github.com/ericcornelissen/svgo-action#in-another-configuration-file

@@ -33,9 +33,9 @@ file. When "svgo-action.yml" is converted to JSON it should match, exactly, the
 JSON data in _'svgo-action.json'_ .
 
 Similarly, the _'svgo-vX-options.json'_ files have a special relation to the
-files found under the `filename` ".svgo.yml" and ".svgo.js". In
+files found under the `filename` ".svgo.yml" and "svgo.config.js". In
 _'contents-payloads.json'_ this is a [YAML]/JavaScript file. When ".svgo.yml"/
-".svgo.js" is converted to JSON it should match, exactly, the JSON data in
+"svgo.config.js" is converted to JSON it should match, exactly, the JSON data in
 _'svgo-vX-options.json'_.
 
 ## Example

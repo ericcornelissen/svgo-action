@@ -559,10 +559,10 @@ describe("ActionConfig", () => {
 
   describe(".svgoOptionsPath", () => {
 
-    const paths: string[] = [".svgo.yml", "foo.yml", "in/folder/config.yml"];
+    const paths: string[] = ["svgo.config.js", "foo.js", "in/folder/config.js"];
 
     test("svgo-options is not set at all", () => {
-      const defaultValue = ".svgo.yml";
+      const defaultValue = "svgo.config.js";
       mockCoreGetInput(INPUT_NAME_SVGO_OPTIONS, defaultValue);
 
       const instance: ActionConfig = new ActionConfig(core);
