@@ -77,7 +77,7 @@ export default async function main(): Promise<void> {
     contextRef,
     config.svgoOptionsPath,
   );
-  const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
+  const svgo: SVGOptimizer = new SVGOptimizer(1, svgoOptions);
 
   run(client, config, svgo);
 }

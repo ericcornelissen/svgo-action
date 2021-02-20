@@ -1,0 +1,53 @@
+{
+  "multipass": true,
+  "plugins": [
+    {
+      "name": "convertPathData",
+      "floatPrecision": 3,
+      "noSpaceAfterFlags": false
+    },
+    {
+      "name": "sortAttrs",
+      "order": [
+        "role",
+        "viewBox"
+      ],
+      "xmlnsOrder": "end"
+    },
+    {
+      "name": "convertShapeToPath",
+      "convertArcs": true
+    },
+    {
+      "name": "mergePaths",
+      "force": true,
+      "noSpaceAfterFlags": false
+    },
+    {
+      "name": "removeTitle",
+      "active": true
+    },
+    {
+      "name": "addAttributesToSVGElement",
+      "attributes": [
+        {
+          "role": "img"
+        }
+      ]
+    },
+    {
+      "name": "removeUnknownsAndDefaults",
+      "keepRoleAttr": true
+    },
+    {
+      "name": "removeAttrs",
+      "attrs": [
+        "baseProfile"
+      ]
+    },
+    {
+      "name": "removeUselessStrokeAndFill",
+      "removeNone": true
+    }
+  ]
+}

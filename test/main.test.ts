@@ -143,7 +143,7 @@ test.each(ALL_EVENTS)("use an SVGO options file in the repository (%s)", async (
 
   await main();
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoOptions);
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoOptions);
 });
 
 test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async (eventName) => {
