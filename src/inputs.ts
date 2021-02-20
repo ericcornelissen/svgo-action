@@ -18,6 +18,7 @@ const NOT_REQUIRED = { required: false };
 
 const BOOLEAN = "boolean";
 const FALSE = "false";
+const NUMBER = "number";
 const STRING = "string";
 const TRUE = "true";
 
@@ -141,25 +142,15 @@ export class ActionConfig {
     inputs: Inputs,
     config: RawActionConfig,
   ): 1 | 2 {
-    let configVersion = config["svgo-version"];
-    if (configVersion !== undefined) {
-      if (typeof configVersion === "string") {
-        configVersion = parseInt(configVersion, 10);
-      }
-      if (configVersion === 1 || configVersion === 2) {
-        return configVersion;
-      }
-    } else {
-      const rawInputVersion = inputs.getInput(
-        INPUT_NAME_SVGO_VERSION,
-        NOT_REQUIRED,
-      );
-      const inputVersion = parseInt(rawInputVersion, 10);
-      if (inputVersion !== undefined) {
-        if (inputVersion === 1 || inputVersion === 2) {
-          return inputVersion;
-        }
-      }
+    const version = ActionConfig.normalizeIntegerOption(
+      inputs,
+      config["svgo-version"],
+      INPUT_NAME_SVGO_VERSION,
+      DEFAULT_SVGO_VERSION,
+    );
+
+    if (version === 1 || version === 2) {
+      return version;
     }
 
     return DEFAULT_SVGO_VERSION;
@@ -190,6 +181,24 @@ export class ActionConfig {
       return false;
     } else if (value === TRUE) {
       return true;
+    } else {
+      return defaultValue;
+    }
+  }
+
+  private static normalizeIntegerOption(
+    inputs: Inputs,
+    configValue: number | undefined,
+    inputName: string,
+    defaultValue: number,
+  ): number {
+    const value = (configValue !== undefined) ?
+      configValue : inputs.getInput(inputName, NOT_REQUIRED);
+
+    if (typeof value === NUMBER) {
+      return value as number;
+    } else if (typeof value === STRING) {
+      return parseInt(value as string, 10);
     } else {
       return defaultValue;
     }
