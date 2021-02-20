@@ -39,8 +39,6 @@ async function getSvgoConfigFile(
   } else {
     return await fetchYamlFile(client, contextRef, path);
   }
-
-  return { };
 }
 
 async function run(
