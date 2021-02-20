@@ -12,6 +12,7 @@ export const INPUT_NAME_DRY_RUN = "dry-run";
 export const INPUT_NAME_IGNORE = "ignore";
 export const INPUT_NAME_REPO_TOKEN = "repo-token";
 export const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
+export const INPUT_NAME_SVGO_VERSION = "svgo-version";
 
 export const CONFIG_NAME_COMMIT = "commit";
 export const CONFIG_NAME_COMMIT_CONVENTIONAL = "conventional";

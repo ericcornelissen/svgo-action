@@ -34,6 +34,10 @@ inputs:
     description: 'The path of the configuration file for SVGO'
     default: '.svgo.yml'
     required: false
+  svgo-version:
+    description: 'The (major) SVGO version to be used (`1` or `2`)'
+    default: 1
+    required: false
 
 runs:
   using: 'node12'

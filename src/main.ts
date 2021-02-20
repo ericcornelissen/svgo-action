@@ -17,6 +17,7 @@ import prEventMain from "./events/pull-request";
 import pushEventMain from "./events/push";
 import scheduleEventMain from "./events/schedule";
 
+import { fetchJsFile } from "./utils/fetch-js";
 import { fetchYamlFile } from "./utils/fetch-yaml";
 
 
@@ -26,6 +27,18 @@ function getConfigFilePath(): string {
 
 function getRepoToken(): string {
   return core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
+}
+
+async function getSvgoConfigFile(
+  client: Octokit,
+  contextRef: string,
+  path: string,
+): SVGOptions {
+  if (path.endsWith(".js")) {
+    return await fetchJsFile(client, contextRef, path);
+  } else {
+    return await fetchYamlFile(client, contextRef, path);
+  }
 }
 
 async function run(
@@ -72,12 +85,13 @@ export default async function main(): Promise<void> {
     core.info("Dry mode enabled, no changes will be committed");
   }
 
-  const svgoOptions: SVGOptions = await fetchYamlFile(
+  core.info(`Using SVGO major version ${config.svgoVersion}`);
+  const svgoOptions: SVGOptions = await getSvgoConfigFile(
     client,
     contextRef,
     config.svgoOptionsPath,
   );
-  const svgo: SVGOptimizer = new SVGOptimizer(svgoOptions);
+  const svgo: SVGOptimizer = new SVGOptimizer(config.svgoVersion, svgoOptions);
 
   run(client, config, svgo);
 }

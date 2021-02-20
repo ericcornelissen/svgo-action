@@ -9,6 +9,11 @@ Versioning].
 
 - _No changes yet_
 
+## [1.3.0] - 2021-02-21
+
+- Add support for using SVGO v2. ([#330])
+- Add support for JavaScript based SVGO configuration files. ([#330])
+
 ## [1.2.3] - 2021-02-10
 
 - Prevent GitHub Actions warning about `ignore` input. ([#327])
@@ -195,4 +200,5 @@ Versioning].
 [#317]: https://github.com/ericcornelissen/svgo-action/pull/317
 [#321]: https://github.com/ericcornelissen/svgo-action/pull/321
 [#327]: https://github.com/ericcornelissen/svgo-action/pull/327
+[#330]: https://github.com/ericcornelissen/svgo-action/pull/330
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

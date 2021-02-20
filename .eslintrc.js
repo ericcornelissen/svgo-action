@@ -97,7 +97,13 @@ module.exports = {
     { // Configuration files
       files: ["*.js"],
       globals: {
+        "__dirname": "readonly",
         "module": "readonly",
+        "require": "readonly",
+      },
+      rules: {
+        "@typescript-eslint/no-var-requires": "off",
+        "security/detect-non-literal-fs-filename": "off",
       },
     },
     { // Script files
