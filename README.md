@@ -56,7 +56,7 @@ configuration file]. The table below shows the options that can be configured.
 | `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
 | `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
 | `ignore`               | A [glob] of SVGs that should be ignored  | `""`          | [docs](/docs/options.md#ignore)               |
-| `svgo`                 | The (major) version of [SVGO] to be used | `1`           | [docs](/docs/options.md#svgo)                 |
+| `svgo-version`         | The (major) version of [SVGO] to be used | `1`           | [docs](/docs/options.md#svgo-version)         |
 | `svgo-options`         | Specify the [SVGO] configuration file    | `".svgo.yml"` | [docs](/docs/options.md#svgo-options)         |
 
 #### In the Workflow file
@@ -72,7 +72,7 @@ with:
   conventional-commits: true
   dry-run: true
   ignore: do/not/optimize/**/*.svg
-  svgo: 1
+  svgo-version: 1
   svgo-options: path/to/svgo-options.yml
 ```
 
@@ -87,7 +87,7 @@ branch: branch-name
 comment: true
 dry-run: true
 ignore: do/not/optimize/**/*.svg
-svgo: 1
+svgo-version: 1
 svgo-options: path/to/svgo-options.yml
 commit:
   conventional: false

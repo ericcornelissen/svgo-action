@@ -30,7 +30,7 @@ inputs:
     description: 'A glob of SVGs that should not be optimized'
     default: ''
     required: false
-  svgo-options:
+  svgo-version:
     description: 'The (major) SVGO version to be used (`1` or `2`)'
     default: 1
     required: false

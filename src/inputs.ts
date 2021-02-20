@@ -141,7 +141,7 @@ export class ActionConfig {
     inputs: Inputs,
     config: RawActionConfig,
   ): 1 | 2 {
-    let configVersion = config["svgo"];
+    let configVersion = config["svgo-version"];
     if (configVersion !== undefined) {
       if (typeof configVersion === "string") {
         configVersion = parseInt(configVersion, 10);
