@@ -10,6 +10,7 @@ This file contains the documentation for all options for the SVGO Action.
 - [Dry run](#dry-run)
 - [Ignore](#ignore)
 - [SVGO Options](#svgo-options)
+- [SVGO Version](#svgo-version)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -345,8 +346,9 @@ ignore: not/optimized/**/*
 | `svgo-options` | `".svgo.yml"` | :heavy_check_mark: | :heavy_check_mark: |
 
 The _SVG Options_ option allows you to specify the configuration file for
-[SVGO]. This configuration file must be in the [YAML] format. If the specified
-file is not found the Action will fall back on SVGO's default configuration.
+[SVGO]. This configuration file must be a JavaScript file or in the [YAML]
+format. If the specified file is not found the Action will fall back on SVGO's
+default configuration.
 
 ### Examples
 
@@ -361,6 +363,43 @@ To change the SVGO configuration file:
 
 # .github/svgo-action.yml
 svgo-options: my-svgo-options.yml
+```
+
+---
+
+## SVGO Version
+
+| Name           | Default Value | Workflow file      | Config File        |
+| -------------- | ------------- | ------------------ | ------------------ |
+| `svgo-version` | `1`           | :heavy_check_mark: | :heavy_check_mark: |
+
+The _SVGO Version_ option allows you to specify the major version of [SVGO] that
+you want to use. This can be either `1` for the latest v1.x.x release or `2` for
+the latest v2.x.x release.
+
+You need to change this option based on the format of the configuration file for
+SVGO that you're using. We recommend updating your configuration file and
+setting this option to `2` as soon as possible. For more information see [the
+release notes of SVGO v2](https://github.com/svg/svgo/releases/tag/v2.0.0).
+
+If you're not using a configuration file it is recommended to set this option to
+`2`.
+
+### Examples
+
+To change the SVGO major version to v2.x.x:
+
+```yaml
+# .github/workflows/svgo.yml
+- uses: ericcornelissen/svgo-action@v1
+  with:
+    svgo-version: 2
+    svgo-options: svgo.config.js
+
+
+# .github/svgo-action.yml
+svgo-version: 2
+svgo-options: svgo.config.js
 ```
 
 [configuration file]: https://github.com/ericcornelissen/svgo-action#in-another-configuration-file
