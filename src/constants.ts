@@ -12,9 +12,6 @@ export const INPUT_NAME_REPO_TOKEN = "repo-token";
 export const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 export const INPUT_NAME_SVGO_VERSION = "svgo-version";
 
-export const DISABLE_PATTERN = /disable-svgo-action/;
-export const ENABLE_PATTERN = /enable-svgo-action/;
-
 // Action defaults
 export const DEFAULT_COMMENT = `
   SVG(s) automatically optimized using [SVGO] :sparkles:

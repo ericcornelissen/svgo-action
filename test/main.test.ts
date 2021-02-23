@@ -13,13 +13,15 @@ import * as outputs from "./mocks/outputs.mock";
 import * as svgo from "./mocks/svgo.mock";
 
 const optimizeMock = jest.fn().mockName("optimize.ts::default");
+const skipRunMock = jest.fn().mockName("skip-run.ts::default");
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
-jest.mock("../src/optimize", () => optimizeMock);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
+jest.mock("../src/optimize", () => optimizeMock);
 jest.mock("../src/outputs", () => outputs);
+jest.mock("../src/skip-run", () => skipRunMock);
 jest.mock("../src/svgo", () => svgo);
 
 import {
@@ -32,12 +34,16 @@ import main from "../src/main";
 
 
 const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE];
+const SKIPPABLE_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
 
 
 beforeEach(() => {
+  core.debug.mockClear();
   core.setFailed.mockClear();
 
   optimizeMock.mockClear();
+
+  skipRunMock.mockResolvedValue({ shouldSkip: false });
 });
 
 test("push event", async () => {
@@ -217,4 +223,15 @@ test.each(ALL_EVENTS)("the SVGO options file does not exist (%s)", async (eventN
 
   expect(core.setFailed).not.toHaveBeenCalled();
   expect(core.debug).toHaveBeenCalledWith(expect.stringMatching(`not found.*${svgoOptionsPath}`));
+});
+
+test.each(SKIPPABLE_EVENTS)("the Action is skipped (%s)", async (eventName) => {
+  github.context.eventName = eventName;
+
+  skipRunMock.mockResolvedValue({ shouldSkip: true });
+
+  await main();
+
+  expect(core.setFailed).not.toHaveBeenCalled();
+  expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Action disabled"));
 });

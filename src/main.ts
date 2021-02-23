@@ -14,6 +14,7 @@ import { ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
 import optimize from "./optimize";
+import shouldSkipRun from "./skip-run";
 import { getOutputNamesFor, setOutputValues } from "./outputs";
 
 import { fetchJsFile } from "./utils/fetch-js";
@@ -47,19 +48,17 @@ async function getSvgoConfigFile(
 }
 
 async function run(
-  _: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
+  event: string,
 ): Promise<void> {
   try {
-    const event = github.context.eventName;
     core.info(`Running SVGO Action in '${event}' context`);
     if (!SUPPORTED_EVENTS.includes(event)) {
       throw new Error(`Event '${event}' not supported`);
     }
 
     const optimizeData = await optimize(fs, config, svgo);
-
     const outputNames = getOutputNamesFor(event);
     setOutputValues(outputNames, optimizeData);
   } catch (error) {
@@ -93,7 +92,12 @@ export default async function main(): Promise<void> {
   );
   const svgo: SVGOptimizer = new SVGOptimizer(config.svgoVersion, svgoOptions);
 
-  run(client, config, svgo);
+  const skip = await shouldSkipRun(client, github.context);
+  if (!skip.shouldSkip) {
+    run(config, svgo, github.context.eventName);
+  } else {
+    core.info(`Action disabled from ${skip.reason}, exiting`);
+  }
 }
 
 main();
