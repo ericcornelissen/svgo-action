@@ -106,8 +106,8 @@ export default async function main(
       contentAfter: file.optimizedContent,
       contentBefore: file.content,
     })),
-    svgCount: totalSvgCount,
     optimizedCount: optimizedFiles.length,
     skippedCount: totalSvgCount - optimizedFiles.length,
+    svgCount: totalSvgCount,
   };
 }

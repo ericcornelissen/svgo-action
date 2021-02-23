@@ -12,6 +12,7 @@ Versioning].
 - BREAKING: Remove option to commit changes.
 - BREAKING: Remove `fileCount` as templating variable.
 - BREAKING: Disabling from push event's now disables the action entirely.
+- Remove `ignoredCount` templating variable.
 
 ## [1.2.2] - 2021-02-08
 

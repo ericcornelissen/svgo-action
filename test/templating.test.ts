@@ -1,50 +1,29 @@
-import type { CommitData } from "../src/types";
+import type { OptimizeFileData, OptimizeProjectData } from "../src/types";
 
 import { formatComment } from "../src/templating";
 
 
-const defaultData: CommitData = {
-  fileData: {
-    optimized: [
-      {
-        content: "world!",
-        originalEncoding: "utf-8",
-        path: "test.svg",
-      },
-      {
-        content: "bar",
-        originalEncoding: "utf-8",
-        path: "foo.svg",
-      },
-      {
-        content: "foo",
-        originalEncoding: "utf-8",
-        path: "bar.svg",
-      },
-    ],
-    original: [
-      {
-        content: "Hello",
-        originalEncoding: "utf-8",
-        path: "test.svg",
-      },
-      {
-        content: "foo",
-        originalEncoding: "utf-8",
-        path: "foo.svg",
-      },
-      {
-        content: "bar",
-        originalEncoding: "utf-8",
-        path: "bar.svg",
-      },
-    ],
-  },
-  ignoredCount: 36,
+const defaultData: OptimizeProjectData = {
+  files: [
+    {
+      contentAfter: "world!",
+      contentBefore: "Hello",
+      path: "test.svg",
+    },
+    {
+      contentAfter: "bar",
+      contentBefore: "foo",
+      path: "foo.svg",
+    },
+    {
+      contentAfter: "foobaz",
+      contentBefore: "foobarr",
+      path: "bar.svg",
+    },
+  ],
   optimizedCount: 3,
   skippedCount: 3,
   svgCount: 42,
-  warnings: [],
 };
 
 const templates = {
@@ -91,68 +70,28 @@ const templates = {
   ],
 };
 
-const values = {
+const values: {
+  filesList: string[][],
+  filesData: { [key: string]: OptimizeFileData[] }
+  optimizedCount: number[],
+  skippedCount: number[],
+  svgCount: number[],
+} = {
   filesList: [
     ["test.svg"],
     ["foo.svg", "bar.svg"],
     ["in/a/folder.svg", "and/this/one.svg"],
   ],
-  fileData: {
-    optimizedFirst: {
-      optimized: [
-        {
-          content: "Hey",
-          originalEncoding: "utf-8",
-          path: "test.svg",
-        },
-      ],
-      original: [
-        {
-          content: "Hello",
-          originalEncoding: "utf-8",
-          path: "test.svg",
-        },
-        {
-          content: "foo",
-          originalEncoding: "utf-8",
-          path: "foo.svg",
-        },
-      ],
-    },
-    optimizedSecond: {
-      optimized: [
-        {
-          content: "foo",
-          originalEncoding: "utf-8",
-          path: "foo.svg",
-        },
-      ],
-      original: [
-        {
-          content: "Hello",
-          originalEncoding: "utf-8",
-          path: "test.svg",
-        },
-        {
-          content: "foobar",
-          originalEncoding: "utf-8",
-          path: "foo.svg",
-        },
-      ],
-    },
-    originalMissing: {
-      optimized: [
-        {
-          content: "foo",
-          originalEncoding: "utf-8",
-          path: "foo.svg",
-        },
-      ],
-      original: [ ],
-    },
+  filesData: {
+    sample: [
+      {
+        contentAfter: "Hey",
+        contentBefore: "Hello",
+        path: "test.svg",
+      },
+    ],
   },
   optimizedCount: [0, 1, 3, 36],
-  ignoredCount: [0, 1, 6, 1337],
   skippedCount: [0, 1, 5, 42],
   svgCount: [0, 1, 4, 9001],
 };
@@ -163,96 +102,52 @@ describe("::formatComment", () => {
   const defaultCommentTemplate = "foobar";
 
   test("empty template string", () => {
-    const result = formatComment(defaultCommentTemplate, defaultData);
+    const result = formatComment(defaultCommentTemplate, defaultData, []);
     expect(result).toEqual(defaultCommentTemplate);
   });
 
   test.each(templates.noTemplateValues)("no template values (%s)", (templateString) => {
-    const result = formatComment(templateString, defaultData);
+    const result = formatComment(templateString, defaultData, []);
     expect(result).toEqual(templateString);
   });
 
   test.each(templates.filesList)("template using '{{filesList}}' (%s)", (templateString) => {
-    const result = formatComment(templateString, defaultData);
+    const result = formatComment(templateString, defaultData, []);
     expect(result).not.toEqual(templateString);
   });
 
   test.each(values.filesList)("different values for  `filesList`", (...filePaths) => {
     const data = Object.assign({ }, defaultData, {
-      fileData: {
-        optimized: filePaths.map((path) => {
-          return {
-            content: "Hey world!",
-            originalEncoding: "base64",
-            path: path,
-          };
-        }),
-        original: filePaths.map((path) => {
-          return {
-            content: "Hello world!",
-            originalEncoding: "base64",
-            path: path,
-          };
-        }),
-      },
+      files: filePaths.map((path) => {
+        return {
+          contentAfter: "Hello world!",
+          contentBefore: "Hello world!",
+          path: path,
+        };
+      }),
     });
     const templateString = "Optimized SVG(s):\n{{filesList}}";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, data, []);
     expect(result).toEqual(`Optimized SVG(s):\n${"- " + filePaths.join("\n- ")}`);
   });
 
-  test("template using {{filesTable}}, only first SVG is optimized", () => {
-    const data = Object.assign({ }, defaultData, { fileData: values.fileData.optimizedFirst });
+  test("template using {{filesTable}}", () => {
     const templateString = "{{filesTable}}";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, defaultData, []);
     expect(result).toBeDefined();
     expect(result).toEqual(
       "| Filename | Before | After | Improvement |\n" +
       "| --- | --- | --- | --- |\n" +
-      "| test.svg | 0.005 KB | 0.003 KB | -40% |\n",
+      "| test.svg | 0.005 KB | 0.006 KB | 20% |\n" +
+      "| foo.svg | 0.003 KB | 0.003 KB | -0% |\n" +
+      "| bar.svg | 0.007 KB | 0.006 KB | -14.29% |\n",
     );
-  });
-
-  test("template using {{filesTable}}, only second SVG is optimized", () => {
-    const data = Object.assign({ }, defaultData, { fileData: values.fileData.optimizedSecond });
-    const templateString = "{{filesTable}}";
-
-    const result = formatComment(templateString, data);
-    expect(result).toBeDefined();
-    expect(result).toEqual(
-      "| Filename | Before | After | Improvement |\n" +
-      "| --- | --- | --- | --- |\n" +
-      "| foo.svg | 0.006 KB | 0.003 KB | -50% |\n",
-    );
-  });
-
-  test("template using {{filesTable}}, missing original SVG data", () => {
-    const data = Object.assign({ }, defaultData, { fileData: values.fileData.originalMissing });
-    const templateString = "{{filesTable}}";
-
-    expect(() => formatComment(templateString, data)).toThrow();
-  });
-
-  test.each(templates.ignoredCount)("template using '{{ignoredCount}}' (%s)", (templateString) => {
-    const result = formatComment(templateString, defaultData);
-    expect(result).not.toEqual(templateString);
-
-    const expected = templateString.replace(/\{\{\s*ignoredCount\s*\}\}/, defaultData.ignoredCount.toString());
-    expect(result).toEqual(expected);
-  });
-
-  test.each(values.ignoredCount)("different values for `ignoredCount` (%i)", (ignoredCount) => {
-    const data = Object.assign({ }, defaultData, { ignoredCount });
-    const templateString = "The Action ignored {{ignoredCount}} files";
-
-    const result = formatComment(templateString, data);
-    expect(result).toEqual(`The Action ignored ${ignoredCount} files`);
   });
 
   test.each(templates.optimizedCount)("template using '{{optimizedCount}}' (%s)", (templateString) => {
-    const result = formatComment(templateString, defaultData);
+    const result = formatComment(templateString, defaultData, []);
     expect(result).not.toEqual(templateString);
 
     const expected = templateString.replace(/\{\{\s*optimizedCount\s*\}\}/, defaultData.optimizedCount.toString());
@@ -263,12 +158,12 @@ describe("::formatComment", () => {
     const data = Object.assign({ }, defaultData, { optimizedCount });
     const templateString = "Optimized {{optimizedCount}} SVG(s)";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, data, []);
     expect(result).toEqual(`Optimized ${optimizedCount} SVG(s)`);
   });
 
   test.each(templates.skippedCount)("template using '{{skippedCount}}' (%s)", (templateString) => {
-    const result = formatComment(templateString, defaultData);
+    const result = formatComment(templateString, defaultData, []);
     expect(result).not.toEqual(templateString);
 
     const expected = templateString.replace(/\{\{\s*skippedCount\s*\}\}/, defaultData.skippedCount.toString());
@@ -279,12 +174,12 @@ describe("::formatComment", () => {
     const data = Object.assign({ }, defaultData, { skippedCount });
     const templateString = "{{skippedCount}} SVG(s) were skipped";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, data, []);
     expect(result).toEqual(`${skippedCount} SVG(s) were skipped`);
   });
 
   test.each(templates.svgCount)("template using '{{svgCount}}' (%s)", (templateString) => {
-    const result = formatComment(templateString, defaultData);
+    const result = formatComment(templateString, defaultData, []);
     expect(result).not.toEqual(templateString);
 
     const expected = templateString.replace(/\{\{\s*svgCount\s*\}\}/, defaultData.svgCount.toString());
@@ -295,25 +190,23 @@ describe("::formatComment", () => {
     const data = Object.assign({ }, defaultData, { svgCount });
     const templateString = "{{svgCount}} SVG(s) were considered";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, data, []);
     expect(result).toEqual(`${svgCount} SVG(s) were considered`);
   });
 
   test("template using {{warnings}}, no warnings", () => {
-    const data = Object.assign({}, defaultData, { warnings: [] });
     const templateString = "{{warnings}}";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, defaultData, []);
     expect(result).toBeDefined();
     expect(result).toEqual("");
   });
 
   test("template using {{warnings}}, one warnings", () => {
     const warning = "foo.svg could not be loaded, too big";
-    const data = Object.assign({}, defaultData, { warnings: [warning] });
     const templateString = "{{warnings}}";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, defaultData, [warning]);
     expect(result).toBeDefined();
     expect(result).toEqual(expect.stringContaining(warning));
   });
@@ -321,10 +214,9 @@ describe("::formatComment", () => {
   test("template using {{warnings}}, multiple warnings", () => {
     const warning1 = "foo.svg could not be loaded, too big";
     const warning2 = "bar.svg could not be loaded, too big";
-    const data = Object.assign({}, defaultData, { warnings: [warning1, warning2] });
     const templateString = "{{warnings}}";
 
-    const result = formatComment(templateString, data);
+    const result = formatComment(templateString, defaultData, [warning1, warning2]);
     expect(result).toBeDefined();
     expect(result).toEqual(expect.stringContaining(warning1));
     expect(result).toEqual(expect.stringContaining(warning2));

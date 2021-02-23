@@ -10,9 +10,9 @@ export type OptimizeFileData = {
 
 export type OptimizeProjectData = {
   readonly files: OptimizeFileData[];
-  readonly svgCount: number;
   readonly optimizedCount: number;
   readonly skippedCount: number;
+  readonly svgCount: number;
 }
 
 // Type representing the possible names of values outputted by the Action.
@@ -27,19 +27,6 @@ export type FileData = {
   readonly content: string;
   readonly originalEncoding: string;
   readonly path: string;
-}
-
-// Type representing the data for the Action to create a commit.
-export type CommitData = {
-  readonly fileData: {
-    readonly optimized: FileData[];
-    readonly original: FileData[];
-  };
-  readonly ignoredCount: number;
-  readonly optimizedCount: number;
-  readonly skippedCount: number;
-  readonly svgCount: number;
-  readonly warnings: string[];
 }
 
 // Type representing an Action configuration file.

@@ -8,9 +8,8 @@ the Action run, such as the number of optimized SVGs, into these messages.
 | ---------------- | ----------------------------------------- | ------------------ |
 | `filesList`      | A bullet list of the optimized SVG files  | :heavy_check_mark: |
 | `filesTable`     | A table of optimized files and statistics | :heavy_check_mark: |
-| `ignoredCount`   | The number of ignored SVGs                | :heavy_check_mark: |
 | `optimizedCount` | The number of optimized SVGs              | :heavy_check_mark: |
-| `skippedCount`   | The number of not-optimized SVGs          | :heavy_check_mark: |
+| `skippedCount`   | The number of ignored SVGs                | :heavy_check_mark: |
 | `svgCount`       | The number of SVGs found in the PR        | :heavy_check_mark: |
 | `warnings`       | A list of warnings that occurred          | :heavy_check_mark: |
 
