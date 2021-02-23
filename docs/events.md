@@ -58,7 +58,7 @@ The following [options] have an effect in the `push` context.
 
 | Name                   | Supported          |
 | ---------------------- | ------------------ |
-| `comment`              | :heavy_check_mark: |
+| `comment`              | :x: |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
