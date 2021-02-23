@@ -33,14 +33,5 @@ export const OUTPUT_NAME_SVG_COUNT = "SVG_COUNT";
 export const BASE64 = "base64";
 export const UTF8 = "utf-8";
 
-// Git and GitHub
-export const GIT_OBJECT_TYPE_DIR = "dir";
-export const GIT_OBJECT_TYPE_FILE = "file";
-
-export const STATUS_ADDED = "added";
-export const STATUS_EXISTS = "exists";
-export const STATUS_MODIFIED = "modified";
-export const STATUS_REMOVED = "removed";
-
 // Special values
 export const PR_NOT_FOUND = -1;

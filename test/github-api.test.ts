@@ -9,16 +9,12 @@ jest.mock("@actions/github", () => github);
 import { INPUT_NAME_REPO_TOKEN, PR_NOT_FOUND } from "../src/constants";
 import {
   createComment,
-  getCommitFiles,
   getCommitMessage,
-  getContent,
-  getDefaultBranch,
   getFile,
   getPrComments,
-  getPrFiles,
   getPrNumber,
 } from "../src/github-api";
-import { GitFileData, GitObjectInfo } from "../src/types";
+import { GitFileData } from "../src/types";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
@@ -46,27 +42,6 @@ describe("::createComment", () => {
         "Hello world",
       ),
     ).rejects.toBeDefined();
-  });
-
-});
-
-describe("::getCommitFiles", () => {
-
-  test("return value for a commit with many changes", async () => {
-    const files = await getCommitFiles(client, github.COMMIT_SHA.MANY_CHANGES);
-    expect(files).toBeDefined();
-  });
-
-  test("return value for a commit with no changes", async () => {
-    const files = await getCommitFiles(client, github.COMMIT_SHA.NO_CHANGES);
-    expect(files).toBeDefined();
-  });
-
-  test("throw when commit is not found", async () => {
-    github.GitHubInstance.repos.getCommit.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = getCommitFiles(client, github.COMMIT_SHA.MANY_CHANGES);
-    await expect(promise).rejects.toBeDefined();
   });
 
 });
@@ -103,56 +78,6 @@ describe("::getCommitMessage", () => {
 
     const promise = getCommitMessage(client, ref);
     await expect(promise).rejects.toBeDefined();
-  });
-
-});
-
-describe("::getContent", () => {
-
-  const defaultDir = "";
-  const defaultRef = github.context.sha;
-
-  test("get an existing directory", async () => {
-    const items: GitObjectInfo[] = await getContent(client, defaultRef, defaultDir);
-    expect(items).toBeDefined();
-  });
-
-  test("'path' is defined for each item", async () => {
-    const items: GitObjectInfo[] = await getContent(client, defaultRef, defaultDir);
-    expect(items).toBeDefined();
-
-    for (const item of items) {
-      expect(item.path).toBeDefined();
-    }
-  });
-
-  test("'type' is defined for each item", async () => {
-    const items: GitObjectInfo[] = await getContent(client, defaultRef, defaultDir);
-    expect(items).toBeDefined();
-
-    for (const item of items) {
-      expect(item.type).toBeDefined();
-    }
-  });
-
-  test("directory is not found", async () => {
-    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = getContent(client, defaultRef, "foobar");
-    await expect(promise).rejects.toBeDefined();
-  });
-
-});
-
-describe("::getDefaultBranch", () => {
-
-  const names: string[] = ["main", "develop", "some-other-branch"];
-
-  test.each(names)("returns the repositories default_branch (%s)", async (name) => {
-    github.GitHubInstance.repos.get.mockResolvedValueOnce({ data: { default_branch: name } });
-
-    const defaultBranch: string = await getDefaultBranch(client);
-    expect(defaultBranch).toBe(name);
   });
 
 });
@@ -221,27 +146,6 @@ describe("::getPrComments", () => {
   test("103 comments", async () => {
     const result = await getPrComments(client, github.PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS);
     expect(result).toHaveLength(103);
-  });
-
-});
-
-describe("::getPrFiles", () => {
-
-  test("return value for a Pull Request with 1 changed files", async () => {
-    const changedFiles = await getPrFiles(client, github.PR_NUMBER.ADD_SVG);
-    expect(changedFiles).toBeDefined();
-  });
-
-  test("return value for a Pull Request with no changes", async () => {
-    const changedFiles = await getPrFiles(client, github.PR_NUMBER.NO_CHANGES);
-    expect(changedFiles).toBeDefined();
-  });
-
-  test("throw when file in Pull Request does not exist", async () => {
-    github.GitHubInstance.pulls.listFiles.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = getPrFiles(client, github.PR_NUMBER.MANY_CHANGES);
-    await expect(promise).rejects.toBeDefined();
   });
 
 });

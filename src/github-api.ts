@@ -1,16 +1,14 @@
-import * as github from "@actions/github";
-import { Octokit } from "@octokit/core";
-import {
+import type { Octokit } from "@octokit/core";
+import type {
   GitGetCommitResponseData,
   ReposGetContentResponseData,
 } from "@octokit/types";
 
+import type { GitFileData } from "./types";
+
+import * as github from "@actions/github";
+
 import { PR_NOT_FOUND } from "./constants";
-import {
-  GitFileData,
-  GitFileInfo,
-  GitObjectInfo,
-} from "./types";
 
 
 type DirContents = ReposGetContentResponseData[];
@@ -20,7 +18,6 @@ type FileContents = ReposGetContentResponseData;
 type GitCommit = GitGetCommitResponseData;
 
 type RepoContents = FileContents | DirContents;
-
 
 const owner = github.context.repo.owner;
 const repo = github.context.repo.repo;
@@ -55,43 +52,12 @@ export async function createComment(
   });
 }
 
-export async function getCommitFiles(
-  client: Octokit,
-  sha: string,
-): Promise<GitFileInfo[]> {
-  const { data } = await client.repos.getCommit({ owner, repo,
-    ref: sha,
-  });
-
-  return data.files.map((details) => ({
-    path: details.filename,
-    status: details.status,
-  }));
-}
-
 export async function getCommitMessage(
   client: Octokit,
   ref: string,
 ): Promise<string> {
   const { message } = await getCommitAt(client, ref);
   return message;
-}
-
-export async function getContent(
-  client: Octokit,
-  ref: string,
-  path: string,
-): Promise<GitObjectInfo[]> {
-  const data = await getContentFromRepo(client, ref, path) as DirContents;
-  return data.map((item) => ({
-    path: item.path,
-    type: item.type,
-  }));
-}
-
-export async function getDefaultBranch(client: Octokit): Promise<string> {
-  const { data } = await client.repos.get({ owner, repo });
-  return data.default_branch;
 }
 
 export async function getFile(
@@ -129,20 +95,6 @@ export async function getPrComments(
   }
 
   return prComments.reverse();
-}
-
-export async function getPrFiles(
-  client: Octokit,
-  prNumber: number,
-): Promise<GitFileInfo[]> {
-  const prFilesDetails = await client.pulls.listFiles({ owner, repo,
-    pull_number: prNumber,
-  });
-
-  return prFilesDetails.data.map((details) => ({
-    path: details.filename,
-    status: details.status,
-  }));
 }
 
 export function getPrNumber(): number {

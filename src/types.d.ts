@@ -2,8 +2,6 @@ type InputOptions = {
   required?: boolean;
 }
 
-type Mode = "100644" | "100755" | "040000" | "160000" | "120000" | undefined;
-
 export type OptimizeFileData = {
   contentAfter: string;
   contentBefore: string;
@@ -44,13 +42,6 @@ export type CommitData = {
   readonly warnings: string[];
 }
 
-// Type representing the context w.r.t. files and SVGs the Action is running in.
-export type ContextData = {
-  readonly ignoredCount: number;
-  readonly svgs: FileData[];
-  readonly warnings: string[];
-}
-
 // Type representing an Action configuration file.
 export type RawActionConfig = {
   readonly comment?: boolean | string;
@@ -60,38 +51,11 @@ export type RawActionConfig = {
   readonly "svgo-version"?: number;
 }
 
-// Type representing the (relevant) data about a commit.
-export type CommitInfo = {
-  readonly sha: string;
-  readonly url: string;
-}
-
-// Type representing a Binary Large OBject (blob) in git.
-export type GitBlob = {
-  readonly mode: Mode
-  readonly path: string;
-  readonly sha: string;
-  readonly type: "blob" | "tree" | "commit" | undefined;
-}
-
 // Type representing the (relevant) data of a file in git.
 export type GitFileData = {
   readonly content: string;
   readonly encoding: string;
   readonly path: string;
-}
-
-// Type representing the (relevant) information about a file in git.
-export type GitFileInfo = {
-  readonly path: string;
-  readonly status: string;
-}
-
-// Type representing the (relevant) information about an object (file or
-// directory) in git.
-export type GitObjectInfo = {
-  readonly path: string;
-  readonly type: string;
 }
 
 // Type representing an object from which the Action inputs can be obtained.
