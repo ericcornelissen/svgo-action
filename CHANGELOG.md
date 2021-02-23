@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix supported inputs for `on: push` events. ([#335])
 
 ## [1.2.2] - 2021-02-08
 
@@ -190,4 +190,5 @@ Versioning].
 [#312]: https://github.com/ericcornelissen/svgo-action/pull/312
 [#317]: https://github.com/ericcornelissen/svgo-action/pull/317
 [#321]: https://github.com/ericcornelissen/svgo-action/pull/321
+[#335]: https://github.com/ericcornelissen/svgo-action/pull/335
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
