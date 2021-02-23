@@ -5,10 +5,8 @@ import {
   ReposGetContentResponseData,
 } from "@octokit/types";
 
-import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
+import { PR_NOT_FOUND } from "./constants";
 import {
-  CommitInfo,
-  GitBlob,
   GitFileData,
   GitFileInfo,
   GitObjectInfo,
@@ -45,54 +43,6 @@ async function getContentFromRepo(
   return data;
 }
 
-
-export async function commitFiles(
-  client: Octokit,
-  blobs: GitBlob[],
-  ref: string,
-  commitMessage: string,
-): Promise<CommitInfo> {
-  const previousCommit = await getCommitAt(client, ref);
-
-  const { data: newTree } = await client.git.createTree({ owner, repo,
-    base_tree: previousCommit.tree.sha,
-    tree: blobs,
-  });
-
-  const { data: newCommit } = await client.git.createCommit({ owner, repo,
-    message: commitMessage,
-    tree: newTree.sha,
-    parents: [previousCommit.sha],
-  });
-
-  const { data: result } = await client.git.updateRef({ owner, repo, ref,
-    sha: newCommit.sha,
-  });
-
-  return {
-    sha: result.object.sha,
-    url: `https://github.com/${owner}/${repo}/git/commit/${result.object.sha}`,
-  };
-}
-
-export async function createBlob(
-  client: Octokit,
-  path: string,
-  data: string,
-  encoding: string,
-): Promise<GitBlob> {
-  const { data: fileBlob } = await client.git.createBlob({ owner, repo,
-    content: data,
-    encoding: encoding,
-  });
-
-  return {
-    mode: COMMIT_MODE_FILE,
-    path: path,
-    sha: fileBlob.sha,
-    type: COMMIT_TYPE_BLOB,
-  };
-}
 
 export async function createComment(
   client: Octokit,

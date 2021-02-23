@@ -82,7 +82,7 @@ export default async function main(): Promise<void> {
 
   const config: ActionConfig = new ActionConfig(core, rawConfig);
   if (config.isDryRun) {
-    core.info("Dry mode enabled, no changes will be committed");
+    core.info("Dry mode enabled, no changes will be written");
   }
 
   core.info(`Using SVGO major version ${config.svgoVersion}`);

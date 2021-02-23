@@ -52,15 +52,13 @@ There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
 configuration file]. The table below shows the options that can be configured.
 
-| Name                   | Description                              | Default            | Documentation                                 |
-| ---------------------- | ---------------------------------------- | ------------------ | --------------------------------------------- |
-| `comment`              | Leave comments on Pull Requests          | `false`            | [docs](/docs/options.md#comment)              |
-| `commit`               | Configure the Action's commit messages   | -                  | [docs](/docs/options.md#commit)               |
-| `conventional-commits` | Use [conventional commit] message titles | `false`            | [docs](/docs/options.md#conventional-commits) |
-| `dry-run`              | Prevent the Action from making commits   | `false`            | [docs](/docs/options.md#dry-run)              |
-| `ignore`               | A [glob] of SVGs that should be ignored  | `""`               | [docs](/docs/options.md#ignore)               |
-| `svgo-options`         | Specify the [SVGO] configuration file    | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
-| `svgo-version`         | The (major) version of [SVGO] to use     | `2`                | [docs](/docs/options.md#svgo-version)         |
+| Name                   | Description                             | Default            | Documentation                                 |
+| ---------------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
+| `comment`              | Leave comments on Pull Requests         | `false`            | [docs](/docs/options.md#comment)              |
+| `dry-run`              | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
+| `ignore`               | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
+| `svgo-options`         | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
+| `svgo-version`         | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
 
 #### In the Workflow file
 
@@ -71,7 +69,6 @@ The first way to configure the Action is inside the Workflow file, after the
 with:
   repo-token: ${{ secrets.GITHUB_TOKEN }}
   comment: true
-  conventional-commits: true
   dry-run: true
   ignore: do/not/optimize/**/*.svg
   svgo-options: path/to/svgo-options.js
@@ -90,12 +87,6 @@ dry-run: true
 ignore: do/not/optimize/**/*.svg
 svgo-options: path/to/svgo-options.js
 svgo-version: 2
-commit:
-  conventional: false
-  title: Optimized {{optimizedCount}} SVG(s)
-  body: |
-    Namely:
-    {{filesList}}
 ```
 
 #### In Another Configuration File
@@ -178,7 +169,6 @@ on:
 [fossa-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield
 [fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
-[conventional commit]: https://www.conventionalcommits.org/
 [creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [in the workflow file]: #in-the-workflow-file

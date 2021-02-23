@@ -75,9 +75,6 @@ export const context: {
       number: number,
     },
     ref: string,
-    repository?: {
-      commits_url: string,
-    },
   },
   repo: {
     owner: string,
@@ -96,9 +93,6 @@ export const context: {
       number: PR_NUMBER.NO_CHANGES,
     },
     ref: "refs/head/develop",
-    repository: {
-      commits_url: "https://api.github.com/repos/pikachu/svgo-action/git/commits{/sha}",
-    },
   },
   repo: {
     owner: "pickachu",
@@ -109,45 +103,6 @@ export const context: {
 
 export const GitHubInstance = {
   git: {
-    createBlob: jest.fn()
-      .mockImplementation(async ({ owner, repo, content, encoding }) => {
-        if (anyAreUndefined([owner, repo, content, encoding])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        return {
-          data: {
-            sha: "b23aa12490660754aff4920ff23909dc324cc1dd",
-          },
-        };
-      })
-      .mockName("GitHub.git.createBlob"),
-    createCommit: jest.fn()
-      .mockImplementation(async ({ owner, repo, message, tree, parents }) => {
-        if (anyAreUndefined([owner, repo, message, tree, parents])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        return {
-          data: {
-            sha: "8482592589d34923489284f3940776702123aaf3",
-          },
-        };
-      })
-      .mockName("GitHub.git.createCommit"),
-    createTree: jest.fn()
-      .mockImplementation(async ({ owner, repo, base_tree, tree }) => {
-        if (anyAreUndefined([owner, repo, base_tree, tree])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        return {
-          data: {
-            sha: "ccaf32432ff32754aff4920ff23909dc33788965",
-          },
-        };
-      })
-      .mockName("GitHub.git.createTree"),
     getCommit: jest.fn()
       .mockImplementation(async ({ owner, repo, commit_sha }) => {
         if (anyAreUndefined([owner, repo, commit_sha])) {
@@ -183,21 +138,6 @@ export const GitHubInstance = {
         };
       })
       .mockName("GitHub.git.getRef"),
-    updateRef: jest.fn()
-      .mockImplementation(async ({ owner, repo, ref, sha }) => {
-        if (anyAreUndefined([owner, repo, ref, sha])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        return {
-          data: {
-            object: {
-              sha: "298344829ff134aafdddc342cc324da2334faaaa",
-            },
-          },
-        };
-      })
-      .mockName("GitHub.git.updateRef"),
   },
   issues: {
     createComment: jest.fn()

@@ -1,4 +1,3 @@
-import contentPayloads from "./fixtures/contents-payloads.json";
 import files from "./fixtures/file-data.json";
 
 import * as core from "./mocks/@actions/core.mock";
@@ -7,15 +6,8 @@ import * as github from "./mocks/@actions/github.mock";
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 
+import { INPUT_NAME_REPO_TOKEN, PR_NOT_FOUND } from "../src/constants";
 import {
-  COMMIT_MODE_FILE,
-  COMMIT_TYPE_BLOB,
-  INPUT_NAME_REPO_TOKEN,
-  PR_NOT_FOUND,
-} from "../src/constants";
-import {
-  commitFiles,
-  createBlob,
   createComment,
   getCommitFiles,
   getCommitMessage,
@@ -26,169 +18,11 @@ import {
   getPrFiles,
   getPrNumber,
 } from "../src/github-api";
-import { GitBlob, GitFileData, GitObjectInfo } from "../src/types";
+import { GitFileData, GitObjectInfo } from "../src/types";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 const client = github.getOctokit(token);
-
-describe("::commitFiles", () => {
-
-  const ref = "heads/master";
-
-  const barBlob: GitBlob = {
-    path: "bar.svg",
-    mode: COMMIT_MODE_FILE,
-    type: COMMIT_TYPE_BLOB,
-    sha: "9199acba391dbd22e48a24467b1fb40eaef2495b",
-  };
-  const complexBlob: GitBlob = {
-    path: "complex.svg",
-    mode: COMMIT_MODE_FILE,
-    type: COMMIT_TYPE_BLOB,
-    sha: "34dd32faba391dbd2e48a24467b1fbdddef32599",
-  };
-  const fooBlob: GitBlob = {
-    path: "foo.svg",
-    mode: COMMIT_MODE_FILE,
-    type: COMMIT_TYPE_BLOB,
-    sha: "570afcba391dbd22e48a24467b1fb40eaf233d98",
-  };
-
-  const defaultBlobs: GitBlob[] = [fooBlob];
-  const defaultCommitMessage = "This is a commit message";
-
-  beforeEach(() => {
-    client.git.createCommit.mockClear();
-    client.git.createTree.mockClear();
-    client.git.getCommit.mockClear();
-    client.git.getRef.mockClear();
-    client.git.updateRef.mockClear();
-  });
-
-  test("call functions to create a commit", async () => {
-    await commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    expect(client.git.getRef).toHaveBeenCalledTimes(1);
-    expect(client.git.getCommit).toHaveBeenCalledTimes(1);
-    expect(client.git.createTree).toHaveBeenCalledTimes(1);
-    expect(client.git.createCommit).toHaveBeenCalledTimes(1);
-    expect(client.git.updateRef).toHaveBeenCalledTimes(1);
-  });
-
-  test.each([
-    defaultBlobs,
-    [complexBlob],
-    [fooBlob, barBlob],
-  ])("return value for non-empty array of blobs", async (...blobs) => {
-    const promise = commitFiles(client, blobs, ref, defaultCommitMessage);
-    await expect(promise).resolves.toEqual(
-      expect.objectContaining({
-        sha: expect.any(String),
-        url: expect.any(String),
-      }),
-    );
-  });
-
-  test.each([
-    defaultCommitMessage,
-    "Optimized SVGs",
-    "fix: optimized SVGs",
-  ])("uses the commit message (%s)", async (commitMessage) => {
-    await commitFiles(client, defaultBlobs, ref, commitMessage);
-    expect(client.git.createCommit).toHaveBeenCalledTimes(1);
-    expect(client.git.createCommit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        message: commitMessage,
-      }),
-    );
-  });
-
-  test("empty list of blobs", async () => {
-    const promise = commitFiles(client, [/* empty list of blobs */], ref, defaultCommitMessage);
-    await expect(promise).resolves.toBeDefined();
-  });
-
-  test("ref is not found", async () => {
-    github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    await expect(promise).rejects.toBeDefined();
-  });
-
-  test("previous commit is not found", async () => {
-    github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    await expect(promise).rejects.toBeDefined();
-  });
-
-  test("tree could not be created", async () => {
-    github.GitHubInstance.git.createTree.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    await expect(promise).rejects.toBeDefined();
-  });
-
-  test("commit could not be created", async () => {
-    github.GitHubInstance.git.createCommit.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    await expect(promise).rejects.toBeDefined();
-  });
-
-  test("ref could not be updated", async () => {
-    github.GitHubInstance.git.updateRef.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    await expect(promise).rejects.toBeDefined();
-  });
-
-});
-
-describe("::createBlob", () => {
-
-  const defaultPath = contentPayloads.files["test.svg"].path;
-  const defaultContent = contentPayloads.files["test.svg"].content;
-  const defaultEncoding = contentPayloads.files["test.svg"].encoding;
-
-  const variousBlobs = Object.values(contentPayloads.files)
-    .map(({ path, content, encoding }) => [path, content, encoding])
-    .slice(0, 4);
-
-  test.each(variousBlobs)("create blob for '%s'", async (
-    path: string,
-    content: string,
-    encoding: string,
-  ) => {
-    await expect(createBlob(
-      client,
-      path,
-      content,
-      encoding,
-    )).resolves.toEqual(
-      expect.objectContaining({
-        path: path,
-        mode: COMMIT_MODE_FILE,
-        type: COMMIT_TYPE_BLOB,
-        sha: expect.any(String),
-      }),
-    );
-  });
-
-  test("blob could not be created", async () => {
-    github.GitHubInstance.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
-
-    await expect(
-      createBlob(
-        client,
-        defaultPath,
-        defaultContent,
-        defaultEncoding,
-      ),
-    ).rejects.toBeDefined();
-  });
-
-});
 
 describe("::createComment", () => {
 

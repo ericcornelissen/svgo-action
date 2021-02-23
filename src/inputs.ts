@@ -1,10 +1,6 @@
 import {
-  CONVENTIONAL_COMMIT_TITLE,
-  DEFAULT_COMMIT_BODY,
-  DEFAULT_COMMIT_TITLE,
   DEFAULT_COMMENT,
   INPUT_NAME_COMMENT,
-  INPUT_NAME_CONVENTIONAL_COMMITS,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
   INPUT_NAME_SVGO_OPTIONS,
@@ -27,8 +23,6 @@ const DEFAULT_SVGO_VERSION = 2;
 export class ActionConfig {
 
   public readonly comment: string;
-  public readonly commitBody: string;
-  public readonly commitTitle: string;
   public readonly enableComments: boolean;
   public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
@@ -39,8 +33,6 @@ export class ActionConfig {
     this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
 
     this.comment = ActionConfig.getCommentValue(inputs, config);
-    this.commitBody = ActionConfig.getCommitBody(config);
-    this.commitTitle = ActionConfig.getCommitTitle(inputs, config);
     this.enableComments = ActionConfig.getEnableComments(
       inputs,
       config,
@@ -66,29 +58,6 @@ export class ActionConfig {
       return value as string;
     } else {
       return DEFAULT_COMMENT;
-    }
-  }
-
-  private static getCommitBody(config: RawActionConfig): string {
-    return (config.commit?.body !== undefined) ?
-      config.commit.body : DEFAULT_COMMIT_BODY;
-  }
-
-  private static getCommitTitle(
-    inputs: Inputs,
-    config: RawActionConfig,
-  ): string {
-    const useConventionalCommit = this.normalizeBoolOption(
-      inputs,
-      config.commit?.conventional,
-      INPUT_NAME_CONVENTIONAL_COMMITS,
-      true,
-    );
-
-    if (useConventionalCommit) {
-      return CONVENTIONAL_COMMIT_TITLE;
-    } else {
-      return config.commit?.title || DEFAULT_COMMIT_TITLE;
     }
   }
 

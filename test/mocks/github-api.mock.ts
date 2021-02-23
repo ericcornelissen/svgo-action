@@ -2,7 +2,6 @@ import { Octokit } from "@octokit/core";
 
 import * as github from "./@actions/github.mock";
 
-import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB } from "../../src/constants";
 import { GitFileData, GitObjectInfo } from "../../src/types";
 
 
@@ -32,22 +31,6 @@ async function _getContent(
   }
 }
 
-
-export const commitFiles = jest.fn()
-  .mockImplementation(async () => ({
-    sha: "b7d615e1cc52b25023c4bd1cbad1a2ce246009cd",
-    url: "https://github.com/ericcornelissen/svgo-action/commit/b7d615e1cc52b25023c4bd1cbad1a2ce246009cd",
-  }))
-  .mockName("github-api.commitFiles");
-
-export const createBlob = jest.fn()
-  .mockImplementation(async (_, path) => ({
-    path: path,
-    mode: COMMIT_MODE_FILE,
-    type: COMMIT_TYPE_BLOB,
-    sha: "8cef761674c705447f0ce449948ac6c0dd76f041",
-  }))
-  .mockName("github-api.createBlob");
 
 export const createComment = jest.fn()
   .mockName("github-api.createComment");

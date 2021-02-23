@@ -7,8 +7,9 @@ Versioning].
 
 ## [2.0.0] - TBD
 
-- BREAKING: work on local clone of the repository.
-- BREAKING: remove branch configuration option for scheduled runs.
+- BREAKING: Work on local clone of the repository.
+- BREAKING: Remove branch configuration option for scheduled runs.
+- BREAKING: Remove option to commit changes.
 - BREAKING: Remove `fileCount` as templating variable.
 
 ## [1.2.2] - 2021-02-08

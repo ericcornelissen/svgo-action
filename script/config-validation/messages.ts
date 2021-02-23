@@ -11,14 +11,6 @@ function suggest(msg: string): string {
 }
 
 
-export const commitTitleNoNewLines = warning(
-  "The commit title should not contains newlines",
-);
-
-export const conventionalCommitOverridesCommitTitle = warning(
-  "commit.conventional currently overrides commit.title",
-);
-
 export const repoTokenValue = error(
   "repo-token value must be ${{ secrets.GITHUB_TOKEN }}",
 );

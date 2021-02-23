@@ -21,11 +21,6 @@ const SKIPPED_COUNT_KEY = "skippedCount";
 const SVG_COUNT_KEY = "svgCount";
 const WARNINGS_KEY = "warnings";
 
-const TITLE_EXCLUDE_KEYS: string[] = [
-  FILE_DATA_KEY,
-  WARNINGS_KEY,
-];
-
 const FILES_TABLE_HEADER =
   "| Filename | Before | After | Improvement |\n" +
   "| --- | --- | --- | --- |\n";
@@ -128,14 +123,4 @@ export function formatComment(
   data: CommitData,
 ): string {
   return formatAll(commentTemplate, data);
-}
-
-export function formatCommitMessage(
-  titleTemplate: string,
-  bodyTemplate: string,
-  data: CommitData,
-): string {
-  const title: string = formatAll(titleTemplate, data, TITLE_EXCLUDE_KEYS);
-  const body: string = formatAll(bodyTemplate, data);
-  return `${title}\n\n${body}`.trimRight();
 }

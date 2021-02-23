@@ -33,7 +33,6 @@ module.exports = {
       allow: [
         "base_tree",
         "commit_sha",
-        "commits_url",
         "issue_number",
         "per_page",
         "pull_number",
