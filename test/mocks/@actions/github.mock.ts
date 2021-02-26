@@ -2,10 +2,6 @@
 
 import { Octokit } from "@octokit/core";
 
-import * as commitPayloads from "../../fixtures/commit-payloads.json";
-import * as contentPayloads from "../../fixtures/contents-payloads.json";
-import * as prPayloads from "../../fixtures/pull-request-payloads.json";
-
 import { EVENT_PULL_REQUEST } from "../../../src/constants";
 
 
@@ -21,23 +17,6 @@ function anyAreUndefined(values: unknown[]): boolean {
 
 
 export enum PR_NUMBER {
-  NO_CHANGES,
-  MANY_CHANGES,
-  ADD_SVG,
-  MODIFY_SVG,
-  REMOVE_SVG,
-  ADD_MODIFY_REMOVE_SVG,
-  ADD_SVG_AND_SVG_IN_DIR,
-  ADD_FILE,
-  MODIFY_FILE,
-  REMOVE_FILE,
-  ADD_SVG_MODIFY_FILE,
-  ADD_FILE_MODIFY_SVG,
-  ADD_SVG_REMOVE_FILE,
-  ADD_FILE_REMOVE_SVG,
-  ADD_OPTIMIZED_SVG,
-  ADD_FAKE_SVG,
-
   NO_COMMENTS,
   ONE_COMMENT,
   TEN_COMMENTS,
@@ -45,23 +24,6 @@ export enum PR_NUMBER {
   SEVENTEEN_COMMENTS,
   ONE_HUNDRED_AND_THREE_COMMENTS,
 }
-
-export const COMMIT_SHA = {
-  NO_CHANGES: "no changes",
-  MANY_CHANGES: "many changes",
-  ADD_SVG: "add 1 SVG",
-  MODIFY_SVG: "modify 1 SVG",
-  REMOVE_SVG: "remove 1 SVG",
-  ADD_SVG_AND_SVG_IN_DIR: "add 1 SVG, add 1 SVG in dir",
-  ADD_FILE: "add 1 file",
-  MODIFY_FILE: "modify 1 file",
-  REMOVE_FILE: "remove 1 file",
-  ADD_OPTIMIZED_SVG: "add 1 optimized SVG",
-  ADD_FAKE_SVG: "add fake SVG",
-  ADD_SVG_X: "add SVG x",
-  MODIFY_SVG_X: "modify SVG x",
-  REMOVE_SVG_X: "remove SVG x",
-};
 
 export const context: {
   eventName: string,
@@ -90,7 +52,7 @@ export const context: {
         ref: "branch-name",
         sha: "60e82798538f1853144300adaaa00650c9a6ab4d",
       },
-      number: PR_NUMBER.NO_CHANGES,
+      number: PR_NUMBER.NO_COMMENTS,
     },
     ref: "refs/head/develop",
   },
@@ -218,83 +180,9 @@ export const GitHubInstance = {
         }
       })
       .mockName("GitHub.pulls.get"),
-    listFiles: jest.fn()
-      .mockImplementation(async ({ owner, repo, pull_number: prNumber }) => {
-        if (anyAreUndefined([owner, repo, prNumber])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        switch (prNumber) {
-          case PR_NUMBER.NO_CHANGES:
-            return { data: [ ] };
-          case PR_NUMBER.MANY_CHANGES:
-            return { data: prPayloads["many changes"] };
-          case PR_NUMBER.ADD_SVG:
-            return { data: prPayloads["add 1 SVG"] };
-          case PR_NUMBER.MODIFY_SVG:
-            return { data: prPayloads["modify 1 SVG"] };
-          case PR_NUMBER.REMOVE_SVG:
-            return { data: prPayloads["remove 1 SVG"] };
-          case PR_NUMBER.ADD_MODIFY_REMOVE_SVG:
-            return { data: prPayloads["add 1 SVG, modify 1 SVG, remove 1 SVG"] };
-          case PR_NUMBER.ADD_SVG_AND_SVG_IN_DIR:
-            return { data: prPayloads["add 1 SVG, add 1 SVG in dir"] };
-          case PR_NUMBER.ADD_FILE:
-            return { data: prPayloads["add 1 file"] };
-          case PR_NUMBER.MODIFY_FILE:
-            return { data: prPayloads["modify 1 file"] };
-          case PR_NUMBER.REMOVE_FILE:
-            return { data: prPayloads["remove 1 file"] };
-          case PR_NUMBER.ADD_SVG_MODIFY_FILE:
-            return { data: prPayloads["add 1 SVG, modify 1 file"] };
-          case PR_NUMBER.ADD_FILE_MODIFY_SVG:
-            return { data: prPayloads["add 1 file, modify 1 SVG"] };
-          case PR_NUMBER.ADD_SVG_REMOVE_FILE:
-            return { data: prPayloads["add 1 SVG, remove 1 file"] };
-          case PR_NUMBER.ADD_FILE_REMOVE_SVG:
-            return { data: prPayloads["add 1 file, remove 1 SVG"] };
-          case PR_NUMBER.ADD_OPTIMIZED_SVG:
-            return { data: prPayloads["add 1 optimized SVG"] };
-          case PR_NUMBER.ADD_FAKE_SVG:
-            return { data: prPayloads["add fake SVG"] };
-          default:
-            return { };
-        }
-      })
-      .mockName("GitHub.pulls.listFiles"),
-  },
-  repos: {
-    get: jest.fn()
-      .mockImplementation(async ({ owner, repo }) => {
-        if (anyAreUndefined([owner, repo])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        return { data: { default_branch: "main" } };
-      })
-      .mockName("GitHub.repos.get"),
-    getCommit: jest.fn()
-      .mockImplementation(async ({ owner, repo, ref }) => {
-        if (anyAreUndefined([owner, repo, ref])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        return { data: commitPayloads[ref] };
-      })
-      .mockName("GitHub.repos.getCommit"),
-    getContent: jest.fn()
-      .mockImplementation(async ({ owner, repo, path, ref }) => {
-        if (anyAreUndefined([owner, repo, path, ref])) {
-          throw Error("Missing parameter(s)");
-        }
-
-        const data = contentPayloads.files[path] || contentPayloads.contents[path];
-        return { data };
-      })
-      .mockName("GitHub.repos.getContent"),
   },
 };
 
 export function getOctokit(_: string): Octokit {
-  return (GitHubInstance as unknown) as Octokit;
+  return GitHubInstance as unknown as Octokit;
 }

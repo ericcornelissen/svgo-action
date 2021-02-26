@@ -1,3 +1,5 @@
+import type { Inputs, RawActionConfig } from "./types";
+
 import {
   DEFAULT_COMMENT,
   INPUT_NAME_COMMENT,
@@ -5,9 +7,8 @@ import {
   INPUT_NAME_IGNORE,
   INPUT_NAME_SVGO_OPTIONS,
   INPUT_NAME_SVGO_VERSION,
-  NOT_REQUIRED,
+  INPUT_NOT_REQUIRED,
 } from "./constants";
-import { Inputs, RawActionConfig } from "./types";
 
 
 const BOOLEAN = "boolean";
@@ -47,7 +48,7 @@ export class ActionConfig {
     config: RawActionConfig,
   ): string {
     const value = (config.comment !== undefined) ?
-      config.comment : inputs.getInput(INPUT_NAME_COMMENT, NOT_REQUIRED);
+      config.comment : inputs.getInput(INPUT_NAME_COMMENT, INPUT_NOT_REQUIRED);
 
     if (typeof value === STRING && value !== TRUE) {
       // If the value is (the string) `"false"` comments will be disabled, so it
@@ -90,7 +91,7 @@ export class ActionConfig {
     config: RawActionConfig,
   ): string {
     return (config.ignore !== undefined) ?
-      config.ignore : inputs.getInput(INPUT_NAME_IGNORE, NOT_REQUIRED);
+      config.ignore : inputs.getInput(INPUT_NAME_IGNORE, INPUT_NOT_REQUIRED);
   }
 
   private static getSvgoOptionsPath(
@@ -99,7 +100,7 @@ export class ActionConfig {
   ): string {
     return config["svgo-options"] || inputs.getInput(
       INPUT_NAME_SVGO_OPTIONS,
-      NOT_REQUIRED,
+      INPUT_NOT_REQUIRED,
     );
   }
 
@@ -128,7 +129,7 @@ export class ActionConfig {
     defaultValue: boolean,
   ): boolean {
     const value = (configValue !== undefined) ?
-      configValue : inputs.getInput(inputName, NOT_REQUIRED);
+      configValue : inputs.getInput(inputName, INPUT_NOT_REQUIRED);
 
     if (typeof value === BOOLEAN) {
       return value as boolean;
@@ -148,7 +149,7 @@ export class ActionConfig {
     defaultValue: number,
   ): number {
     const value = (configValue !== undefined) ?
-      configValue : inputs.getInput(inputName, NOT_REQUIRED);
+      configValue : inputs.getInput(inputName, INPUT_NOT_REQUIRED);
 
     if (typeof value === NUMBER) {
       return value as number;

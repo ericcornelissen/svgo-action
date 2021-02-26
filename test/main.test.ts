@@ -27,7 +27,7 @@ import {
   EVENT_PUSH,
   EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
-  NOT_REQUIRED,
+  INPUT_NOT_REQUIRED,
 } from "../src/constants";
 import main from "../src/main";
 
@@ -134,7 +134,7 @@ test.each(ALL_EVENTS)("use custom configuration file (%s)", async (eventName) =>
   const actionConfig = { "dry-run": true };
 
   when(core.getInput)
-    .calledWith(INPUT_NAME_CONFIG_PATH, NOT_REQUIRED)
+    .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
     .mockReturnValueOnce(actionConfigFilePath);
   when(fs.readFile)
     .calledWith(actionConfigFilePath)

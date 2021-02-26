@@ -1,9 +1,6 @@
 import { when } from "jest-when";
-import * as yaml from "js-yaml";
 
 import * as core from "./mocks/@actions/core.mock";
-
-jest.mock("@actions/core", () => core);
 
 import {
   DEFAULT_COMMENT,
@@ -65,7 +62,7 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `true` in the config object", () => {
-      const rawConfig = yaml.load("comment: true") as RawActionConfig;
+      const rawConfig = { comment: true };
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -73,7 +70,7 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `'true'` in the config object", () => {
-      const rawConfig = yaml.load("comment: 'true'") as RawActionConfig;
+      const rawConfig = { comment: "true" };
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -84,7 +81,7 @@ describe("ActionConfig", () => {
       "foobar",
       "{{ svgCount }} SVG(s) were optimized :sparkles:",
     ])("comment is set to a template in the config object ('%s')", (template) => {
-      const rawConfig = yaml.load(`comment: "${template}"`) as RawActionConfig;
+      const rawConfig = { comment: template };
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -132,7 +129,7 @@ describe("ActionConfig", () => {
     test("comment is `false` in the config object", () => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
-      const rawConfig = yaml.load("comment: false") as RawActionConfig;
+      const rawConfig = { comment: false };
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -142,7 +139,7 @@ describe("ActionConfig", () => {
     test("comment is `true` in the config object", () => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
-      const rawConfig = yaml.load("comment: true") as RawActionConfig;
+      const rawConfig = { comment: true };
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -152,7 +149,7 @@ describe("ActionConfig", () => {
     test("comment is `'false'` in the config object", () => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
-      const rawConfig = yaml.load("comment: 'false'") as RawActionConfig;
+      const rawConfig = { comment: "false" };
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -162,7 +159,7 @@ describe("ActionConfig", () => {
     test("comment is `'true'` in the config object", () => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
-      const rawConfig = yaml.load("comment: 'true'") as RawActionConfig;
+      const rawConfig = { comment: "true" };
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -172,7 +169,7 @@ describe("ActionConfig", () => {
     test.each(nonBooleanStrings)("comment is `'%s'` in the config object", (value) => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
-      const rawConfig = yaml.load(`comment: '${value}'`) as RawActionConfig;
+      const rawConfig = { comment: value };
       mockCoreGetInput(INPUT_NAME_COMMENT, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -221,7 +218,7 @@ describe("ActionConfig", () => {
     });
 
     test("dry-run is `false` in the config object", () => {
-      const rawConfig = yaml.load("dry-run: false") as RawActionConfig;
+      const rawConfig = { "dry-run": false };
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -229,7 +226,7 @@ describe("ActionConfig", () => {
     });
 
     test("dry-run is `true` in the config object", () => {
-      const rawConfig = yaml.load("dry-run: true") as RawActionConfig;
+      const rawConfig = { "dry-run": true };
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -237,7 +234,7 @@ describe("ActionConfig", () => {
     });
 
     test("dry-run is `'false'` in the config object", () => {
-      const rawConfig = yaml.load("dry-run: 'false'") as RawActionConfig;
+      const rawConfig = { "dry-run": "false" } as unknown as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -245,7 +242,7 @@ describe("ActionConfig", () => {
     });
 
     test("dry-run is `'true'` in the config object", () => {
-      const rawConfig = yaml.load("dry-run: 'true'") as RawActionConfig;
+      const rawConfig = { "dry-run": "true" } as unknown as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
@@ -253,7 +250,7 @@ describe("ActionConfig", () => {
     });
 
     test.each(nonBooleanStrings)("dry-run is `'%s'` in the config object", (value) => {
-      const rawConfig = yaml.load(`dry-run: '${value}'`) as RawActionConfig;
+      const rawConfig = { "dry-run": value } as unknown as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);

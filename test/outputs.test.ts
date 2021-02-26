@@ -16,12 +16,15 @@ import {
 import { setOutputValues } from "../src/outputs";
 
 
-const sampleData: OptimizeProjectData = {
+const sampleData = {
   files: [],
   optimizedCount: 3,
   skippedCount: 1,
   svgCount: 4,
 };
+const sampleDataList: OptimizeProjectData[] = [
+  sampleData,
+];
 
 
 describe("::setOutputValues", () => {
@@ -35,9 +38,7 @@ describe("::setOutputValues", () => {
     expect(core.setOutput).not.toHaveBeenCalled();
   });
 
-  test.each([
-    sampleData,
-  ])(`event ${EVENT_PULL_REQUEST}`, (data: OptimizeProjectData) => {
+  test.each(sampleDataList)(`event ${EVENT_PULL_REQUEST}`, (data: OptimizeProjectData) => {
     setOutputValues(EVENT_PULL_REQUEST, data);
     expect(core.setOutput).toHaveBeenCalledTimes(4);
     expect(core.setOutput).toHaveBeenCalledWith(
@@ -58,9 +59,7 @@ describe("::setOutputValues", () => {
     );
   });
 
-  test.each([
-    sampleData,
-  ])(`event ${EVENT_PUSH}`, (data: OptimizeProjectData) => {
+  test.each(sampleDataList)(`event ${EVENT_PUSH}`, (data: OptimizeProjectData) => {
     setOutputValues(EVENT_PUSH, data);
     expect(core.setOutput).toHaveBeenCalledTimes(4);
     expect(core.setOutput).toHaveBeenCalledWith(
@@ -81,9 +80,7 @@ describe("::setOutputValues", () => {
     );
   });
 
-  test.each([
-    sampleData,
-  ])(`event ${EVENT_SCHEDULE}`, (data: OptimizeProjectData) => {
+  test.each(sampleDataList)(`event ${EVENT_SCHEDULE}`, (data: OptimizeProjectData) => {
     setOutputValues(EVENT_SCHEDULE, data);
     expect(core.setOutput).toHaveBeenCalledTimes(4);
     expect(core.setOutput).toHaveBeenCalledWith(

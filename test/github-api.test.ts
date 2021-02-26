@@ -1,10 +1,8 @@
-import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 
-jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 
-import { INPUT_NAME_REPO_TOKEN, PR_NOT_FOUND } from "../src/constants";
+import { PR_NOT_FOUND } from "../src/constants";
 import {
   createComment,
   getCommitMessage,
@@ -13,8 +11,7 @@ import {
 } from "../src/github-api";
 
 
-const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
-const client = github.getOctokit(token);
+const client = github.getOctokit("token");
 
 describe("::createComment", () => {
 
@@ -115,10 +112,10 @@ describe("::getPrComments", () => {
 describe("::getPrNumber", () => {
 
   test.each([
-    github.PR_NUMBER.NO_CHANGES,
-    github.PR_NUMBER.MANY_CHANGES,
-    github.PR_NUMBER.ADD_SVG,
-    github.PR_NUMBER.MODIFY_SVG,
+    github.PR_NUMBER.NO_COMMENTS,
+    github.PR_NUMBER.ONE_COMMENT,
+    github.PR_NUMBER.TEN_COMMENTS,
+    github.PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS,
   ])("return value for Pull Request #%i", (prNumber: number) => {
     if (!github.context.payload.pull_request) {
       throw new Error("`github.context.payload.pull_request` cannot be null");

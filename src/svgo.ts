@@ -4,7 +4,7 @@ import svgo from "svgo-v2";
 
 type allowedVersions = 1 | 2;
 type SVGO = { optimize };
-export type SVGOptions = svgo.Options;
+type SVGOptions = svgo.Options;
 
 
 export class SVGOptimizer {
@@ -47,3 +47,5 @@ export class SVGOptimizer {
   }
 
 }
+
+export type { SVGOptions };

@@ -3,20 +3,6 @@
 import * as yaml from "js-yaml";
 
 
-export function parseAny(
-  type: "js" | "yaml",
-  raw: string,
-): any {
-  switch (type) {
-    case "js":
-      return parseJavaScript(raw);
-    case "yaml":
-      return parseYaml(raw);
-    default:
-      throw new Error(`unsupported type ${type}`);
-  }
-}
-
 export function parseJavaScript(rawJavaScript: string): any {
   try {
     // eslint-disable-next-line security/detect-eval-with-expression

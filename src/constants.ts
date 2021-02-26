@@ -11,8 +11,8 @@ export const INPUT_NAME_IGNORE = "ignore";
 export const INPUT_NAME_REPO_TOKEN = "repo-token";
 export const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 export const INPUT_NAME_SVGO_VERSION = "svgo-version";
-
-export const NOT_REQUIRED = { required: false };
+export const INPUT_NOT_REQUIRED = { required: false };
+export const INPUT_REQUIRED = { required: true };
 
 // Action defaults
 export const DEFAULT_COMMENT = `

@@ -1,7 +1,3 @@
-export const extName = jest.fn()
-  .mockReturnValue("svg")
-  .mockName("fs.extName");
-
 export const listFiles = jest.fn()
   .mockReturnValue([])
   .mockName("fs.listFile");

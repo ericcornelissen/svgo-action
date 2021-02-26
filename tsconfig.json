@@ -10,9 +10,8 @@
     "resolveJsonModule": true
   },
   "exclude": [
-    "node_modules",
-    "script",
-    "**/*.mock.ts",
-    "**/*.test.ts"
+    "node_modules/",
+    "script/",
+    "test/"
   ]
 }

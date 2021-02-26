@@ -1,22 +1,15 @@
 import type { Context } from "@actions/github/lib/context";
 
-import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 
 jest.mock("../src/github-api", () => githubAPI);
 
-import {
-  EVENT_PULL_REQUEST,
-  EVENT_PUSH,
-  EVENT_SCHEDULE,
-  INPUT_NAME_REPO_TOKEN,
-} from "../src/constants";
+import { EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE } from "../src/constants";
 import { shouldSkipRun } from "../src/skip-run";
 
 
-const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
-const client = github.getOctokit(token);
+const client = github.getOctokit("token");
 
 
 function newMockContext(
@@ -32,7 +25,7 @@ function newMockContext(
   } as unknown as Context;
 }
 
-describe("shouldSkipRun", () => {
+describe("::shouldSkipRun", () => {
 
   test.each([
     EVENT_SCHEDULE,
@@ -53,13 +46,13 @@ describe("shouldSkipRun", () => {
     const stdCommitMessage = "Hello world!";
 
     beforeEach(() => {
-      githubAPI.getCommitMessage.mockReturnValue(stdCommitMessage);
+      githubAPI.getCommitMessage.mockResolvedValue(stdCommitMessage);
     });
 
     test("disabled from commit", async () => {
       const context = newMockContext(eventName);
 
-      githubAPI.getCommitMessage.mockReturnValue("disable-svgo-action");
+      githubAPI.getCommitMessage.mockResolvedValue("disable-svgo-action");
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(true);
@@ -73,7 +66,7 @@ describe("shouldSkipRun", () => {
       const prNumber = 36;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
-      githubAPI.getPrComments.mockReturnValue([]);
+      githubAPI.getPrComments.mockResolvedValue([]);
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
@@ -91,7 +84,7 @@ describe("shouldSkipRun", () => {
       const prNumber = 42;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
-      githubAPI.getPrComments.mockReturnValue(comments);
+      githubAPI.getPrComments.mockResolvedValue(comments);
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
@@ -108,7 +101,7 @@ describe("shouldSkipRun", () => {
       const prNumber = 1997;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
-      githubAPI.getPrComments.mockReturnValue(comments);
+      githubAPI.getPrComments.mockResolvedValue(comments);
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(true);
@@ -125,7 +118,7 @@ describe("shouldSkipRun", () => {
       const prNumber = 1997;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
-      githubAPI.getPrComments.mockReturnValue(comments);
+      githubAPI.getPrComments.mockResolvedValue(comments);
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
@@ -142,13 +135,28 @@ describe("shouldSkipRun", () => {
       const prNumber = 1997;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
-      githubAPI.getPrComments.mockReturnValue(comments);
+      githubAPI.getPrComments.mockResolvedValue(comments);
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(expected);
       expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
       expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
       expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
+    });
+
+    test("enabled from comment, disabled from Pull Request", async () => {
+      const context = newMockContext(eventName);
+      const prNumber = 1997;
+
+      githubAPI.getPrNumber.mockReturnValue(prNumber);
+      githubAPI.getPrComments.mockResolvedValue(["disable-svgo-action"]);
+      githubAPI.getCommitMessage.mockResolvedValue("enable-svgo-action");
+
+      const result = await shouldSkipRun(client, context);
+      expect(result.shouldSkip).toBe(false);
+      expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
+      expect(githubAPI.getPrComments).not.toHaveBeenCalled();
+      expect(githubAPI.getPrNumber).not.toHaveBeenCalled();
     });
 
     afterEach(() => {
@@ -170,7 +178,6 @@ describe("shouldSkipRun", () => {
       ];
       const context = newMockContext(eventName, commits);
 
-
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
     });
@@ -181,7 +188,6 @@ describe("shouldSkipRun", () => {
         { message: "Hello world!" },
       ];
       const context = newMockContext(eventName, commits);
-
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(true);
@@ -194,6 +200,12 @@ describe("shouldSkipRun", () => {
       ];
       const context = newMockContext(eventName, commits);
 
+      const result = await shouldSkipRun(client, context);
+      expect(result.shouldSkip).toBe(false);
+    });
+
+    test("no commits", async () => {
+      const context = newMockContext(eventName, []);
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);

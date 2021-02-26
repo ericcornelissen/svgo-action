@@ -1,8 +1,3 @@
-type InputOptions = {
-  required?: boolean;
-}
-
-
 // Type representing data about one optimized file.
 export type OptimizeFileData = {
   contentAfter: string;
@@ -34,7 +29,7 @@ export type FileData = {
 
 // Type representing an object from which the Action inputs can be obtained.
 export type Inputs = {
-  getInput(name: string, options: InputOptions): string;
+  getInput(name: string, options: { required?: boolean; }): string;
 }
 
 // Type representing an Action configuration file.

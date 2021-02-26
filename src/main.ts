@@ -1,8 +1,9 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
+import type { Octokit } from "@octokit/core";
+
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { Octokit } from "@octokit/core";
 
 import {
   EVENT_PULL_REQUEST,
@@ -10,7 +11,8 @@ import {
   EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
-  NOT_REQUIRED,
+  INPUT_NOT_REQUIRED,
+  INPUT_REQUIRED,
 } from "./constants";
 import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
@@ -29,11 +31,11 @@ const SUPPORTED_EVENTS: string[] = [
 ];
 
 function getRepoToken(): string {
-  return core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
+  return core.getInput(INPUT_NAME_REPO_TOKEN, INPUT_REQUIRED);
 }
 
 async function getActionConfig(): Promise<ActionConfig> {
-  const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, NOT_REQUIRED);
+  const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED);
 
   let rawConfig: RawActionConfig | undefined;
   try {

@@ -13,5 +13,5 @@ export const getPrComments = jest.fn()
   .mockName("github-api.getPrComment");
 
 export const getPrNumber = jest.fn()
-  .mockReturnValue(github.PR_NUMBER.NO_CHANGES)
+  .mockReturnValue(github.PR_NUMBER.NO_COMMENTS)
   .mockName("github-api.getPrNumber");

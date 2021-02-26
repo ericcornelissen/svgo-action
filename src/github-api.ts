@@ -6,12 +6,13 @@ import * as github from "@actions/github";
 import { PR_NOT_FOUND } from "./constants";
 
 
-type GitCommit = GitGetCommitResponseData;
-
 const owner = github.context.repo.owner;
 const repo = github.context.repo.repo;
 
-async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
+async function getCommitAt(
+  client: Octokit,
+  ref: string,
+): Promise<GitGetCommitResponseData> {
   const { data: refData } = await client.git.getRef({ owner, repo, ref });
   const { data: commit } = await client.git.getCommit({ owner, repo,
     commit_sha: refData.object.sha,
