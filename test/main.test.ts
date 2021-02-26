@@ -9,19 +9,18 @@ import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 import * as inputs from "./mocks/inputs.mock";
+import * as optimize from "./mocks/optimize.mock";
 import * as outputs from "./mocks/outputs.mock";
+import * as skipRun from "./mocks/skip-run.mock";
 import * as svgo from "./mocks/svgo.mock";
-
-const optimizeMock = jest.fn().mockName("optimize.ts::default");
-const skipRunMock = jest.fn().mockName("skip-run.ts::default");
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/inputs", () => inputs);
-jest.mock("../src/optimize", () => optimizeMock);
+jest.mock("../src/optimize", () => optimize);
 jest.mock("../src/outputs", () => outputs);
-jest.mock("../src/skip-run", () => skipRunMock);
+jest.mock("../src/skip-run", () => skipRun);
 jest.mock("../src/svgo", () => svgo);
 
 import {
@@ -41,65 +40,65 @@ beforeEach(() => {
   core.debug.mockClear();
   core.setFailed.mockClear();
 
-  optimizeMock.mockClear();
+  optimize.optimize.mockClear();
 
-  skipRunMock.mockResolvedValue({ shouldSkip: false });
+  skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: false });
 });
 
 test("push event", async () => {
   github.context.eventName = EVENT_PUSH;
 
   await main();
-  expect(optimizeMock).toHaveBeenCalled();
+  expect(optimize.optimize).toHaveBeenCalled();
 });
 
 test("pull_request event", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
 
   await main();
-  expect(optimizeMock).toHaveBeenCalled();
+  expect(optimize.optimize).toHaveBeenCalled();
 });
 
 test("schedule event", async () => {
   github.context.eventName = EVENT_SCHEDULE;
 
   await main();
-  expect(optimizeMock).toHaveBeenCalled();
+  expect(optimize.optimize).toHaveBeenCalled();
 });
 
 test("push event error", async () => {
   github.context.eventName = EVENT_PUSH;
 
-  optimizeMock.mockImplementationOnce(() => {
+  optimize.optimize.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
-  expect(optimizeMock).toHaveBeenCalledTimes(1);
+  expect(optimize.optimize).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
 test("pull_request event error", async () => {
   github.context.eventName = EVENT_PULL_REQUEST;
 
-  optimizeMock.mockImplementationOnce(() => {
+  optimize.optimize.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
-  expect(optimizeMock).toHaveBeenCalledTimes(1);
+  expect(optimize.optimize).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
 test("schedule event error", async () => {
   github.context.eventName = EVENT_SCHEDULE;
 
-  optimizeMock.mockImplementationOnce(() => {
+  optimize.optimize.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
   });
 
   await main();
-  expect(optimizeMock).toHaveBeenCalledTimes(1);
+  expect(optimize.optimize).toHaveBeenCalledTimes(1);
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
@@ -107,7 +106,7 @@ test("unknown event", async () => {
   github.context.eventName = "UnKnOwN eVeNt";
 
   await main();
-  expect(optimizeMock).not.toHaveBeenCalled();
+  expect(optimize.optimize).not.toHaveBeenCalled();
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
@@ -228,7 +227,7 @@ test.each(ALL_EVENTS)("the SVGO options file does not exist (%s)", async (eventN
 test.each(SKIPPABLE_EVENTS)("the Action is skipped (%s)", async (eventName) => {
   github.context.eventName = eventName;
 
-  skipRunMock.mockResolvedValue({ shouldSkip: true });
+  skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: true });
 
   await main();
 

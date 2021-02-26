@@ -7,7 +7,7 @@ jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
 
 import { INPUT_NAME_REPO_TOKEN } from "../src/constants";
-import { fetchYamlFile } from "../src/utils/fetch-yaml";
+import { fetchYamlFile } from "../src/fetch/yaml";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });

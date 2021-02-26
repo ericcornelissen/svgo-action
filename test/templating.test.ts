@@ -1,5 +1,9 @@
 import type { OptimizeFileData, OptimizeProjectData } from "../src/types";
 
+import * as utils from "./mocks/utils.mock";
+
+jest.mock("../src/utils", () => utils);
+
 import { formatComment } from "../src/templating";
 
 
@@ -138,11 +142,13 @@ describe("::formatComment", () => {
     const result = formatComment(templateString, defaultData, []);
     expect(result).toBeDefined();
     expect(result).toEqual(
-      "| Filename | Before | After | Improvement |\n" +
-      "| --- | --- | --- | --- |\n" +
-      "| test.svg | 0.005 KB | 0.006 KB | 20% |\n" +
-      "| foo.svg | 0.003 KB | 0.003 KB | -0% |\n" +
-      "| bar.svg | 0.007 KB | 0.006 KB | -14.29% |\n",
+      expect.stringMatching(
+        "| Filename | Before | After | Improvement |\n" +
+        "| --- | --- | --- | --- |\n" +
+        "| \\w+.svg | \\d+\\.\\d+ KB | \\d+\\.\\d+ KB | -?\\d+(\\.\\d+)?% |\n" +
+        "| \\w+.svg | \\d+\\.\\d+ KB | \\d+\\.\\d+ KB | -?\\d+(\\.\\d+)?% |\n" +
+        "| \\w+.svg | \\d+\\.\\d+ KB | \\d+\\.\\d+ KB | -?\\d+(\\.\\d+)?% |\n",
+      ),
     );
   });
 

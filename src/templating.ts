@@ -1,9 +1,12 @@
-import { format as strFormat } from "util";
+import type { OptimizeFileData, OptimizeProjectData } from "./types";
 
-import { OptimizeFileData, OptimizeProjectData } from "./types";
+import { format as printf } from "util";
 
-import { getFileSizeInKB } from "./utils/file-size";
-import { toPercentage } from "./utils/percentages";
+import {
+  getChangedPercentage,
+  getFileSizeInKB,
+  roundToPrecision,
+} from "./utils";
 
 
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
@@ -39,15 +42,17 @@ const formatters = [
         const originalSize: number = getFileSizeInKB(value.contentBefore);
         const optimizedSize: number = getFileSizeInKB(value.contentAfter);
 
-        const reduced: number = (originalSize - optimizedSize) / originalSize;
-        const reducedPercentage: number = -1 * toPercentage(reduced);
+        const reducedPercentage = getChangedPercentage(
+          originalSize,
+          optimizedSize,
+        );
 
-        table += strFormat(
+        table += printf(
           FILES_TABLE_ROW,
           value.path,
           originalSize,
           optimizedSize,
-          reducedPercentage,
+          roundToPrecision(reducedPercentage, 2),
         );
       }
 

@@ -61,7 +61,7 @@ async function checkShouldSkipPush(
 }
 
 
-export default async function shouldSkipRun(
+export async function shouldSkipRun(
   client: Octokit,
   context: Context,
 ): Promise<{ shouldSkip: boolean, reason: string }> {

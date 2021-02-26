@@ -13,24 +13,22 @@ import {
 } from "./constants";
 
 
-function getOutputValueFor(
-  name: OutputName,
-  data: OptimizeProjectData,
-): string {
-  switch (name) {
-    case OUTPUT_NAME_DID_OPTIMIZE:
-      return `${data.optimizedCount > 0}`;
-    case OUTPUT_NAME_OPTIMIZED_COUNT:
-      return `${data.optimizedCount}`;
-    case OUTPUT_NAME_SKIPPED_COUNT:
-      return `${data.skippedCount}`;
-    case OUTPUT_NAME_SVG_COUNT:
-      return `${data.svgCount}`;
-  }
-}
+const outputs: { [key: string]: (data: OptimizeProjectData) => string } = {
+  "DID_OPTIMIZE": (data: OptimizeProjectData): string => {
+    return `${data.optimizedCount > 0}`;
+  },
+  "OPTIMIZED_COUNT": (data: OptimizeProjectData): string => {
+    return `${data.optimizedCount}`;
+  },
+  "SKIPPED_COUNT": (data: OptimizeProjectData): string => {
+    return `${data.skippedCount}`;
+  },
+  "SVG_COUNT": (data: OptimizeProjectData): string => {
+    return `${data.svgCount}`;
+  },
+};
 
-
-export function getOutputNamesFor(event: string): OutputName[] {
+function getOutputNamesFor(event: string): OutputName[] {
   switch (event) {
     case EVENT_PULL_REQUEST:
     case EVENT_PUSH:
@@ -46,12 +44,16 @@ export function getOutputNamesFor(event: string): OutputName[] {
   }
 }
 
+
 export function setOutputValues(
-  names: OutputName[],
+  event: string,
   data: OptimizeProjectData,
 ): void {
+  const names = getOutputNamesFor(event);
   for (const name of names) {
-    const value = getOutputValueFor(name, data);
+    // eslint-disable-next-line security/detect-object-injection
+    const fn = outputs[name];
+    const value = fn(data);
     core.setOutput(name, value);
   }
 }

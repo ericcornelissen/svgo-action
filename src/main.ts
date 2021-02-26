@@ -9,16 +9,14 @@ import {
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
 } from "./constants";
+import { fetchJsFile, fetchYamlFile } from "./fetch";
 import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
-import optimize from "./optimize";
-import shouldSkipRun from "./skip-run";
-import { getOutputNamesFor, setOutputValues } from "./outputs";
-
-import { fetchJsFile } from "./utils/fetch-js";
-import { fetchYamlFile } from "./utils/fetch-yaml";
+import { optimize } from "./optimize";
+import { shouldSkipRun } from "./skip-run";
+import { setOutputValues } from "./outputs";
 
 
 const SUPPORTED_EVENTS: string[] = [
@@ -59,8 +57,7 @@ async function run(
     }
 
     const optimizeData = await optimize(fs, config, svgo);
-    const outputNames = getOutputNamesFor(event);
-    setOutputValues(outputNames, optimizeData);
+    setOutputValues(event, optimizeData);
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
   }

@@ -87,7 +87,7 @@ async function writeOptimizedSvgs(
   await Promise.all(promises);
 }
 
-export default async function main(
+export async function optimize(
   fs: FileSystem,
   config: ActionConfig,
   svgo: SVGOptimizer,

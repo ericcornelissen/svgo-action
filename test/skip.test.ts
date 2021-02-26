@@ -12,7 +12,7 @@ import {
   EVENT_SCHEDULE,
   INPUT_NAME_REPO_TOKEN,
 } from "../src/constants";
-import shouldSkipRun from "../src/skip-run";
+import { shouldSkipRun } from "../src/skip-run";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
