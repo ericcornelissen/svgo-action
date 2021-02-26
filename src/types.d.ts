@@ -2,12 +2,15 @@ type InputOptions = {
   required?: boolean;
 }
 
+
+// Type representing data about one optimized file.
 export type OptimizeFileData = {
   contentAfter: string;
   contentBefore: string;
   path: string;
 }
 
+// Type representing data about the optimization process.
 export type OptimizeProjectData = {
   readonly files: OptimizeFileData[];
   readonly optimizedCount: number;
@@ -29,6 +32,11 @@ export type FileData = {
   readonly path: string;
 }
 
+// Type representing an object from which the Action inputs can be obtained.
+export type Inputs = {
+  getInput(name: string, options: InputOptions): string;
+}
+
 // Type representing an Action configuration file.
 export type RawActionConfig = {
   readonly comment?: boolean | string;
@@ -36,16 +44,4 @@ export type RawActionConfig = {
   readonly ignore?: string;
   readonly "svgo-options"?: string;
   readonly "svgo-version"?: number;
-}
-
-// Type representing the (relevant) data of a file in git.
-export type GitFileData = {
-  readonly content: string;
-  readonly encoding: string;
-  readonly path: string;
-}
-
-// Type representing an object from which the Action inputs can be obtained.
-export type Inputs = {
-  getInput(name: string, options: InputOptions): string;
 }

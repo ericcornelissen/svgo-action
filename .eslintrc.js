@@ -122,6 +122,7 @@ module.exports = {
           ignoreTrailingComments: true,
         }],
         "security/detect-object-injection": "off",
+        "security/detect-non-literal-fs-filename": "off",
       },
     },
   ],

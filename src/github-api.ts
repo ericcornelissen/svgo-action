@@ -1,23 +1,12 @@
 import type { Octokit } from "@octokit/core";
-import type {
-  GitGetCommitResponseData,
-  ReposGetContentResponseData,
-} from "@octokit/types";
-
-import type { GitFileData } from "./types";
+import type { GitGetCommitResponseData } from "@octokit/types";
 
 import * as github from "@actions/github";
 
 import { PR_NOT_FOUND } from "./constants";
 
 
-type DirContents = ReposGetContentResponseData[];
-
-type FileContents = ReposGetContentResponseData;
-
 type GitCommit = GitGetCommitResponseData;
-
-type RepoContents = FileContents | DirContents;
 
 const owner = github.context.repo.owner;
 const repo = github.context.repo.repo;
@@ -29,15 +18,6 @@ async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
   });
 
   return commit;
-}
-
-async function getContentFromRepo(
-  client: Octokit,
-  ref: string,
-  path: string,
-): Promise<RepoContents> {
-  const { data } = await client.repos.getContent({ owner, repo, path, ref });
-  return data;
 }
 
 
@@ -58,19 +38,6 @@ export async function getCommitMessage(
 ): Promise<string> {
   const { message } = await getCommitAt(client, ref);
   return message;
-}
-
-export async function getFile(
-  client: Octokit,
-  ref: string,
-  path: string,
-): Promise<GitFileData> {
-  const contents = await getContentFromRepo(client, ref, path) as FileContents;
-  return {
-    content: contents.content,
-    encoding: contents.encoding,
-    path: contents.path,
-  };
 }
 
 export async function getPrComments(

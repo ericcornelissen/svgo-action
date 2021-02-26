@@ -3,11 +3,9 @@ import svgoV1Options from "./fixtures/svgo-v1-options.json";
 import svgoV2Options from "./fixtures/svgo-v2-options.json";
 
 import * as core from "./mocks/@actions/core.mock";
-import * as encoder from "./mocks/encoder.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 
 jest.mock("@actions/core", () => core);
-jest.mock("../src/encoder", () => encoder);
 jest.mock("../src/github-api", () => githubAPI);
 
 import { SVGOptimizer, SVGOptions } from "../src/svgo";

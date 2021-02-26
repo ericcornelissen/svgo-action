@@ -1,5 +1,3 @@
-import files from "./fixtures/file-data.json";
-
 import * as core from "./mocks/@actions/core.mock";
 import * as github from "./mocks/@actions/github.mock";
 
@@ -10,11 +8,9 @@ import { INPUT_NAME_REPO_TOKEN, PR_NOT_FOUND } from "../src/constants";
 import {
   createComment,
   getCommitMessage,
-  getFile,
   getPrComments,
   getPrNumber,
 } from "../src/github-api";
-import { GitFileData } from "../src/types";
 
 
 const token = core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
@@ -77,40 +73,6 @@ describe("::getCommitMessage", () => {
     github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getCommitMessage(client, ref);
-    await expect(promise).rejects.toBeDefined();
-  });
-
-});
-
-describe("::getFile", () => {
-
-  const filePaths: string[] = Object.keys(files).slice(0, 4);
-  const defaultRef = github.context.sha;
-
-  test.each(filePaths)("get an existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
-    expect(fileData).toBeDefined();
-  });
-
-  test.each(filePaths)("'path' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
-    expect(fileData.path).toBeDefined();
-  });
-
-  test.each(filePaths)("'content' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
-    expect(fileData.content).toBeDefined();
-  });
-
-  test.each(filePaths)("'encoding' is defined for existing file (%s)", async (filePath) => {
-    const fileData: GitFileData = await getFile(client, defaultRef, filePath);
-    expect(fileData.encoding).toBeDefined();
-  });
-
-  test("file is not found", async () => {
-    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
-
-    const promise = getFile(client, defaultRef, "foobar");
     await expect(promise).rejects.toBeDefined();
   });
 

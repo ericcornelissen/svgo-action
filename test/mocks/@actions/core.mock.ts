@@ -12,7 +12,7 @@ export const error = jest.fn().mockName("core.error");
 export const getInput = jest.fn()
   .mockImplementation((key, _) => {
     if (key === INPUT_NAME_CONFIG_PATH) {
-      return "./config.yml";
+      return "svgo-action.yml";
     } else if (key === INPUT_NAME_DRY_RUN) {
       return "false";
     } else if (key === INPUT_NAME_REPO_TOKEN) {

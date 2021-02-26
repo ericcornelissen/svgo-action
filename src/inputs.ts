@@ -5,11 +5,10 @@ import {
   INPUT_NAME_IGNORE,
   INPUT_NAME_SVGO_OPTIONS,
   INPUT_NAME_SVGO_VERSION,
+  NOT_REQUIRED,
 } from "./constants";
 import { Inputs, RawActionConfig } from "./types";
 
-
-const NOT_REQUIRED = { required: false };
 
 const BOOLEAN = "boolean";
 const FALSE = "false";

@@ -1,19 +1,16 @@
-import { FileInfo, FileSystem } from "../../src/file-system";
+export const extName = jest.fn()
+  .mockReturnValue("svg")
+  .mockName("fs.extName");
 
-const defaultFile: FileInfo = {
-  path: "/foo/bar.svg",
-  extension: "svg",
-};
+export const listFiles = jest.fn()
+  .mockReturnValue([])
+  .mockName("fs.listFile");
 
-const fs: FileSystem = {
-  listFiles: jest.fn()
-    .mockReturnValue([])
-    .mockName("fs.listFile"),
-  readFile: jest.fn()
-    .mockReturnValue(defaultFile)
-    .mockName("fs.readFile"),
-  writeFile: jest.fn()
-    .mockName("fs.writeFile"),
-};
+export const readFile = jest.fn()
+  .mockResolvedValue("")
+  .mockName("fs.readFile");
 
-export default fs;
+export const writeFile = jest.fn()
+  .mockResolvedValue(undefined)
+  .mockName("fs.writeFile");
+

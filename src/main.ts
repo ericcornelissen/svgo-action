@@ -1,3 +1,5 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
+
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 import { Octokit } from "@octokit/core";
@@ -8,10 +10,11 @@ import {
   EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
+  NOT_REQUIRED,
 } from "./constants";
-import { fetchJsFile, fetchYamlFile } from "./fetch";
 import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
+import { parseJavaScript, parseYaml } from "./parser";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig } from "./types";
 import { optimize } from "./optimize";
@@ -25,24 +28,38 @@ const SUPPORTED_EVENTS: string[] = [
   EVENT_SCHEDULE,
 ];
 
-function getConfigFilePath(): string {
-  return core.getInput(INPUT_NAME_CONFIG_PATH, { required: false });
-}
-
 function getRepoToken(): string {
   return core.getInput(INPUT_NAME_REPO_TOKEN, { required: true });
 }
 
-async function getSvgoConfigFile(
-  client: Octokit,
-  contextRef: string,
-  path: string,
-): SVGOptions {
-  if (path.endsWith(".js")) {
-    return await fetchJsFile(client, contextRef, path);
-  } else {
-    return await fetchYamlFile(client, contextRef, path);
+async function getActionConfig(): Promise<ActionConfig> {
+  const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, NOT_REQUIRED);
+
+  let rawConfig: RawActionConfig | undefined;
+  try {
+    const rawConfigYaml = await fs.readFile(filePath);
+    rawConfig = parseYaml(rawConfigYaml);
+  } catch (_) {
+    core.warning(`Action config file '${filePath}' not found or invalid`);
   }
+
+  return new ActionConfig(core, rawConfig);
+}
+
+async function getSvgoInstance(config: ActionConfig): Promise<SVGOptimizer> {
+  const filePath = config.svgoOptionsPath;
+
+  let options: SVGOptions | undefined;
+  try {
+    const rawOptions = await fs.readFile(filePath);
+    options = filePath.endsWith(".js") ?
+      parseJavaScript(rawOptions) :
+      parseYaml(rawOptions);
+  } catch(_) {
+    core.warning(`SVGO config file '${filePath}' not found or invalid`);
+  }
+
+  return new SVGOptimizer(config.svgoVersion, options);
 }
 
 async function run(
@@ -63,31 +80,17 @@ async function run(
   }
 }
 
-
 export default async function main(): Promise<void> {
-  const contextRef: string = github.context.sha;
   const token: string = getRepoToken();
   const client: Octokit = github.getOctokit(token);
 
-  const configFilePath: string = getConfigFilePath();
-  const rawConfig: RawActionConfig = await fetchYamlFile(
-    client,
-    contextRef,
-    configFilePath,
-  );
-
-  const config: ActionConfig = new ActionConfig(core, rawConfig);
+  const config = await getActionConfig();
   if (config.isDryRun) {
     core.info("Dry mode enabled, no changes will be written");
   }
 
   core.info(`Using SVGO major version ${config.svgoVersion}`);
-  const svgoOptions: SVGOptions = await getSvgoConfigFile(
-    client,
-    contextRef,
-    config.svgoOptionsPath,
-  );
-  const svgo: SVGOptimizer = new SVGOptimizer(config.svgoVersion, svgoOptions);
+  const svgo: SVGOptimizer = await getSvgoInstance(config);
 
   const skip = await shouldSkipRun(client, github.context);
   if (!skip.shouldSkip) {

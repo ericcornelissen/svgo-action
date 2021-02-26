@@ -3,7 +3,7 @@ export const EVENT_PULL_REQUEST = "pull_request";
 export const EVENT_PUSH = "push";
 export const EVENT_SCHEDULE = "schedule";
 
-// Action configuration
+// Action inputs
 export const INPUT_NAME_COMMENT = "comment";
 export const INPUT_NAME_CONFIG_PATH = "configuration-path";
 export const INPUT_NAME_DRY_RUN = "dry-run";
@@ -11,6 +11,8 @@ export const INPUT_NAME_IGNORE = "ignore";
 export const INPUT_NAME_REPO_TOKEN = "repo-token";
 export const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
 export const INPUT_NAME_SVGO_VERSION = "svgo-version";
+
+export const NOT_REQUIRED = { required: false };
 
 // Action defaults
 export const DEFAULT_COMMENT = `

@@ -3,14 +3,23 @@
 import * as fs from "fs";
 import * as path from "path";
 
+
 const LIST_FILES_ALWAYS_IGNORE: string[] = [".git"];
 
-export async function readFile(file: FileInfo): Promise<string> {
+
+export async function readFile(file: FileInfo | string): Promise<string> {
+  let filePath: string;
+  if (typeof file === "string") {
+    filePath = file;
+  } else {
+    filePath = file.path;
+  }
+
   return new Promise((resolve, reject) => {
-    if (!fs.existsSync(file.path)) {
+    if (!fs.existsSync(filePath)) {
       reject(new Error("file not found"));
     } else {
-      const buffer = fs.readFileSync(file.path);
+      const buffer = fs.readFileSync(filePath);
       const content = buffer.toString();
       resolve(content);
     }
@@ -57,6 +66,6 @@ export type FileInfo = {
 
 export type FileSystem = {
   listFiles(fileOrFolder: string, recursive?: boolean): Iterable<FileInfo>
-  readFile(file: FileInfo): Promise<string>;
+  readFile(file: FileInfo | string): Promise<string>;
   writeFile(file: FileInfo, content: string): Promise<void>;
 }
