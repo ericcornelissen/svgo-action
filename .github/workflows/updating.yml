@@ -19,7 +19,7 @@ jobs:
     - name: Build lib/index.js
       run: npm run build
     - name: Push updated lib/index.js
-      uses: stefanzweifel/git-auto-commit-action@v4.8.0
+      uses: stefanzweifel/git-auto-commit-action@v4.9.1
       with:
         commit_message: "chore: update lib/index.js"
         commit_options: "--no-verify"
