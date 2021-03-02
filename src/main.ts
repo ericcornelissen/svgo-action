@@ -5,7 +5,9 @@ import { Octokit } from "@octokit/core";
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
+  EVENT_REPOSITORY_DISPATCH,
   EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
 } from "./constants";
@@ -32,9 +34,10 @@ function getRepoToken(): string {
 async function getSvgoConfigFile(
   client: Octokit,
   contextRef: string,
-  path: string,
+  config: ActionConfig,
 ): SVGOptions {
-  if (path.endsWith(".js")) {
+  const path = config.svgoOptionsPath;
+  if (config.svgoVersion === 2) {
     return await fetchJsFile(client, contextRef, path);
   } else {
     return await fetchYamlFile(client, contextRef, path);
@@ -56,7 +59,9 @@ async function run(
       case EVENT_PUSH:
         await pushEventMain(client, config, svgo);
         break;
+      case EVENT_REPOSITORY_DISPATCH:
       case EVENT_SCHEDULE:
+      case EVENT_WORKFLOW_DISPATCH:
         await scheduleEventMain(client, config, svgo);
         break;
       default:
@@ -89,7 +94,7 @@ export default async function main(): Promise<void> {
   const svgoOptions: SVGOptions = await getSvgoConfigFile(
     client,
     contextRef,
-    config.svgoOptionsPath,
+    config,
   );
   const svgo: SVGOptimizer = new SVGOptimizer(config.svgoVersion, svgoOptions);
 

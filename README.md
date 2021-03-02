@@ -29,6 +29,9 @@ on:
 # Enable the following lines if you want the Action to run on a schedule.
 #  schedule:
 #  - cron:  '0 * * * 1'  # See https://crontab.guru/
+# Enable one of the following lines if you want to manually trigger the Action.
+#  repository_dispatch:
+#  workflow_dispatch:
 
 jobs:
   triage:
@@ -48,16 +51,16 @@ There are a couple of ways for you to configure the Action. You can configure it
 [in the Workflow file], [in `.github/svgo-action.yml`], or [in another
 configuration file]. The table below shows the options that can be configured.
 
-| Name                   | Description                              | Default       | Documentation                                 |
-| ---------------------- | ---------------------------------------- | ------------- | --------------------------------------------- |
-| `branch`               | Select branch for scheduled runs         | -             | [docs](/docs/options.md#branch)               |
-| `comment`              | Leave comments on Pull Requests          | `false`       | [docs](/docs/options.md#comment)              |
-| `commit`               | Configure the Action's commit messages   | -             | [docs](/docs/options.md#commit)               |
-| `conventional-commits` | Use [conventional commit] message titles | `false`       | [docs](/docs/options.md#conventional-commits) |
-| `dry-run`              | Prevent the Action from making commits   | `false`       | [docs](/docs/options.md#dry-run)              |
-| `ignore`               | A [glob] of SVGs that should be ignored  | `""`          | [docs](/docs/options.md#ignore)               |
-| `svgo-options`         | Specify the [SVGO] configuration file    | `".svgo.yml"` | [docs](/docs/options.md#svgo-options)         |
-| `svgo-version`         | The (major) version of [SVGO] to use     | `1`           | [docs](/docs/options.md#svgo-version)         |
+| Name                   | Description                               | Default       | Documentation                                 |
+| ---------------------- | ----------------------------------------- | ------------- | --------------------------------------------- |
+| `branch`               | Select branch for scheduled & manual runs | -             | [docs](/docs/options.md#branch)               |
+| `comment`              | Leave comments on Pull Requests           | `false`       | [docs](/docs/options.md#comment)              |
+| `commit`               | Configure the Action's commit messages    | -             | [docs](/docs/options.md#commit)               |
+| `conventional-commits` | Use [conventional commit] message titles  | `false`       | [docs](/docs/options.md#conventional-commits) |
+| `dry-run`              | Prevent the Action from making commits    | `false`       | [docs](/docs/options.md#dry-run)              |
+| `ignore`               | A [glob] of SVGs that should be ignored   | `""`          | [docs](/docs/options.md#ignore)               |
+| `svgo-options`         | Specify the [SVGO] configuration file     | `".svgo.yml"` | [docs](/docs/options.md#svgo-options)         |
+| `svgo-version`         | The (major) version of [SVGO] to use      | `1`           | [docs](/docs/options.md#svgo-version)         |
 
 #### In the Workflow file
 
@@ -162,8 +165,8 @@ on:
     - "**.svg"
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.0
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.0-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.1
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.1-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Adevelop
 [ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/develop?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action

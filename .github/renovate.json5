@@ -15,6 +15,16 @@
       matchUpdateTypes: ["minor", "patch", "pin", "digest"],
       automerge: true,
     },
+    {
+      // Configure SVGO v1: don't upgrade to v2.x.x
+      matchPackageNames: ["svgo-v1"],
+      allowedVersions: "<2.0.0"
+    },
+    {
+      // Configure SVGO v2: don't upgrade to v3.x.x
+      matchPackageNames: ["svgo-v2"],
+      allowedVersions: "<3.0.0"
+    }
   ],
 
   lockFileMaintenance: {

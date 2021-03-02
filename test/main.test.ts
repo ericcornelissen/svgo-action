@@ -27,13 +27,26 @@ jest.mock("../src/svgo", () => svgo);
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
+  EVENT_REPOSITORY_DISPATCH,
   EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
   INPUT_NAME_CONFIG_PATH,
 } from "../src/constants";
 import main from "../src/main";
 
 
-const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE];
+const ALL_EVENTS = [
+  EVENT_PULL_REQUEST,
+  EVENT_PUSH,
+  EVENT_REPOSITORY_DISPATCH,
+  EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
+];
+const SCHEDULE_EVENTS = [
+  EVENT_REPOSITORY_DISPATCH,
+  EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
+];
 
 
 beforeEach(() => {
@@ -58,8 +71,8 @@ test("pull_request event", async () => {
   expect(prEventMain).toHaveBeenCalledTimes(1);
 });
 
-test("schedule event", async () => {
-  github.context.eventName = EVENT_SCHEDULE;
+test.each(SCHEDULE_EVENTS)("schedule event (%s)", async (eventName) => {
+  github.context.eventName = eventName;
 
   await main();
   expect(scheduleEventMain).toHaveBeenCalledTimes(1);
@@ -88,8 +101,8 @@ test("pull_request event error", async () => {
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
-test("schedule event error", async () => {
-  github.context.eventName = EVENT_SCHEDULE;
+test.each(SCHEDULE_EVENTS)("schedule event error (%s)", async (eventName) => {
+  github.context.eventName = eventName;
 
   scheduleEventMain.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
@@ -153,7 +166,7 @@ test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)
   github.context.eventName = eventName;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 1 };
+    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 2 };
   });
 
   when(githubAPI.getFile)
@@ -162,7 +175,7 @@ test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)
 
   await main();
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoV2Options);
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoV2Options);
 });
 
 test("use a JavaScript SVGO options file that does not exist", async () => {
@@ -171,7 +184,7 @@ test("use a JavaScript SVGO options file that does not exist", async () => {
   github.context.eventName = EVENT_PUSH;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 1 };
+    return { svgoOptionsPath: "svgo.config.js", svgoVersion: 2 };
   });
 
   when(githubAPI.getFile)
@@ -180,7 +193,7 @@ test("use a JavaScript SVGO options file that does not exist", async () => {
 
   await main();
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, expect.any(Object));
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, expect.any(Object));
 });
 
 test.each([1, 2])("set SVGO version", async (svgoVersion) => {
