@@ -5,15 +5,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [2.0.0] - TBD
+## [Unreleased]
+
+- _No changes yet_
+
+## [2.0.0-alpha.1] - 2021-03-02
 
 - BREAKING: Work on local clone of the repository.
 - BREAKING: Remove branch configuration option for scheduled runs.
 - BREAKING: Remove option to commit changes.
-- BREAKING: Remove `fileCount` as templating variable.
+- BREAKING: Remove `fileCount` and `ignoredCount` as templating variable.
 - BREAKING: Disabling from push event's now disables the action entirely.
-- Remove `ignoredCount` templating variable.
 - Warn about missing or invalid configuration files.
+
+## [1.3.1] - 2021-03-02
+
+- Fix documentation of supported inputs for on: push events. ([#335])
+- Run Action on `repository_dispatch` & `workflow_dispatch`. ([#339])
+- Update SVGO v2 to `v2.2.0`. ([#337])
+
+## [1.3.0] - 2021-02-21
+
+- Add support for using SVGO v2. ([#330])
+- Add support for JavaScript based SVGO configuration files. ([#330])
+
+## [1.2.3] - 2021-02-10
+
+- Prevent GitHub Actions warning about `ignore` input. ([#327])
 
 ## [1.2.2] - 2021-02-08
 
@@ -196,4 +214,9 @@ Versioning].
 [#312]: https://github.com/ericcornelissen/svgo-action/pull/312
 [#317]: https://github.com/ericcornelissen/svgo-action/pull/317
 [#321]: https://github.com/ericcornelissen/svgo-action/pull/321
+[#327]: https://github.com/ericcornelissen/svgo-action/pull/327
+[#330]: https://github.com/ericcornelissen/svgo-action/pull/330
+[#335]: https://github.com/ericcornelissen/svgo-action/pull/335
+[#337]: https://github.com/ericcornelissen/svgo-action/pull/337
+[#339]: https://github.com/ericcornelissen/svgo-action/pull/339
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
