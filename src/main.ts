@@ -18,7 +18,7 @@ import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
 import { parseJavaScript, parseYaml } from "./parser";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { RawActionConfig } from "./types";
+import { RawActionConfig, Warnings } from "./types";
 import { optimize } from "./optimize";
 import { shouldSkipRun } from "./skip-run";
 import { setOutputValues } from "./outputs";
@@ -28,8 +28,9 @@ function getRepoToken(): string {
   return core.getInput(INPUT_NAME_REPO_TOKEN, INPUT_REQUIRED);
 }
 
-async function getActionConfig(): Promise<ActionConfig> {
+async function getActionConfig(): Promise<[ActionConfig, Warnings]> {
   const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED);
+  const warnings: Warnings = [];
 
   let rawConfig: RawActionConfig | undefined;
   try {
@@ -37,19 +38,25 @@ async function getActionConfig(): Promise<ActionConfig> {
     try {
       rawConfig = parseYaml(rawConfigYaml);
     } catch (_) {
-      core.warning(`Action config file '${filePath}' invalid`);
+      warnings.push(`Action config file '${filePath}' invalid`);
     }
   } catch (_) {
     if (filePath !== DEFAULT_CONFIG_PATH) {
-      core.warning(`Action config file '${filePath}' not found`);
+      warnings.push(`Action config file '${filePath}' not found`);
     }
   }
 
-  return new ActionConfig(core, rawConfig);
+  return [
+    new ActionConfig(core, rawConfig),
+    warnings,
+  ];
 }
 
-async function getSvgoInstance(config: ActionConfig): Promise<SVGOptimizer> {
+async function getSvgoInstance(
+  config: ActionConfig,
+): Promise<[SVGOptimizer, Warnings]> {
   const filePath = config.svgoOptionsPath;
+  const warnings: Warnings = [];
 
   let options: SVGOptions | undefined;
   try {
@@ -59,15 +66,18 @@ async function getSvgoInstance(config: ActionConfig): Promise<SVGOptimizer> {
         parseJavaScript(rawOptions) :
         parseYaml(rawOptions);
     } catch (_) {
-      core.warning(`SVGO config file '${filePath}' invalid`);
+      warnings.push(`SVGO config file '${filePath}' invalid`);
     }
   } catch (_) {
     if (filePath !== DEFAULT_SVGO_OPTIONS) {
-      core.warning(`SVGO config file '${filePath}' not found`);
+      warnings.push(`SVGO config file '${filePath}' not found`);
     }
   }
 
-  return new SVGOptimizer(config.svgoVersion, options);
+  return [
+    new SVGOptimizer(config.svgoVersion, options),
+    warnings,
+  ];
 }
 
 async function run(
@@ -88,17 +98,26 @@ async function run(
   }
 }
 
+function logWarnings(warnings: Warnings): void {
+  for (const warning of warnings) {
+    core.warning(warning);
+  }
+}
+
 export default async function main(): Promise<void> {
   const token: string = getRepoToken();
   const client: Octokit = github.getOctokit(token);
+  const warnings: Warnings = [];
 
-  const config = await getActionConfig();
+  const [config, configWarnings] = await getActionConfig();
+  warnings.push(...configWarnings);
   if (config.isDryRun) {
     core.info("Dry mode enabled, no changes will be written");
   }
 
   core.info(`Using SVGO major version ${config.svgoVersion}`);
-  const svgo: SVGOptimizer = await getSvgoInstance(config);
+  const [svgo, svgoWarnings] = await getSvgoInstance(config);
+  warnings.push(...svgoWarnings);
 
   const skip = await shouldSkipRun(client, github.context);
   if (!skip.shouldSkip) {
@@ -106,6 +125,8 @@ export default async function main(): Promise<void> {
   } else {
     core.info(`Action disabled from ${skip.reason}, exiting`);
   }
+
+  logWarnings(warnings);
 }
 
 main();
