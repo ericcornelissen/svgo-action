@@ -4,7 +4,11 @@ import * as fs from "fs";
 import * as path from "path";
 
 
-const LIST_FILES_ALWAYS_IGNORE: string[] = [".git"];
+const LIST_FILES_ALWAYS_IGNORE: string[] = [
+  ".git",
+  "node_modules",
+  "vendor",
+];
 
 
 export async function readFile(file: FileInfo | string): Promise<string> {
