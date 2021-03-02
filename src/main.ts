@@ -32,9 +32,10 @@ function getRepoToken(): string {
 async function getSvgoConfigFile(
   client: Octokit,
   contextRef: string,
-  path: string,
+  config: ActionConfig,
 ): SVGOptions {
-  if (path.endsWith(".js")) {
+  const path = config.svgoOptionsPath;
+  if (config.svgoVersion === 2) {
     return await fetchJsFile(client, contextRef, path);
   } else {
     return await fetchYamlFile(client, contextRef, path);
@@ -89,7 +90,7 @@ export default async function main(): Promise<void> {
   const svgoOptions: SVGOptions = await getSvgoConfigFile(
     client,
     contextRef,
-    config.svgoOptionsPath,
+    config,
   );
   const svgo: SVGOptimizer = new SVGOptimizer(config.svgoVersion, svgoOptions);
 
