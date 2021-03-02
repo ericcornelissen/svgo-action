@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Fix supported inputs for `on: push` events. ([#335])
+- Run Action on `repository_dispatch` & `workflow_dispatch`. ([#339])
 
 ## [1.3.0] - 2021-02-21
 
@@ -202,4 +203,5 @@ Versioning].
 [#327]: https://github.com/ericcornelissen/svgo-action/pull/327
 [#330]: https://github.com/ericcornelissen/svgo-action/pull/330
 [#335]: https://github.com/ericcornelissen/svgo-action/pull/335
+[#339]: https://github.com/ericcornelissen/svgo-action/pull/339
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
