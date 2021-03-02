@@ -28,9 +28,12 @@ async function checkShouldSkipPullRequest(
   client: Octokit,
   context: Context,
 ): Promise<{ shouldSkip: boolean, reason: string }> {
-  const ref = `heads/${context.payload.pull_request?.head.ref}`;
+  let commitMessage = "";
+  if (context.payload.pull_request) {
+    const commitRef = `heads/${context.payload.pull_request.head.ref}`;
+    commitMessage = await getCommitMessage(client, commitRef);
+  }
 
-  const commitMessage: string = await getCommitMessage(client, ref);
   if (DISABLE_PATTERN.test(commitMessage)) {
     return { shouldSkip: true, reason: "commit message" };
   }

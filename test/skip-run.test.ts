@@ -20,7 +20,11 @@ function newMockContext(
     eventName,
     payload: {
       commits,
-      pull_request: undefined,
+      pull_request: {
+        head: {
+          ref: "ref",
+        },
+      },
     },
   } as unknown as Context;
 }
@@ -157,6 +161,21 @@ describe("::shouldSkipRun", () => {
       expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
       expect(githubAPI.getPrComments).not.toHaveBeenCalled();
       expect(githubAPI.getPrNumber).not.toHaveBeenCalled();
+    });
+
+    test("head ref is missing", async () => {
+      const prNumber = 36;
+      const context = newMockContext(eventName);
+      context.payload.pull_request = undefined;
+
+      githubAPI.getPrNumber.mockReturnValue(prNumber);
+      githubAPI.getPrComments.mockResolvedValue([]);
+
+      const result = await shouldSkipRun(client, context);
+      expect(result.shouldSkip).toBe(false);
+      expect(githubAPI.getCommitMessage).not.toHaveBeenCalled();
+      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
+      expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
     });
 
     afterEach(() => {
