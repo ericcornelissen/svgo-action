@@ -15,6 +15,7 @@ export const INPUT_NOT_REQUIRED = { required: false };
 export const INPUT_REQUIRED = { required: true };
 
 // Action defaults
+export const DEFAULT_CONFIG_PATH = ".github/svgo-action.yml";
 export const DEFAULT_COMMENT = `
   SVG(s) automatically optimized using [SVGO] :sparkles:
 
@@ -24,6 +25,7 @@ export const DEFAULT_COMMENT = `
 
   [SVGO]: https://github.com/svg/svgo
 `;
+export const DEFAULT_SVGO_OPTIONS = "svgo.config.js";
 
 // Action outputs
 export const OUTPUT_NAME_DID_OPTIMIZE = "DID_OPTIMIZE";

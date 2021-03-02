@@ -6,6 +6,8 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import {
+  DEFAULT_CONFIG_PATH,
+  DEFAULT_SVGO_OPTIONS,
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
   EVENT_SCHEDULE,
@@ -40,9 +42,15 @@ async function getActionConfig(): Promise<ActionConfig> {
   let rawConfig: RawActionConfig | undefined;
   try {
     const rawConfigYaml = await fs.readFile(filePath);
-    rawConfig = parseYaml(rawConfigYaml);
+    try {
+      rawConfig = parseYaml(rawConfigYaml);
+    } catch (_) {
+      core.warning(`Action config file '${filePath}' invalid`);
+    }
   } catch (_) {
-    core.warning(`Action config file '${filePath}' not found or invalid`);
+    if (filePath !== DEFAULT_CONFIG_PATH) {
+      core.warning(`Action config file '${filePath}' not found`);
+    }
   }
 
   return new ActionConfig(core, rawConfig);
@@ -54,11 +62,17 @@ async function getSvgoInstance(config: ActionConfig): Promise<SVGOptimizer> {
   let options: SVGOptions | undefined;
   try {
     const rawOptions = await fs.readFile(filePath);
-    options = config.svgoVersion === 2 ?
-      parseJavaScript(rawOptions) :
-      parseYaml(rawOptions);
-  } catch(_) {
-    core.warning(`SVGO config file '${filePath}' not found or invalid`);
+    try {
+      options = config.svgoVersion === 2 ?
+        parseJavaScript(rawOptions) :
+        parseYaml(rawOptions);
+    } catch (_) {
+      core.warning(`SVGO config file '${filePath}' invalid`);
+    }
+  } catch (_) {
+    if (filePath !== DEFAULT_SVGO_OPTIONS) {
+      core.warning(`SVGO config file '${filePath}' not found`);
+    }
   }
 
   return new SVGOptimizer(config.svgoVersion, options);

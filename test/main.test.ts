@@ -23,6 +23,8 @@ jest.mock("../src/skip-run", () => skipRun);
 jest.mock("../src/svgo", () => svgo);
 
 import {
+  DEFAULT_CONFIG_PATH,
+  DEFAULT_SVGO_OPTIONS,
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
   EVENT_SCHEDULE,
@@ -112,7 +114,6 @@ test("unknown event", async () => {
 
 test.each(ALL_EVENTS)("dry mode enabled (%s)", async (eventName) => {
   github.context.eventName = eventName;
-
 
   inputs.ActionConfig.mockImplementationOnce(() => {
     return { svgoOptionsPath: "svgo.config.js", isDryRun: true };
@@ -228,14 +229,37 @@ test.each(SKIPPABLE_EVENTS)("the Action is skipped (%s)", async (eventName) => {
   expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Action disabled"));
 });
 
-test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async (eventName) => {
+test.each(ALL_EVENTS)("the default Action configuration file does not exist (%s)", async (eventName) => {
   core.warning.mockClear();
   core.setFailed.mockClear();
 
   github.context.eventName = eventName;
 
-  const actionConfigFilePath = core.getInput(INPUT_NAME_CONFIG_PATH);
+  when(core.getInput)
+    .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
+    .mockReturnValueOnce(DEFAULT_SVGO_OPTIONS);
+  when(fs.readFile)
+    .calledWith(DEFAULT_CONFIG_PATH)
+    .mockRejectedValueOnce(new Error("Not found"));
 
+  await main();
+
+  expect(core.setFailed).not.toHaveBeenCalled();
+  expect(core.warning).not.toHaveBeenCalled();
+});
+
+test.each(ALL_EVENTS)("a custom Action configuration file does not exist (%s)", async (eventName) => {
+  core.warning.mockClear();
+  core.setFailed.mockClear();
+
+  github.context.eventName = eventName;
+
+  const actionConfigFilePath = ".svgo-action.yml";
+  expect(actionConfigFilePath).not.toEqual(core.getInput(INPUT_NAME_CONFIG_PATH));
+
+  when(core.getInput)
+    .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
+    .mockReturnValueOnce(actionConfigFilePath);
   when(fs.readFile)
     .calledWith(actionConfigFilePath)
     .mockRejectedValueOnce(new Error("Not found"));
@@ -244,11 +268,11 @@ test.each(ALL_EVENTS)("the Action configuration file does not exist (%s)", async
 
   expect(core.setFailed).not.toHaveBeenCalled();
   expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("Action config file '.*' not found or invalid"),
+    expect.stringMatching("Action config file '.*' not found"),
   );
 });
 
-test.each(ALL_EVENTS)("the Action configuration file is invalid (%s)", async (eventName) => {
+test.each(ALL_EVENTS)("the Action configuration file exists but is invalid (%s)", async (eventName) => {
   core.warning.mockClear();
   core.setFailed.mockClear();
 
@@ -268,16 +292,36 @@ test.each(ALL_EVENTS)("the Action configuration file is invalid (%s)", async (ev
 
   expect(core.setFailed).not.toHaveBeenCalled();
   expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("Action config file '.*' not found or invalid"),
+    expect.stringMatching("Action config file '.*' invalid"),
   );
 });
 
+test("the default SVGO config file does not exist", async () => {
+  core.warning.mockClear();
+  core.setFailed.mockClear();
+  svgo.SVGOptimizer.mockClear();
+
+  github.context.eventName = EVENT_PUSH;
+
+  inputs.ActionConfig.mockImplementationOnce(() => {
+    return { svgoOptionsPath: DEFAULT_SVGO_OPTIONS, svgoVersion: 2 };
+  });
+
+  when(fs.readFile)
+    .calledWith(DEFAULT_SVGO_OPTIONS)
+    .mockRejectedValueOnce(new Error("Not found"));
+
+  await main();
+
+  expect(core.setFailed).not.toHaveBeenCalled();
+  expect(core.warning).not.toHaveBeenCalled();
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, undefined);
+});
+
 test.each([
-  [1, "svgo.config.js"],
-  [2, "svgo.config.js"],
-  [1, ".svgo.yml"],
-  [2, ".svgo.yml"],
-])("use a SVGO config file that does not exist (%s, %s)", async (version, filePath) => {
+  [2, "svgo-configuration.js"],
+  [1, "svgo-configuration.yml"],
+])("a custom SVGO config file does not exist (%s, %s)", async (version, filePath) => {
   core.warning.mockClear();
   core.setFailed.mockClear();
   svgo.SVGOptimizer.mockClear();
@@ -296,16 +340,14 @@ test.each([
 
   expect(core.setFailed).not.toHaveBeenCalled();
   expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("SVGO config file '.*' not found or invalid"),
+    expect.stringMatching("SVGO config file '.*' not found"),
   );
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
 });
 
 test.each([
-  [1, "svgo.config.js"],
   [2, "svgo.config.js"],
   [1, ".svgo.yml"],
-  [2, ".svgo.yml"],
 ])("use a SVGO config file that is invalid (%s, %s)", async (version, filePath) => {
   core.warning.mockClear();
   core.setFailed.mockClear();
@@ -333,7 +375,7 @@ test.each([
 
   expect(core.setFailed).not.toHaveBeenCalled();
   expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("SVGO config file '.*' not found or invalid"),
+    expect.stringMatching("SVGO config file '.*' invalid"),
   );
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
 });

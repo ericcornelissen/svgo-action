@@ -13,6 +13,7 @@ Versioning].
 - BREAKING: Remove `fileCount` as templating variable.
 - BREAKING: Disabling from push event's now disables the action entirely.
 - Remove `ignoredCount` templating variable.
+- Warn about missing or invalid configuration files.
 
 ## [1.2.2] - 2021-02-08
 
