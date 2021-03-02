@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.1] - 2021-03-02
+
 - Fix supported inputs for `on: push` events. ([#335])
 - Run Action on `repository_dispatch` & `workflow_dispatch`. ([#339])
 
