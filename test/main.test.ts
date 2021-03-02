@@ -190,7 +190,7 @@ test.each(ALL_EVENTS)("use a YAML SVGO options file in the repository (%s)", asy
   const svgoOptions = { multipass: true, plugins: ["removeDoctype"] };
 
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: svgoOptionsFilePath, svgoVersion: 2 };
+    return { svgoOptionsPath: svgoOptionsFilePath, svgoVersion: 1 };
   });
   when(fs.readFile)
     .calledWith(svgoOptionsFilePath)
@@ -203,7 +203,7 @@ test.each(ALL_EVENTS)("use a YAML SVGO options file in the repository (%s)", asy
 
   expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
   expect(parser.parseYaml).toHaveBeenCalledWith(svgoOptionsFileContent);
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoOptions);
+  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoOptions);
 });
 
 test.each([1, 2])("set SVGO version", async (svgoVersion) => {

@@ -54,7 +54,7 @@ async function getSvgoInstance(config: ActionConfig): Promise<SVGOptimizer> {
   let options: SVGOptions | undefined;
   try {
     const rawOptions = await fs.readFile(filePath);
-    options = filePath.endsWith(".js") ?
+    options = config.svgoVersion === 2 ?
       parseJavaScript(rawOptions) :
       parseYaml(rawOptions);
   } catch(_) {
