@@ -27,14 +27,13 @@ import {
   DEFAULT_SVGO_OPTIONS,
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
-  EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NOT_REQUIRED,
+  SUPPORTED_EVENTS,
 } from "../src/constants";
 import main from "../src/main";
 
 
-const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE];
 const SKIPPABLE_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
 
 
@@ -47,53 +46,15 @@ beforeEach(() => {
   skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: false });
 });
 
-test("push event", async () => {
-  github.context.eventName = EVENT_PUSH;
+test.each(SUPPORTED_EVENTS)("%s event", async (eventName) => {
+  github.context.eventName = eventName;
 
   await main();
   expect(optimize.optimize).toHaveBeenCalled();
 });
 
-test("pull_request event", async () => {
-  github.context.eventName = EVENT_PULL_REQUEST;
-
-  await main();
-  expect(optimize.optimize).toHaveBeenCalled();
-});
-
-test("schedule event", async () => {
-  github.context.eventName = EVENT_SCHEDULE;
-
-  await main();
-  expect(optimize.optimize).toHaveBeenCalled();
-});
-
-test("push event error", async () => {
-  github.context.eventName = EVENT_PUSH;
-
-  optimize.optimize.mockImplementationOnce(() => {
-    throw new Error("Something went wrong");
-  });
-
-  await main();
-  expect(optimize.optimize).toHaveBeenCalledTimes(1);
-  expect(core.setFailed).toHaveBeenCalledTimes(1);
-});
-
-test("pull_request event error", async () => {
-  github.context.eventName = EVENT_PULL_REQUEST;
-
-  optimize.optimize.mockImplementationOnce(() => {
-    throw new Error("Something went wrong");
-  });
-
-  await main();
-  expect(optimize.optimize).toHaveBeenCalledTimes(1);
-  expect(core.setFailed).toHaveBeenCalledTimes(1);
-});
-
-test("schedule event error", async () => {
-  github.context.eventName = EVENT_SCHEDULE;
+test.each(SUPPORTED_EVENTS)("%s event error", async (eventName) => {
+  github.context.eventName = eventName;
 
   optimize.optimize.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
@@ -112,7 +73,7 @@ test("unknown event", async () => {
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
-test.each(ALL_EVENTS)("dry mode enabled (%s)", async (eventName) => {
+test.each(SUPPORTED_EVENTS)("dry mode enabled (%s)", async (eventName) => {
   github.context.eventName = eventName;
 
   inputs.ActionConfig.mockImplementationOnce(() => {
@@ -123,7 +84,7 @@ test.each(ALL_EVENTS)("dry mode enabled (%s)", async (eventName) => {
   expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
 });
 
-test.each(ALL_EVENTS)("use custom configuration file (%s)", async (eventName) => {
+test.each(SUPPORTED_EVENTS)("use custom configuration file (%s)", async (eventName) => {
   fs.readFile.mockClear();
   parser.parseYaml.mockClear();
   svgo.SVGOptimizer.mockClear();
@@ -151,7 +112,7 @@ test.each(ALL_EVENTS)("use custom configuration file (%s)", async (eventName) =>
   expect(inputs.ActionConfig).toHaveBeenCalledWith(core, actionConfig);
 });
 
-test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
+test.each(SUPPORTED_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
   fs.readFile.mockClear();
   parser.parseJavaScript.mockClear();
   svgo.SVGOptimizer.mockClear();
@@ -179,7 +140,7 @@ test.each(ALL_EVENTS)("use a JavaScript SVGO options file in the repository (%s)
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoOptions);
 });
 
-test.each(ALL_EVENTS)("use a YAML SVGO options file in the repository (%s)", async (eventName) => {
+test.each(SUPPORTED_EVENTS)("use a YAML SVGO options file in the repository (%s)", async (eventName) => {
   fs.readFile.mockClear();
   parser.parseYaml.mockClear();
   svgo.SVGOptimizer.mockClear();
@@ -229,7 +190,7 @@ test.each(SKIPPABLE_EVENTS)("the Action is skipped (%s)", async (eventName) => {
   expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Action disabled"));
 });
 
-test.each(ALL_EVENTS)("the default Action configuration file does not exist (%s)", async (eventName) => {
+test.each(SUPPORTED_EVENTS)("the default Action configuration file does not exist (%s)", async (eventName) => {
   core.warning.mockClear();
   core.setFailed.mockClear();
 
@@ -248,7 +209,7 @@ test.each(ALL_EVENTS)("the default Action configuration file does not exist (%s)
   expect(core.warning).not.toHaveBeenCalled();
 });
 
-test.each(ALL_EVENTS)("a custom Action configuration file does not exist (%s)", async (eventName) => {
+test.each(SUPPORTED_EVENTS)("a custom Action configuration file does not exist (%s)", async (eventName) => {
   core.warning.mockClear();
   core.setFailed.mockClear();
 
@@ -272,7 +233,7 @@ test.each(ALL_EVENTS)("a custom Action configuration file does not exist (%s)", 
   );
 });
 
-test.each(ALL_EVENTS)("the Action configuration file exists but is invalid (%s)", async (eventName) => {
+test.each(SUPPORTED_EVENTS)("the Action configuration file exists but is invalid (%s)", async (eventName) => {
   core.warning.mockClear();
   core.setFailed.mockClear();
 

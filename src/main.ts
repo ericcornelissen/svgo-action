@@ -8,13 +8,11 @@ import * as github from "@actions/github";
 import {
   DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
-  EVENT_PULL_REQUEST,
-  EVENT_PUSH,
-  EVENT_SCHEDULE,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
   INPUT_NOT_REQUIRED,
   INPUT_REQUIRED,
+  SUPPORTED_EVENTS,
 } from "./constants";
 import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
@@ -25,12 +23,6 @@ import { optimize } from "./optimize";
 import { shouldSkipRun } from "./skip-run";
 import { setOutputValues } from "./outputs";
 
-
-const SUPPORTED_EVENTS: string[] = [
-  EVENT_PULL_REQUEST,
-  EVENT_PUSH,
-  EVENT_SCHEDULE,
-];
 
 function getRepoToken(): string {
   return core.getInput(INPUT_NAME_REPO_TOKEN, INPUT_REQUIRED);

@@ -29,6 +29,9 @@ on:
 # Enable the following lines if you want the Action to run on a schedule.
 #  schedule:
 #  - cron:  '0 * * * 1'  # See https://crontab.guru/
+# Enable one of the following lines if you want to manually trigger the Action.
+#  repository_dispatch:
+#  workflow_dispatch:
 
 jobs:
   triage:
