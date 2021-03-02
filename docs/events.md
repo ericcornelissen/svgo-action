@@ -5,7 +5,9 @@ Action supports.
 
 - [`on: pull_request`](#on-pull_request)
 - [`on: push`](#on-push)
+- [`on: repository_dispatch`](#manual-events)
 - [`on: schedule`](#on-schedule)
+- [`on: workflow_dispatch`](#manual-events)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -97,9 +99,40 @@ The following [options] have an effect in the `schedule` context.
 | `svgo-version`         | :heavy_check_mark: |
 | `svgo-options`         | :heavy_check_mark: |
 
+---
+
+## Manual events
+
+> Find out more in the GitHub Actions documentation on [`repository_dispatch`
+> events] and [`workflow_dispatch` events].
+
+In the `repository_dispatch` and `workflow_dispatch` context, the SVGO Action
+will optimize all SVGs in the repository's default branch.
+
+The Action will not change SVGs that are already optimized or [SVGs that are
+ignored].
+
+### Configuration
+
+The following [options] have an effect in the `repository_dispatch` and
+`workflow_dispatch` contexts.
+
+| Name                   | Supported          |
+| ---------------------- | ------------------ |
+| `branch`               | :heavy_check_mark: |
+| `comment`              | :x:                |
+| `commit`               | :heavy_check_mark: |
+| `conventional-commits` | :heavy_check_mark: |
+| `dry-run`              | :heavy_check_mark: |
+| `ignore`               | :heavy_check_mark: |
+| `svgo-version`         | :heavy_check_mark: |
+| `svgo-options`         | :heavy_check_mark: |
+
 [`pull_request` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request
 [`push` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#push
+[`repository_dispatch` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch
 [`schedule` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#schedule
+[`workflow_dispatch` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch
 [branch and tag filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [options]: ./options.md
