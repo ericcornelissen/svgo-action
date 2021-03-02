@@ -5,7 +5,9 @@ import { Octokit } from "@octokit/core";
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
+  EVENT_REPOSITORY_DISPATCH,
   EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NAME_REPO_TOKEN,
 } from "./constants";
@@ -57,7 +59,9 @@ async function run(
       case EVENT_PUSH:
         await pushEventMain(client, config, svgo);
         break;
+      case EVENT_REPOSITORY_DISPATCH:
       case EVENT_SCHEDULE:
+      case EVENT_WORKFLOW_DISPATCH:
         await scheduleEventMain(client, config, svgo);
         break;
       default:

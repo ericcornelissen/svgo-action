@@ -27,13 +27,26 @@ jest.mock("../src/svgo", () => svgo);
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
+  EVENT_REPOSITORY_DISPATCH,
   EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
   INPUT_NAME_CONFIG_PATH,
 } from "../src/constants";
 import main from "../src/main";
 
 
-const ALL_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE];
+const ALL_EVENTS = [
+  EVENT_PULL_REQUEST,
+  EVENT_PUSH,
+  EVENT_REPOSITORY_DISPATCH,
+  EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
+];
+const SCHEDULE_EVENTS = [
+  EVENT_REPOSITORY_DISPATCH,
+  EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
+];
 
 
 beforeEach(() => {
@@ -58,8 +71,8 @@ test("pull_request event", async () => {
   expect(prEventMain).toHaveBeenCalledTimes(1);
 });
 
-test("schedule event", async () => {
-  github.context.eventName = EVENT_SCHEDULE;
+test.each(SCHEDULE_EVENTS)("schedule event (%s)", async (eventName) => {
+  github.context.eventName = eventName;
 
   await main();
   expect(scheduleEventMain).toHaveBeenCalledTimes(1);
@@ -88,8 +101,8 @@ test("pull_request event error", async () => {
   expect(core.setFailed).toHaveBeenCalledTimes(1);
 });
 
-test("schedule event error", async () => {
-  github.context.eventName = EVENT_SCHEDULE;
+test.each(SCHEDULE_EVENTS)("schedule event error (%s)", async (eventName) => {
+  github.context.eventName = eventName;
 
   scheduleEventMain.mockImplementationOnce(() => {
     throw new Error("Something went wrong");
