@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.0.0-alpha.2] - 2021-03-08
+
 - Re-add the ability to leave comments on Pull Requests. ([#343])
 - Fix documentation on manually triggered events in v2. ([#346])
 
