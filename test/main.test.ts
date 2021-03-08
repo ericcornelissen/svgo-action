@@ -10,6 +10,7 @@ import * as outputs from "./mocks/outputs.mock";
 import * as parser from "./mocks/parser.mock";
 import * as skipRun from "./mocks/skip-run.mock";
 import * as svgo from "./mocks/svgo.mock";
+import * as templating from "./mocks/templating.mock";
 
 jest.mock("@actions/core", () => core);
 jest.mock("@actions/github", () => github);
@@ -21,8 +22,10 @@ jest.mock("../src/outputs", () => outputs);
 jest.mock("../src/parser", () => parser);
 jest.mock("../src/skip-run", () => skipRun);
 jest.mock("../src/svgo", () => svgo);
+jest.mock("../src/templating", () => templating);
 
 import {
+  COMMENTABLE_EVENTS,
   DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
   EVENT_PULL_REQUEST,
@@ -339,4 +342,54 @@ test.each([
     expect.stringMatching("SVGO config file '.*' invalid"),
   );
   expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
+});
+
+test.each(COMMENTABLE_EVENTS)("leave no comment by default (%s)", async (eventName) => {
+  templating.formatComment.mockClear();
+
+  github.context.eventName = eventName;
+
+  await main();
+  expect(templating.formatComment).not.toHaveBeenCalled();
+});
+
+test.each(COMMENTABLE_EVENTS)("leave a comment if enabled (%s)", async (eventName) => {
+  templating.formatComment.mockClear();
+
+  github.context.eventName = eventName;
+
+  inputs.ActionConfig.mockImplementationOnce(() => {
+    return { enableComments: true };
+  });
+
+  await main();
+  expect(templating.formatComment).toHaveBeenCalled();
+});
+
+test.each(COMMENTABLE_EVENTS)("leave no comment if disabled (%s)", async (eventName) => {
+  templating.formatComment.mockClear();
+
+  github.context.eventName = eventName;
+
+  inputs.ActionConfig.mockImplementationOnce(() => {
+    return { enableComments: false };
+  });
+
+  await main();
+  expect(templating.formatComment).not.toHaveBeenCalled();
+});
+
+test.each(
+  SUPPORTED_EVENTS.filter((eventName) => !COMMENTABLE_EVENTS.includes(eventName)),
+)("leave no comment if enabled but not in commentable event (%s)", async (eventName) => {
+  templating.formatComment.mockClear();
+
+  github.context.eventName = eventName;
+
+  inputs.ActionConfig.mockImplementationOnce(() => {
+    return { enableComments: true };
+  });
+
+  await main();
+  expect(templating.formatComment).not.toHaveBeenCalled();
 });
