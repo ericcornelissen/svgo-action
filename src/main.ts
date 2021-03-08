@@ -6,6 +6,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import {
+  COMMENTABLE_EVENTS,
   DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
   INPUT_NAME_CONFIG_PATH,
@@ -15,13 +16,15 @@ import {
   SUPPORTED_EVENTS,
 } from "./constants";
 import * as fs from "./file-system";
+import { createComment, getPrNumber } from "./github-api";
 import { ActionConfig } from "./inputs";
 import { parseJavaScript, parseYaml } from "./parser";
 import { SVGOptimizer, SVGOptions } from "./svgo";
 import { RawActionConfig, Warnings } from "./types";
 import { optimize } from "./optimize";
-import { shouldSkipRun } from "./skip-run";
 import { setOutputValues } from "./outputs";
+import { shouldSkipRun } from "./skip-run";
+import { formatComment } from "./templating";
 
 
 function getRepoToken(): string {
@@ -81,6 +84,7 @@ async function getSvgoInstance(
 }
 
 async function run(
+  client: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
   event: string,
@@ -93,6 +97,13 @@ async function run(
 
     const optimizeData = await optimize(fs, config, svgo);
     setOutputValues(event, optimizeData);
+
+    if (COMMENTABLE_EVENTS.includes(event) && config.enableComments) {
+      const prNumber = getPrNumber();
+      core.info(`Creating comment in Pull Request #${prNumber}...`);
+      const comment = formatComment(config.comment, optimizeData, []);
+      await createComment(client, prNumber, comment);
+    }
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
   }
@@ -121,7 +132,7 @@ export default async function main(): Promise<void> {
 
   const skip = await shouldSkipRun(client, github.context);
   if (!skip.shouldSkip) {
-    run(config, svgo, github.context.eventName);
+    run(client, config, svgo, github.context.eventName);
   } else {
     core.info(`Action disabled from ${skip.reason}, exiting`);
   }
