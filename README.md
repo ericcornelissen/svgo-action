@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # Enable the following if you want to select a branch for scheduled runs.
+    # Enable the following to select a branch for scheduled or triggered runs.
     # with:
     #   path: main
     - uses: ericcornelissen/svgo-action@next

@@ -5,9 +5,9 @@ Action supports.
 
 - [`on: pull_request`](#on-pull_request)
 - [`on: push`](#on-push)
-- [`on: repository_dispatch`](#manual-events)
+- [`on: repository_dispatch`](#manually-triggered-events)
 - [`on: schedule`](#on-schedule)
-- [`on: workflow_dispatch`](#manual-events)
+- [`on: workflow_dispatch`](#manually-triggered-events)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -90,7 +90,7 @@ The following [options] have an effect in the `schedule` context.
 | `svgo-options`         | :heavy_check_mark: |
 | `svgo-version`         | :heavy_check_mark: |
 
-## Manual events
+## Manually triggered events
 
 > Find out more in the GitHub Actions documentation on [`repository_dispatch`
 > events] and [`workflow_dispatch` events].
@@ -108,10 +108,7 @@ The following [options] have an effect in the `repository_dispatch` and
 
 | Name                   | Supported          |
 | ---------------------- | ------------------ |
-| `branch`               | :heavy_check_mark: |
 | `comment`              | :x:                |
-| `commit`               | :heavy_check_mark: |
-| `conventional-commits` | :heavy_check_mark: |
 | `dry-run`              | :heavy_check_mark: |
 | `ignore`               | :heavy_check_mark: |
 | `svgo-version`         | :heavy_check_mark: |
