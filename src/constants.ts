@@ -4,6 +4,9 @@ export const EVENT_PUSH = "push";
 export const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
 export const EVENT_SCHEDULE = "schedule";
 export const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
+export const COMMENTABLE_EVENTS: string[] = [
+  EVENT_PULL_REQUEST,
+];
 export const SUPPORTED_EVENTS: string[] = [
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
