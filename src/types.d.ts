@@ -40,3 +40,7 @@ export type RawActionConfig = {
   readonly "svgo-options"?: string;
   readonly "svgo-version"?: number;
 }
+
+// Types representing Action run warnings
+export type Warning = string;
+export type Warnings = Warning[];

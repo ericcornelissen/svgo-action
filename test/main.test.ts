@@ -358,12 +358,17 @@ test.each(COMMENTABLE_EVENTS)("leave a comment if enabled (%s)", async (eventNam
 
   github.context.eventName = eventName;
 
+  const commentTemplate = "{{optimizedCount}} SVGs optimized";
   inputs.ActionConfig.mockImplementationOnce(() => {
-    return { enableComments: true };
+    return { enableComments: true, comment: commentTemplate };
   });
 
   await main();
-  expect(templating.formatComment).toHaveBeenCalled();
+  expect(templating.formatComment).toHaveBeenCalledWith(
+    commentTemplate,
+    expect.any(Object),
+    [],
+  );
 });
 
 test.each(COMMENTABLE_EVENTS)("leave no comment if disabled (%s)", async (eventName) => {
