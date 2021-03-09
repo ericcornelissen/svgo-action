@@ -7,7 +7,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.0.0-alpha.2] - 2021-03-08
+
 - Re-add the ability to leave comments on Pull Requests. ([#343])
+- Fix documentation on manually triggered events in v2. ([#346])
 
 ## [2.0.0-alpha.1] - 2021-03-02
 
@@ -225,4 +230,5 @@ Versioning].
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
 [#343]: https://github.com/ericcornelissen/svgo-action/pull/343
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
+[#346]: https://github.com/ericcornelissen/svgo-action/pull/346
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
