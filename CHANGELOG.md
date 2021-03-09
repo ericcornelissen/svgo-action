@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Re-add warnings in Action logs and Pull Requests comments. ([#342])
 
 ## [2.0.0-alpha.2] - 2021-03-08
 
@@ -228,6 +228,7 @@ Versioning].
 [#335]: https://github.com/ericcornelissen/svgo-action/pull/335
 [#337]: https://github.com/ericcornelissen/svgo-action/pull/337
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
+[#342]: https://github.com/ericcornelissen/svgo-action/pull/342
 [#343]: https://github.com/ericcornelissen/svgo-action/pull/343
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
 [#346]: https://github.com/ericcornelissen/svgo-action/pull/346
