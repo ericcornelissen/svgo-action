@@ -1,6 +1,7 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
 import type { Octokit } from "@octokit/core";
+import type { RawActionConfig, Warnings } from "./types";
 
 import * as core from "@actions/core";
 import * as github from "@actions/github";
@@ -20,7 +21,6 @@ import { createComment, getPrNumber } from "./github-api";
 import { ActionConfig } from "./inputs";
 import { parseJavaScript, parseYaml } from "./parser";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { RawActionConfig, Warnings } from "./types";
 import { optimize } from "./optimize";
 import { setOutputValues } from "./outputs";
 import { shouldSkipRun } from "./skip-run";
@@ -83,6 +83,27 @@ async function getSvgoInstance(
   ];
 }
 
+async function initAction(): Promise<[
+  { client: Octokit, config: ActionConfig, svgo: SVGOptimizer, },
+  Warnings,
+]> {
+  const token: string = getRepoToken();
+  const client: Octokit = github.getOctokit(token);
+  const warnings: Warnings = [];
+
+  const [config, configWarnings] = await getActionConfig();
+  warnings.push(...configWarnings);
+  if (config.isDryRun) {
+    core.info("Dry mode enabled, no changes will be written");
+  }
+
+  core.info(`Using SVGO major version ${config.svgoVersion}`);
+  const [svgo, svgoWarnings] = await getSvgoInstance(config);
+  warnings.push(...svgoWarnings);
+
+  return [{ client, config, svgo }, warnings];
+}
+
 async function run(
   client: Octokit,
   config: ActionConfig,
@@ -117,19 +138,7 @@ function logWarnings(warnings: Warnings): void {
 }
 
 export default async function main(): Promise<void> {
-  const token: string = getRepoToken();
-  const client: Octokit = github.getOctokit(token);
-  const warnings: Warnings = [];
-
-  const [config, configWarnings] = await getActionConfig();
-  warnings.push(...configWarnings);
-  if (config.isDryRun) {
-    core.info("Dry mode enabled, no changes will be written");
-  }
-
-  core.info(`Using SVGO major version ${config.svgoVersion}`);
-  const [svgo, svgoWarnings] = await getSvgoInstance(config);
-  warnings.push(...svgoWarnings);
+  const [{ client, config, svgo }, warnings] = await initAction();
 
   const skip = await shouldSkipRun(client, github.context);
   if (!skip.shouldSkip) {
