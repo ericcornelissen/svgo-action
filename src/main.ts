@@ -87,6 +87,7 @@ async function run(
   client: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
+  warnings: Warnings,
   event: string,
 ): Promise<void> {
   try {
@@ -101,7 +102,7 @@ async function run(
     if (COMMENTABLE_EVENTS.includes(event) && config.enableComments) {
       const prNumber = getPrNumber();
       core.info(`Creating comment in Pull Request #${prNumber}...`);
-      const comment = formatComment(config.comment, optimizeData, []);
+      const comment = formatComment(config.comment, optimizeData, warnings);
       await createComment(client, prNumber, comment);
     }
   } catch (error) {
@@ -132,7 +133,7 @@ export default async function main(): Promise<void> {
 
   const skip = await shouldSkipRun(client, github.context);
   if (!skip.shouldSkip) {
-    run(client, config, svgo, github.context.eventName);
+    run(client, config, svgo, warnings, github.context.eventName);
   } else {
     core.info(`Action disabled from ${skip.reason}, exiting`);
   }
