@@ -8,7 +8,7 @@ node_modules/
 # static analysis reports
 _reports/
 
-# TypeScript generated files
+# any generated files in lib/ that are not needed
 lib/**/*
 !lib/.svgo.yml
 !lib/index.js
