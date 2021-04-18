@@ -23,6 +23,10 @@ Versioning].
 - BREAKING: Disabling from push event's now disables the action entirely.
 - Warn about missing or invalid configuration files.
 
+## [1.3.3] - 2021-04-02
+
+- Update SVGO v2 to `v2.3.0`. ([#352])
+
 ## [1.3.2] - 2021-03-08
 
 - Update SVGO v2 to `v2.2.1`. ([#344])
