@@ -1,5 +1,3 @@
-import type { Context } from "@actions/github/lib/context";
-
 import * as github from "./mocks/@actions/github.mock";
 import * as githubAPI from "./mocks/github-api.mock";
 
@@ -11,31 +9,13 @@ import { shouldSkipRun } from "../src/skip-run";
 
 const client = github.getOctokit("token");
 
-
-function newMockContext(
-  eventName: string,
-  commits: { message: string }[] = [],
-): Context {
-  return {
-    eventName,
-    payload: {
-      commits,
-      pull_request: {
-        head: {
-          ref: "ref",
-        },
-      },
-    },
-  } as unknown as Context;
-}
-
 describe("::shouldSkipRun", () => {
 
   test.each([
     EVENT_SCHEDULE,
     "nonsense",
   ])("non-skippable event types", async (eventName) => {
-    const context = newMockContext(eventName);
+    const context = github.MockContext({ eventName });
 
     const result = await shouldSkipRun(client, context);
     expect(result.shouldSkip).toBe(false);
@@ -54,7 +34,7 @@ describe("::shouldSkipRun", () => {
     });
 
     test("disabled from commit", async () => {
-      const context = newMockContext(eventName);
+      const context = github.MockContext({ eventName });
 
       githubAPI.getCommitMessage.mockResolvedValue("disable-svgo-action");
 
@@ -66,7 +46,7 @@ describe("::shouldSkipRun", () => {
     });
 
     test("no Pull Request comment", async () => {
-      const context = newMockContext(eventName);
+      const context = github.MockContext({ eventName });
       const prNumber = 36;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
@@ -75,7 +55,7 @@ describe("::shouldSkipRun", () => {
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
       expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
-      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
+      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, context, prNumber);
       expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
     });
 
@@ -84,7 +64,7 @@ describe("::shouldSkipRun", () => {
       [["Hello", "world"]],
       [["praise", "the", "sun"]],
     ])("comments, neither enable nor disable", async (comments) => {
-      const context = newMockContext(eventName);
+      const context = github.MockContext({ eventName });
       const prNumber = 42;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
@@ -93,7 +73,7 @@ describe("::shouldSkipRun", () => {
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
       expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
-      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
+      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, context, prNumber);
       expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
     });
 
@@ -101,7 +81,7 @@ describe("::shouldSkipRun", () => {
       [["Hello disable-svgo-action", "world"]],
       [["foo", "disable-svgo-action bar"]],
     ])("disabled from Pull Request comment", async (comments) => {
-      const context = newMockContext(eventName);
+      const context = github.MockContext({ eventName });
       const prNumber = 1997;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
@@ -110,7 +90,7 @@ describe("::shouldSkipRun", () => {
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(true);
       expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
-      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
+      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, context, prNumber);
       expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
     });
 
@@ -118,7 +98,7 @@ describe("::shouldSkipRun", () => {
       [["Hello enable-svgo-action", "world"]],
       [["foo", "enable-svgo-action bar"]],
     ])("enabled from Pull Request comment", async (comments) => {
-      const context = newMockContext(eventName);
+      const context = github.MockContext({ eventName });
       const prNumber = 1997;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
@@ -127,7 +107,7 @@ describe("::shouldSkipRun", () => {
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
       expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
-      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
+      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, context, prNumber);
       expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
     });
 
@@ -135,7 +115,7 @@ describe("::shouldSkipRun", () => {
       [["enable-svgo-action", "disable-svgo-action"], false],
       [["disable-svgo-action", "enable-svgo-action"], true],
     ])("enabled and disabled from Pull Request comment", async (comments, expected) => {
-      const context = newMockContext(eventName);
+      const context = github.MockContext({ eventName });
       const prNumber = 1997;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
@@ -144,12 +124,12 @@ describe("::shouldSkipRun", () => {
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(expected);
       expect(githubAPI.getCommitMessage).toHaveBeenCalledTimes(1);
-      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
+      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, context, prNumber);
       expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
     });
 
     test("enabled from comment, disabled from Pull Request", async () => {
-      const context = newMockContext(eventName);
+      const context = github.MockContext({ eventName });
       const prNumber = 1997;
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
@@ -165,8 +145,12 @@ describe("::shouldSkipRun", () => {
 
     test("head ref is missing", async () => {
       const prNumber = 36;
-      const context = newMockContext(eventName);
-      context.payload.pull_request = undefined;
+      const context = github.MockContext({
+        eventName,
+        payload: {
+          pull_request: null,
+        },
+      });
 
       githubAPI.getPrNumber.mockReturnValue(prNumber);
       githubAPI.getPrComments.mockResolvedValue([]);
@@ -174,7 +158,7 @@ describe("::shouldSkipRun", () => {
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
       expect(githubAPI.getCommitMessage).not.toHaveBeenCalled();
-      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, prNumber);
+      expect(githubAPI.getPrComments).toHaveBeenCalledWith(client, context, prNumber);
       expect(githubAPI.getPrNumber).toHaveBeenCalledTimes(1);
     });
 
@@ -195,7 +179,7 @@ describe("::shouldSkipRun", () => {
         { message: "Hello" },
         { message: "world!" },
       ];
-      const context = newMockContext(eventName, commits);
+      const context = github.MockContext({ eventName, payload: { commits } });
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
@@ -206,7 +190,7 @@ describe("::shouldSkipRun", () => {
         { message: "disable-svgo-action" },
         { message: "Hello world!" },
       ];
-      const context = newMockContext(eventName, commits);
+      const context = github.MockContext({ eventName, payload: { commits } });
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(true);
@@ -217,14 +201,15 @@ describe("::shouldSkipRun", () => {
         { message: "Hello world!" },
         { message: "disable-svgo-action" },
       ];
-      const context = newMockContext(eventName, commits);
+      const context = github.MockContext({ eventName, payload: { commits } });
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
     });
 
     test("no commits", async () => {
-      const context = newMockContext(eventName, []);
+      const commits = [];
+      const context = github.MockContext({ eventName, payload: { commits } });
 
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);

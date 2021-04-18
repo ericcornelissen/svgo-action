@@ -10,9 +10,10 @@ const ENABLE_PATTERN = /enable-svgo-action/;
 
 async function actionDisabledFromPR(
   client: Octokit,
+  context: Context,
   prNumber: number,
 ): Promise<boolean> {
-  const prComments: string[] = await getPrComments(client, prNumber);
+  const prComments: string[] = await getPrComments(client, context, prNumber);
   for (const comment of prComments) {
     if (ENABLE_PATTERN.test(comment)) {
       break;
@@ -31,7 +32,7 @@ async function checkShouldSkipPullRequest(
   let commitMessage = "";
   if (context.payload.pull_request) {
     const commitRef = `heads/${context.payload.pull_request.head.ref}`;
-    commitMessage = await getCommitMessage(client, commitRef);
+    commitMessage = await getCommitMessage(client, context, commitRef);
   }
 
   if (DISABLE_PATTERN.test(commitMessage)) {
@@ -39,8 +40,8 @@ async function checkShouldSkipPullRequest(
   }
 
   if (!ENABLE_PATTERN.test(commitMessage)) {
-    const prNumber = getPrNumber();
-    const disabled = await actionDisabledFromPR(client, prNumber);
+    const prNumber = getPrNumber(context);
+    const disabled = await actionDisabledFromPR(client, context, prNumber);
     if (disabled) {
       return { shouldSkip: true, reason: "Pull Request" };
     }

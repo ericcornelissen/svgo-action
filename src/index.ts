@@ -9,4 +9,4 @@ import main from "./main";
 const token: string = core.getInput(INPUT_NAME_REPO_TOKEN, INPUT_REQUIRED);
 const client: Octokit = github.getOctokit(token);
 
-main(client);
+main(client, github.context);

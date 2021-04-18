@@ -1,10 +1,11 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
+import type { Context } from "@actions/github/lib/context";
 import type { Octokit } from "@octokit/core";
+
 import type { RawActionConfig, Warnings } from "./types";
 
 import * as core from "@actions/core";
-import * as github from "@actions/github";
 
 import {
   COMMENTABLE_EVENTS,
@@ -98,12 +99,13 @@ async function initAction(): Promise<[
 
 async function run(
   client: Octokit,
+  context: Context,
   config: ActionConfig,
   svgo: SVGOptimizer,
   warnings: Warnings,
-  event: string,
 ): Promise<void> {
   try {
+    const event = context.eventName;
     core.info(`Running SVGO Action in '${event}' context`);
     if (!SUPPORTED_EVENTS.includes(event)) {
       throw new Error(`Event '${event}' not supported`);
@@ -113,10 +115,10 @@ async function run(
     setOutputValues(event, optimizeData);
 
     if (COMMENTABLE_EVENTS.includes(event) && config.enableComments) {
-      const prNumber = getPrNumber();
+      const prNumber = getPrNumber(context);
       core.info(`Creating comment in Pull Request #${prNumber}...`);
       const comment = formatComment(config.comment, optimizeData, warnings);
-      await createComment(client, prNumber, comment);
+      await createComment(client, context, prNumber, comment);
     }
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
@@ -129,12 +131,15 @@ function logWarnings(warnings: Warnings): void {
   }
 }
 
-export default async function main(client: Octokit): Promise<void> {
+export default async function main(
+  client: Octokit,
+  context: Context,
+): Promise<void> {
   const [{ config, svgo }, warnings] = await initAction();
 
-  const skip = await shouldSkipRun(client, github.context);
+  const skip = await shouldSkipRun(client, context);
   if (!skip.shouldSkip) {
-    run(client, config, svgo, warnings, github.context.eventName);
+    run(client, context, config, svgo, warnings);
   } else {
     core.info(`Action disabled from ${skip.reason}, exiting`);
   }
