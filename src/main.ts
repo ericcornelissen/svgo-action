@@ -2,6 +2,8 @@
 
 import type { Octokit } from "@octokit/core";
 
+import type { FileSystem } from "./file-system";
+
 import * as core from "@actions/core";
 import * as github from "@actions/github";
 
@@ -87,6 +89,7 @@ async function run(
   client: Octokit,
   config: ActionConfig,
   svgo: SVGOptimizer,
+  fs: FileSystem,
   warnings: Warnings,
   event: string,
 ): Promise<void> {
@@ -133,7 +136,7 @@ export default async function main(): Promise<void> {
 
   const skip = await shouldSkipRun(client, github.context);
   if (!skip.shouldSkip) {
-    run(client, config, svgo, warnings, github.context.eventName);
+    run(client, config, svgo, fs, warnings, github.context.eventName);
   } else {
     core.info(`Action disabled from ${skip.reason}, exiting`);
   }
