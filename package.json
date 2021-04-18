@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "scripts": {
     "prebuild": "node script/prebuild.js",
-    "build": "ncc build src/main.ts -m -o lib",
+    "build": "ncc build src/index.ts -m -o lib",
     "clean": "run-p clean:reports",
     "clean:reports": "rm -rf ./_reports",
     "format": "run-p format:js format:md",

@@ -11,9 +11,7 @@ import {
   DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
   INPUT_NAME_CONFIG_PATH,
-  INPUT_NAME_REPO_TOKEN,
   INPUT_NOT_REQUIRED,
-  INPUT_REQUIRED,
   SUPPORTED_EVENTS,
 } from "./constants";
 import * as fs from "./file-system";
@@ -26,10 +24,6 @@ import { setOutputValues } from "./outputs";
 import { shouldSkipRun } from "./skip-run";
 import { formatComment } from "./templating";
 
-
-function getRepoToken(): string {
-  return core.getInput(INPUT_NAME_REPO_TOKEN, INPUT_REQUIRED);
-}
 
 async function getActionConfig(): Promise<[ActionConfig, Warnings]> {
   const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED);
@@ -84,11 +78,9 @@ async function getSvgoInstance(
 }
 
 async function initAction(): Promise<[
-  { client: Octokit, config: ActionConfig, svgo: SVGOptimizer, },
+  { config: ActionConfig, svgo: SVGOptimizer },
   Warnings,
 ]> {
-  const token: string = getRepoToken();
-  const client: Octokit = github.getOctokit(token);
   const warnings: Warnings = [];
 
   const [config, configWarnings] = await getActionConfig();
@@ -101,7 +93,7 @@ async function initAction(): Promise<[
   const [svgo, svgoWarnings] = await getSvgoInstance(config);
   warnings.push(...svgoWarnings);
 
-  return [{ client, config, svgo }, warnings];
+  return [{ config, svgo }, warnings];
 }
 
 async function run(
@@ -137,8 +129,8 @@ function logWarnings(warnings: Warnings): void {
   }
 }
 
-export default async function main(): Promise<void> {
-  const [{ client, config, svgo }, warnings] = await initAction();
+export default async function main(client: Octokit): Promise<void> {
+  const [{ config, svgo }, warnings] = await initAction();
 
   const skip = await shouldSkipRun(client, github.context);
   if (!skip.shouldSkip) {
@@ -149,5 +141,3 @@ export default async function main(): Promise<void> {
 
   logWarnings(warnings);
 }
-
-main();
