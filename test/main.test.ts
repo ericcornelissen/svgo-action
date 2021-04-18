@@ -36,7 +36,6 @@ import {
 } from "../src/constants";
 import main from "../src/main";
 
-
 const SKIPPABLE_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
 
 const client = github.getOctokit("token");
@@ -88,11 +87,9 @@ describe("run & optimize", () => {
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Action disabled"));
   });
-
 });
 
 describe("configuration", () => {
-
   test.each(SUPPORTED_EVENTS)("dry mode enabled (%s)", async (eventName) => {
     const context = github.MockContext({ eventName });
 
@@ -120,11 +117,9 @@ describe("configuration", () => {
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, expect.anything());
     expect(core.info).toHaveBeenCalledWith(expect.stringMatching(`SVGO.*${svgoVersion}`));
   });
-
 });
 
 describe("Action configuration file", () => {
-
   test.each(SUPPORTED_EVENTS)("use custom file (%s)", async (eventName) => {
     fs.readFile.mockClear();
     parser.parseYaml.mockClear();
@@ -219,11 +214,9 @@ describe("Action configuration file", () => {
       expect.stringMatching("Action config file '.*' invalid"),
     );
   });
-
 });
 
 describe("SVGO configuration file", () => {
-
   test.each(SUPPORTED_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
     fs.readFile.mockClear();
     parser.parseJavaScript.mockClear();
@@ -363,11 +356,9 @@ describe("SVGO configuration file", () => {
     );
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
   });
-
 });
 
 describe("comments", () => {
-
   test.each(COMMENTABLE_EVENTS)("leave no comment by default (%s)", async (eventName) => {
     templating.formatComment.mockClear();
 
@@ -422,5 +413,4 @@ describe("comments", () => {
     await main(client, context);
     expect(templating.formatComment).not.toHaveBeenCalled();
   });
-
 });

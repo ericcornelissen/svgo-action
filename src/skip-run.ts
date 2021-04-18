@@ -4,7 +4,6 @@ import type { Octokit } from "@octokit/core";
 import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 import { getCommitMessage, getPrComments, getPrNumber } from "./github-api";
 
-
 const DISABLE_PATTERN = /disable-svgo-action/;
 const ENABLE_PATTERN = /enable-svgo-action/;
 
@@ -63,7 +62,6 @@ async function checkShouldSkipPush(
 
   return { shouldSkip: false, reason: "" };
 }
-
 
 export async function shouldSkipRun(
   client: Octokit,

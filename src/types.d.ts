@@ -29,7 +29,7 @@ export type OptimizeProjectData = {
 }
 
 // Type representing the possible names of values outputted by the Action.
-type OutputName =
+export type OutputName =
   "DID_OPTIMIZE" |
   "OPTIMIZED_COUNT" |
   "SKIPPED_COUNT" |

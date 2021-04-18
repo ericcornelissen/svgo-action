@@ -25,7 +25,6 @@ import { setOutputValues } from "./outputs";
 import { shouldSkipRun } from "./skip-run";
 import { formatComment } from "./templating";
 
-
 async function getActionConfig(): Promise<[ActionConfig, Warnings]> {
   const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED);
   const warnings: Warnings = [];

@@ -10,7 +10,6 @@ import {
   getPrNumber,
 } from "../src/github-api";
 
-
 const client = github.getOctokit("token");
 
 describe("::createComment", () => {
@@ -39,11 +38,9 @@ describe("::createComment", () => {
       ),
     ).rejects.toBeDefined();
   });
-
 });
 
 describe("::getCommitMessage", () => {
-
   const context = github.MockContext();
   const ref = "heads/master";
 
@@ -76,11 +73,9 @@ describe("::getCommitMessage", () => {
     const promise = getCommitMessage(client, context, ref);
     await expect(promise).rejects.toBeDefined();
   });
-
 });
 
 describe("::getPrComments", () => {
-
   const context = github.MockContext();
 
   test("no comments", async () => {
@@ -112,11 +107,9 @@ describe("::getPrComments", () => {
     const result = await getPrComments(client, context, github.PR_NUMBER.ONE_HUNDRED_AND_THREE_COMMENTS);
     expect(result).toHaveLength(103);
   });
-
 });
 
 describe("::getPrNumber", () => {
-
   test.each([
     github.PR_NUMBER.NO_COMMENTS,
     github.PR_NUMBER.ONE_COMMENT,
@@ -139,5 +132,4 @@ describe("::getPrNumber", () => {
     const actual: number = getPrNumber(context);
     expect(actual).toBe(PR_NOT_FOUND);
   });
-
 });

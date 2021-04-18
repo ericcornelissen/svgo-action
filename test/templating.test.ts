@@ -6,7 +6,6 @@ jest.mock("../src/utils", () => utils);
 
 import { formatComment } from "../src/templating";
 
-
 const defaultData: OptimizeProjectData = {
   files: [
     {
@@ -100,9 +99,7 @@ const values: {
   svgCount: [0, 1, 4, 9001],
 };
 
-
 describe("::formatComment", () => {
-
   const defaultCommentTemplate = "foobar";
 
   test("empty template string", () => {
@@ -227,5 +224,4 @@ describe("::formatComment", () => {
     expect(result).toEqual(expect.stringContaining(warning1));
     expect(result).toEqual(expect.stringContaining(warning2));
   });
-
 });

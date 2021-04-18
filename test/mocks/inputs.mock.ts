@@ -2,7 +2,6 @@ import { actionManifest } from "./helpers/read-manifest";
 
 import { DEFAULT_COMMENT } from "../../src/constants";
 
-
 const NAME_MAP = {
   "repo-token": "",
   "comment": "enableComments",
@@ -12,7 +11,6 @@ const NAME_MAP = {
   "svgo-options": "svgoOptionsPath",
   "svgo-version": "svgoVersion",
 };
-
 
 export const ActionConfig = jest.fn()
   .mockImplementation(() => {

@@ -15,20 +15,18 @@ import {
 } from "../src/constants";
 import { setOutputValues } from "../src/outputs";
 
-
 const sampleData = {
   files: [],
   optimizedCount: 3,
   skippedCount: 1,
   svgCount: 4,
 };
+
 const sampleDataList: OptimizeProjectData[] = [
   sampleData,
 ];
 
-
 describe("::setOutputValues", () => {
-
   beforeEach(() => {
     core.setOutput.mockClear();
   });
@@ -100,5 +98,4 @@ describe("::setOutputValues", () => {
       `${data.svgCount}`,
     );
   });
-
 });

@@ -4,9 +4,7 @@ import {
   roundToPrecision,
 } from "../src/utils";
 
-
 describe("::getChangedPercentage", () => {
-
   test.each([
     [1, 1, 0],
     [100, 50, -50],
@@ -21,11 +19,9 @@ describe("::getChangedPercentage", () => {
     expect(getChangedPercentage(0, 1)).toEqual(0);
     expect(getChangedPercentage(0, -1)).toEqual(0);
   });
-
 });
 
 describe("::getFileSizeInKb", () => {
-
   test("an empty file", () => {
     const result = getFileSizeInKB("");
     expect(result).toEqual(0);
@@ -38,11 +34,9 @@ describe("::getFileSizeInKb", () => {
     const actual = getFileSizeInKB(content);
     expect(actual).toEqual(expected);
   });
-
 });
 
 describe("::roundToPrecision", () => {
-
   test.each([
     [3, 0, 3],
     [3, 1, 3],
@@ -66,5 +60,4 @@ describe("::roundToPrecision", () => {
     const actual = roundToPrecision(n, decimalPlaces);
     expect(actual).toEqual(expected);
   });
-
 });

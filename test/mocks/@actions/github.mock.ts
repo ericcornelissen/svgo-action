@@ -6,7 +6,6 @@ import { Octokit } from "@octokit/core";
 
 import { EVENT_PULL_REQUEST } from "../../../src/constants";
 
-
 const BASE_CONTEXT: Context = {
   action: "bar",
   actor: "Foobar",
@@ -48,7 +47,6 @@ function anyAreUndefined(values: unknown[]): boolean {
 
   return false;
 }
-
 
 export enum PR_NUMBER {
   NO_COMMENTS,

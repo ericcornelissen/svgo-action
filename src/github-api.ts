@@ -4,7 +4,6 @@ import type { GitGetCommitResponseData } from "@octokit/types";
 
 import { PR_NOT_FOUND } from "./constants";
 
-
 async function getCommitAt(
   client: Octokit,
   context: Context,
@@ -24,7 +23,6 @@ async function getCommitAt(
 
   return commit;
 }
-
 
 export async function createComment(
   client: Octokit,

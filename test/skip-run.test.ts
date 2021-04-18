@@ -6,11 +6,9 @@ jest.mock("../src/github-api", () => githubAPI);
 import { EVENT_PULL_REQUEST, EVENT_PUSH, EVENT_SCHEDULE } from "../src/constants";
 import { shouldSkipRun } from "../src/skip-run";
 
-
 const client = github.getOctokit("token");
 
 describe("::shouldSkipRun", () => {
-
   test.each([
     EVENT_SCHEDULE,
     "nonsense",
@@ -25,7 +23,6 @@ describe("::shouldSkipRun", () => {
   });
 
   describe("eventName: pull_request", () => {
-
     const eventName = EVENT_PULL_REQUEST;
     const stdCommitMessage = "Hello world!";
 
@@ -167,11 +164,9 @@ describe("::shouldSkipRun", () => {
       githubAPI.getPrComments.mockClear();
       githubAPI.getPrNumber.mockClear();
     });
-
   });
 
   describe("eventName: push", () => {
-
     const eventName = EVENT_PUSH;
 
     test("not disabled from commit", async () => {
@@ -214,7 +209,5 @@ describe("::shouldSkipRun", () => {
       const result = await shouldSkipRun(client, context);
       expect(result.shouldSkip).toBe(false);
     });
-
   });
-
 });

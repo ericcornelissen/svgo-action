@@ -1,14 +1,11 @@
 import svgoOld from "svgo-v1";
 import svgo from "svgo-v2";
 
-
 type allowedVersions = 1 | 2;
 type SVGO = { optimize };
 type SVGOptions = svgo.Options;
 
-
 export class SVGOptimizer {
-
   private version: allowedVersions;
   private options: SVGOptions;
   private svgo: SVGO;
@@ -45,7 +42,6 @@ export class SVGOptimizer {
     const { data: optimizedSvg } = await this.svgo.optimize(originalSvg);
     return optimizedSvg;
   }
-
 }
 
 export type { SVGOptions };

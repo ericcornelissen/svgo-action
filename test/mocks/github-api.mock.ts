@@ -1,6 +1,5 @@
 import * as github from "./@actions/github.mock";
 
-
 export const createComment = jest.fn()
   .mockName("github-api.createComment");
 

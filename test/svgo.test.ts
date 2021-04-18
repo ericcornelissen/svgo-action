@@ -6,11 +6,8 @@ import svgoV2Options from "./fixtures/svgo-v2-options.json";
 
 import { SVGOptimizer } from "../src/svgo";
 
-
 describe("SVGOptimizer (v2)", () => {
-
   describe("::constructor", () => {
-
     test("does not throw when given no configuration", () => {
       expect(() => new SVGOptimizer(2)).not.toThrow();
     });
@@ -22,11 +19,9 @@ describe("SVGOptimizer (v2)", () => {
     test("does not throw when given configuration", () => {
       expect(() => new SVGOptimizer(2, svgoV2Options as SVGOptions)).not.toThrow();
     });
-
   });
 
   describe(".optimize", () => {
-
     const optimizer: SVGOptimizer = new SVGOptimizer(2, {});
 
     test.each(svgs.notOptimized)("return a (string) value", async (svg: string) => {
@@ -49,15 +44,11 @@ describe("SVGOptimizer (v2)", () => {
       const promise = optimizer.optimize("this is not an SVG");
       await expect(promise).rejects.toBeDefined();
     });
-
   });
-
 });
 
 describe("SVGOptimizer (v1)", () => {
-
   describe("::constructor", () => {
-
     test("does not throw when given no configuration", () => {
       expect(() => new SVGOptimizer(1)).not.toThrow();
     });
@@ -69,11 +60,9 @@ describe("SVGOptimizer (v1)", () => {
     test("does not throw when given configuration", () => {
       expect(() => new SVGOptimizer(1, svgoV1Options as SVGOptions)).not.toThrow();
     });
-
   });
 
   describe(".optimize", () => {
-
     const optimizer: SVGOptimizer = new SVGOptimizer(1, {});
 
     test.each(svgs.notOptimized)("return a (string) value", async (svg: string) => {
@@ -96,7 +85,5 @@ describe("SVGOptimizer (v1)", () => {
       const promise = optimizer.optimize("this is not an SVG");
       await expect(promise).rejects.toBeDefined();
     });
-
   });
-
 });
