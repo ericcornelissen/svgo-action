@@ -1,6 +1,5 @@
 import { actionManifest }  from "../helpers/read-manifest";
 
-
 export const debug = jest.fn().mockName("core.debug");
 
 export const error = jest.fn().mockName("core.error");

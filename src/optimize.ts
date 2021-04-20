@@ -10,7 +10,6 @@ import { Minimatch } from "minimatch";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer } from "./svgo";
 
-
 interface ReadFileInfo extends FileInfo {
   readonly path: string;
   readonly content: string;

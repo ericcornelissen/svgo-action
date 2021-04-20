@@ -2,7 +2,6 @@
 
 import * as yaml from "js-yaml";
 
-
 export function parseJavaScript(rawJavaScript: string): any {
   try {
     // eslint-disable-next-line security/detect-eval-with-expression

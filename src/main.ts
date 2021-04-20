@@ -1,18 +1,18 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
+import type { Context } from "@actions/github/lib/context";
 import type { Octokit } from "@octokit/core";
 
+import type { RawActionConfig, Warnings } from "./types";
+
 import * as core from "@actions/core";
-import * as github from "@actions/github";
 
 import {
   COMMENTABLE_EVENTS,
   DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
   INPUT_NAME_CONFIG_PATH,
-  INPUT_NAME_REPO_TOKEN,
   INPUT_NOT_REQUIRED,
-  INPUT_REQUIRED,
   SUPPORTED_EVENTS,
 } from "./constants";
 import * as fs from "./file-system";
@@ -20,16 +20,10 @@ import { createComment, getPrNumber } from "./github-api";
 import { ActionConfig } from "./inputs";
 import { parseJavaScript, parseYaml } from "./parser";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { RawActionConfig, Warnings } from "./types";
 import { optimize } from "./optimize";
 import { setOutputValues } from "./outputs";
 import { shouldSkipRun } from "./skip-run";
 import { formatComment } from "./templating";
-
-
-function getRepoToken(): string {
-  return core.getInput(INPUT_NAME_REPO_TOKEN, INPUT_REQUIRED);
-}
 
 async function getActionConfig(): Promise<[ActionConfig, Warnings]> {
   const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED);
@@ -83,42 +77,10 @@ async function getSvgoInstance(
   ];
 }
 
-async function run(
-  client: Octokit,
-  config: ActionConfig,
-  svgo: SVGOptimizer,
-  warnings: Warnings,
-  event: string,
-): Promise<void> {
-  try {
-    core.info(`Running SVGO Action in '${event}' context`);
-    if (!SUPPORTED_EVENTS.includes(event)) {
-      throw new Error(`Event '${event}' not supported`);
-    }
-
-    const optimizeData = await optimize(fs, config, svgo);
-    setOutputValues(event, optimizeData);
-
-    if (COMMENTABLE_EVENTS.includes(event) && config.enableComments) {
-      const prNumber = getPrNumber();
-      core.info(`Creating comment in Pull Request #${prNumber}...`);
-      const comment = formatComment(config.comment, optimizeData, warnings);
-      await createComment(client, prNumber, comment);
-    }
-  } catch (error) {
-    core.setFailed(`action failed with error '${error}'`);
-  }
-}
-
-function logWarnings(warnings: Warnings): void {
-  for (const warning of warnings) {
-    core.warning(warning);
-  }
-}
-
-export default async function main(): Promise<void> {
-  const token: string = getRepoToken();
-  const client: Octokit = github.getOctokit(token);
+async function initAction(): Promise<[
+  { config: ActionConfig, svgo: SVGOptimizer },
+  Warnings,
+]> {
   const warnings: Warnings = [];
 
   const [config, configWarnings] = await getActionConfig();
@@ -131,14 +93,55 @@ export default async function main(): Promise<void> {
   const [svgo, svgoWarnings] = await getSvgoInstance(config);
   warnings.push(...svgoWarnings);
 
-  const skip = await shouldSkipRun(client, github.context);
+  return [{ config, svgo }, warnings];
+}
+
+async function run(
+  client: Octokit,
+  context: Context,
+  config: ActionConfig,
+  svgo: SVGOptimizer,
+  warnings: Warnings,
+): Promise<void> {
+  try {
+    const event = context.eventName;
+    core.info(`Running SVGO Action in '${event}' context`);
+    if (!SUPPORTED_EVENTS.includes(event)) {
+      throw new Error(`Event '${event}' not supported`);
+    }
+
+    const optimizeData = await optimize(fs, config, svgo);
+    setOutputValues(event, optimizeData);
+
+    if (COMMENTABLE_EVENTS.includes(event) && config.enableComments) {
+      const prNumber = getPrNumber(context);
+      core.info(`Creating comment in Pull Request #${prNumber}...`);
+      const comment = formatComment(config.comment, optimizeData, warnings);
+      await createComment(client, context, prNumber, comment);
+    }
+  } catch (error) {
+    core.setFailed(`action failed with error '${error}'`);
+  }
+}
+
+function logWarnings(warnings: Warnings): void {
+  for (const warning of warnings) {
+    core.warning(warning);
+  }
+}
+
+export default async function main(
+  client: Octokit,
+  context: Context,
+): Promise<void> {
+  const [{ config, svgo }, warnings] = await initAction();
+
+  const skip = await shouldSkipRun(client, context);
   if (!skip.shouldSkip) {
-    run(client, config, svgo, warnings, github.context.eventName);
+    run(client, context, config, svgo, warnings);
   } else {
     core.info(`Action disabled from ${skip.reason}, exiting`);
   }
 
   logWarnings(warnings);
 }
-
-main();

@@ -1,8 +1,6 @@
 import { parseJavaScript, parseYaml } from "../src/parser";
 
-
 describe("::parseJavaScript", () => {
-
   test("valid JavaScript", async () => {
     const result = await parseJavaScript(`
       module.exports = { multipass: true };
@@ -16,11 +14,9 @@ describe("::parseJavaScript", () => {
     `);
     expect(result).toBeNull();
   });
-
 });
 
 describe("::parseYaml", () => {
-
   test("valid YAML", async () => {
     const result = await parseYaml(
       "multipass: true\n" +
@@ -44,5 +40,4 @@ describe("::parseYaml", () => {
     );
     expect(result).toBeNull();
   });
-
 });

@@ -10,7 +10,6 @@ import {
   INPUT_NOT_REQUIRED,
 } from "./constants";
 
-
 const BOOLEAN = "boolean";
 const FALSE = "false";
 const NUMBER = "number";
@@ -19,9 +18,7 @@ const TRUE = "true";
 
 const DEFAULT_SVGO_VERSION = 2;
 
-
 export class ActionConfig {
-
   public readonly comment: string;
   public readonly enableComments: boolean;
   public readonly ignoreGlob: string;
@@ -159,5 +156,4 @@ export class ActionConfig {
       return defaultValue;
     }
   }
-
 }

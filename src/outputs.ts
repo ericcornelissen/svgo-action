@@ -12,7 +12,6 @@ import {
   OUTPUT_NAME_SVG_COUNT,
 } from "./constants";
 
-
 const outputs: { [key: string]: (data: OptimizeProjectData) => string } = {
   "DID_OPTIMIZE": (data: OptimizeProjectData): string => {
     return `${data.optimizedCount > 0}`;
@@ -43,7 +42,6 @@ function getOutputNamesFor(event: string): OutputName[] {
       return [];
   }
 }
-
 
 export function setOutputValues(
   event: string,

@@ -1,9 +1,42 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
+import type { Context } from "@actions/github/lib/context";
+
 import { Octokit } from "@octokit/core";
 
 import { EVENT_PULL_REQUEST } from "../../../src/constants";
 
+const BASE_CONTEXT: Context = {
+  action: "bar",
+  actor: "Foobar",
+  eventName: EVENT_PULL_REQUEST,
+  issue: {
+    owner: "pickachu",
+    repo: "svgo-action",
+    number: 36,
+  },
+  job: "foobar",
+  runNumber: 42,
+  runId: 3.14,
+  payload: {
+    commits: [{}],
+    pull_request: {
+      head: {
+        ref: "branch-name",
+        sha: "60e82798538f1853144300adaaa00650c9a6ab4d",
+      },
+      number: 0,
+    },
+    ref: "refs/head/develop",
+  },
+  repo: {
+    owner: "pickachu",
+    repo: "svgo-action",
+  },
+  ref: "branch-name",
+  sha: "60e82798538f1853144300adaaa00650c9a6ab4d",
+  workflow: "foo",
+};
 
 function anyAreUndefined(values: unknown[]): boolean {
   for (const value of values) {
@@ -15,7 +48,6 @@ function anyAreUndefined(values: unknown[]): boolean {
   return false;
 }
 
-
 export enum PR_NUMBER {
   NO_COMMENTS,
   ONE_COMMENT,
@@ -24,44 +56,6 @@ export enum PR_NUMBER {
   SEVENTEEN_COMMENTS,
   ONE_HUNDRED_AND_THREE_COMMENTS,
 }
-
-export const context: {
-  eventName: string,
-  payload: {
-    commits: { id?: string, message?: string }[],
-    pull_request?: {
-      head: {
-        ref: string,
-        sha: string,
-      },
-      number: number,
-    },
-    ref: string,
-  },
-  repo: {
-    owner: string,
-    repo: string,
-  },
-  sha: string,
-} = {
-  eventName: EVENT_PULL_REQUEST,
-  payload: {
-    commits: [{}],
-    pull_request: {
-      head: {
-        ref: "branch-name",
-        sha: "60e82798538f1853144300adaaa00650c9a6ab4d",
-      },
-      number: PR_NUMBER.NO_COMMENTS,
-    },
-    ref: "refs/head/develop",
-  },
-  repo: {
-    owner: "pickachu",
-    repo: "svgo-action",
-  },
-  sha: "60e82798538f1853144300adaaa00650c9a6ab4d",
-};
 
 export const GitHubInstance = {
   git: {
@@ -185,4 +179,16 @@ export const GitHubInstance = {
 
 export function getOctokit(_: string): Octokit {
   return GitHubInstance as unknown as Octokit;
+}
+
+export function MockContext(values?: {
+  eventName?: string,
+  payload?: {
+    commits?: { message: string }[],
+    pull_request?: null | {
+      number?: number,
+    },
+  },
+}): Context {
+  return Object.assign(BASE_CONTEXT, values);
 }

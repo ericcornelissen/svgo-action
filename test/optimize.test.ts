@@ -11,9 +11,7 @@ const svgo = new svgoImport.SVGOptimizer();
 
 
 describe("::optimize", () => {
-
   describe.each([false, true])("dry run = %s", (dryRun) => {
-
     const folderContainingTwoSvgs = "/path/to/two/svgs";
 
     const nonSvgFile: FileInfo = {
@@ -216,7 +214,5 @@ describe("::optimize", () => {
       expect(result.skippedCount).toEqual(2);
       expect(result.svgCount).toEqual(files.length - nonSvgFileCount);
     });
-
   });
-
 });

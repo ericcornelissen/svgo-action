@@ -13,20 +13,16 @@ import {
 import { ActionConfig } from "../src/inputs";
 import { RawActionConfig } from "../src/types";
 
-
 function mockCoreGetInput(key: string, value: string): void {
   when(core.getInput)
     .calledWith(key, expect.any(Object))
     .mockReturnValue(value);
 }
 
-
 describe("ActionConfig", () => {
-
   const nonBooleanStrings: string[] = ["foobar", "treu", "fals"];
 
   describe("::constructor", () => {
-
     test("construct without a parameter", () => {
       expect(() => new ActionConfig(core)).not.toThrow();
     });
@@ -39,11 +35,9 @@ describe("ActionConfig", () => {
       const config: RawActionConfig = { "dry-run": true };
       expect(() => new ActionConfig(core, config)).not.toThrow();
     });
-
   });
 
   describe(".comment", () => {
-
     test("comment is set to `'true'` in the Workflow file", () => {
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
 
@@ -87,11 +81,9 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.comment).toEqual(template);
     });
-
   });
 
   describe(".enableComments", () => {
-
     test("comment is not set at all", () => {
       mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
 
@@ -183,11 +175,9 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.enableComments).toBe(false);
     });
-
   });
 
   describe(".isDryRun", () => {
-
     test("dry-run is not set at all", () => {
       const defaultValue = "false";
       mockCoreGetInput(INPUT_NAME_DRY_RUN, defaultValue);
@@ -256,11 +246,9 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.isDryRun).toBe(true);
     });
-
   });
 
   describe(".ignoreGlob", () => {
-
     const globs: string[] = ["file.svg", "dir/*", "folder/**/*"];
 
     test("dry-run is not set at all", () => {
@@ -298,11 +286,9 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.ignoreGlob).toBe(configGlob);
     });
-
   });
 
   describe(".svgoOptionsPath", () => {
-
     const paths: string[] = ["svgo.config.js", "foo.js", "in/folder/config.js"];
 
     test("svgo-options is not set at all", () => {
@@ -326,11 +312,9 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig(core, { "svgo-options": path });
       expect(instance.svgoOptionsPath).toBe(path);
     });
-
   });
 
   describe(".svgoVersion", () => {
-
     const defaultValue = "2";
 
     test("not configured", () => {
@@ -417,7 +401,5 @@ describe("ActionConfig", () => {
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.svgoVersion).toBe(2);
     });
-
   });
-
 });

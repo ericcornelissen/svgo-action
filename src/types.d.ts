@@ -1,3 +1,18 @@
+// Type representing the relevant information of `@actions/github.context`.
+export type Context = {
+  eventName: string;
+  payload: {
+    commits: {
+      message: string;
+    }[],
+    pull_request?: {
+      head: {
+        ref: string;
+      }
+    }
+  }
+}
+
 // Type representing data about one optimized file.
 export type OptimizeFileData = {
   contentAfter: string;
@@ -14,7 +29,7 @@ export type OptimizeProjectData = {
 }
 
 // Type representing the possible names of values outputted by the Action.
-type OutputName =
+export type OutputName =
   "DID_OPTIMIZE" |
   "OPTIMIZED_COUNT" |
   "SKIPPED_COUNT" |

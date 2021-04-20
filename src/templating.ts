@@ -8,7 +8,6 @@ import {
   roundToPrecision,
 } from "./utils";
 
-
 const FILES_LIST_EXP = /\{\{\s*filesList\s*\}\}/;
 const FILES_TABLE_EXP = /\{\{\s*filesTable\s*\}\}/;
 const OPTIMIZED_COUNT_EXP = /\{\{\s*optimizedCount\s*\}\}/;
@@ -87,7 +86,6 @@ function injectWarnings(template: string, values: string[]): string {
 
   return template.replace(WARNINGS_EXP, warnings);
 }
-
 
 export function formatComment(
   template: string,

@@ -36,9 +36,9 @@ import {
 } from "../src/constants";
 import main from "../src/main";
 
-
 const SKIPPABLE_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
 
+const client = github.getOctokit("token");
 
 beforeEach(() => {
   core.debug.mockClear();
@@ -49,352 +49,368 @@ beforeEach(() => {
   skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: false });
 });
 
-test.each(SUPPORTED_EVENTS)("%s event", async (eventName) => {
-  github.context.eventName = eventName;
+describe("run & optimize", () => {
+  test.each(SUPPORTED_EVENTS)("%s event", async (eventName) => {
+    const context = github.MockContext({ eventName });
 
-  await main();
-  expect(optimize.optimize).toHaveBeenCalled();
-});
-
-test.each(SUPPORTED_EVENTS)("%s event error", async (eventName) => {
-  github.context.eventName = eventName;
-
-  optimize.optimize.mockImplementationOnce(() => {
-    throw new Error("Something went wrong");
+    await main(client, context);
+    expect(optimize.optimize).toHaveBeenCalled();
   });
 
-  await main();
-  expect(optimize.optimize).toHaveBeenCalledTimes(1);
-  expect(core.setFailed).toHaveBeenCalledTimes(1);
-});
+  test.each(SUPPORTED_EVENTS)("%s event error", async (eventName) => {
+    const context = github.MockContext({ eventName });
 
-test("unknown event", async () => {
-  github.context.eventName = "UnKnOwN eVeNt";
+    optimize.optimize.mockImplementationOnce(() => {
+      throw new Error("Something went wrong");
+    });
 
-  await main();
-  expect(optimize.optimize).not.toHaveBeenCalled();
-  expect(core.setFailed).toHaveBeenCalledTimes(1);
-});
-
-test.each(SUPPORTED_EVENTS)("dry mode enabled (%s)", async (eventName) => {
-  github.context.eventName = eventName;
-
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: "svgo.config.js", isDryRun: true };
+    await main(client, context);
+    expect(optimize.optimize).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
-  await main();
-  expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
-});
+  test("unknown event", async () => {
+    const context = github.MockContext({ eventName: "UnKnOwN eVeNt" });
 
-test.each(SUPPORTED_EVENTS)("use custom configuration file (%s)", async (eventName) => {
-  fs.readFile.mockClear();
-  parser.parseYaml.mockClear();
-  svgo.SVGOptimizer.mockClear();
-
-  github.context.eventName = eventName;
-
-  const actionConfigFilePath = "svgo-action.yml";
-  const actionConfigFileContent = "dry-run: true\n";
-  const actionConfig = { "dry-run": true };
-
-  when(core.getInput)
-    .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
-    .mockReturnValueOnce(actionConfigFilePath);
-  when(fs.readFile)
-    .calledWith(actionConfigFilePath)
-    .mockReturnValueOnce(actionConfigFileContent);
-  when(parser.parseYaml)
-    .calledWith(actionConfigFileContent)
-    .mockReturnValueOnce(actionConfig);
-
-  await main();
-
-  expect(fs.readFile).toHaveBeenCalledWith(actionConfigFilePath);
-  expect(parser.parseYaml).toHaveBeenCalledWith(actionConfigFileContent);
-  expect(inputs.ActionConfig).toHaveBeenCalledWith(core, actionConfig);
-});
-
-test.each(SUPPORTED_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
-  fs.readFile.mockClear();
-  parser.parseJavaScript.mockClear();
-  svgo.SVGOptimizer.mockClear();
-
-  github.context.eventName = eventName;
-
-  const svgoOptionsFilePath = "svgo.config.js";
-  const svgoOptionsFileContent = "module.exports = { }";
-  const svgoOptions = { multipass: true, plugins: [] };
-
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: svgoOptionsFilePath, svgoVersion: 2 };
-  });
-  when(fs.readFile)
-    .calledWith(svgoOptionsFilePath)
-    .mockReturnValueOnce(svgoOptionsFileContent);
-  when(parser.parseJavaScript)
-    .calledWith(svgoOptionsFileContent)
-    .mockReturnValueOnce(svgoOptions);
-
-  await main();
-
-  expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
-  expect(parser.parseJavaScript).toHaveBeenCalledWith(svgoOptionsFileContent);
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoOptions);
-});
-
-test.each(SUPPORTED_EVENTS)("use a YAML SVGO options file in the repository (%s)", async (eventName) => {
-  fs.readFile.mockClear();
-  parser.parseYaml.mockClear();
-  svgo.SVGOptimizer.mockClear();
-
-  github.context.eventName = eventName;
-
-  const svgoOptionsFilePath = ".svgo.yml";
-  const svgoOptionsFileContent = "multipass: true\nplugins:\n- removeDoctype";
-  const svgoOptions = { multipass: true, plugins: ["removeDoctype"] };
-
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: svgoOptionsFilePath, svgoVersion: 1 };
-  });
-  when(fs.readFile)
-    .calledWith(svgoOptionsFilePath)
-    .mockReturnValueOnce(svgoOptionsFileContent);
-  when(parser.parseYaml)
-    .calledWith(svgoOptionsFileContent)
-    .mockReturnValueOnce(svgoOptions);
-
-  await main();
-
-  expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
-  expect(parser.parseYaml).toHaveBeenCalledWith(svgoOptionsFileContent);
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoOptions);
-});
-
-test.each([1, 2])("set SVGO version", async (svgoVersion) => {
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: "svgo.config.js", svgoVersion: svgoVersion };
+    await main(client, context);
+    expect(optimize.optimize).not.toHaveBeenCalled();
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
-  await main();
+  test.each(SKIPPABLE_EVENTS)("the Action is skipped (%s)", async (eventName) => {
+    const context = github.MockContext({ eventName });
 
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, undefined);
-  expect(core.info).toHaveBeenCalledWith(expect.stringMatching(`SVGO.*${svgoVersion}`));
+    skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: true });
+
+    await main(client, context);
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Action disabled"));
+  });
 });
 
-test.each(SKIPPABLE_EVENTS)("the Action is skipped (%s)", async (eventName) => {
-  github.context.eventName = eventName;
+describe("configuration", () => {
+  test.each(SUPPORTED_EVENTS)("dry mode enabled (%s)", async (eventName) => {
+    const context = github.MockContext({ eventName });
 
-  skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: true });
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { svgoOptionsPath: "svgo.config.js", isDryRun: true };
+    });
 
-  await main();
-
-  expect(core.setFailed).not.toHaveBeenCalled();
-  expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Action disabled"));
-});
-
-test.each(SUPPORTED_EVENTS)("the default Action configuration file does not exist (%s)", async (eventName) => {
-  core.warning.mockClear();
-  core.setFailed.mockClear();
-
-  github.context.eventName = eventName;
-
-  when(core.getInput)
-    .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
-    .mockReturnValueOnce(DEFAULT_SVGO_OPTIONS);
-  when(fs.readFile)
-    .calledWith(DEFAULT_CONFIG_PATH)
-    .mockRejectedValueOnce(new Error("Not found"));
-
-  await main();
-
-  expect(core.setFailed).not.toHaveBeenCalled();
-  expect(core.warning).not.toHaveBeenCalled();
-});
-
-test.each(SUPPORTED_EVENTS)("a custom Action configuration file does not exist (%s)", async (eventName) => {
-  core.warning.mockClear();
-  core.setFailed.mockClear();
-
-  github.context.eventName = eventName;
-
-  const actionConfigFilePath = ".svgo-action.yml";
-  expect(actionConfigFilePath).not.toEqual(core.getInput(INPUT_NAME_CONFIG_PATH));
-
-  when(core.getInput)
-    .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
-    .mockReturnValueOnce(actionConfigFilePath);
-  when(fs.readFile)
-    .calledWith(actionConfigFilePath)
-    .mockRejectedValueOnce(new Error("Not found"));
-
-  await main();
-
-  expect(core.setFailed).not.toHaveBeenCalled();
-  expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("Action config file '.*' not found"),
-  );
-});
-
-test.each(SUPPORTED_EVENTS)("the Action configuration file exists but is invalid (%s)", async (eventName) => {
-  core.warning.mockClear();
-  core.setFailed.mockClear();
-
-  github.context.eventName = eventName;
-
-  const actionConfigFilePath = core.getInput(INPUT_NAME_CONFIG_PATH);
-  const actionConfigFileContent = "foobar";
-
-  when(fs.readFile)
-    .calledWith(actionConfigFilePath)
-    .mockResolvedValueOnce(actionConfigFileContent);
-  when(parser.parseYaml)
-    .calledWith(actionConfigFileContent)
-    .mockImplementation(() => { throw new Error("Not found"); });
-
-  await main();
-
-  expect(core.setFailed).not.toHaveBeenCalled();
-  expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("Action config file '.*' invalid"),
-  );
-});
-
-test("the default SVGO config file does not exist", async () => {
-  core.warning.mockClear();
-  core.setFailed.mockClear();
-  svgo.SVGOptimizer.mockClear();
-
-  github.context.eventName = EVENT_PUSH;
-
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: DEFAULT_SVGO_OPTIONS, svgoVersion: 2 };
+    await main(client, context);
+    expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
-  when(fs.readFile)
-    .calledWith(DEFAULT_SVGO_OPTIONS)
-    .mockRejectedValueOnce(new Error("Not found"));
+  test.each([1, 2])("SVGO version", async (svgoVersion) => {
+    core.info.mockClear();
+    svgo.SVGOptimizer.mockClear();
 
-  await main();
+    const context = github.MockContext();
 
-  expect(core.setFailed).not.toHaveBeenCalled();
-  expect(core.warning).not.toHaveBeenCalled();
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, undefined);
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { svgoOptionsPath: "svgo.config.js", svgoVersion: svgoVersion };
+    });
+
+    await main(client, context);
+
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, expect.anything());
+    expect(core.info).toHaveBeenCalledWith(expect.stringMatching(`SVGO.*${svgoVersion}`));
+  });
 });
 
-test.each([
-  [2, "svgo-configuration.js"],
-  [1, "svgo-configuration.yml"],
-])("a custom SVGO config file does not exist (%s, %s)", async (version, filePath) => {
-  core.warning.mockClear();
-  core.setFailed.mockClear();
-  svgo.SVGOptimizer.mockClear();
+describe("Action configuration file", () => {
+  test.each(SUPPORTED_EVENTS)("use custom file (%s)", async (eventName) => {
+    fs.readFile.mockClear();
+    parser.parseYaml.mockClear();
+    svgo.SVGOptimizer.mockClear();
 
-  github.context.eventName = EVENT_PUSH;
+    const context = github.MockContext({ eventName });
 
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: filePath, svgoVersion: version };
+    const actionConfigFilePath = "svgo-action.yml";
+    const actionConfigFileContent = "dry-run: true\n";
+    const actionConfig = { "dry-run": true };
+
+    when(core.getInput)
+      .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
+      .mockReturnValueOnce(actionConfigFilePath);
+    when(fs.readFile)
+      .calledWith(actionConfigFilePath)
+      .mockReturnValueOnce(actionConfigFileContent);
+    when(parser.parseYaml)
+      .calledWith(actionConfigFileContent)
+      .mockReturnValueOnce(actionConfig);
+
+    await main(client, context);
+
+    expect(fs.readFile).toHaveBeenCalledWith(actionConfigFilePath);
+    expect(parser.parseYaml).toHaveBeenCalledWith(actionConfigFileContent);
+    expect(inputs.ActionConfig).toHaveBeenCalledWith(core, actionConfig);
   });
 
-  when(fs.readFile)
-    .calledWith(filePath)
-    .mockRejectedValueOnce(new Error("Not found"));
+  test.each(SUPPORTED_EVENTS)("the default file does not exist (%s)", async (eventName) => {
+    core.warning.mockClear();
+    core.setFailed.mockClear();
 
-  await main();
+    const context = github.MockContext({ eventName });
 
-  expect(core.setFailed).not.toHaveBeenCalled();
-  expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("SVGO config file '.*' not found"),
-  );
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
-});
+    when(core.getInput)
+      .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
+      .mockReturnValueOnce(DEFAULT_CONFIG_PATH);
+    when(fs.readFile)
+      .calledWith(DEFAULT_CONFIG_PATH)
+      .mockRejectedValueOnce(new Error("Not found"));
 
-test.each([
-  [2, "svgo.config.js"],
-  [1, ".svgo.yml"],
-])("use a SVGO config file that is invalid (%s, %s)", async (version, filePath) => {
-  core.warning.mockClear();
-  core.setFailed.mockClear();
-  svgo.SVGOptimizer.mockClear();
+    await main(client, context);
 
-  github.context.eventName = EVENT_PUSH;
-
-  const invalidContent = "foobar";
-
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { svgoOptionsPath: filePath, svgoVersion: version };
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.warning).not.toHaveBeenCalled();
   });
 
-  when(fs.readFile)
-    .calledWith(filePath)
-    .mockResolvedValueOnce(invalidContent);
-  when(parser.parseJavaScript)
-    .calledWith(invalidContent)
-    .mockImplementation(() => { throw new Error("Not found"); });
-  when(parser.parseYaml)
-    .calledWith(invalidContent)
-    .mockImplementation(() => { throw new Error("Not found"); });
+  test.each(SUPPORTED_EVENTS)("a custom file does not exist (%s)", async (eventName) => {
+    core.warning.mockClear();
+    core.setFailed.mockClear();
 
-  await main();
+    const context = github.MockContext({ eventName });
 
-  expect(core.setFailed).not.toHaveBeenCalled();
-  expect(core.warning).toHaveBeenCalledWith(
-    expect.stringMatching("SVGO config file '.*' invalid"),
-  );
-  expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
-});
+    const actionConfigFilePath = ".svgo-action.yml";
+    expect(actionConfigFilePath).not.toEqual(core.getInput(INPUT_NAME_CONFIG_PATH));
 
-test.each(COMMENTABLE_EVENTS)("leave no comment by default (%s)", async (eventName) => {
-  templating.formatComment.mockClear();
+    when(core.getInput)
+      .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
+      .mockReturnValueOnce(actionConfigFilePath);
+    when(fs.readFile)
+      .calledWith(actionConfigFilePath)
+      .mockRejectedValueOnce(new Error("Not found"));
 
-  github.context.eventName = eventName;
+    await main(client, context);
 
-  await main();
-  expect(templating.formatComment).not.toHaveBeenCalled();
-});
-
-test.each(COMMENTABLE_EVENTS)("leave a comment if enabled (%s)", async (eventName) => {
-  templating.formatComment.mockClear();
-
-  github.context.eventName = eventName;
-
-  const commentTemplate = "{{optimizedCount}} SVGs optimized";
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { enableComments: true, comment: commentTemplate };
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.warning).toHaveBeenCalledWith(
+      expect.stringMatching("Action config file '.*' not found"),
+    );
   });
 
-  await main();
-  expect(templating.formatComment).toHaveBeenCalledWith(
-    commentTemplate,
-    expect.any(Object),
-    [],
-  );
+  test.each(SUPPORTED_EVENTS)("the Action exists but is invalid (%s)", async (eventName) => {
+    core.warning.mockClear();
+    core.setFailed.mockClear();
+
+    const context = github.MockContext({ eventName });
+
+    const actionConfigFilePath = core.getInput(INPUT_NAME_CONFIG_PATH);
+    const actionConfigFileContent = "foobar";
+
+    when(fs.readFile)
+      .calledWith(actionConfigFilePath)
+      .mockResolvedValueOnce(actionConfigFileContent);
+    when(parser.parseYaml)
+      .calledWith(actionConfigFileContent)
+      .mockImplementation(() => { throw new Error("Not found"); });
+
+    await main(client, context);
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.warning).toHaveBeenCalledWith(
+      expect.stringMatching("Action config file '.*' invalid"),
+    );
+  });
 });
 
-test.each(COMMENTABLE_EVENTS)("leave no comment if disabled (%s)", async (eventName) => {
-  templating.formatComment.mockClear();
+describe("SVGO configuration file", () => {
+  test.each(SUPPORTED_EVENTS)("use a JavaScript SVGO options file in the repository (%s)", async (eventName) => {
+    fs.readFile.mockClear();
+    parser.parseJavaScript.mockClear();
+    svgo.SVGOptimizer.mockClear();
 
-  github.context.eventName = eventName;
+    const context = github.MockContext({ eventName });
 
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { enableComments: false };
+    const svgoOptionsFilePath = "svgo.config.js";
+    const svgoOptionsFileContent = "module.exports = { }";
+    const svgoOptions = { multipass: true, plugins: [] };
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { svgoOptionsPath: svgoOptionsFilePath, svgoVersion: 2 };
+    });
+    when(fs.readFile)
+      .calledWith(svgoOptionsFilePath)
+      .mockReturnValueOnce(svgoOptionsFileContent);
+    when(parser.parseJavaScript)
+      .calledWith(svgoOptionsFileContent)
+      .mockReturnValueOnce(svgoOptions);
+
+    await main(client, context);
+
+    expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
+    expect(parser.parseJavaScript).toHaveBeenCalledWith(svgoOptionsFileContent);
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, svgoOptions);
   });
 
-  await main();
-  expect(templating.formatComment).not.toHaveBeenCalled();
+  test.each(SUPPORTED_EVENTS)("use a YAML SVGO options file in the repository (%s)", async (eventName) => {
+    fs.readFile.mockClear();
+    parser.parseYaml.mockClear();
+    svgo.SVGOptimizer.mockClear();
+
+    const context = github.MockContext({ eventName });
+
+    const svgoOptionsFilePath = ".svgo.yml";
+    const svgoOptionsFileContent = "multipass: true\nplugins:\n- removeDoctype";
+    const svgoOptions = { multipass: true, plugins: ["removeDoctype"] };
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { svgoOptionsPath: svgoOptionsFilePath, svgoVersion: 1 };
+    });
+    when(fs.readFile)
+      .calledWith(svgoOptionsFilePath)
+      .mockReturnValueOnce(svgoOptionsFileContent);
+    when(parser.parseYaml)
+      .calledWith(svgoOptionsFileContent)
+      .mockReturnValueOnce(svgoOptions);
+
+    await main(client, context);
+
+    expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
+    expect(parser.parseYaml).toHaveBeenCalledWith(svgoOptionsFileContent);
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(1, svgoOptions);
+  });
+
+  test("the default SVGO config file does not exist", async () => {
+    core.warning.mockClear();
+    core.setFailed.mockClear();
+    svgo.SVGOptimizer.mockClear();
+
+    const context = github.MockContext();
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { svgoOptionsPath: DEFAULT_SVGO_OPTIONS, svgoVersion: 2 };
+    });
+
+    when(fs.readFile)
+      .calledWith(DEFAULT_SVGO_OPTIONS)
+      .mockRejectedValueOnce(new Error("Not found"));
+
+    await main(client, context);
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.warning).not.toHaveBeenCalled();
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(2, undefined);
+  });
+
+  test.each([
+    [2, "svgo-configuration.js"],
+    [1, "svgo-configuration.yml"],
+  ])("a custom SVGO config file does not exist (%s, %s)", async (version, filePath) => {
+    core.warning.mockClear();
+    core.setFailed.mockClear();
+    svgo.SVGOptimizer.mockClear();
+
+    const context = github.MockContext();
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { svgoOptionsPath: filePath, svgoVersion: version };
+    });
+
+    when(fs.readFile)
+      .calledWith(filePath)
+      .mockRejectedValueOnce(new Error("Not found"));
+
+    await main(client, context);
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.warning).toHaveBeenCalledWith(
+      expect.stringMatching("SVGO config file '.*' not found"),
+    );
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
+  });
+
+  test.each([
+    [2, "svgo.config.js"],
+    [1, ".svgo.yml"],
+  ])("use a SVGO config file that is invalid (%s, %s)", async (version, filePath) => {
+    core.warning.mockClear();
+    core.setFailed.mockClear();
+    svgo.SVGOptimizer.mockClear();
+
+    const context = github.MockContext();
+
+    const invalidContent = "foobar";
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { svgoOptionsPath: filePath, svgoVersion: version };
+    });
+
+    when(fs.readFile)
+      .calledWith(filePath)
+      .mockResolvedValueOnce(invalidContent);
+    when(parser.parseJavaScript)
+      .calledWith(invalidContent)
+      .mockImplementation(() => { throw new Error("Not found"); });
+    when(parser.parseYaml)
+      .calledWith(invalidContent)
+      .mockImplementation(() => { throw new Error("Not found"); });
+
+    await main(client, context);
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.warning).toHaveBeenCalledWith(
+      expect.stringMatching("SVGO config file '.*' invalid"),
+    );
+    expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
+  });
 });
 
-test.each(
-  SUPPORTED_EVENTS.filter((eventName) => !COMMENTABLE_EVENTS.includes(eventName)),
-)("leave no comment if enabled but not in commentable event (%s)", async (eventName) => {
-  templating.formatComment.mockClear();
+describe("comments", () => {
+  test.each(COMMENTABLE_EVENTS)("leave no comment by default (%s)", async (eventName) => {
+    templating.formatComment.mockClear();
 
-  github.context.eventName = eventName;
+    const context = github.MockContext({ eventName });
 
-  inputs.ActionConfig.mockImplementationOnce(() => {
-    return { enableComments: true };
+    await main(client, context);
+    expect(templating.formatComment).not.toHaveBeenCalled();
   });
 
-  await main();
-  expect(templating.formatComment).not.toHaveBeenCalled();
+  test.each(COMMENTABLE_EVENTS)("leave a comment if enabled (%s)", async (eventName) => {
+    templating.formatComment.mockClear();
+
+    const context = github.MockContext({ eventName });
+
+    const commentTemplate = "{{optimizedCount}} SVGs optimized";
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { enableComments: true, comment: commentTemplate };
+    });
+
+    await main(client, context);
+    expect(templating.formatComment).toHaveBeenCalledWith(
+      commentTemplate,
+      expect.any(Object),
+      [],
+    );
+  });
+
+  test.each(COMMENTABLE_EVENTS)("leave no comment if disabled (%s)", async (eventName) => {
+    templating.formatComment.mockClear();
+
+    const context = github.MockContext({ eventName });
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { enableComments: false };
+    });
+
+    await main(client, context);
+    expect(templating.formatComment).not.toHaveBeenCalled();
+  });
+
+  test.each(
+    SUPPORTED_EVENTS.filter((eventName) => !COMMENTABLE_EVENTS.includes(eventName)),
+  )("leave no comment if enabled but not in commentable event (%s)", async (eventName) => {
+    templating.formatComment.mockClear();
+
+    const context = github.MockContext({ eventName });
+
+    inputs.ActionConfig.mockImplementationOnce(() => {
+      return { enableComments: true };
+    });
+
+    await main(client, context);
+    expect(templating.formatComment).not.toHaveBeenCalled();
+  });
 });
