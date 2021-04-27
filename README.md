@@ -45,6 +45,9 @@ jobs:
 _Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
 GitHub's rest API_
 
+> :warning: This Action does not work for Pull Requests from forks. This is
+> because GitHub Actions do not have permission to alter forked repositories.
+
 ### Configure the Action
 
 There are a couple of ways for you to configure the Action. You can configure it
