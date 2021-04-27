@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add warning about running the Action for Pull Requests from forks. ([#355])
 
 ## [1.3.3] - 2021-04-02
 
@@ -220,4 +220,5 @@ Versioning].
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
 [#352]: https://github.com/ericcornelissen/svgo-action/pull/352
+[#355]: https://github.com/ericcornelissen/svgo-action/pull/355
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
