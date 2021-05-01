@@ -68,11 +68,12 @@ configuration file]. The table below shows the options that can be configured.
 The first way to configure the Action is inside the Workflow file. For example:
 
 ```yaml
-with:
-  dry-run: true
-  ignore: do/not/optimize/**/*.svg
-  svgo-options: path/to/svgo-options.js
-  svgo-version: 2
+- uses: ericcornelissen/svgo-action@next
+  with:
+    dry-run: true
+    ignore: do/not/optimize/**/*.svg
+    svgo-options: path/to/svgo-options.js
+    svgo-version: 2
 ```
 
 #### In `.github/svgo-action.yml`
@@ -97,8 +98,9 @@ value should point to the configuration file you want to use. For example:
 > :warning: The configuration file must always be a valid YAML file.
 
 ```yaml
-with:
-  configuration-path: path/to/configuration/file.yml
+- uses: ericcornelissen/svgo-action@next
+  with:
+    configuration-path: path/to/configuration/file.yml
 ```
 
 ### Advanced Usage

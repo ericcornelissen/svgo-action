@@ -23,9 +23,8 @@ export class ActionConfig {
   public readonly svgoVersion: 1 | 2;
 
   constructor(inputs: Inputs, config: RawActionConfig = { }) {
-    this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
-
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
+    this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
     this.svgoVersion = ActionConfig.getSvgoVersion(inputs, config);
   }

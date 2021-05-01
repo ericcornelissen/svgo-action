@@ -170,3 +170,4 @@ svgo-options: .svgo.yml
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
+[yaml]: https://yaml.org/
