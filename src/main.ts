@@ -3,16 +3,13 @@
 import type { Context } from "@actions/github/lib/context";
 import type { Octokit } from "@octokit/core";
 
-import type { RawActionConfig, Warnings } from "./types";
+import type { Warnings } from "./types";
 
 import * as core from "@actions/core";
 
 import {
   COMMENTABLE_EVENTS,
-  DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
-  INPUT_NAME_CONFIG_PATH,
-  INPUT_NOT_REQUIRED,
   SUPPORTED_EVENTS,
 } from "./constants";
 import * as fs from "./file-system";
@@ -24,30 +21,6 @@ import { optimize } from "./optimize";
 import { setOutputValues } from "./outputs";
 import { shouldSkipRun } from "./skip-run";
 import { formatComment } from "./templating";
-
-async function getActionConfig(): Promise<[ActionConfig, Warnings]> {
-  const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED);
-  const warnings: Warnings = [];
-
-  let rawConfig: RawActionConfig | undefined;
-  try {
-    const rawConfigYaml = await fs.readFile(filePath);
-    try {
-      rawConfig = parseYaml(rawConfigYaml);
-    } catch (_) {
-      warnings.push(`Action config file '${filePath}' invalid`);
-    }
-  } catch (_) {
-    if (filePath !== DEFAULT_CONFIG_PATH) {
-      warnings.push(`Action config file '${filePath}' not found`);
-    }
-  }
-
-  return [
-    new ActionConfig(core, rawConfig),
-    warnings,
-  ];
-}
 
 async function getSvgoInstance(
   config: ActionConfig,
@@ -83,8 +56,7 @@ async function initAction(): Promise<[
 ]> {
   const warnings: Warnings = [];
 
-  const [config, configWarnings] = await getActionConfig();
-  warnings.push(...configWarnings);
+  const config = new ActionConfig(core);
   if (config.isDryRun) {
     core.info("Dry mode enabled, no changes will be written");
   }
