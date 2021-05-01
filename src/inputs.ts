@@ -1,8 +1,6 @@
 import type { Inputs, RawActionConfig } from "./types";
 
 import {
-  DEFAULT_COMMENT,
-  INPUT_NAME_COMMENT,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
   INPUT_NAME_SVGO_OPTIONS,
@@ -19,43 +17,16 @@ const TRUE = "true";
 const DEFAULT_SVGO_VERSION = 2;
 
 export class ActionConfig {
-  public readonly comment: string;
-  public readonly enableComments: boolean;
   public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
   public readonly svgoVersion: 1 | 2;
 
   constructor(inputs: Inputs, config: RawActionConfig = { }) {
-    this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
-
-    this.comment = ActionConfig.getCommentValue(inputs, config);
-    this.enableComments = ActionConfig.getEnableComments(
-      inputs,
-      config,
-      this.isDryRun,
-    );
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs, config);
+    this.isDryRun = ActionConfig.getDryRunValue(inputs, config);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs, config);
     this.svgoVersion = ActionConfig.getSvgoVersion(inputs, config);
-  }
-
-  private static getCommentValue(
-    inputs: Inputs,
-    config: RawActionConfig,
-  ): string {
-    const value = (config.comment !== undefined) ?
-      config.comment : inputs.getInput(INPUT_NAME_COMMENT, INPUT_NOT_REQUIRED);
-
-    if (typeof value === STRING && value !== TRUE) {
-      // If the value is (the string) `"false"` comments will be disabled, so it
-      // does not matter that the comment template is `"false"`. If the value is
-      // (the string) `"true"`, we interpret it as (the boolean) `true`, so the
-      // default template should be used.
-      return value as string;
-    } else {
-      return DEFAULT_COMMENT;
-    }
   }
 
   private static getDryRunValue(
@@ -68,19 +39,6 @@ export class ActionConfig {
       INPUT_NAME_DRY_RUN,
       true,
     );
-  }
-
-  private static getEnableComments(
-    inputs: Inputs,
-    config: RawActionConfig,
-    dryRun: boolean,
-  ): boolean {
-    return this.normalizeBoolOption(
-      inputs,
-      config.comment as boolean,
-      INPUT_NAME_COMMENT,
-      true,
-    ) && !dryRun;
   }
 
   private static getIgnoreGlob(

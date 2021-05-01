@@ -18,8 +18,6 @@ reference it in the subsequent step that needs it:
 steps:
 - uses: ericcornelissen/svgo-action@v1
   id: svgo  # <-- You need to give the SVGO Action step a unique id
-  with:
-    repo-token: ${{ secrets.GITHUB_TOKEN }}
 - name: Consume output
   run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
   #                   ^            ^

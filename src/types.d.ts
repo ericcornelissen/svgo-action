@@ -1,16 +1,6 @@
 // Type representing the relevant information of `@actions/github.context`.
 export type Context = {
   eventName: string;
-  payload: {
-    commits: {
-      message: string;
-    }[],
-    pull_request?: {
-      head: {
-        ref: string;
-      }
-    }
-  }
 }
 
 // Type representing data about one optimized file.
@@ -49,7 +39,6 @@ export type Inputs = {
 
 // Type representing an Action configuration file.
 export type RawActionConfig = {
-  readonly comment?: boolean | string;
   readonly "dry-run"?: boolean;
   readonly ignore?: string;
   readonly "svgo-options"?: string;
