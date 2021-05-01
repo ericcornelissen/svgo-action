@@ -9,6 +9,7 @@ Versioning].
 
 - BREAKING: Remove ability to leave comments on Pull Requests. ([#357])
 - BREAKING: Remove ability to cancel runs. ([#357])
+- BREAKING: Remove external configuration file. ([#358])
 
 ## [2.0.0-alpha.2] - 2021-03-08
 
@@ -237,10 +238,11 @@ Versioning].
 [#335]: https://github.com/ericcornelissen/svgo-action/pull/335
 [#337]: https://github.com/ericcornelissen/svgo-action/pull/337
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
-[#357]: https://github.com/ericcornelissen/svgo-action/pull/357
 [#343]: https://github.com/ericcornelissen/svgo-action/pull/343
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
 [#346]: https://github.com/ericcornelissen/svgo-action/pull/346
 [#352]: https://github.com/ericcornelissen/svgo-action/pull/352
 [#355]: https://github.com/ericcornelissen/svgo-action/pull/355
+[#357]: https://github.com/ericcornelissen/svgo-action/pull/357
+[#358]: https://github.com/ericcornelissen/svgo-action/pull/358
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
