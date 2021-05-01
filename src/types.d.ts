@@ -37,14 +37,6 @@ export type Inputs = {
   getInput(name: string, options: { required?: boolean; }): string;
 }
 
-// Type representing an Action configuration file.
-export type RawActionConfig = {
-  readonly "dry-run"?: boolean;
-  readonly ignore?: string;
-  readonly "svgo-options"?: string;
-  readonly "svgo-version"?: number;
-}
-
 // Types representing Action run warnings
 export type Warning = string;
 export type Warnings = Warning[];

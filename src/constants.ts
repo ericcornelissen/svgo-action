@@ -13,7 +13,6 @@ export const SUPPORTED_EVENTS: string[] = [
 ];
 
 // Action inputs
-export const INPUT_NAME_CONFIG_PATH = "configuration-path";
 export const INPUT_NAME_DRY_RUN = "dry-run";
 export const INPUT_NAME_IGNORE = "ignore";
 export const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
@@ -21,7 +20,6 @@ export const INPUT_NAME_SVGO_VERSION = "svgo-version";
 export const INPUT_NOT_REQUIRED = { required: false };
 
 // Action defaults
-export const DEFAULT_CONFIG_PATH = ".github/svgo-action.yml";
 export const DEFAULT_SVGO_OPTIONS = "svgo.config.js";
 
 // Action outputs

@@ -17,11 +17,8 @@ jest.mock("../src/parser", () => parser);
 jest.mock("../src/svgo", () => svgo);
 
 import {
-  DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
   EVENT_PUSH,
-  INPUT_NAME_CONFIG_PATH,
-  INPUT_NOT_REQUIRED,
   SUPPORTED_EVENTS,
 } from "../src/constants";
 import main from "../src/main";
@@ -88,103 +85,6 @@ describe("configuration", () => {
 
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, expect.anything());
     expect(core.info).toHaveBeenCalledWith(expect.stringMatching(`SVGO.*${svgoVersion}`));
-  });
-});
-
-describe("Action configuration file", () => {
-  test.each(SUPPORTED_EVENTS)("use custom file (%s)", async (eventName) => {
-    fs.readFile.mockClear();
-    parser.parseYaml.mockClear();
-    svgo.SVGOptimizer.mockClear();
-
-    const context = { eventName };
-
-    const actionConfigFilePath = "svgo-action.yml";
-    const actionConfigFileContent = "dry-run: true\n";
-    const actionConfig = { "dry-run": true };
-
-    when(core.getInput)
-      .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
-      .mockReturnValueOnce(actionConfigFilePath);
-    when(fs.readFile)
-      .calledWith(actionConfigFilePath)
-      .mockReturnValueOnce(actionConfigFileContent);
-    when(parser.parseYaml)
-      .calledWith(actionConfigFileContent)
-      .mockReturnValueOnce(actionConfig);
-
-    await main(context);
-
-    expect(fs.readFile).toHaveBeenCalledWith(actionConfigFilePath);
-    expect(parser.parseYaml).toHaveBeenCalledWith(actionConfigFileContent);
-    expect(inputs.ActionConfig).toHaveBeenCalledWith(core, actionConfig);
-  });
-
-  test.each(SUPPORTED_EVENTS)("the default file does not exist (%s)", async (eventName) => {
-    core.warning.mockClear();
-    core.setFailed.mockClear();
-
-    const context = { eventName };
-
-    when(core.getInput)
-      .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
-      .mockReturnValueOnce(DEFAULT_CONFIG_PATH);
-    when(fs.readFile)
-      .calledWith(DEFAULT_CONFIG_PATH)
-      .mockRejectedValueOnce(new Error("Not found"));
-
-    await main(context);
-
-    expect(core.setFailed).not.toHaveBeenCalled();
-    expect(core.warning).not.toHaveBeenCalled();
-  });
-
-  test.each(SUPPORTED_EVENTS)("a custom file does not exist (%s)", async (eventName) => {
-    core.warning.mockClear();
-    core.setFailed.mockClear();
-
-    const context = { eventName };
-
-    const actionConfigFilePath = ".svgo-action.yml";
-    expect(actionConfigFilePath).not.toEqual(core.getInput(INPUT_NAME_CONFIG_PATH));
-
-    when(core.getInput)
-      .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
-      .mockReturnValueOnce(actionConfigFilePath);
-    when(fs.readFile)
-      .calledWith(actionConfigFilePath)
-      .mockRejectedValueOnce(new Error("Not found"));
-
-    await main(context);
-
-    expect(core.setFailed).not.toHaveBeenCalled();
-    expect(core.warning).toHaveBeenCalledWith(
-      expect.stringMatching("Action config file '.*' not found"),
-    );
-  });
-
-  test.each(SUPPORTED_EVENTS)("the Action exists but is invalid (%s)", async (eventName) => {
-    core.warning.mockClear();
-    core.setFailed.mockClear();
-
-    const context = { eventName };
-
-    const actionConfigFilePath = core.getInput(INPUT_NAME_CONFIG_PATH);
-    const actionConfigFileContent = "foobar";
-
-    when(fs.readFile)
-      .calledWith(actionConfigFilePath)
-      .mockResolvedValueOnce(actionConfigFileContent);
-    when(parser.parseYaml)
-      .calledWith(actionConfigFileContent)
-      .mockImplementation(() => { throw new Error("Not found"); });
-
-    await main(context);
-
-    expect(core.setFailed).not.toHaveBeenCalled();
-    expect(core.warning).toHaveBeenCalledWith(
-      expect.stringMatching("Action config file '.*' invalid"),
-    );
   });
 });
 

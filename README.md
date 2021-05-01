@@ -44,17 +44,12 @@ jobs:
     - uses: ericcornelissen/svgo-action@next
 ```
 
-_Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
-GitHub's rest API_
-
 > :warning: This Action does not work for Pull Requests from forks. This is
 > because GitHub Actions do not have permission to alter forked repositories.
 
 ### Configure the Action
 
-There are a couple of ways for you to configure the Action. You can configure it
-[in the Workflow file], [in `.github/svgo-action.yml`], or [in another
-configuration file]. The table below shows the options that can be configured.
+This Action has a couple of options to configure its behaviour, namely:
 
 | Name                   | Description                             | Default            | Documentation                                 |
 | ---------------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
@@ -63,9 +58,7 @@ configuration file]. The table below shows the options that can be configured.
 | `svgo-options`         | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
 | `svgo-version`         | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
 
-#### In the Workflow file
-
-The first way to configure the Action is inside the Workflow file. For example:
+To configure these you add them to the Workflow file. For example:
 
 ```yaml
 - uses: ericcornelissen/svgo-action@next
@@ -74,33 +67,6 @@ The first way to configure the Action is inside the Workflow file. For example:
     ignore: do/not/optimize/**/*.svg
     svgo-options: path/to/svgo-options.js
     svgo-version: 2
-```
-
-#### In `.github/svgo-action.yml`
-
-If you prefer to separate the Action configuration from the Workflow file you
-can add a file called `svgo-action.yml` inside the `.github` directory. Then,
-you can configure the Action inside this file. For example:
-
-```yaml
-dry-run: true
-ignore: do/not/optimize/**/*.svg
-svgo-options: path/to/svgo-options.js
-svgo-version: 2
-```
-
-#### In Another Configuration File
-
-Lastly, if you prefer to use a different file from `.github/svgo-action.yml`,
-it is possible to specify a `configuration-path` in the Workflow file. This
-value should point to the configuration file you want to use. For example:
-
-> :warning: The configuration file must always be a valid YAML file.
-
-```yaml
-- uses: ericcornelissen/svgo-action@next
-  with:
-    configuration-path: path/to/configuration/file.yml
 ```
 
 ### Advanced Usage
@@ -145,8 +111,6 @@ on:
 [fossa-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield
 [fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
+[creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
-[in the workflow file]: #in-the-workflow-file
-[in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
-[in another configuration file]: #in-another-configuration-file
 [svgo]: https://github.com/svg/svgo

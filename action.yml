@@ -3,10 +3,6 @@ description: 'Automatically run SVGO with GitHub Actions'
 author: 'Eric Cornelissen'
 
 inputs:
-  configuration-path:
-    description: 'The path for the svgo-action configurations'
-    default: '.github/svgo-action.yml'
-    required: false
   dry-run:
     description: 'Run the action in dry mode (i.e. do not write optimized SVGs)'
     default: false
