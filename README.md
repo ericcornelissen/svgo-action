@@ -42,8 +42,6 @@ jobs:
     # with:
     #   path: main
     - uses: ericcornelissen/svgo-action@next
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 _Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
@@ -60,7 +58,6 @@ configuration file]. The table below shows the options that can be configured.
 
 | Name                   | Description                             | Default            | Documentation                                 |
 | ---------------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
-| `comment`              | Leave comments on Pull Requests         | `false`            | [docs](/docs/options.md#comment)              |
 | `dry-run`              | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
 | `ignore`               | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
 | `svgo-options`         | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
@@ -68,13 +65,10 @@ configuration file]. The table below shows the options that can be configured.
 
 #### In the Workflow file
 
-The first way to configure the Action is inside the Workflow file, after the
-`repo-token`. For example:
+The first way to configure the Action is inside the Workflow file. For example:
 
 ```yaml
 with:
-  repo-token: ${{ secrets.GITHUB_TOKEN }}
-  comment: true
   dry-run: true
   ignore: do/not/optimize/**/*.svg
   svgo-options: path/to/svgo-options.js
@@ -88,7 +82,6 @@ can add a file called `svgo-action.yml` inside the `.github` directory. Then,
 you can configure the Action inside this file. For example:
 
 ```yaml
-comment: true
 dry-run: true
 ignore: do/not/optimize/**/*.svg
 svgo-options: path/to/svgo-options.js
@@ -105,35 +98,10 @@ value should point to the configuration file you want to use. For example:
 
 ```yaml
 with:
-  repo-token: ${{ secrets.GITHUB_TOKEN }}
   configuration-path: path/to/configuration/file.yml
 ```
 
 ### Advanced Usage
-
-#### Manually Disabling the Action
-
-It is possible to manually disable the Action from a commit message. This can be
-achieved by including the string "_disable-svgo-action_" anywhere in the commit
-message.
-
-> :warning: This will only stop the Action from optimizing SVGs in the build
-> corresponding to the commit whose commit message contains the string.
-
-Another possibility is to disable the Action from a Pull Request comment. This
-can be achieved by including the string "_disable-svgo-action_" anywhere in any
-comment on the Pull Request.
-
-> :warning: This will stop the Action from optimizing SVGs in any subsequent
-> build for that Pull Request.
-
-If you want to enable the Action for a singe commit when it is disabled from a
-Pull Request comment, include the string "_enable-svgo-action_" anywhere in the
-commit message. Then, for that commit only, the Action will optimize SVGs.
-
-If instead you want to enable the Action again for all commits, include the
-string "_enable-svgo-action_" anywhere in a comment on the Pull Request after it
-has been disabled, and the Action will start optimizing SVGs again.
 
 #### Limit Runs
 
@@ -175,7 +143,6 @@ on:
 [fossa-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield
 [fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
-[creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [in the workflow file]: #in-the-workflow-file
 [in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
