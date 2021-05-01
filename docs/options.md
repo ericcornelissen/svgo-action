@@ -2,7 +2,6 @@
 
 This file contains the documentation for all options for the SVGO Action.
 
-- [Comment](#comment)
 - [Dry run](#dry-run)
 - [Ignore](#ignore)
 - [SVGO Options](#svgo-options)
@@ -10,48 +9,6 @@ This file contains the documentation for all options for the SVGO Action.
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
-
----
-
-## Comment
-
-| Name      | Default Value |
-| --------- | ------------- |
-| `comment` | `false`       |
-
-The _comment_ options can be used to enable comments by the Action on Pull
-Requests. The comment by the Action contains a summary of the optimization by
-the Action. If the Action did not do anything, it won't leave a comment.
-
-Alternatively, the _comment_ option can be used to configure the contents of
-comments by the Action. By setting the value to a string, comments are enabled
-and the string will be used as the comment. The comment can be a template string
-as described in [the templating documentation].
-
-> :warning: This option only affects the behaviour of the Action when running on
-> a Pull Request.
-
-### Examples
-
-To enable comments by the Action:
-
-```yaml
-- uses: ericcornelissen/svgo-action@next
-  with:
-    comment: true
-```
-
-To configure the contents of comments by the Action (using [YAML multiline
-strings]):
-
-```yaml
-- uses: ericcornelissen/svgo-action@next
-  with:
-    comment: |
-      {{optimizedCount}}/{{svgCount}} SVG(s) optimized :sparkles:
-
-      {{filesTable}}
-```
 
 ---
 
@@ -163,6 +120,4 @@ To change the SVGO major version to v1.x.x:
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
-[the templating documentation]: /docs/templating.md
 [yaml]: https://yaml.org/
-[yaml multiline strings]: https://yaml-multiline.info/

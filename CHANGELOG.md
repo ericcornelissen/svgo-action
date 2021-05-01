@@ -7,7 +7,8 @@ Versioning].
 
 ## [Unreleased, v2]
 
-- Re-add warnings in Action logs and Pull Requests comments. ([#342])
+- BREAKING: Remove ability to leave comments on Pull Requests. ([#357])
+- BREAKING: Remove ability to cancel runs. ([#357])
 
 ## [2.0.0-alpha.2] - 2021-03-08
 
@@ -20,7 +21,7 @@ Versioning].
 - BREAKING: Remove branch configuration option for scheduled runs.
 - BREAKING: Remove option to commit changes.
 - BREAKING: Remove `fileCount` and `ignoredCount` as templating variable.
-- BREAKING: Disabling from push event's now disables the action entirely.
+- BREAKING: Disabling from push events now disables the action entirely.
 - Warn about missing or invalid configuration files.
 
 ## [Unreleased, v1]
@@ -236,7 +237,7 @@ Versioning].
 [#335]: https://github.com/ericcornelissen/svgo-action/pull/335
 [#337]: https://github.com/ericcornelissen/svgo-action/pull/337
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
-[#342]: https://github.com/ericcornelissen/svgo-action/pull/342
+[#357]: https://github.com/ericcornelissen/svgo-action/pull/357
 [#343]: https://github.com/ericcornelissen/svgo-action/pull/343
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
 [#346]: https://github.com/ericcornelissen/svgo-action/pull/346

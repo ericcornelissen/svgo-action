@@ -3,13 +3,6 @@ description: 'Automatically run SVGO with GitHub Actions'
 author: 'Eric Cornelissen'
 
 inputs:
-  repo-token:
-    description: 'The GITHUB_TOKEN secret'
-    required: true
-  comment:
-    description: 'Enable comments on Pull Requests with an optimization summary'
-    default: false
-    required: false
   dry-run:
     description: 'Run the action in dry mode (i.e. do not write optimized SVGs)'
     default: false

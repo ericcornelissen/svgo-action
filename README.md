@@ -42,12 +42,7 @@ jobs:
     # with:
     #   path: main
     - uses: ericcornelissen/svgo-action@next
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
-
-_Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
-GitHub's rest API_
 
 > :warning: This Action does not work for Pull Requests from forks. This is
 > because GitHub Actions do not have permission to alter forked repositories.
@@ -58,7 +53,6 @@ This Action has a couple of options to configure its behaviour, namely:
 
 | Name                   | Description                             | Default            | Documentation                                 |
 | ---------------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
-| `comment`              | Leave comments on Pull Requests         | `false`            | [docs](/docs/options.md#comment)              |
 | `dry-run`              | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
 | `ignore`               | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
 | `svgo-options`         | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
@@ -67,40 +61,15 @@ This Action has a couple of options to configure its behaviour, namely:
 To configure these you add them to the Workflow file. For example:
 
 ```yaml
-with:
-  repo-token: ${{ secrets.GITHUB_TOKEN }}
-  comment: true
-  dry-run: true
-  ignore: do/not/optimize/**/*.svg
-  svgo-options: path/to/svgo-options.js
-  svgo-version: 2
+- uses: ericcornelissen/svgo-action@next
+  with:
+    dry-run: true
+    ignore: do/not/optimize/**/*.svg
+    svgo-options: path/to/svgo-options.js
+    svgo-version: 2
 ```
 
 ### Advanced Usage
-
-#### Manually Disabling the Action
-
-It is possible to manually disable the Action from a commit message. This can be
-achieved by including the string "_disable-svgo-action_" anywhere in the commit
-message.
-
-> :warning: This will only stop the Action from optimizing SVGs in the build
-> corresponding to the commit whose commit message contains the string.
-
-Another possibility is to disable the Action from a Pull Request comment. This
-can be achieved by including the string "_disable-svgo-action_" anywhere in any
-comment on the Pull Request.
-
-> :warning: This will stop the Action from optimizing SVGs in any subsequent
-> build for that Pull Request.
-
-If you want to enable the Action for a singe commit when it is disabled from a
-Pull Request comment, include the string "_enable-svgo-action_" anywhere in the
-commit message. Then, for that commit only, the Action will optimize SVGs.
-
-If instead you want to enable the Action again for all commits, include the
-string "_enable-svgo-action_" anywhere in a comment on the Pull Request after it
-has been disabled, and the Action will start optimizing SVGs again.
 
 #### Limit Runs
 

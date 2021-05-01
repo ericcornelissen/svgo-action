@@ -1,8 +1,6 @@
 import type { Inputs } from "./types";
 
 import {
-  DEFAULT_COMMENT,
-  INPUT_NAME_COMMENT,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
   INPUT_NAME_SVGO_OPTIONS,
@@ -17,40 +15,16 @@ const TRUE = "true";
 const DEFAULT_SVGO_VERSION = 2;
 
 export class ActionConfig {
-  public readonly comment: string;
-  public readonly enableComments: boolean;
   public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
   public readonly svgoVersion: 1 | 2;
 
   constructor(inputs: Inputs) {
-    this.isDryRun = ActionConfig.getDryRunValue(inputs);
-
-    this.comment = ActionConfig.getCommentValue(inputs);
-    this.enableComments = ActionConfig.getEnableComments(
-      inputs,
-      this.isDryRun,
-    );
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs);
+    this.isDryRun = ActionConfig.getDryRunValue(inputs);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs);
     this.svgoVersion = ActionConfig.getSvgoVersion(inputs);
-  }
-
-  private static getCommentValue(
-    inputs: Inputs,
-  ): string {
-    const value = inputs.getInput(INPUT_NAME_COMMENT, INPUT_NOT_REQUIRED);
-
-    if (typeof value === STRING && value !== TRUE) {
-      // If the value is (the string) `"false"` comments will be disabled, so it
-      // does not matter that the comment template is `"false"`. If the value is
-      // (the string) `"true"`, we interpret it as (the boolean) `true`, so the
-      // default template should be used.
-      return value as string;
-    } else {
-      return DEFAULT_COMMENT;
-    }
   }
 
   private static getDryRunValue(
@@ -61,17 +35,6 @@ export class ActionConfig {
       INPUT_NAME_DRY_RUN,
       true,
     );
-  }
-
-  private static getEnableComments(
-    inputs: Inputs,
-    dryRun: boolean,
-  ): boolean {
-    return this.normalizeBoolOption(
-      inputs,
-      INPUT_NAME_COMMENT,
-      true,
-    ) && !dryRun;
   }
 
   private static getIgnoreGlob(
