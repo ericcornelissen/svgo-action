@@ -6,9 +6,7 @@ import * as svgoImport from "./mocks/svgo.mock";
 
 import { optimize } from "../src/optimize";
 
-
 const svgo = new svgoImport.SVGOptimizer();
-
 
 describe("::optimize", () => {
   describe.each([false, true])("dry run = %s", (dryRun) => {

@@ -1,34 +1,24 @@
 import { when } from "jest-when";
 
 import * as core from "./mocks/@actions/core.mock";
-import * as github from "./mocks/@actions/github.mock";
-import * as githubAPI from "./mocks/github-api.mock";
 import * as fs from "./mocks/file-system.mock";
 import * as inputs from "./mocks/inputs.mock";
 import * as optimize from "./mocks/optimize.mock";
 import * as outputs from "./mocks/outputs.mock";
 import * as parser from "./mocks/parser.mock";
-import * as skipRun from "./mocks/skip-run.mock";
 import * as svgo from "./mocks/svgo.mock";
-import * as templating from "./mocks/templating.mock";
 
 jest.mock("@actions/core", () => core);
-jest.mock("@actions/github", () => github);
-jest.mock("../src/github-api", () => githubAPI);
 jest.mock("../src/file-system", () => fs);
 jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/optimize", () => optimize);
 jest.mock("../src/outputs", () => outputs);
 jest.mock("../src/parser", () => parser);
-jest.mock("../src/skip-run", () => skipRun);
 jest.mock("../src/svgo", () => svgo);
-jest.mock("../src/templating", () => templating);
 
 import {
-  COMMENTABLE_EVENTS,
   DEFAULT_CONFIG_PATH,
   DEFAULT_SVGO_OPTIONS,
-  EVENT_PULL_REQUEST,
   EVENT_PUSH,
   INPUT_NAME_CONFIG_PATH,
   INPUT_NOT_REQUIRED,
@@ -36,68 +26,53 @@ import {
 } from "../src/constants";
 import main from "../src/main";
 
-const SKIPPABLE_EVENTS = [EVENT_PULL_REQUEST, EVENT_PUSH];
-
-const client = github.getOctokit("token");
+const DEFAULT_CONTEXT = { eventName: EVENT_PUSH };
 
 beforeEach(() => {
   core.debug.mockClear();
   core.setFailed.mockClear();
 
   optimize.optimize.mockClear();
-
-  skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: false });
 });
 
 describe("run & optimize", () => {
   test.each(SUPPORTED_EVENTS)("%s event", async (eventName) => {
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
-    await main(client, context);
+    await main(context);
     expect(optimize.optimize).toHaveBeenCalled();
   });
 
   test.each(SUPPORTED_EVENTS)("%s event error", async (eventName) => {
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     optimize.optimize.mockImplementationOnce(() => {
       throw new Error("Something went wrong");
     });
 
-    await main(client, context);
+    await main(context);
     expect(optimize.optimize).toHaveBeenCalledTimes(1);
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
 
   test("unknown event", async () => {
-    const context = github.MockContext({ eventName: "UnKnOwN eVeNt" });
+    const context = { eventName: "UnKnOwN eVeNt" };
 
-    await main(client, context);
+    await main(context);
     expect(optimize.optimize).not.toHaveBeenCalled();
     expect(core.setFailed).toHaveBeenCalledTimes(1);
-  });
-
-  test.each(SKIPPABLE_EVENTS)("the Action is skipped (%s)", async (eventName) => {
-    const context = github.MockContext({ eventName });
-
-    skipRun.shouldSkipRun.mockResolvedValue({ shouldSkip: true });
-
-    await main(client, context);
-
-    expect(core.setFailed).not.toHaveBeenCalled();
-    expect(core.info).toHaveBeenCalledWith(expect.stringMatching("Action disabled"));
   });
 });
 
 describe("configuration", () => {
   test.each(SUPPORTED_EVENTS)("dry mode enabled (%s)", async (eventName) => {
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     inputs.ActionConfig.mockImplementationOnce(() => {
       return { svgoOptionsPath: "svgo.config.js", isDryRun: true };
     });
 
-    await main(client, context);
+    await main(context);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
@@ -105,14 +80,11 @@ describe("configuration", () => {
     core.info.mockClear();
     svgo.SVGOptimizer.mockClear();
 
-    const context = github.MockContext();
-
-
     inputs.ActionConfig.mockImplementationOnce(() => {
       return { svgoOptionsPath: "svgo.config.js", svgoVersion: svgoVersion };
     });
 
-    await main(client, context);
+    await main(DEFAULT_CONTEXT);
 
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, expect.anything());
     expect(core.info).toHaveBeenCalledWith(expect.stringMatching(`SVGO.*${svgoVersion}`));
@@ -125,7 +97,7 @@ describe("Action configuration file", () => {
     parser.parseYaml.mockClear();
     svgo.SVGOptimizer.mockClear();
 
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     const actionConfigFilePath = "svgo-action.yml";
     const actionConfigFileContent = "dry-run: true\n";
@@ -141,7 +113,7 @@ describe("Action configuration file", () => {
       .calledWith(actionConfigFileContent)
       .mockReturnValueOnce(actionConfig);
 
-    await main(client, context);
+    await main(context);
 
     expect(fs.readFile).toHaveBeenCalledWith(actionConfigFilePath);
     expect(parser.parseYaml).toHaveBeenCalledWith(actionConfigFileContent);
@@ -152,7 +124,7 @@ describe("Action configuration file", () => {
     core.warning.mockClear();
     core.setFailed.mockClear();
 
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     when(core.getInput)
       .calledWith(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED)
@@ -161,7 +133,7 @@ describe("Action configuration file", () => {
       .calledWith(DEFAULT_CONFIG_PATH)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main(client, context);
+    await main(context);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).not.toHaveBeenCalled();
@@ -171,7 +143,7 @@ describe("Action configuration file", () => {
     core.warning.mockClear();
     core.setFailed.mockClear();
 
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     const actionConfigFilePath = ".svgo-action.yml";
     expect(actionConfigFilePath).not.toEqual(core.getInput(INPUT_NAME_CONFIG_PATH));
@@ -183,7 +155,7 @@ describe("Action configuration file", () => {
       .calledWith(actionConfigFilePath)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main(client, context);
+    await main(context);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).toHaveBeenCalledWith(
@@ -195,7 +167,7 @@ describe("Action configuration file", () => {
     core.warning.mockClear();
     core.setFailed.mockClear();
 
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     const actionConfigFilePath = core.getInput(INPUT_NAME_CONFIG_PATH);
     const actionConfigFileContent = "foobar";
@@ -207,7 +179,7 @@ describe("Action configuration file", () => {
       .calledWith(actionConfigFileContent)
       .mockImplementation(() => { throw new Error("Not found"); });
 
-    await main(client, context);
+    await main(context);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).toHaveBeenCalledWith(
@@ -222,7 +194,7 @@ describe("SVGO configuration file", () => {
     parser.parseJavaScript.mockClear();
     svgo.SVGOptimizer.mockClear();
 
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     const svgoOptionsFilePath = "svgo.config.js";
     const svgoOptionsFileContent = "module.exports = { }";
@@ -238,7 +210,7 @@ describe("SVGO configuration file", () => {
       .calledWith(svgoOptionsFileContent)
       .mockReturnValueOnce(svgoOptions);
 
-    await main(client, context);
+    await main(context);
 
     expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
     expect(parser.parseJavaScript).toHaveBeenCalledWith(svgoOptionsFileContent);
@@ -250,7 +222,7 @@ describe("SVGO configuration file", () => {
     parser.parseYaml.mockClear();
     svgo.SVGOptimizer.mockClear();
 
-    const context = github.MockContext({ eventName });
+    const context = { eventName };
 
     const svgoOptionsFilePath = ".svgo.yml";
     const svgoOptionsFileContent = "multipass: true\nplugins:\n- removeDoctype";
@@ -266,7 +238,7 @@ describe("SVGO configuration file", () => {
       .calledWith(svgoOptionsFileContent)
       .mockReturnValueOnce(svgoOptions);
 
-    await main(client, context);
+    await main(context);
 
     expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
     expect(parser.parseYaml).toHaveBeenCalledWith(svgoOptionsFileContent);
@@ -278,8 +250,6 @@ describe("SVGO configuration file", () => {
     core.setFailed.mockClear();
     svgo.SVGOptimizer.mockClear();
 
-    const context = github.MockContext();
-
     inputs.ActionConfig.mockImplementationOnce(() => {
       return { svgoOptionsPath: DEFAULT_SVGO_OPTIONS, svgoVersion: 2 };
     });
@@ -288,7 +258,7 @@ describe("SVGO configuration file", () => {
       .calledWith(DEFAULT_SVGO_OPTIONS)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main(client, context);
+    await main(DEFAULT_CONTEXT);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).not.toHaveBeenCalled();
@@ -303,8 +273,6 @@ describe("SVGO configuration file", () => {
     core.setFailed.mockClear();
     svgo.SVGOptimizer.mockClear();
 
-    const context = github.MockContext();
-
     inputs.ActionConfig.mockImplementationOnce(() => {
       return { svgoOptionsPath: filePath, svgoVersion: version };
     });
@@ -313,7 +281,7 @@ describe("SVGO configuration file", () => {
       .calledWith(filePath)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main(client, context);
+    await main(DEFAULT_CONTEXT);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).toHaveBeenCalledWith(
@@ -329,8 +297,6 @@ describe("SVGO configuration file", () => {
     core.warning.mockClear();
     core.setFailed.mockClear();
     svgo.SVGOptimizer.mockClear();
-
-    const context = github.MockContext();
 
     const invalidContent = "foobar";
 
@@ -348,69 +314,12 @@ describe("SVGO configuration file", () => {
       .calledWith(invalidContent)
       .mockImplementation(() => { throw new Error("Not found"); });
 
-    await main(client, context);
+    await main(DEFAULT_CONTEXT);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).toHaveBeenCalledWith(
       expect.stringMatching("SVGO config file '.*' invalid"),
     );
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(version, undefined);
-  });
-});
-
-describe("comments", () => {
-  test.each(COMMENTABLE_EVENTS)("leave no comment by default (%s)", async (eventName) => {
-    templating.formatComment.mockClear();
-
-    const context = github.MockContext({ eventName });
-
-    await main(client, context);
-    expect(templating.formatComment).not.toHaveBeenCalled();
-  });
-
-  test.each(COMMENTABLE_EVENTS)("leave a comment if enabled (%s)", async (eventName) => {
-    templating.formatComment.mockClear();
-
-    const context = github.MockContext({ eventName });
-
-    const commentTemplate = "{{optimizedCount}} SVGs optimized";
-    inputs.ActionConfig.mockImplementationOnce(() => {
-      return { enableComments: true, comment: commentTemplate };
-    });
-
-    await main(client, context);
-    expect(templating.formatComment).toHaveBeenCalledWith(
-      commentTemplate,
-      expect.any(Object),
-      [],
-    );
-  });
-
-  test.each(COMMENTABLE_EVENTS)("leave no comment if disabled (%s)", async (eventName) => {
-    templating.formatComment.mockClear();
-
-    const context = github.MockContext({ eventName });
-
-    inputs.ActionConfig.mockImplementationOnce(() => {
-      return { enableComments: false };
-    });
-
-    await main(client, context);
-    expect(templating.formatComment).not.toHaveBeenCalled();
-  });
-
-  test.each(
-    SUPPORTED_EVENTS.filter((eventName) => !COMMENTABLE_EVENTS.includes(eventName)),
-  )("leave no comment if enabled but not in commentable event (%s)", async (eventName) => {
-    templating.formatComment.mockClear();
-
-    const context = github.MockContext({ eventName });
-
-    inputs.ActionConfig.mockImplementationOnce(() => {
-      return { enableComments: true };
-    });
-
-    await main(client, context);
-    expect(templating.formatComment).not.toHaveBeenCalled();
   });
 });
