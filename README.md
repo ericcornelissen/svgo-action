@@ -54,9 +54,7 @@ GitHub's rest API_
 
 ### Configure the Action
 
-There are a couple of ways for you to configure the Action. You can configure it
-[in the Workflow file], [in `.github/svgo-action.yml`], or [in another
-configuration file]. The table below shows the options that can be configured.
+This Action has a couple of options to configure its behaviour, namely:
 
 | Name                   | Description                             | Default            | Documentation                                 |
 | ---------------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
@@ -66,10 +64,7 @@ configuration file]. The table below shows the options that can be configured.
 | `svgo-options`         | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
 | `svgo-version`         | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
 
-#### In the Workflow file
-
-The first way to configure the Action is inside the Workflow file, after the
-`repo-token`. For example:
+To configure these you add them to the Workflow file. For example:
 
 ```yaml
 with:
@@ -79,34 +74,6 @@ with:
   ignore: do/not/optimize/**/*.svg
   svgo-options: path/to/svgo-options.js
   svgo-version: 2
-```
-
-#### In `.github/svgo-action.yml`
-
-If you prefer to separate the Action configuration from the Workflow file you
-can add a file called `svgo-action.yml` inside the `.github` directory. Then,
-you can configure the Action inside this file. For example:
-
-```yaml
-comment: true
-dry-run: true
-ignore: do/not/optimize/**/*.svg
-svgo-options: path/to/svgo-options.js
-svgo-version: 2
-```
-
-#### In Another Configuration File
-
-Lastly, if you prefer to use a different file from `.github/svgo-action.yml`,
-it is possible to specify a `configuration-path` in the Workflow file. This
-value should point to the configuration file you want to use. For example:
-
-> :warning: The configuration file must always be a valid YAML file.
-
-```yaml
-with:
-  repo-token: ${{ secrets.GITHUB_TOKEN }}
-  configuration-path: path/to/configuration/file.yml
 ```
 
 ### Advanced Usage
@@ -177,7 +144,4 @@ on:
 
 [creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
-[in the workflow file]: #in-the-workflow-file
-[in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
-[in another configuration file]: #in-another-configuration-file
 [svgo]: https://github.com/svg/svgo
