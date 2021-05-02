@@ -16,8 +16,8 @@ Automatically run [SVGO] with GitHub Actions.
 
 Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO Action. You can
-check [what the Action does for each `on` event](/docs/events.md). The SVGO
-Action also [outputs some values](/docs/outputs.md) for subsequent steps.
+check [what the Action does for each `on` event](/docs/events.md) and [what the
+Action outputs](/docs/outputs.md) for subsequent steps.
 
 ```yaml
 name: SVGOptimizer
@@ -78,12 +78,12 @@ touch any SVG files, you may want the Action to run only when an SVG was
 actually changed. To do this you can change the Workflow file that uses this
 Action to be triggered only when SVG files change.
 
-> :warning: This will cause **any** Action specified in the Workflow file to be
-> run only when an SVG changes. If there are Actions that should run for every
-> push or Pull Request they must be specified in a separate Workflow file.
+> :warning: This will cause the entire Workflow to be run only when an SVG
+> changes. If there are steps that should run for every push or Pull Request
+> they must be specified in a separate Workflow file.
 
 To run this Action only when SVG files are changed, update the `on:`
-configuration as follows:
+configuration for `pull_request` and/or `push` as follows:
 
 ```yaml
 name: SVGOptimizer
