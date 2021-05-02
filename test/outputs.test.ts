@@ -11,13 +11,13 @@ import { setOutputValues } from "../src/outputs";
 
 const OUTPUT_NAME_DID_OPTIMIZE = "DID_OPTIMIZE";
 const OUTPUT_NAME_OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
-const OUTPUT_NAME_SKIPPED_COUNT = "SKIPPED_COUNT";
+const OUTPUT_NAME_IGNORED_COUNT = "IGNORED_COUNT";
 const OUTPUT_NAME_SVG_COUNT = "SVG_COUNT";
 
 const sampleData = {
   files: [],
   optimizedCount: 3,
-  skippedCount: 1,
+  ignoredCount: 1,
   svgCount: 4,
 };
 
@@ -47,8 +47,8 @@ describe("::setOutputValues", () => {
       `${data.optimizedCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
-      OUTPUT_NAME_SKIPPED_COUNT,
-      `${data.skippedCount}`,
+      OUTPUT_NAME_IGNORED_COUNT,
+      `${data.ignoredCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_SVG_COUNT,
@@ -68,8 +68,8 @@ describe("::setOutputValues", () => {
       `${data.optimizedCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
-      OUTPUT_NAME_SKIPPED_COUNT,
-      `${data.skippedCount}`,
+      OUTPUT_NAME_IGNORED_COUNT,
+      `${data.ignoredCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_SVG_COUNT,
@@ -89,8 +89,8 @@ describe("::setOutputValues", () => {
       `${data.optimizedCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
-      OUTPUT_NAME_SKIPPED_COUNT,
-      `${data.skippedCount}`,
+      OUTPUT_NAME_IGNORED_COUNT,
+      `${data.ignoredCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_SVG_COUNT,

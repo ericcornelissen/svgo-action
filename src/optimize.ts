@@ -101,7 +101,7 @@ export async function optimize(
 
   return {
     optimizedCount: optimizedFiles.length,
-    skippedCount: totalSvgCount - optimizedFiles.length,
+    ignoredCount: 0,
     svgCount: totalSvgCount,
   };
 }

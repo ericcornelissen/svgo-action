@@ -11,7 +11,7 @@ type DataToOutput = (data: OptimizeProjectData) => string;
 const enum OutputName {
   DID_OPTIMIZE = "DID_OPTIMIZE",
   OPTIMIZED_COUNT = "OPTIMIZED_COUNT",
-  SKIPPED_COUNT = "SKIPPED_COUNT",
+  IGNORED_COUNT = "IGNORED_COUNT",
   SVG_COUNT = "SVG_COUNT",
 }
 
@@ -25,8 +25,8 @@ const outputsMap: Map<OutputName, DataToOutput> = new Map([
     (data: OptimizeProjectData): string => `${data.optimizedCount}`,
   ],
   [
-    OutputName.SKIPPED_COUNT,
-    (data: OptimizeProjectData): string => `${data.skippedCount}`,
+    OutputName.IGNORED_COUNT,
+    (data: OptimizeProjectData): string => `${data.ignoredCount}`,
   ],
   [
     OutputName.SVG_COUNT,
@@ -42,7 +42,7 @@ function getOutputNamesFor(event: string): OutputName[] {
       return [
         OutputName.DID_OPTIMIZE,
         OutputName.OPTIMIZED_COUNT,
-        OutputName.SKIPPED_COUNT,
+        OutputName.IGNORED_COUNT,
         OutputName.SVG_COUNT,
       ];
     default:

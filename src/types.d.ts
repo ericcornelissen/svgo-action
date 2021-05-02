@@ -13,7 +13,7 @@ export interface Core extends Inputter, Outputter {
 // Type representing data about the optimization process.
 export type OptimizeProjectData = {
   readonly optimizedCount: number;
-  readonly skippedCount: number;
+  readonly ignoredCount: number;
   readonly svgCount: number;
 }
 
