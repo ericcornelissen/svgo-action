@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased, v2]
 
+- _No changes yet_
+
+## [2.0.0-alpha.3] - 2021-05-02
+
 - BREAKING: Remove ability to leave comments on Pull Requests. ([#357])
 - BREAKING: Remove ability to cancel runs. ([#357])
 - BREAKING: Remove external configuration file. ([#358])
