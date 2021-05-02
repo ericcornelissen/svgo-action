@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased, v2]
 
-- _No changes yet_
+- Don't count optimized SVGs in `OPTIMIZED_COUNT`.
 
 ## [2.0.0-alpha.3] - 2021-05-02
 

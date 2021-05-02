@@ -110,7 +110,6 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.files).toHaveLength(0);
       expect(result.optimizedCount).toEqual(0);
       expect(result.skippedCount).toEqual(1); // TODO: update skipped count logic
       expect(result.svgCount).toEqual(1);
