@@ -3,7 +3,7 @@
 import type { IMinimatch } from "minimatch";
 
 import type { FileInfo, FileSystem } from "./file-system";
-import type { OptimizeFileData, OptimizeProjectData } from "./types";
+import type { OptimizeProjectData } from "./types";
 
 import { Minimatch } from "minimatch";
 
@@ -100,11 +100,6 @@ export async function optimize(
   }
 
   return {
-    files: optimizedFiles.map((file): OptimizeFileData => ({
-      path: file.path,
-      contentAfter: file.optimizedContent,
-      contentBefore: file.content,
-    })),
     optimizedCount: optimizedFiles.length,
     skippedCount: totalSvgCount - optimizedFiles.length,
     svgCount: totalSvgCount,

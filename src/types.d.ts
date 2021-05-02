@@ -10,16 +10,8 @@ export interface Core extends Inputter, Outputter {
   warning(message: string | Error): void;
 }
 
-// Type representing data about one optimized file.
-export type OptimizeFileData = {
-  readonly contentAfter: string;
-  readonly contentBefore: string;
-  readonly path: string;
-}
-
 // Type representing data about the optimization process.
 export type OptimizeProjectData = {
-  readonly files: OptimizeFileData[];
   readonly optimizedCount: number;
   readonly skippedCount: number;
   readonly svgCount: number;
