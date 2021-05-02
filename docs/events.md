@@ -1,7 +1,7 @@
 # SVGO Action Events
 
 This file contains the documentation for all GitHub Actions events that the SVGO
-Action supports.
+Action supports. If an event is not listed here it is not officially supported.
 
 - [`on: pull_request`](#on-pull_request)
 - [`on: push`](#on-push)
