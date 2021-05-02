@@ -59,8 +59,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).not.toHaveBeenCalled();
 
-      expect(result.optimizedCount).toEqual(0);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(0);
       expect(result.svgCount).toEqual(0);
     });
 
@@ -75,8 +75,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).not.toHaveBeenCalled();
 
-      expect(result.optimizedCount).toEqual(0);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(0);
       expect(result.svgCount).toEqual(0);
     });
 
@@ -91,8 +91,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.optimizedCount).toEqual(1);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(1);
       expect(result.svgCount).toEqual(1);
     });
 
@@ -110,8 +110,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.optimizedCount).toEqual(0);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(0);
       expect(result.svgCount).toEqual(1);
     });
 
@@ -126,8 +126,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.optimizedCount).toEqual(1);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(1);
       expect(result.svgCount).toEqual(1);
     });
 
@@ -142,8 +142,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.optimizedCount).toEqual(1);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(1);
       expect(result.svgCount).toEqual(1);
     });
 
@@ -165,8 +165,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
-      expect(result.optimizedCount).toEqual(optimizedCount);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(optimizedCount);
       expect(result.svgCount).toEqual(files.length);
     });
 
@@ -190,8 +190,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
-      expect(result.optimizedCount).toEqual(optimizedCount);
       expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(optimizedCount);
       expect(result.svgCount).toEqual(files.length - nonSvgFileCount);
     });
 
@@ -219,8 +219,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
-      expect(result.optimizedCount).toEqual(optimizedCount);
       expect(result.ignoredCount).toEqual(ignoredCount);
+      expect(result.optimizedCount).toEqual(optimizedCount);
       expect(result.svgCount).toEqual(files.length - nonSvgFileCount);
     });
   });

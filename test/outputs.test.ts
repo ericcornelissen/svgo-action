@@ -10,14 +10,14 @@ import {
 import { setOutputValues } from "../src/outputs";
 
 const OUTPUT_NAME_DID_OPTIMIZE = "DID_OPTIMIZE";
-const OUTPUT_NAME_OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
 const OUTPUT_NAME_IGNORED_COUNT = "IGNORED_COUNT";
+const OUTPUT_NAME_OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
 const OUTPUT_NAME_SVG_COUNT = "SVG_COUNT";
 
 const sampleData = {
   files: [],
-  optimizedCount: 3,
   ignoredCount: 1,
+  optimizedCount: 3,
   svgCount: 4,
 };
 
@@ -43,12 +43,12 @@ describe("::setOutputValues", () => {
       `${data.optimizedCount > 0}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
-      OUTPUT_NAME_OPTIMIZED_COUNT,
-      `${data.optimizedCount}`,
-    );
-    expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_IGNORED_COUNT,
       `${data.ignoredCount}`,
+    );
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_OPTIMIZED_COUNT,
+      `${data.optimizedCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_SVG_COUNT,
@@ -64,12 +64,12 @@ describe("::setOutputValues", () => {
       `${data.optimizedCount > 0}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
-      OUTPUT_NAME_OPTIMIZED_COUNT,
-      `${data.optimizedCount}`,
-    );
-    expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_IGNORED_COUNT,
       `${data.ignoredCount}`,
+    );
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_OPTIMIZED_COUNT,
+      `${data.optimizedCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_SVG_COUNT,
@@ -85,12 +85,12 @@ describe("::setOutputValues", () => {
       `${data.optimizedCount > 0}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
-      OUTPUT_NAME_OPTIMIZED_COUNT,
-      `${data.optimizedCount}`,
-    );
-    expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_IGNORED_COUNT,
       `${data.ignoredCount}`,
+    );
+    expect(core.setOutput).toHaveBeenCalledWith(
+      OUTPUT_NAME_OPTIMIZED_COUNT,
+      `${data.optimizedCount}`,
     );
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_SVG_COUNT,

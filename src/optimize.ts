@@ -109,8 +109,8 @@ export async function optimize(
   }
 
   return {
-    optimizedCount: optimizedFiles.length,
     ignoredCount: ignoredSvgCount,
+    optimizedCount: optimizedFiles.length,
     svgCount: totalSvgCount,
   };
 }
