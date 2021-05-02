@@ -39,8 +39,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     # Enable the following to select a branch for scheduled or triggered runs.
-    # with:
-    #   path: main
+    #  with:
+    #    ref: main
     - uses: ericcornelissen/svgo-action@next
 ```
 
@@ -51,12 +51,12 @@ jobs:
 
 This Action has a couple of options to configure its behaviour, namely:
 
-| Name                   | Description                             | Default            | Documentation                                 |
-| ---------------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
-| `dry-run`              | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
-| `ignore`               | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
-| `svgo-options`         | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
-| `svgo-version`         | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
+| Name           | Description                             | Default            | Documentation                                 |
+| -------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
+| `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
+| `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
+| `svgo-options` | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
+| `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
 
 To configure these you add them to the Workflow file. For example:
 
