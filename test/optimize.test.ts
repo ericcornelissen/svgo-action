@@ -99,6 +99,26 @@ describe("::optimize", () => {
       expect(result.svgCount).toEqual(1);
     });
 
+    test("one optimized SVG file", async () => {
+      fs.listFiles.mockReturnValueOnce([svgFile2]);
+
+      const svgo = new svgoImport.SVGOptimizer();
+      svgo.optimize.mockImplementationOnce(async (svg) => svg);
+
+      const result = await optimize(fs, config, svgo);
+
+      expect(fs.listFiles).toHaveBeenCalledTimes(1);
+      expect(fs.readFile).toHaveBeenCalledTimes(1);
+      expect(fs.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : 1);
+
+      expect(svgo.optimize).toHaveBeenCalledTimes(1);
+
+      expect(result.files).toHaveLength(0);
+      expect(result.optimizedCount).toEqual(0);
+      expect(result.skippedCount).toEqual(0);
+      expect(result.svgCount).toEqual(1);
+    });
+
     test("one non-SVG file and one SVG file", async () => {
       fs.listFiles.mockReturnValueOnce([nonSvgFile, svgFile1]);
 
