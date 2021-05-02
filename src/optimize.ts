@@ -70,7 +70,7 @@ async function optimizeSvgs(
   }
 
   const optimizedFiles = await Promise.all(promises);
-  return optimizedFiles;
+  return optimizedFiles.filter((f) => f.content !== f.optimizedContent);
 }
 
 async function writeOptimizedSvgs(
