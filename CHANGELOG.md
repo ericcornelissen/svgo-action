@@ -7,6 +7,8 @@ Versioning].
 
 ## [Unreleased, v2]
 
+- BREAKING: Remove `SKIPPED_COUNT` output. ([#364])
+- Add `IGNORED_COUNT` output. ([#364])
 - Don't count optimized SVGs in `OPTIMIZED_COUNT`. ([#363])
 
 ## [2.0.0-alpha.3] - 2021-05-02
@@ -250,4 +252,5 @@ Versioning].
 [#357]: https://github.com/ericcornelissen/svgo-action/pull/357
 [#358]: https://github.com/ericcornelissen/svgo-action/pull/358
 [#363]: https://github.com/ericcornelissen/svgo-action/pull/363
+[#364]: https://github.com/ericcornelissen/svgo-action/pull/364
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
