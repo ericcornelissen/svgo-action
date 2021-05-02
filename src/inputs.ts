@@ -1,26 +1,26 @@
-import type { Inputs } from "./types";
-
-import {
-  INPUT_NAME_DRY_RUN,
-  INPUT_NAME_IGNORE,
-  INPUT_NAME_SVGO_OPTIONS,
-  INPUT_NAME_SVGO_VERSION,
-  INPUT_NOT_REQUIRED,
-} from "./constants";
+import type { AllowedSvgoVersions } from "./svgo";
+import type { Inputter } from "./types";
 
 const FALSE = "false";
 const STRING = "string";
 const TRUE = "true";
 
-const DEFAULT_SVGO_VERSION = 2;
+const INPUT_NOT_REQUIRED = { required: false };
+
+const DEFAULT_SVGO_VERSION: AllowedSvgoVersions = 2;
+
+const INPUT_NAME_DRY_RUN = "dry-run";
+const INPUT_NAME_IGNORE = "ignore";
+const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
+const INPUT_NAME_SVGO_VERSION = "svgo-version";
 
 export class ActionConfig {
   public readonly ignoreGlob: string;
   public readonly isDryRun: boolean;
   public readonly svgoOptionsPath: string;
-  public readonly svgoVersion: 1 | 2;
+  public readonly svgoVersion: AllowedSvgoVersions;
 
-  constructor(inputs: Inputs) {
+  constructor(inputs: Inputter) {
     this.ignoreGlob = ActionConfig.getIgnoreGlob(inputs);
     this.isDryRun = ActionConfig.getDryRunValue(inputs);
     this.svgoOptionsPath = ActionConfig.getSvgoOptionsPath(inputs);
@@ -28,7 +28,7 @@ export class ActionConfig {
   }
 
   private static getDryRunValue(
-    inputs: Inputs,
+    inputs: Inputter,
   ): boolean {
     return this.normalizeBoolOption(
       inputs,
@@ -38,20 +38,20 @@ export class ActionConfig {
   }
 
   private static getIgnoreGlob(
-    inputs: Inputs,
+    inputs: Inputter,
   ): string {
     return inputs.getInput(INPUT_NAME_IGNORE, INPUT_NOT_REQUIRED);
   }
 
   private static getSvgoOptionsPath(
-    inputs: Inputs,
+    inputs: Inputter,
   ): string {
     return inputs.getInput(INPUT_NAME_SVGO_OPTIONS, INPUT_NOT_REQUIRED);
   }
 
   private static getSvgoVersion(
-    inputs: Inputs,
-  ): 1 | 2 {
+    inputs: Inputter,
+  ): AllowedSvgoVersions {
     const version = ActionConfig.normalizeIntegerOption(
       inputs,
       INPUT_NAME_SVGO_VERSION,
@@ -66,12 +66,11 @@ export class ActionConfig {
   }
 
   private static normalizeBoolOption(
-    inputs: Inputs,
+    inputs: Inputter,
     inputName: string,
     defaultValue: boolean,
   ): boolean {
     const value = inputs.getInput(inputName, INPUT_NOT_REQUIRED);
-
     if (value === FALSE) {
       return false;
     } else if (value === TRUE) {
@@ -82,12 +81,11 @@ export class ActionConfig {
   }
 
   private static normalizeIntegerOption(
-    inputs: Inputs,
+    inputs: Inputter,
     inputName: string,
     defaultValue: number,
   ): number {
     const value = inputs.getInput(inputName, INPUT_NOT_REQUIRED);
-
     if (typeof value === STRING) {
       return parseInt(value as string, 10);
     } else {

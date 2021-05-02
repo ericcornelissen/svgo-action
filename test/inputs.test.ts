@@ -2,13 +2,12 @@ import { when } from "jest-when";
 
 import * as core from "./mocks/@actions/core.mock";
 
-import {
-  INPUT_NAME_DRY_RUN,
-  INPUT_NAME_IGNORE,
-  INPUT_NAME_SVGO_OPTIONS,
-  INPUT_NAME_SVGO_VERSION,
-} from "../src/constants";
 import { ActionConfig } from "../src/inputs";
+
+const INPUT_NAME_DRY_RUN = "dry-run";
+const INPUT_NAME_IGNORE = "ignore";
+const INPUT_NAME_SVGO_OPTIONS = "svgo-options";
+const INPUT_NAME_SVGO_VERSION = "svgo-version";
 
 function mockCoreGetInput(key: string, value: string): void {
   when(core.getInput)

@@ -8,7 +8,6 @@ import * as outputs from "./mocks/outputs.mock";
 import * as parser from "./mocks/parser.mock";
 import * as svgo from "./mocks/svgo.mock";
 
-jest.mock("@actions/core", () => core);
 jest.mock("../src/file-system", () => fs);
 jest.mock("../src/inputs", () => inputs);
 jest.mock("../src/optimize", () => optimize);
@@ -36,7 +35,7 @@ describe("run & optimize", () => {
   test.each(SUPPORTED_EVENTS)("%s event", async (eventName) => {
     const context = { eventName };
 
-    await main(context);
+    await main(core, context);
     expect(optimize.optimize).toHaveBeenCalled();
   });
 
@@ -47,7 +46,7 @@ describe("run & optimize", () => {
       throw new Error("Something went wrong");
     });
 
-    await main(context);
+    await main(core, context);
     expect(optimize.optimize).toHaveBeenCalledTimes(1);
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
@@ -55,7 +54,7 @@ describe("run & optimize", () => {
   test("unknown event", async () => {
     const context = { eventName: "UnKnOwN eVeNt" };
 
-    await main(context);
+    await main(core, context);
     expect(optimize.optimize).not.toHaveBeenCalled();
     expect(core.setFailed).toHaveBeenCalledTimes(1);
   });
@@ -69,7 +68,7 @@ describe("configuration", () => {
       return { svgoOptionsPath: "svgo.config.js", isDryRun: true };
     });
 
-    await main(context);
+    await main(core, context);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("Dry mode enabled"));
   });
 
@@ -81,7 +80,7 @@ describe("configuration", () => {
       return { svgoOptionsPath: "svgo.config.js", svgoVersion: svgoVersion };
     });
 
-    await main(DEFAULT_CONTEXT);
+    await main(core, DEFAULT_CONTEXT);
 
     expect(svgo.SVGOptimizer).toHaveBeenCalledWith(svgoVersion, expect.anything());
     expect(core.info).toHaveBeenCalledWith(expect.stringMatching(`SVGO.*${svgoVersion}`));
@@ -110,7 +109,7 @@ describe("SVGO configuration file", () => {
       .calledWith(svgoOptionsFileContent)
       .mockReturnValueOnce(svgoOptions);
 
-    await main(context);
+    await main(core, context);
 
     expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
     expect(parser.parseJavaScript).toHaveBeenCalledWith(svgoOptionsFileContent);
@@ -138,7 +137,7 @@ describe("SVGO configuration file", () => {
       .calledWith(svgoOptionsFileContent)
       .mockReturnValueOnce(svgoOptions);
 
-    await main(context);
+    await main(core, context);
 
     expect(fs.readFile).toHaveBeenCalledWith(svgoOptionsFilePath);
     expect(parser.parseYaml).toHaveBeenCalledWith(svgoOptionsFileContent);
@@ -158,7 +157,7 @@ describe("SVGO configuration file", () => {
       .calledWith(DEFAULT_SVGO_OPTIONS)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main(DEFAULT_CONTEXT);
+    await main(core, DEFAULT_CONTEXT);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).not.toHaveBeenCalled();
@@ -181,7 +180,7 @@ describe("SVGO configuration file", () => {
       .calledWith(filePath)
       .mockRejectedValueOnce(new Error("Not found"));
 
-    await main(DEFAULT_CONTEXT);
+    await main(core, DEFAULT_CONTEXT);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).toHaveBeenCalledWith(
@@ -214,7 +213,7 @@ describe("SVGO configuration file", () => {
       .calledWith(invalidContent)
       .mockImplementation(() => { throw new Error("Not found"); });
 
-    await main(DEFAULT_CONTEXT);
+    await main(core, DEFAULT_CONTEXT);
 
     expect(core.setFailed).not.toHaveBeenCalled();
     expect(core.warning).toHaveBeenCalledWith(

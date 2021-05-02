@@ -1,32 +1,32 @@
-import svgoOld from "svgo-v1";
-import svgo from "svgo-v2";
+import svgoV1 from "svgo-v1";
+import svgoV2 from "svgo-v2";
 
-type allowedVersions = 1 | 2;
-type SVGO = { optimize };
-type SVGOptions = svgo.Options;
+export type SVGOptions = svgoV2.Options;
+
+export type AllowedSvgoVersions = 1 | 2;
 
 export class SVGOptimizer {
-  private version: allowedVersions;
+  private version: AllowedSvgoVersions;
   private options: SVGOptions;
-  private svgo: SVGO;
+  private svgoV1: svgoV1;
 
-  constructor(version: allowedVersions, options: SVGOptions = { }) {
+  constructor(version: AllowedSvgoVersions, options: SVGOptions = { }) {
     this.version = version;
     this.options = options;
-    this.svgo = new svgoOld(options);
+    this.svgoV1 = new svgoV1(options);
   }
 
   async optimize(originalSvg: string): Promise<string> {
     switch (this.version) {
-      case 2:
-        return await this.optimizeV2(originalSvg);
       case 1:
         return await this.optimizeV1(originalSvg);
+      case 2:
+        return await this.optimizeV2(originalSvg);
     }
   }
 
   private async optimizeV2(originalSvg: string): Promise<string> {
-    const { data: optimizedSvg, error } = svgo.optimize(
+    const { data: optimizedSvg, error } = svgoV2.optimize(
       originalSvg,
       this.options,
     );
@@ -39,9 +39,7 @@ export class SVGOptimizer {
   }
 
   private async optimizeV1(originalSvg: string): Promise<string> {
-    const { data: optimizedSvg } = await this.svgo.optimize(originalSvg);
+    const { data: optimizedSvg } = await this.svgoV1.optimize(originalSvg);
     return optimizedSvg;
   }
 }
-
-export type { SVGOptions };

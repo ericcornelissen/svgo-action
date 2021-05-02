@@ -2,18 +2,17 @@ import type { OptimizeProjectData } from "../src/types";
 
 import * as core from "./mocks/@actions/core.mock";
 
-jest.mock("@actions/core", () => core);
-
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
   EVENT_SCHEDULE,
-  OUTPUT_NAME_DID_OPTIMIZE,
-  OUTPUT_NAME_OPTIMIZED_COUNT,
-  OUTPUT_NAME_SKIPPED_COUNT,
-  OUTPUT_NAME_SVG_COUNT,
 } from "../src/constants";
 import { setOutputValues } from "../src/outputs";
+
+const OUTPUT_NAME_DID_OPTIMIZE = "DID_OPTIMIZE";
+const OUTPUT_NAME_OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
+const OUTPUT_NAME_SKIPPED_COUNT = "SKIPPED_COUNT";
+const OUTPUT_NAME_SVG_COUNT = "SVG_COUNT";
 
 const sampleData = {
   files: [],
@@ -32,12 +31,12 @@ describe("::setOutputValues", () => {
   });
 
   test("unknown event", () => {
-    setOutputValues("unknown event", sampleData);
+    setOutputValues(core, "unknown event", sampleData);
     expect(core.setOutput).not.toHaveBeenCalled();
   });
 
   test.each(sampleDataList)(`event ${EVENT_PULL_REQUEST}`, (data: OptimizeProjectData) => {
-    setOutputValues(EVENT_PULL_REQUEST, data);
+    setOutputValues(core, EVENT_PULL_REQUEST, data);
     expect(core.setOutput).toHaveBeenCalledTimes(4);
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_DID_OPTIMIZE,
@@ -58,7 +57,7 @@ describe("::setOutputValues", () => {
   });
 
   test.each(sampleDataList)(`event ${EVENT_PUSH}`, (data: OptimizeProjectData) => {
-    setOutputValues(EVENT_PUSH, data);
+    setOutputValues(core, EVENT_PUSH, data);
     expect(core.setOutput).toHaveBeenCalledTimes(4);
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_DID_OPTIMIZE,
@@ -79,7 +78,7 @@ describe("::setOutputValues", () => {
   });
 
   test.each(sampleDataList)(`event ${EVENT_SCHEDULE}`, (data: OptimizeProjectData) => {
-    setOutputValues(EVENT_SCHEDULE, data);
+    setOutputValues(core, EVENT_SCHEDULE, data);
     expect(core.setOutput).toHaveBeenCalledTimes(4);
     expect(core.setOutput).toHaveBeenCalledWith(
       OUTPUT_NAME_DID_OPTIMIZE,

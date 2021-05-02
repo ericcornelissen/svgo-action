@@ -1,13 +1,8 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import type { Context, Warnings } from "./types";
+import type { Context, Core, Warnings } from "./types";
 
-import * as core from "@actions/core";
-
-import {
-  DEFAULT_SVGO_OPTIONS,
-  SUPPORTED_EVENTS,
-} from "./constants";
+import { DEFAULT_SVGO_OPTIONS, SUPPORTED_EVENTS } from "./constants";
 import * as fs from "./file-system";
 import { ActionConfig } from "./inputs";
 import { parseJavaScript, parseYaml } from "./parser";
@@ -43,7 +38,7 @@ async function getSvgoInstance(
   ];
 }
 
-async function initAction(): Promise<[
+async function initAction(core: Core): Promise<[
   { config: ActionConfig, svgo: SVGOptimizer },
   Warnings,
 ]> {
@@ -62,6 +57,7 @@ async function initAction(): Promise<[
 }
 
 async function run(
+  core: Core,
   context: Context,
   config: ActionConfig,
   svgo: SVGOptimizer,
@@ -74,22 +70,17 @@ async function run(
     }
 
     const optimizeData = await optimize(fs, config, svgo);
-    setOutputValues(event, optimizeData);
+    setOutputValues(core, event, optimizeData);
   } catch (error) {
     core.setFailed(`action failed with error '${error}'`);
   }
 }
 
-function logWarnings(warnings: Warnings): void {
-  for (const warning of warnings) {
-    core.warning(warning);
-  }
-}
-
 export default async function main(
+  core: Core,
   context: Context,
 ): Promise<void> {
-  const [{ config, svgo }, warnings] = await initAction();
-  run(context, config, svgo);
-  logWarnings(warnings);
+  const [{ config, svgo }, warnings] = await initAction(core);
+  run(core, context, config, svgo);
+  warnings.forEach((warning) => core.warning(warning));
 }
