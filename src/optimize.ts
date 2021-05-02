@@ -30,8 +30,12 @@ async function readSvg(
 async function readSvgs(
   fs: FileSystem,
   ignoreMatcher: IMinimatch,
-): Promise<{ files: ReadFileInfo[], totalSvgCount: number }> {
-  let totalSvgCount = 0;
+): Promise<{
+  files: ReadFileInfo[],
+  ignoredSvgCount: number,
+  totalSvgCount: number,
+}> {
+  let totalSvgCount = 0, ignoredSvgCount = 0;
   const promises: Promise<ReadFileInfo>[] = [];
   for (const file of fs.listFiles(".", true)) {
     if (file.extension !== ".svg") {
@@ -40,6 +44,7 @@ async function readSvgs(
 
     totalSvgCount++;
     if (ignoreMatcher.match(file.path)) {
+      ignoredSvgCount++;
       continue;
     }
 
@@ -48,7 +53,7 @@ async function readSvgs(
   }
 
   const files = await Promise.all(promises);
-  return { files, totalSvgCount };
+  return { files, ignoredSvgCount, totalSvgCount };
 }
 
 async function optimizeSvg(
@@ -93,7 +98,11 @@ export async function optimize(
 ): Promise<OptimizeProjectData> {
   const ignoreMatcher = new Minimatch(config.ignoreGlob);
 
-  const { files, totalSvgCount } = await readSvgs(fs, ignoreMatcher);
+  const {
+    files,
+    ignoredSvgCount,
+    totalSvgCount,
+  } = await readSvgs(fs, ignoreMatcher);
   const optimizedFiles = await optimizeSvgs(svgo, files);
   if (!config.isDryRun) {
     await writeOptimizedSvgs(fs, optimizedFiles);
@@ -101,7 +110,7 @@ export async function optimize(
 
   return {
     optimizedCount: optimizedFiles.length,
-    ignoredCount: 0,
+    ignoredCount: ignoredSvgCount,
     svgCount: totalSvgCount,
   };
 }
