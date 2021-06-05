@@ -1,3 +1,6 @@
+
+import { GitHub } from "@actions/github/lib/utils";
+
 type InputOptions = {
   required?: boolean;
 }
@@ -93,3 +96,6 @@ export type GitObjectInfo = {
 export type Inputs = {
   getInput(name: string, options: InputOptions): string;
 }
+
+// Type definition of Octokit.
+export type Octokit = InstanceType<typeof GitHub>;
