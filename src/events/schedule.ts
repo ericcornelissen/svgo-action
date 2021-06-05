@@ -1,5 +1,4 @@
 import * as core from "@actions/core";
-import { Octokit } from "@octokit/core";
 
 import {
   GIT_OBJECT_TYPE_DIR,
@@ -13,7 +12,13 @@ import {
 import { getContent, getDefaultBranch } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
-import { ContextData, GitFileInfo, GitObjectInfo, OutputName } from "../types";
+import {
+  ContextData,
+  GitFileInfo,
+  GitObjectInfo,
+  Octokit,
+  OutputName,
+} from "../types";
 import {
   doCommit,
   doFilterSvgsFromFiles,

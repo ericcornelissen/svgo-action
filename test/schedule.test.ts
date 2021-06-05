@@ -97,8 +97,9 @@ const fooFilePath = "foo.svg";
 const optimizedFilePath = "optimized.svg";
 const testFilePath = "test.svg";
 
-const getContentMockBackup = client.repos.getContent;
+const getContentMockBackup = client.rest.repos.getContent;
 
+type Implementable = { mockImplementation(...args: unknown[]); };
 
 describe("Logging", () => {
 
@@ -115,7 +116,7 @@ describe("Logging", () => {
 
   test("summary for commits with 1 optimized SVG", async () => {
     const getContentsMock = mockGetContentsForFiles([barFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 1/1 SVG(s)"));
@@ -124,7 +125,7 @@ describe("Logging", () => {
 
   test("summary for commits with 1 skipped SVG", async () => {
     const getContentsMock = mockGetContentsForFiles([optimizedFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 0/1 SVG(s)"));
@@ -137,7 +138,7 @@ describe("Logging", () => {
       `dir/${barFilePath}`,
       `dir/${optimizedFilePath}`,
     ]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
     expect(core.info).toHaveBeenCalledWith(expect.stringContaining("optimized 2/3 SVG(s)"));
@@ -259,7 +260,7 @@ describe("Configuration", () => {
       `dir/${barFilePath}`,
       `dir/${optimizedFilePath}`,
     ]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     const actionConfig = new inputs.ActionConfig();
     actionConfig.ignoreGlob = "dir/*";
@@ -287,7 +288,7 @@ describe("Outputs", () => {
 
   test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "true"`, async () => {
     const getContentsMock = mockGetContentsForFiles([fooFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -300,7 +301,7 @@ describe("Outputs", () => {
 
   test(`${OUTPUT_NAME_DID_OPTIMIZE} is set to "false"`, async () => {
     const getContentsMock = mockGetContentsForFiles([]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -313,7 +314,7 @@ describe("Outputs", () => {
 
   test(`${OUTPUT_NAME_OPTIMIZED_COUNT} is set correctly`, async () => {
     const getContentsMock = mockGetContentsForFiles([fooFilePath, barFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -329,7 +330,7 @@ describe("Outputs", () => {
     [[optimizedFilePath], 1],
   ])(`${OUTPUT_NAME_SKIPPED_COUNT} is set correctly`, async (files, count) => {
     const getContentsMock = mockGetContentsForFiles(files);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -342,7 +343,7 @@ describe("Outputs", () => {
 
   test(`${OUTPUT_NAME_SVG_COUNT} is set correctly`, async () => {
     const getContentsMock = mockGetContentsForFiles([fooFilePath, barFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -377,7 +378,7 @@ describe("Payloads", () => {
 
   test("empty repository", async () => {
     const getContentsMock = mockGetContentsForFiles([]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -390,7 +391,7 @@ describe("Payloads", () => {
 
   test("repository without SVGs", async () => {
     const getContentsMock = mockGetContentsForFiles(["README.md", "LICENSE"]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -403,7 +404,7 @@ describe("Payloads", () => {
 
   test("repository with 1 SVG", async () => {
     const getContentsMock = mockGetContentsForFiles([fooFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -441,7 +442,7 @@ describe("Payloads", () => {
       "LICENSE",
       fooFilePath,
     ]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -479,7 +480,7 @@ describe("Payloads", () => {
       "LICENSE",
       `foo/${barFilePath}`,
     ]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -517,7 +518,7 @@ describe("Payloads", () => {
       `foo/${barFilePath}`,
       fooFilePath,
     ]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -596,7 +597,7 @@ describe("Error scenarios", () => {
 
   test("an SVG file that does not contain SVG content", async () => {
     const getContentsMock = mockGetContentsForFiles([fakeFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     await main(client, config, svgo);
 
@@ -610,7 +611,7 @@ describe("Error scenarios", () => {
 
   test("blob size is too large", async () => {
     const getContentsMock = mockGetContentsForFiles([barFilePath, fooFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     githubAPI.getFile.mockImplementationOnce(() => { throw new Error("Blob too large"); });
 
@@ -632,7 +633,7 @@ describe("Error scenarios", () => {
 
   test("optimized blob size is too large", async () => {
     const getContentsMock = mockGetContentsForFiles([barFilePath, fooFilePath]);
-    client.repos.getContent.mockImplementation(getContentsMock);
+    (client.rest.repos.getContent as unknown as Implementable).mockImplementation(getContentsMock);
 
     githubAPI.createBlob.mockImplementationOnce(() => { throw new Error("Blob too large"); });
 
@@ -655,5 +656,5 @@ describe("Error scenarios", () => {
 });
 
 afterEach(() => {
-  client.repos.getContent = getContentMockBackup;
+  client.rest.repos.getContent = getContentMockBackup;
 });

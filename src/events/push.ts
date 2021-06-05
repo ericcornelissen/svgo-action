@@ -1,6 +1,5 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { Octokit } from "@octokit/core";
 
 import {
   DISABLE_PATTERN,
@@ -13,7 +12,7 @@ import { removedFiles } from "../filters";
 import { getCommitFiles } from "../github-api";
 import { ActionConfig } from "../inputs";
 import { SVGOptimizer } from "../svgo";
-import { ContextData, GitFileInfo, OutputName } from "../types";
+import { ContextData, GitFileInfo, Octokit, OutputName } from "../types";
 import {
   doCommit,
   doFilterSvgsFromFiles,

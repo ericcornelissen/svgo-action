@@ -1,6 +1,5 @@
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { Octokit } from "@octokit/core";
 
 import {
   EVENT_PULL_REQUEST,
@@ -13,7 +12,7 @@ import {
 } from "./constants";
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { RawActionConfig } from "./types";
+import { Octokit, RawActionConfig } from "./types";
 
 import prEventMain from "./events/pull-request";
 import pushEventMain from "./events/push";

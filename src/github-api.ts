@@ -1,9 +1,4 @@
 import * as github from "@actions/github";
-import { Octokit } from "@octokit/core";
-import {
-  GitGetCommitResponseData,
-  ReposGetContentResponseData,
-} from "@octokit/types";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB, PR_NOT_FOUND } from "./constants";
 import {
@@ -12,14 +7,26 @@ import {
   GitFileData,
   GitFileInfo,
   GitObjectInfo,
+  Octokit,
 } from "./types";
 
 
-type DirContents = ReposGetContentResponseData[];
+type FileContents = {
+  content: string;
+  encoding: string;
+  path: string;
+  type: string;
+};
 
-type FileContents = ReposGetContentResponseData;
+type DirContents = FileContents[];
 
-type GitCommit = GitGetCommitResponseData;
+type GitCommit = {
+  message: string;
+  sha: string;
+  tree: {
+    sha: string;
+  };
+};
 
 type RepoContents = FileContents | DirContents;
 
@@ -28,8 +35,8 @@ const owner = github.context.repo.owner;
 const repo = github.context.repo.repo;
 
 async function getCommitAt(client: Octokit, ref: string): Promise<GitCommit> {
-  const { data: refData } = await client.git.getRef({ owner, repo, ref });
-  const { data: commit } = await client.git.getCommit({ owner, repo,
+  const { data: refData } = await client.rest.git.getRef({ owner, repo, ref });
+  const { data: commit } = await client.rest.git.getCommit({ owner, repo,
     commit_sha: refData.object.sha,
   });
 
@@ -41,8 +48,14 @@ async function getContentFromRepo(
   ref: string,
   path: string,
 ): Promise<RepoContents> {
-  const { data } = await client.repos.getContent({ owner, repo, path, ref });
-  return data;
+  const { data } = await client.rest.repos.getContent({
+    owner,
+    repo,
+    path,
+    ref,
+  });
+
+  return data as RepoContents;
 }
 
 
@@ -54,18 +67,18 @@ export async function commitFiles(
 ): Promise<CommitInfo> {
   const previousCommit = await getCommitAt(client, ref);
 
-  const { data: newTree } = await client.git.createTree({ owner, repo,
+  const { data: newTree } = await client.rest.git.createTree({ owner, repo,
     base_tree: previousCommit.tree.sha,
     tree: blobs,
   });
 
-  const { data: newCommit } = await client.git.createCommit({ owner, repo,
+  const { data: newCommit } = await client.rest.git.createCommit({ owner, repo,
     message: commitMessage,
     tree: newTree.sha,
     parents: [previousCommit.sha],
   });
 
-  const { data: result } = await client.git.updateRef({ owner, repo, ref,
+  const { data: result } = await client.rest.git.updateRef({ owner, repo, ref,
     sha: newCommit.sha,
   });
 
@@ -81,7 +94,7 @@ export async function createBlob(
   data: string,
   encoding: string,
 ): Promise<GitBlob> {
-  const { data: fileBlob } = await client.git.createBlob({ owner, repo,
+  const { data: fileBlob } = await client.rest.git.createBlob({ owner, repo,
     content: data,
     encoding: encoding,
   });
@@ -99,7 +112,7 @@ export async function createComment(
   prNumber: number,
   comment: string,
 ): Promise<void> {
-  await client.issues.createComment({ owner, repo,
+  await client.rest.issues.createComment({ owner, repo,
     issue_number: prNumber,
     body: comment,
   });
@@ -109,13 +122,13 @@ export async function getCommitFiles(
   client: Octokit,
   sha: string,
 ): Promise<GitFileInfo[]> {
-  const { data } = await client.repos.getCommit({ owner, repo,
+  const { data } = await client.rest.repos.getCommit({ owner, repo,
     ref: sha,
   });
 
-  return data.files.map((details) => ({
-    path: details.filename,
-    status: details.status,
+  return (data.files || []).map((details) => ({
+    path: details.filename || "",
+    status: details.status || "",
   }));
 }
 
@@ -140,7 +153,7 @@ export async function getContent(
 }
 
 export async function getDefaultBranch(client: Octokit): Promise<string> {
-  const { data } = await client.repos.get({ owner, repo });
+  const { data } = await client.rest.repos.get({ owner, repo });
   return data.default_branch;
 }
 
@@ -163,19 +176,21 @@ export async function getPrComments(
 ): Promise<string[]> {
   const PER_PAGE = 100;
 
-  const { data } = await client.pulls.get({ owner, repo,
+  const { data } = await client.rest.pulls.get({ owner, repo,
     pull_number: prNumber,
   });
 
   const prComments: string[] = [];
   for (let i = 0; i < Math.ceil(data.comments / PER_PAGE); i++) {
-    const { data: comments } = await client.issues.listComments({ owner, repo,
+    const { data: comments } = await client.rest.issues.listComments({
+      owner,
+      repo,
       issue_number: prNumber,
       per_page: PER_PAGE,
       page: i,
     });
 
-    prComments.push(...comments.map((comment) => comment.body));
+    prComments.push(...comments.map((comment) => comment.body || ""));
   }
 
   return prComments.reverse();
@@ -185,7 +200,7 @@ export async function getPrFiles(
   client: Octokit,
   prNumber: number,
 ): Promise<GitFileInfo[]> {
-  const prFilesDetails = await client.pulls.listFiles({ owner, repo,
+  const prFilesDetails = await client.rest.pulls.listFiles({ owner, repo,
     pull_number: prNumber,
   });
 
