@@ -1,4 +1,3 @@
-
 import { GitHub } from "@actions/github/lib/utils";
 
 type InputOptions = {
