@@ -10,14 +10,21 @@ export const debug = jest.fn().mockName("core.debug");
 
 export const error = jest.fn().mockName("core.error");
 
+export const getBooleanInput = jest.fn()
+  .mockImplementation((key, _) => {
+    if (key === INPUT_NAME_CONVENTIONAL_COMMITS) {
+      return false;
+    } else if (key === INPUT_NAME_DRY_RUN) {
+      return false;
+    }
+
+    return false;
+  });
+
 export const getInput = jest.fn()
   .mockImplementation((key, _) => {
     if (key === INPUT_NAME_CONFIG_PATH) {
       return "./config.yml";
-    } else if (key === INPUT_NAME_CONVENTIONAL_COMMITS) {
-      return "false";
-    } else if (key === INPUT_NAME_DRY_RUN) {
-      return "false";
     } else if (key === INPUT_NAME_REPO_TOKEN) {
       return "TOKEN";
     }
