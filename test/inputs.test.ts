@@ -494,7 +494,7 @@ describe("ActionConfig", () => {
       ["folder/**/*", "dir/**/*"],
     ])("ignore is '%s' in the workflow file and '%s' in the config file", (workflowGlob, configGlob) => {
       const rawConfig: RawActionConfig = { ignore: configGlob };
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, workflowGlob);
+      mockCoreGetInput(INPUT_NAME_IGNORE, workflowGlob);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.ignoreGlob).toBe(configGlob);
