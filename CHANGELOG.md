@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Add warning about running the Action for Pull Requests from forks. ([#355])
+- Allow more values for boolean options. ([#371])
 
 ## [1.3.3] - 2021-04-02
 
@@ -221,4 +222,5 @@ Versioning].
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
 [#352]: https://github.com/ericcornelissen/svgo-action/pull/352
 [#355]: https://github.com/ericcornelissen/svgo-action/pull/355
+[#371]: https://github.com/ericcornelissen/svgo-action/pull/371
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
