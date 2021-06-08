@@ -168,12 +168,15 @@ export class ActionConfig {
 
   private static normalizeBoolOption(
     inputs: Inputs,
-    configValue: boolean | undefined,
+    configValue: boolean | string | undefined,
     inputName: string,
     defaultValue: boolean,
   ): boolean {
-    const value = (configValue !== undefined) ?
-      configValue : inputs.getInput(inputName, NOT_REQUIRED);
+    let value;
+    try {
+      value = (configValue !== undefined) ?
+        configValue : inputs.getBooleanInput(inputName, NOT_REQUIRED);
+    } catch (_) { /* Fall through and return `defaultValue` */ }
 
     if (typeof value === BOOLEAN) {
       return value as boolean;
