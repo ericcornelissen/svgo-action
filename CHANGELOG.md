@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Update SVGO v2 to `v2.3.1`.
 - Add warning about running the Action for Pull Requests from forks. ([#355])
 - Allow more values for boolean options. ([#371])
 
