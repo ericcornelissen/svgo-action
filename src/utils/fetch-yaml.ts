@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as core from "@actions/core";
-import { Octokit } from "@octokit/core";
 import * as yaml from "js-yaml";
 
 import { decode } from "../encoder";
 import { getFile } from "../github-api";
+import { Octokit } from "../types";
 
 
 export async function fetchYamlFile(

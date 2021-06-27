@@ -1,9 +1,7 @@
-import { Octokit } from "@octokit/core";
-
 import * as github from "./@actions/github.mock";
 
 import { COMMIT_MODE_FILE, COMMIT_TYPE_BLOB } from "../../src/constants";
-import { GitFileData, GitObjectInfo } from "../../src/types";
+import { GitFileData, GitObjectInfo, Octokit } from "../../src/types";
 
 
 async function _getContent(
@@ -11,7 +9,7 @@ async function _getContent(
   ref,
   path: string,
 ): Promise<GitFileData | GitObjectInfo[]> {
-  const { data } = await client.repos.getContent({
+  const { data } = await client.rest.repos.getContent({
     owner: "mew",
     repo: "svg-action",
     path,
@@ -24,10 +22,11 @@ async function _getContent(
       type: item.type,
     }));
   } else {
+    const _data = data as { path: string; content: string; encoding: string; };
     return {
-      path: data.path,
-      content: data.content,
-      encoding: data.encoding,
+      path: _data.path,
+      content: _data.content,
+      encoding: _data.encoding,
     };
   }
 }
@@ -54,7 +53,7 @@ export const createComment = jest.fn()
 
 export const getCommitFiles = jest.fn()
   .mockImplementation(async (client, sha) => {
-    const { data } = await client.repos.getCommit({
+    const { data } = await client.rest.repos.getCommit({
       owner: "mew",
       repo: "svg-action",
       ref: sha,
@@ -89,7 +88,7 @@ export const getPrComments = jest.fn()
 
 export const getPrFiles = jest.fn()
   .mockImplementation(async (client, prNumber) => {
-    const { data } = await client.pulls.listFiles({
+    const { data } = await client.rest.pulls.listFiles({
       owner: "mew",
       repo: "svg-action",
       pull_number: prNumber,

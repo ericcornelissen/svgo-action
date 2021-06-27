@@ -59,20 +59,21 @@ describe("::commitFiles", () => {
   const defaultCommitMessage = "This is a commit message";
 
   beforeEach(() => {
-    client.git.createCommit.mockClear();
-    client.git.createTree.mockClear();
-    client.git.getCommit.mockClear();
-    client.git.getRef.mockClear();
-    client.git.updateRef.mockClear();
+    type Clearable = { mockClear(); };
+    (client.rest.git.createCommit as unknown as Clearable).mockClear();
+    (client.rest.git.createTree as unknown as Clearable).mockClear();
+    (client.rest.git.getCommit as unknown as Clearable).mockClear();
+    (client.rest.git.getRef as unknown as Clearable).mockClear();
+    (client.rest.git.updateRef as unknown as Clearable).mockClear();
   });
 
   test("call functions to create a commit", async () => {
     await commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
-    expect(client.git.getRef).toHaveBeenCalledTimes(1);
-    expect(client.git.getCommit).toHaveBeenCalledTimes(1);
-    expect(client.git.createTree).toHaveBeenCalledTimes(1);
-    expect(client.git.createCommit).toHaveBeenCalledTimes(1);
-    expect(client.git.updateRef).toHaveBeenCalledTimes(1);
+    expect(client.rest.git.getRef).toHaveBeenCalledTimes(1);
+    expect(client.rest.git.getCommit).toHaveBeenCalledTimes(1);
+    expect(client.rest.git.createTree).toHaveBeenCalledTimes(1);
+    expect(client.rest.git.createCommit).toHaveBeenCalledTimes(1);
+    expect(client.rest.git.updateRef).toHaveBeenCalledTimes(1);
   });
 
   test.each([
@@ -95,8 +96,8 @@ describe("::commitFiles", () => {
     "fix: optimized SVGs",
   ])("uses the commit message (%s)", async (commitMessage) => {
     await commitFiles(client, defaultBlobs, ref, commitMessage);
-    expect(client.git.createCommit).toHaveBeenCalledTimes(1);
-    expect(client.git.createCommit).toHaveBeenCalledWith(
+    expect(client.rest.git.createCommit).toHaveBeenCalledTimes(1);
+    expect(client.rest.git.createCommit).toHaveBeenCalledWith(
       expect.objectContaining({
         message: commitMessage,
       }),
@@ -109,35 +110,35 @@ describe("::commitFiles", () => {
   });
 
   test("ref is not found", async () => {
-    github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.getRef.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
     await expect(promise).rejects.toBeDefined();
   });
 
   test("previous commit is not found", async () => {
-    github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
     await expect(promise).rejects.toBeDefined();
   });
 
   test("tree could not be created", async () => {
-    github.GitHubInstance.git.createTree.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.createTree.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
     await expect(promise).rejects.toBeDefined();
   });
 
   test("commit could not be created", async () => {
-    github.GitHubInstance.git.createCommit.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.createCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
     await expect(promise).rejects.toBeDefined();
   });
 
   test("ref could not be updated", async () => {
-    github.GitHubInstance.git.updateRef.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.updateRef.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = commitFiles(client, defaultBlobs, ref, defaultCommitMessage);
     await expect(promise).rejects.toBeDefined();
@@ -176,7 +177,7 @@ describe("::createBlob", () => {
   });
 
   test("blob could not be created", async () => {
-    github.GitHubInstance.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.createBlob.mockRejectedValueOnce(new Error("Not found"));
 
     await expect(
       createBlob(
@@ -203,7 +204,7 @@ describe("::createComment", () => {
   });
 
   test("comment could not be created", async () => {
-    github.GitHubInstance.issues.createComment.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.issues.createComment.mockRejectedValueOnce(new Error("Not found"));
 
     await expect(
       createComment(
@@ -229,7 +230,7 @@ describe("::getCommitFiles", () => {
   });
 
   test("throw when commit is not found", async () => {
-    github.GitHubInstance.repos.getCommit.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.repos.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getCommitFiles(client, github.COMMIT_SHA.MANY_CHANGES);
     await expect(promise).rejects.toBeDefined();
@@ -251,21 +252,21 @@ describe("::getCommitMessage", () => {
     "These are not the droids you're looking for",
     "Another one bites de_dust",
   ])("return the commit message (%s)", async (commitMessage) => {
-    github.GitHubInstance.git.getCommit.mockReturnValueOnce({ data: { message: commitMessage } });
+    github.GitHubInstance.rest.git.getCommit.mockReturnValueOnce({ data: { message: commitMessage } });
 
     const result = await getCommitMessage(client, ref);
     expect(result).toBeDefined();
   });
 
   test("ref is not found", async () => {
-    github.GitHubInstance.git.getRef.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.getRef.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getCommitMessage(client, ref);
     await expect(promise).rejects.toBeDefined();
   });
 
   test("commit is not found", async () => {
-    github.GitHubInstance.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.git.getCommit.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getCommitMessage(client, ref);
     await expect(promise).rejects.toBeDefined();
@@ -302,7 +303,7 @@ describe("::getContent", () => {
   });
 
   test("directory is not found", async () => {
-    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getContent(client, defaultRef, "foobar");
     await expect(promise).rejects.toBeDefined();
@@ -315,7 +316,7 @@ describe("::getDefaultBranch", () => {
   const names: string[] = ["main", "develop", "some-other-branch"];
 
   test.each(names)("returns the repositories default_branch (%s)", async (name) => {
-    github.GitHubInstance.repos.get.mockResolvedValueOnce({ data: { default_branch: name } });
+    github.GitHubInstance.rest.repos.get.mockResolvedValueOnce({ data: { default_branch: name } });
 
     const defaultBranch: string = await getDefaultBranch(client);
     expect(defaultBranch).toBe(name);
@@ -349,7 +350,7 @@ describe("::getFile", () => {
   });
 
   test("file is not found", async () => {
-    github.GitHubInstance.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.repos.getContent.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getFile(client, defaultRef, "foobar");
     await expect(promise).rejects.toBeDefined();
@@ -404,7 +405,7 @@ describe("::getPrFiles", () => {
   });
 
   test("throw when file in Pull Request does not exist", async () => {
-    github.GitHubInstance.pulls.listFiles.mockRejectedValueOnce(new Error("Not found"));
+    github.GitHubInstance.rest.pulls.listFiles.mockRejectedValueOnce(new Error("Not found"));
 
     const promise = getPrFiles(client, github.PR_NUMBER.MANY_CHANGES);
     await expect(promise).rejects.toBeDefined();

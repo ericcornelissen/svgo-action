@@ -1,3 +1,5 @@
+import { GitHub } from "@actions/github/lib/utils";
+
 type InputOptions = {
   required?: boolean;
 }
@@ -91,5 +93,9 @@ export type GitObjectInfo = {
 
 // Type representing an object from which the Action inputs can be obtained.
 export type Inputs = {
+  getBooleanInput(name: string, options: InputOptions): boolean
   getInput(name: string, options: InputOptions): string;
 }
+
+// Type definition of Octokit.
+export type Octokit = InstanceType<typeof GitHub>;

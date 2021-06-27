@@ -16,8 +16,8 @@ Automatically run [SVGO] with GitHub Actions.
 
 Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO Action. You can
-check [what the Action does for each `on` event](/docs/events.md). The SVGO
-Action also [outputs some values](/docs/outputs.md) for subsequent steps.
+check [what the Action does for each `on` event](/docs/events.md) and [what the
+Action outputs](/docs/outputs.md) for subsequent steps.
 
 ```yaml
 name: SVGOptimizer
@@ -44,6 +44,9 @@ jobs:
 
 _Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
 GitHub's rest API_
+
+> :warning: This Action does not work for Pull Requests from forks. This is
+> because GitHub Actions do not have permission to alter forked repositories.
 
 ### Configure the Action
 
@@ -147,12 +150,12 @@ touch any SVG files, you may want the Action to run only when an SVG was
 actually changed. To do this you can change the Workflow file that uses this
 Action to be triggered only when SVG files change.
 
-> :warning: This will cause **any** Action specified in the Workflow file to be
-> run only when an SVG changes. If there are Actions that should run for every
-> push or Pull Request they must be specified in a separate Workflow file.
+> :warning: This will cause the entire Workflow to be run only when an SVG
+> changes. If there are steps that should run for every push or Pull Request
+> they must be specified in a separate Workflow file.
 
 To run this Action only when SVG files are changed, update the `on:`
-configuration as follows:
+configuration for `pull_request` and/or `push` as follows:
 
 ```yaml
 name: SVGOptimizer
@@ -165,8 +168,8 @@ on:
     - "**.svg"
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.3
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.3-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.4
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.4-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Adevelop
 [ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/develop?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action

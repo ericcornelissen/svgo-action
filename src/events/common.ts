@@ -1,6 +1,4 @@
 import * as core from "@actions/core";
-import { Octokit } from "@octokit/core";
-
 import {
   OUTPUT_NAME_DID_OPTIMIZE,
   OUTPUT_NAME_OPTIMIZED_COUNT,
@@ -17,6 +15,7 @@ import {
   CommitData,
   ContextData,
   FileData,
+  Octokit,
   OutputName,
 
   // Git

@@ -21,6 +21,22 @@ import { ActionConfig } from "../src/inputs";
 import { RawActionConfig } from "../src/types";
 
 
+function mockCoreGetBooleanInput(
+  key: string,
+  value: boolean | string,
+  throws?: boolean,
+): void {
+  if (throws) {
+    when(core.getBooleanInput)
+      .calledWith(key, expect.any(Object))
+      .mockImplementation(() => { throw new TypeError("Invalid string"); });
+  } else {
+    when(core.getBooleanInput)
+      .calledWith(key, expect.any(Object))
+      .mockReturnValue(value);
+  }
+}
+
 function mockCoreGetInput(key: string, value: string): void {
   when(core.getInput)
     .calledWith(key, expect.any(Object))
@@ -166,7 +182,7 @@ describe("ActionConfig", () => {
     const CONVENTIONAL_COMMIT_EXP = /.+:\s.+/;
 
     test("commit is not defined in the config object", () => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, false);
 
       const instance: ActionConfig = new ActionConfig(core, { });
       expect(instance.commitTitle).toEqual(DEFAULT_COMMIT_TITLE);
@@ -182,7 +198,7 @@ describe("ActionConfig", () => {
       "This is templated commit message title {{optimizedCount}}",
       "If you see a rat the size of a car, you're playing the wrong game",
     ])("commit message title is defined in the config object", (title) => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, false);
 
       const instance: ActionConfig = new ActionConfig(core, { commit: { title } });
       expect(instance.commitTitle).toEqual(title);
@@ -195,7 +211,7 @@ describe("ActionConfig", () => {
     });
 
     test("conventional-commits is enabled and no commit message title is specified", () => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, true);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.commitTitle).toBeDefined();
@@ -204,7 +220,7 @@ describe("ActionConfig", () => {
     });
 
     test("conventional-commits is enabled and a commit message title is specified", () => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, true);
 
       const instance: ActionConfig = new ActionConfig(core, { commit: { title: "deadbeef" } });
       expect(instance.commitTitle).toBeDefined();
@@ -213,7 +229,7 @@ describe("ActionConfig", () => {
     });
 
     test("conventional-commits is disabled and no commit message title is specified", () => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, false);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.commitTitle).toBeDefined();
@@ -221,14 +237,14 @@ describe("ActionConfig", () => {
     });
 
     test("conventional-commits is disabled and a commit message title is specified", () => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, false);
 
       const instance: ActionConfig = new ActionConfig(core, { commit: { title: "Do the thing" } });
       expect(instance.commitTitle).toEqual("Do the thing");
     });
 
     test.each(nonBooleanStrings)("conventional-commits is '%s'", (value) => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, value);
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, value, true);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.commitTitle).toMatch(CONVENTIONAL_COMMIT_EXP);
@@ -273,7 +289,7 @@ describe("ActionConfig", () => {
     });
 
     test("conventional-commits enabled and commit.conventional disabled", () => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, true);
 
       const instance: ActionConfig = new ActionConfig(core, { commit: { conventional: false } });
       expect(instance.commitTitle).toBeDefined();
@@ -281,7 +297,7 @@ describe("ActionConfig", () => {
     });
 
     test("conventional-commits disabled and commit.conventional enabled", () => {
-      mockCoreGetInput(INPUT_NAME_CONVENTIONAL_COMMITS, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_CONVENTIONAL_COMMITS, false);
 
       const instance: ActionConfig = new ActionConfig(core, { commit: { conventional: true } });
       expect(instance.commitTitle).toBeDefined();
@@ -294,33 +310,33 @@ describe("ActionConfig", () => {
   describe(".enableComments", () => {
 
     test("comment is not set at all", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
-      const defaultValue = "false";
-      mockCoreGetInput(INPUT_NAME_COMMENT, defaultValue);
+      const defaultValue = false;
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, defaultValue);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.enableComments).toBe(false);
     });
 
     test("comment is `'false'` in the Workflow file", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
-      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, false);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.enableComments).toBe(false);
     });
 
     test("comment is `'true'` in the Workflow file", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
-      mockCoreGetInput(INPUT_NAME_COMMENT, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, true);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.enableComments).toBe(true);
     });
 
     test.each(nonBooleanStrings)("comment is `'%s'` in the Workflow file", (value) => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
       mockCoreGetInput(INPUT_NAME_COMMENT, value);
 
       const instance: ActionConfig = new ActionConfig(core);
@@ -328,7 +344,7 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `false` in the config object", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const rawConfig = yaml.load("comment: false") as RawActionConfig;
       mockCoreGetInput(INPUT_NAME_COMMENT, "true");
@@ -338,48 +354,48 @@ describe("ActionConfig", () => {
     });
 
     test("comment is `true` in the config object", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const rawConfig = yaml.load("comment: true") as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, false);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.enableComments).toBe(true);
     });
 
     test("comment is `'false'` in the config object", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const rawConfig = yaml.load("comment: 'false'") as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_COMMENT, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, true);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.enableComments).toBe(false);
     });
 
     test("comment is `'true'` in the config object", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const rawConfig = yaml.load("comment: 'true'") as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, false);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.enableComments).toBe(true);
     });
 
     test.each(nonBooleanStrings)("comment is `'%s'` in the config object", (value) => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const rawConfig = yaml.load(`comment: '${value}'`) as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_COMMENT, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, false);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.enableComments).toBe(true);
     });
 
-    test.each(["true", "false"])("dry-run is true and comment is `%s`", (value) => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
-      mockCoreGetInput(INPUT_NAME_COMMENT, value);
+    test.each([true, false])("dry-run is true and comment is `%s`", (value) => {
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, true);
+      mockCoreGetBooleanInput(INPUT_NAME_COMMENT, value);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.enableComments).toBe(false);
@@ -390,29 +406,29 @@ describe("ActionConfig", () => {
   describe(".isDryRun", () => {
 
     test("dry-run is not set at all", () => {
-      const defaultValue = "false";
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, defaultValue);
+      const defaultValue = false;
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, defaultValue);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.isDryRun).toBe(false);
     });
 
     test("dry-run is `'false'` in the workflow file", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.isDryRun).toBe(false);
     });
 
     test("dry-run is `'true'` in the workflow file", () => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, true);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.isDryRun).toBe(true);
     });
 
     test.each(nonBooleanStrings)("dry-run is `'%s'` in the workflow file", (value) => {
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, value);
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, value, true);
 
       const instance: ActionConfig = new ActionConfig(core);
       expect(instance.isDryRun).toBe(true);
@@ -420,7 +436,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `false` in the config object", () => {
       const rawConfig = yaml.load("dry-run: false") as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, true);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.isDryRun).toBe(false);
@@ -428,7 +444,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `true` in the config object", () => {
       const rawConfig = yaml.load("dry-run: true") as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.isDryRun).toBe(true);
@@ -436,7 +452,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `'false'` in the config object", () => {
       const rawConfig = yaml.load("dry-run: 'false'") as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "true");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, true);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.isDryRun).toBe(false);
@@ -444,7 +460,7 @@ describe("ActionConfig", () => {
 
     test("dry-run is `'true'` in the config object", () => {
       const rawConfig = yaml.load("dry-run: 'true'") as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.isDryRun).toBe(true);
@@ -452,7 +468,7 @@ describe("ActionConfig", () => {
 
     test.each(nonBooleanStrings)("dry-run is `'%s'` in the config object", (value) => {
       const rawConfig = yaml.load(`dry-run: '${value}'`) as RawActionConfig;
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, "false");
+      mockCoreGetBooleanInput(INPUT_NAME_DRY_RUN, false);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.isDryRun).toBe(true);
@@ -494,7 +510,7 @@ describe("ActionConfig", () => {
       ["folder/**/*", "dir/**/*"],
     ])("ignore is '%s' in the workflow file and '%s' in the config file", (workflowGlob, configGlob) => {
       const rawConfig: RawActionConfig = { ignore: configGlob };
-      mockCoreGetInput(INPUT_NAME_DRY_RUN, workflowGlob);
+      mockCoreGetInput(INPUT_NAME_IGNORE, workflowGlob);
 
       const instance: ActionConfig = new ActionConfig(core, rawConfig);
       expect(instance.ignoreGlob).toBe(configGlob);

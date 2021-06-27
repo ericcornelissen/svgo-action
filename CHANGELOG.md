@@ -9,6 +9,12 @@ Versioning].
 
 - _No changes yet_
 
+## [1.3.4] - 2021-06-27
+
+- Update SVGO v2 to `v2.3.1`.
+- Add warning about running the Action for Pull Requests from forks. ([#355])
+- Allow more values for boolean options. ([#371])
+
 ## [1.3.3] - 2021-04-02
 
 - Update SVGO v2 to `v2.3.0`. ([#352])
@@ -220,4 +226,6 @@ Versioning].
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
 [#352]: https://github.com/ericcornelissen/svgo-action/pull/352
+[#355]: https://github.com/ericcornelissen/svgo-action/pull/355
+[#371]: https://github.com/ericcornelissen/svgo-action/pull/371
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
