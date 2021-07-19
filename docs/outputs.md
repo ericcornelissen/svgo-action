@@ -16,8 +16,10 @@ reference it in the subsequent step that needs it:
 ```yml
 # .github/workflows/svgo.yml
 steps:
-- uses: ericcornelissen/svgo-action@v1
+- uses: ericcornelissen/svgo-action@next
   id: svgo  # <-- You need to give the SVGO Action step a unique id
+  with:
+    repo-token: ${{ secrets.GITHUB_TOKEN }}
 - name: Consume output
   run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
   #                   ^            ^

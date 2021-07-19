@@ -1,9 +1,10 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import type { Context, Core, Warnings } from "./types";
+import type { Client, Context, Core, Warnings } from "./types";
+import type { FileSystem } from "./file-systems";
 
 import { DEFAULT_SVGO_OPTIONS, SUPPORTED_EVENTS } from "./constants";
-import * as fs from "./file-system";
+import * as fileSystems from "./file-systems";
 import { ActionConfig } from "./inputs";
 import { parseJavaScript, parseYaml } from "./parser";
 import { SVGOptimizer, SVGOptions } from "./svgo";
@@ -12,6 +13,7 @@ import { setOutputValues } from "./outputs";
 
 async function getSvgoInstance(
   config: ActionConfig,
+  fs: FileSystem,
 ): Promise<[SVGOptimizer, Warnings]> {
   const filePath = config.svgoOptionsPath;
   const warnings: Warnings = [];
@@ -50,10 +52,23 @@ async function initAction(core: Core): Promise<[
   }
 
   core.info(`Using SVGO major version ${config.svgoVersion}`);
-  const [svgo, svgoWarnings] = await getSvgoInstance(config);
+  const fs = fileSystems.newStandard();
+  const [svgo, svgoWarnings] = await getSvgoInstance(config, fs);
   warnings.push(...svgoWarnings);
 
   return [{ config, svgo }, warnings];
+}
+
+async function getFileSystem(
+  client: Client,
+  context: Context,
+): Promise<FileSystem> {
+  switch (context.eventName) {
+    case "pull_request":
+      return fileSystems.newPullRequest(client, context);
+    default:
+      return fileSystems.newStandard();
+  }
 }
 
 async function run(
@@ -61,6 +76,7 @@ async function run(
   context: Context,
   config: ActionConfig,
   svgo: SVGOptimizer,
+  fs: FileSystem,
 ): Promise<void> {
   try {
     const event = context.eventName;
@@ -78,9 +94,11 @@ async function run(
 
 export default async function main(
   core: Core,
+  client: Client,
   context: Context,
 ): Promise<void> {
+  const fs = await getFileSystem(client, context);
   const [{ config, svgo }, warnings] = await initAction(core);
-  run(core, context, config, svgo);
+  run(core, context, config, svgo, fs);
   warnings.forEach((warning) => core.warning(warning));
 }

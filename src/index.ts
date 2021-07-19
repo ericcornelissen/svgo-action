@@ -3,4 +3,7 @@ import * as core from "@actions/core";
 
 import main from "./main";
 
-main(core, github.context);
+const token = core.getInput("repo-token", { required: true });
+const client = github.getOctokit(token);
+
+main(core, client, github.context);

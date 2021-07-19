@@ -2,7 +2,7 @@
 
 import type { IMinimatch } from "minimatch";
 
-import type { FileInfo, FileSystem } from "./file-system";
+import type { FileInfo, FileSystem } from "./file-systems";
 import type { OptimizeProjectData } from "./types";
 
 import { Minimatch } from "minimatch";

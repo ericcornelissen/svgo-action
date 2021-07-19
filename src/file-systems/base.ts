@@ -1,5 +1,7 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
+import type { FileInfo, FileSystem } from "./types";
+
 import * as fs from "fs";
 import * as path from "path";
 
@@ -9,7 +11,7 @@ const LIST_FILES_ALWAYS_IGNORE: string[] = [
   "vendor",
 ];
 
-export async function readFile(file: FileInfo | string): Promise<string> {
+async function readFile(file: FileInfo | string): Promise<string> {
   let filePath: string;
   if (typeof file === "string") {
     filePath = file;
@@ -28,7 +30,7 @@ export async function readFile(file: FileInfo | string): Promise<string> {
   });
 }
 
-export async function writeFile(
+async function writeFile(
   file: FileInfo,
   content: string,
 ): Promise<void> {
@@ -38,7 +40,7 @@ export async function writeFile(
   });
 }
 
-export function* listFiles(fileOrFolder: string): Iterable<FileInfo> {
+function* listFiles(fileOrFolder: string): Iterable<FileInfo> {
   for (const entry of fs.readdirSync(fileOrFolder)) {
     if (LIST_FILES_ALWAYS_IGNORE.includes(entry)) {
       continue;
@@ -61,13 +63,8 @@ export function* listFiles(fileOrFolder: string): Iterable<FileInfo> {
   }
 }
 
-export type FileInfo = {
-  readonly path: string;
-  readonly extension: string;
-}
-
-export type FileSystem = {
-  listFiles(fileOrFolder: string, recursive?: boolean): Iterable<FileInfo>
-  readFile(file: FileInfo | string): Promise<string>;
-  writeFile(file: FileInfo, content: string): Promise<void>;
-}
+export const BaseFileSystem: FileSystem = {
+  listFiles,
+  readFile,
+  writeFile,
+};

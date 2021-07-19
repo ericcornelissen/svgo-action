@@ -8,8 +8,9 @@ Versioning].
 ## [Unreleased, v2]
 
 - BREAKING: Remove `SKIPPED_COUNT` output. ([#364])
+- Only optimize SVGs in the Pull Request in that context. ([#376])
 - Add `IGNORED_COUNT` output. ([#364])
-- Don't count optimized SVGs in `OPTIMIZED_COUNT`. ([#363])
+- Don't count previously optimized SVGs in `OPTIMIZED_COUNT`. ([#363])
 
 ## [2.0.0-alpha.3] - 2021-05-02
 
@@ -33,7 +34,13 @@ Versioning].
 
 ## [Unreleased, v1]
 
+- _No changes yet_
+
+## [1.3.4] - 2021-06-27
+
+- Update SVGO v2 to `v2.3.1`.
 - Add warning about running the Action for Pull Requests from forks. ([#355])
+- Allow more values for boolean options. ([#371])
 
 ## [1.3.3] - 2021-04-02
 
@@ -253,4 +260,6 @@ Versioning].
 [#358]: https://github.com/ericcornelissen/svgo-action/pull/358
 [#363]: https://github.com/ericcornelissen/svgo-action/pull/363
 [#364]: https://github.com/ericcornelissen/svgo-action/pull/364
+[#371]: https://github.com/ericcornelissen/svgo-action/pull/371
+[#376]: https://github.com/ericcornelissen/svgo-action/pull/376
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

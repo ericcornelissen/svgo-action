@@ -78,6 +78,7 @@ jobs:
       id: svgo
       uses: ./../action
       with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
         dry-run: true
     # And outputs things...
     - name: Check SVGO Action output
