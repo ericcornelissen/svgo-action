@@ -1,19 +1,4 @@
-// Type representing the relevant information of `@actions/github.context`.
-export type Client = {
-  readonly rest: {
-    readonly pulls: {
-      listFiles(params: {
-        owner: string;
-        repo: string;
-        pull_number: number;
-        per_page?: number;
-        page?: number;
-      }): Promise<{
-        data: { filename: string; status: string; }[]
-      }>;
-    };
-  };
-}
+export type error = string | null;
 
 // Type representing the relevant information of `@actions/github.context`.
 export type Context = {
@@ -34,6 +19,7 @@ export interface Core extends Inputter, Outputter {
   info(message: string): void;
   setFailed(message: string | Error): void;
   warning(message: string | Error): void;
+  debug(message: string): void;
 }
 
 // Type representing data about the optimization process.
@@ -51,8 +37,13 @@ export type FileData = {
 }
 
 // Type representing an object from which the Action inputs can be obtained.
+interface InputterOptions {
+  readonly required?: boolean;
+}
+
 export interface Inputter {
-  getInput(name: string, options: { required?: boolean; }): string;
+  getInput(name: string, options: InputterOptions): string;
+  getBooleanInput(name: string, options: InputterOptions): boolean;
 }
 
 // Type representing an object to which Action outputs can be outputted.
@@ -60,6 +51,7 @@ export interface Outputter {
   setOutput(name: string, value: string): void;
 }
 
-// Types representing Action run warnings
-export type Warning = string;
-export type Warnings = Warning[];
+export interface GitHub {
+  getOctokit(token: string): Client;
+  readonly context: Context;
+}

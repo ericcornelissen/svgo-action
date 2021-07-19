@@ -77,6 +77,7 @@ module.exports = {
     "jest/no-alias-methods": ["error"],
     "jest/no-duplicate-hooks": "off",
     "jest/no-if": ["error"],
+    "jest/no-mocks-import": "off",
     "jest/no-truthy-falsy": ["error"],
     "jest/prefer-to-be-null": ["error"],
     "jest/prefer-to-be-undefined": ["error"],
@@ -118,7 +119,6 @@ module.exports = {
       files: ["test/**/*.ts"],
       rules: {
         "max-len": ["error", {
-          code: 120,
           ignoreTrailingComments: true,
         }],
         "security/detect-object-injection": "off",

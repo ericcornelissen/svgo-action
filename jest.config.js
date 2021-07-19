@@ -2,6 +2,9 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   coverageDirectory: "_reports/coverage",
+  collectCoverageFrom: [
+    "src/**/*.ts",
+  ],
   coveragePathIgnorePatterns: [
     "lib",
     "node_modules",
@@ -9,9 +12,9 @@ module.exports = {
   ],
   coverageThreshold: {
     global: {
-      branches: 90,
-      functions: 100,
-      lines: 80,
+      branches: 75,
+      functions: 75,
+      lines: 75,
     },
   },
 };

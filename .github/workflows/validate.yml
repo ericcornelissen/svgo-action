@@ -32,8 +32,14 @@ jobs:
       run: npm ci
     - name: Lint source
       run: npm run lint
-  test-unit:
-    name: Unit tests
+  test:
+    name: Test - ${{ matrix.type }}
+    needs: [build]
+    strategy:
+      matrix:
+        type:
+        - unit
+        # - integration
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -45,7 +51,7 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Run tests
-      run: npm run test:coverage
+      run: npm run coverage:${{ matrix.type }}
       env:
         CI: true
     - name: Upload coverage to Codecov
@@ -53,9 +59,10 @@ jobs:
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         file: ./_reports/coverage/lcov.info
-  test-integration:
-    name: Integration test
-    needs: [build, test-unit]
+        # flags: ${{ matrix.type }}
+  test-e2e:
+    name: End-to-end test
+    needs: [test]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout

@@ -11,3 +11,11 @@ export const SUPPORTED_EVENTS: string[] = [
   EVENT_SCHEDULE,
   EVENT_WORKFLOW_DISPATCH,
 ];
+
+export const EVENTS = {
+  pullRequest: EVENT_PULL_REQUEST,
+  push: EVENT_PUSH,
+  repositoryDispatch: EVENT_REPOSITORY_DISPATCH,
+  schedule: EVENT_SCHEDULE,
+  workflowDispatch: EVENT_WORKFLOW_DISPATCH,
+};

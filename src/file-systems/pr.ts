@@ -1,32 +1,43 @@
-import type {
-  Client,
-  Context,
-  FileInfo,
-  FileSystem,
-  ListFilesFn,
-} from "./types";
+import type { error } from "../types";
+import type { GitHubClient } from "../clients";
+import type { FileInfo, FileSystem, ListFilesFn } from "./types";
 
-type Path = {
-  resolve(...args: string[]): string;
+import errors from "../errors";
+
+interface Context {
+  readonly payload: {
+    readonly pull_request: {
+      readonly number: number;
+    };
+  };
+  readonly repo: {
+    readonly owner: string;
+    readonly repo: string;
+  };
 }
 
 async function getPrFiles(
-  client: Client,
+  client: GitHubClient,
   context: Context,
-): Promise<string[]> {
-  const result: string[] = [];
+): Promise<[string[], error]> {
   const perPage = 100;
+
+  const result: string[] = [];
+  let err: error = null;
+
   let curPage = 0;
-
-  while (true) { // eslint-disable-line no-constant-condition
-    curPage++;
-
-    const { data } = await client.rest.pulls.listFiles({
+  while (++curPage) {
+    const [{ data }, err0] = await client.pulls.listFiles({
       ...context.repo,
-      pull_number: context.payload.pull_request?.number as number,
-      per_page: perPage,
+      pullNumber: context.payload.pull_request.number,
       page: curPage,
+      perPage,
     });
+
+    if (err0 !== null) {
+      err = errors.New(`Could not get Pull Request files (${err0})`);
+      break;
+    }
 
     const files = data
       .filter((entry) => entry.status !== "removed")
@@ -34,9 +45,11 @@ async function getPrFiles(
     result.push(...files);
 
     if (data.length < perPage) {
-      return result;
+      break;
     }
   }
+
+  return [result, err];
 }
 
 function createListFiles(
@@ -52,21 +65,36 @@ function createListFiles(
   };
 }
 
-export function createPrFileSystemBuilder(
-  fs: FileSystem,
-  path: Path,
-) {
-  return async function(
-    client: Client,
-    context: Context,
-  ): Promise<FileSystem> {
-    const prFiles = await getPrFiles(client, context);
-    const prFilePaths = prFiles.map((file) => path.resolve(".", file));
-
-    return {
-      listFiles: createListFiles(fs, prFilePaths),
-      readFile: fs.readFile,
-      writeFile: fs.writeFile,
-    };
+interface Params {
+  readonly fs: FileSystem;
+  readonly path: {
+    resolve(...args: string[]): string;
   };
 }
+
+export function createPrFileSystemBuilder({ fs, path }: Params) {
+  return async function(
+    client: GitHubClient,
+    context: Context,
+  ): Promise<[FileSystem, error]> {
+    const [prFiles, err] = await getPrFiles(client, context);
+    if (err !== null) {
+      return [fs, err];
+    }
+
+    const prFilePaths = prFiles.map((file) => path.resolve(".", file));
+
+    return [
+      {
+        listFiles: createListFiles(fs, prFilePaths),
+        readFile: fs.readFile,
+        writeFile: fs.writeFile,
+      },
+      null,
+    ];
+  };
+}
+
+export type {
+  Context as PrContext,
+};

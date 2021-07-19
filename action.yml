@@ -5,7 +5,8 @@ author: 'Eric Cornelissen'
 inputs:
   repo-token:
     description: 'The GITHUB_TOKEN secret'
-    required: true
+    default: ''
+    required: false
   dry-run:
     description: 'Run the action in dry mode (i.e. do not write optimized SVGs)'
     default: false

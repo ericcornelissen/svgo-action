@@ -1,12 +1,24 @@
-import type { Outputter, OptimizeProjectData } from "./types";
+import type { error, Outputter } from "./types";
 
-import {
-  EVENT_PULL_REQUEST,
-  EVENT_PUSH,
-  EVENT_SCHEDULE,
-} from "./constants";
+import { EVENTS } from "./constants";
 
-type DataToOutput = (data: OptimizeProjectData) => string;
+type DataToOutput = (data: OptimizedProjectStats) => string;
+
+interface OptimizedProjectStats {
+  readonly ignoredCount: number;
+  readonly optimizedCount: number;
+  readonly svgCount: number;
+}
+
+interface Context {
+  readonly eventName: string;
+}
+
+interface Params {
+  readonly context: Context;
+  readonly data: OptimizedProjectStats;
+  readonly out: Outputter;
+}
 
 const enum OutputName {
   DID_OPTIMIZE = "DID_OPTIMIZE",
@@ -18,47 +30,49 @@ const enum OutputName {
 const outputsMap: Map<OutputName, DataToOutput> = new Map([
   [
     OutputName.DID_OPTIMIZE,
-    (data: OptimizeProjectData): string => `${data.optimizedCount > 0}`,
+    (data) => `${data.optimizedCount > 0}`,
   ],
   [
     OutputName.IGNORED_COUNT,
-    (data: OptimizeProjectData): string => `${data.ignoredCount}`,
+    (data) => `${data.ignoredCount}`,
   ],
   [
     OutputName.OPTIMIZED_COUNT,
-    (data: OptimizeProjectData): string => `${data.optimizedCount}`,
+    (data) => `${data.optimizedCount}`,
   ],
   [
     OutputName.SVG_COUNT,
-    (data: OptimizeProjectData): string => `${data.svgCount}`,
+    (data) => `${data.svgCount}`,
   ],
 ]);
 
-function getOutputNamesFor(event: string): OutputName[] {
+function getOutputNamesFor(event: string): [OutputName[], error] {
   switch (event) {
-    case EVENT_PULL_REQUEST:
-    case EVENT_PUSH:
-    case EVENT_SCHEDULE:
-      return [
+    case EVENTS.pullRequest:
+    case EVENTS.push:
+    case EVENTS.schedule:
+      return [[
         OutputName.DID_OPTIMIZE,
         OutputName.IGNORED_COUNT,
         OutputName.OPTIMIZED_COUNT,
         OutputName.SVG_COUNT,
-      ];
+      ], null];
     default:
-      return [];
+      return [[], `unknown event ${event}`];
   }
 }
 
-export function setOutputValues(
-  outputs: Outputter,
-  event: string,
-  data: OptimizeProjectData,
-): void {
-  const names = getOutputNamesFor(event);
+function setOutputValues({ context, data, out }: Params): error {
+  const [names, err] = getOutputNamesFor(context.eventName);
   for (const name of names) {
     const fn = outputsMap.get(name) as DataToOutput;
     const value = fn(data);
-    outputs.setOutput(name, value);
+    out.setOutput(name, value);
   }
+
+  return err;
 }
+
+export {
+  setOutputValues,
+};

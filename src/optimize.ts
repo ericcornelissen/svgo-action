@@ -2,13 +2,13 @@
 
 import type { IMinimatch } from "minimatch";
 
+import type { Config } from "./configs";
 import type { FileInfo, FileSystem } from "./file-systems";
-import type { OptimizeProjectData } from "./types";
+import type { SVGOptimizer } from "./svgo";
+import type { error, OptimizeProjectData } from "./types";
 
 import { Minimatch } from "minimatch";
 
-import { ActionConfig } from "./inputs";
-import { SVGOptimizer } from "./svgo";
 
 interface ReadFileInfo extends FileInfo {
   readonly path: string;
@@ -19,24 +19,30 @@ interface OptimizedFileInfo extends ReadFileInfo {
   readonly optimizedContent: string;
 }
 
+interface Params {
+  readonly fs: FileSystem;
+  readonly config: Config;
+  readonly svgo: SVGOptimizer;
+}
+
 async function readSvg(
   fs: FileSystem,
   file: FileInfo,
-): Promise<ReadFileInfo> {
-  const content = await fs.readFile(file);
-  return { ...file, content };
+): Promise<[ReadFileInfo, error]> {
+  const [content, err] = await fs.readFile(file);
+  return [{ ...file, content }, err];
 }
 
 async function readSvgs(
   fs: FileSystem,
   ignoreMatcher: IMinimatch,
 ): Promise<{
-  files: ReadFileInfo[],
+  files: [ReadFileInfo, error][],
   ignoredSvgCount: number,
   totalSvgCount: number,
 }> {
   let totalSvgCount = 0, ignoredSvgCount = 0;
-  const promises: Promise<ReadFileInfo>[] = [];
+  const promises: Promise<[ReadFileInfo, error]>[] = [];
   for (const file of fs.listFiles(".", true)) {
     if (file.extension !== ".svg") {
       continue;
@@ -59,43 +65,46 @@ async function readSvgs(
 async function optimizeSvg(
   svgo: SVGOptimizer,
   file: ReadFileInfo,
-): Promise<OptimizedFileInfo> {
-  const optimizedContent = await svgo.optimize(file.content);
-  return { ...file, optimizedContent };
+): Promise<[OptimizedFileInfo, error]> {
+  const [optimizedContent, err] = await svgo.optimize(file.content);
+  return [{ ...file, optimizedContent }, err];
 }
 
-async function optimizeSvgs(
+async function optimizeAllSvgs(
   svgo: SVGOptimizer,
   files: ReadFileInfo[],
 ): Promise<OptimizedFileInfo[]> {
-  const promises: Promise<OptimizedFileInfo>[] = [];
+  const promises: Promise<[OptimizedFileInfo, error]>[] = [];
   for (const file of files) {
     const promise = optimizeSvg(svgo, file);
     promises.push(promise);
   }
 
   const optimizedFiles = await Promise.all(promises);
-  return optimizedFiles.filter((f) => f.content !== f.optimizedContent);
+  return optimizedFiles
+    .filter(([_, err]) => err === null)
+    .map(([file, _]) => file)
+    .filter((file) => file.content !== file.optimizedContent);
 }
 
 async function writeOptimizedSvgs(
   fs: FileSystem,
   files: OptimizedFileInfo[],
-): Promise<void> {
-  const promises: Promise<void>[] = [];
+): Promise<error[]> {
+  const promises: Promise<error>[] = [];
   for (const file of files) {
     const promise = fs.writeFile(file, file.optimizedContent);
     promises.push(promise);
   }
 
-  await Promise.all(promises);
+  return await Promise.all(promises);
 }
 
-export async function optimize(
-  fs: FileSystem,
-  config: ActionConfig,
-  svgo: SVGOptimizer,
-): Promise<OptimizeProjectData> {
+async function optimizeSvgs({
+  fs,
+  config,
+  svgo,
+}: Params): Promise<[OptimizeProjectData, error]> {
   const ignoreMatcher = new Minimatch(config.ignoreGlob);
 
   const {
@@ -103,14 +112,25 @@ export async function optimize(
     ignoredSvgCount,
     totalSvgCount,
   } = await readSvgs(fs, ignoreMatcher);
-  const optimizedFiles = await optimizeSvgs(svgo, files);
+
+  const readFiles = files
+    .filter(([_, err]) => err === null)
+    .map(([file, _]) => file);
+
+  const optimizedFiles = await optimizeAllSvgs(svgo, readFiles);
   if (!config.isDryRun) {
     await writeOptimizedSvgs(fs, optimizedFiles);
   }
 
-  return {
+  const optimizeProjectData: OptimizeProjectData = {
     ignoredCount: ignoredSvgCount,
     optimizedCount: optimizedFiles.length,
     svgCount: totalSvgCount,
   };
+
+  return [optimizeProjectData, null];
 }
+
+export {
+  optimizeSvgs,
+};
