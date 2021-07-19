@@ -1,6 +1,6 @@
-import type { FileInfo } from "../src/file-system";
+import type { FileInfo } from "../src/file-systems";
 
-import * as fs from "./mocks/file-system.mock";
+import * as fileSystems from "./mocks/file-systems.mock";
 import * as inputs from "./mocks/inputs.mock";
 import * as svgoImport from "./mocks/svgo.mock";
 
@@ -36,9 +36,9 @@ describe("::optimize", () => {
     let config;
 
     beforeEach(() => {
-      fs.listFiles.mockClear();
-      fs.readFile.mockClear();
-      fs.writeFile.mockClear();
+      fileSystems.listFiles.mockClear();
+      fileSystems.readFile.mockClear();
+      fileSystems.writeFile.mockClear();
 
       svgo.optimize.mockClear();
     });
@@ -49,13 +49,13 @@ describe("::optimize", () => {
     });
 
     test("no files", async () => {
-      fs.listFiles.mockReturnValueOnce([]);
+      fileSystems.listFiles.mockReturnValueOnce([]);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).not.toHaveBeenCalled();
-      expect(fs.writeFile).not.toHaveBeenCalled();
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).not.toHaveBeenCalled();
+      expect(fileSystems.writeFile).not.toHaveBeenCalled();
 
       expect(svgo.optimize).not.toHaveBeenCalled();
 
@@ -65,13 +65,13 @@ describe("::optimize", () => {
     });
 
     test("one non-svg files", async () => {
-      fs.listFiles.mockReturnValueOnce([nonSvgFile]);
+      fileSystems.listFiles.mockReturnValueOnce([nonSvgFile]);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).not.toHaveBeenCalled();
-      expect(fs.writeFile).not.toHaveBeenCalled();
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).not.toHaveBeenCalled();
+      expect(fileSystems.writeFile).not.toHaveBeenCalled();
 
       expect(svgo.optimize).not.toHaveBeenCalled();
 
@@ -81,13 +81,13 @@ describe("::optimize", () => {
     });
 
     test("one SVG file", async () => {
-      fs.listFiles.mockReturnValueOnce([svgFile1]);
+      fileSystems.listFiles.mockReturnValueOnce([svgFile1]);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).toHaveBeenCalledTimes(1);
-      expect(fs.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : 1);
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).toHaveBeenCalledTimes(1);
+      expect(fileSystems.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : 1);
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
@@ -97,16 +97,16 @@ describe("::optimize", () => {
     });
 
     test("one optimized SVG file", async () => {
-      fs.listFiles.mockReturnValueOnce([svgFile2]);
+      fileSystems.listFiles.mockReturnValueOnce([svgFile2]);
 
       const svgo = new svgoImport.SVGOptimizer();
       svgo.optimize.mockImplementationOnce(async (svg) => svg);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).toHaveBeenCalledTimes(1);
-      expect(fs.writeFile).toHaveBeenCalledTimes(0);
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).toHaveBeenCalledTimes(1);
+      expect(fileSystems.writeFile).toHaveBeenCalledTimes(0);
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
@@ -116,13 +116,13 @@ describe("::optimize", () => {
     });
 
     test("one non-SVG file and one SVG file", async () => {
-      fs.listFiles.mockReturnValueOnce([nonSvgFile, svgFile1]);
+      fileSystems.listFiles.mockReturnValueOnce([nonSvgFile, svgFile1]);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).toHaveBeenCalledTimes(1);
-      expect(fs.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : 1);
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).toHaveBeenCalledTimes(1);
+      expect(fileSystems.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : 1);
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
@@ -132,13 +132,13 @@ describe("::optimize", () => {
     });
 
     test("one SVG file and one non-SVG file", async () => {
-      fs.listFiles.mockReturnValueOnce([svgFile1, nonSvgFile]);
+      fileSystems.listFiles.mockReturnValueOnce([svgFile1, nonSvgFile]);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).toHaveBeenCalledTimes(1);
-      expect(fs.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : 1);
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).toHaveBeenCalledTimes(1);
+      expect(fileSystems.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : 1);
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
@@ -155,13 +155,13 @@ describe("::optimize", () => {
       ];
       const optimizedCount = files.length;
 
-      fs.listFiles.mockReturnValueOnce(files);
+      fileSystems.listFiles.mockReturnValueOnce(files);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).toHaveBeenCalledTimes(optimizedCount);
-      expect(fs.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : optimizedCount);
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).toHaveBeenCalledTimes(optimizedCount);
+      expect(fileSystems.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : optimizedCount);
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
@@ -180,13 +180,13 @@ describe("::optimize", () => {
       const nonSvgFileCount = 1;
       const optimizedCount = files.length - nonSvgFileCount;
 
-      fs.listFiles.mockReturnValueOnce(files);
+      fileSystems.listFiles.mockReturnValueOnce(files);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).toHaveBeenCalledTimes(optimizedCount);
-      expect(fs.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : optimizedCount);
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).toHaveBeenCalledTimes(optimizedCount);
+      expect(fileSystems.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : optimizedCount);
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
@@ -209,13 +209,13 @@ describe("::optimize", () => {
       const ignoredCount = 2;
       const optimizedCount = files.length - ignoredCount - nonSvgFileCount;
 
-      fs.listFiles.mockReturnValueOnce(files);
+      fileSystems.listFiles.mockReturnValueOnce(files);
 
-      const result = await optimize(fs, config, svgo);
+      const result = await optimize(fileSystems, config, svgo);
 
-      expect(fs.listFiles).toHaveBeenCalledTimes(1);
-      expect(fs.readFile).toHaveBeenCalledTimes(optimizedCount);
-      expect(fs.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : optimizedCount);
+      expect(fileSystems.listFiles).toHaveBeenCalledTimes(1);
+      expect(fileSystems.readFile).toHaveBeenCalledTimes(optimizedCount);
+      expect(fileSystems.writeFile).toHaveBeenCalledTimes(dryRun ? 0 : optimizedCount);
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 

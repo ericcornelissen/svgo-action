@@ -42,6 +42,8 @@ jobs:
     #  with:
     #    ref: main
     - uses: ericcornelissen/svgo-action@next
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 > :warning: This Action does not work for Pull Requests from forks. This is
@@ -63,6 +65,7 @@ To configure these you add them to the Workflow file. For example:
 ```yaml
 - uses: ericcornelissen/svgo-action@next
   with:
+    repo-token: ${{ secrets.GITHUB_TOKEN }}
     dry-run: true
     ignore: do/not/optimize/**/*.svg
     svgo-options: path/to/svgo-options.js

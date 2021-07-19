@@ -1,6 +1,32 @@
 // Type representing the relevant information of `@actions/github.context`.
+export type Client = {
+  readonly rest: {
+    readonly pulls: {
+      listFiles(params: {
+        owner: string;
+        repo: string;
+        pull_number: number;
+        per_page?: number;
+        page?: number;
+      }): Promise<{
+        data: { filename: string; status: string; }[]
+      }>;
+    };
+  };
+}
+
+// Type representing the relevant information of `@actions/github.context`.
 export type Context = {
   readonly eventName: string;
+  readonly payload: {
+    readonly pull_request?: {
+      readonly number: number;
+    };
+  };
+  readonly repo: {
+    readonly owner: string;
+    readonly repo: string;
+  };
 }
 
 // Type representing the relevant information of `@actions/core`.
