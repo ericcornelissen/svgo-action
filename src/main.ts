@@ -1,61 +1,15 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import type { Octokit } from "@octokit/core";
-
+import type { Context, Core, Warnings } from "./types";
 import type { FileSystem } from "./file-system";
 
-import * as core from "@actions/core";
-import * as github from "@actions/github";
-
-import {
-  COMMENTABLE_EVENTS,
-  DEFAULT_CONFIG_PATH,
-  DEFAULT_SVGO_OPTIONS,
-  INPUT_NAME_CONFIG_PATH,
-  INPUT_NAME_REPO_TOKEN,
-  INPUT_NOT_REQUIRED,
-  INPUT_REQUIRED,
-  SUPPORTED_EVENTS,
-} from "./constants";
+import { DEFAULT_SVGO_OPTIONS, SUPPORTED_EVENTS } from "./constants";
 import * as fs from "./file-system";
-import { createComment, getPrNumber } from "./github-api";
 import { ActionConfig } from "./inputs";
 import { parseJavaScript, parseYaml } from "./parser";
 import { SVGOptimizer, SVGOptions } from "./svgo";
-import { RawActionConfig, Warnings } from "./types";
 import { optimize } from "./optimize";
 import { setOutputValues } from "./outputs";
-import { shouldSkipRun } from "./skip-run";
-import { formatComment } from "./templating";
-
-
-function getRepoToken(): string {
-  return core.getInput(INPUT_NAME_REPO_TOKEN, INPUT_REQUIRED);
-}
-
-async function getActionConfig(): Promise<[ActionConfig, Warnings]> {
-  const filePath = core.getInput(INPUT_NAME_CONFIG_PATH, INPUT_NOT_REQUIRED);
-  const warnings: Warnings = [];
-
-  let rawConfig: RawActionConfig | undefined;
-  try {
-    const rawConfigYaml = await fs.readFile(filePath);
-    try {
-      rawConfig = parseYaml(rawConfigYaml);
-    } catch (_) {
-      warnings.push(`Action config file '${filePath}' invalid`);
-    }
-  } catch (_) {
-    if (filePath !== DEFAULT_CONFIG_PATH) {
-      warnings.push(`Action config file '${filePath}' not found`);
-    }
-  }
-
-  return [
-    new ActionConfig(core, rawConfig),
-    warnings,
-  ];
-}
 
 async function getSvgoInstance(
   config: ActionConfig,
@@ -85,47 +39,13 @@ async function getSvgoInstance(
   ];
 }
 
-async function run(
-  client: Octokit,
-  config: ActionConfig,
-  svgo: SVGOptimizer,
-  fs: FileSystem,
-  warnings: Warnings,
-  event: string,
-): Promise<void> {
-  try {
-    core.info(`Running SVGO Action in '${event}' context`);
-    if (!SUPPORTED_EVENTS.includes(event)) {
-      throw new Error(`Event '${event}' not supported`);
-    }
-
-    const optimizeData = await optimize(fs, config, svgo);
-    setOutputValues(event, optimizeData);
-
-    if (COMMENTABLE_EVENTS.includes(event) && config.enableComments) {
-      const prNumber = getPrNumber();
-      core.info(`Creating comment in Pull Request #${prNumber}...`);
-      const comment = formatComment(config.comment, optimizeData, warnings);
-      await createComment(client, prNumber, comment);
-    }
-  } catch (error) {
-    core.setFailed(`action failed with error '${error}'`);
-  }
-}
-
-function logWarnings(warnings: Warnings): void {
-  for (const warning of warnings) {
-    core.warning(warning);
-  }
-}
-
-export default async function main(): Promise<void> {
-  const token: string = getRepoToken();
-  const client: Octokit = github.getOctokit(token);
+async function initAction(core: Core): Promise<[
+  { config: ActionConfig, svgo: SVGOptimizer },
+  Warnings,
+]> {
   const warnings: Warnings = [];
 
-  const [config, configWarnings] = await getActionConfig();
-  warnings.push(...configWarnings);
+  const config = new ActionConfig(core);
   if (config.isDryRun) {
     core.info("Dry mode enabled, no changes will be written");
   }
@@ -134,14 +54,35 @@ export default async function main(): Promise<void> {
   const [svgo, svgoWarnings] = await getSvgoInstance(config);
   warnings.push(...svgoWarnings);
 
-  const skip = await shouldSkipRun(client, github.context);
-  if (!skip.shouldSkip) {
-    run(client, config, svgo, fs, warnings, github.context.eventName);
-  } else {
-    core.info(`Action disabled from ${skip.reason}, exiting`);
-  }
-
-  logWarnings(warnings);
+  return [{ config, svgo }, warnings];
 }
 
-main();
+async function run(
+  core: Core,
+  context: Context,
+  config: ActionConfig,
+  svgo: SVGOptimizer,
+  fs: FileSystem,
+): Promise<void> {
+  try {
+    const event = context.eventName;
+    core.info(`Running SVGO Action in '${event}' context`);
+    if (!SUPPORTED_EVENTS.includes(event)) {
+      throw new Error(`Event '${event}' not supported`);
+    }
+
+    const optimizeData = await optimize(fs, config, svgo);
+    setOutputValues(core, event, optimizeData);
+  } catch (error) {
+    core.setFailed(`action failed with error '${error}'`);
+  }
+}
+
+export default async function main(
+  core: Core,
+  context: Context,
+): Promise<void> {
+  const [{ config, svgo }, warnings] = await initAction(core);
+  run(core, context, config, svgo, fs);
+  warnings.forEach((warning) => core.warning(warning));
+}

@@ -1,32 +1,38 @@
-import type { OptimizeProjectData, OutputName } from "./types";
-
-import * as core from "@actions/core";
+import type { Outputter, OptimizeProjectData } from "./types";
 
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
   EVENT_SCHEDULE,
-  OUTPUT_NAME_DID_OPTIMIZE,
-  OUTPUT_NAME_OPTIMIZED_COUNT,
-  OUTPUT_NAME_SKIPPED_COUNT,
-  OUTPUT_NAME_SVG_COUNT,
 } from "./constants";
 
+type DataToOutput = (data: OptimizeProjectData) => string;
 
-const outputs: { [key: string]: (data: OptimizeProjectData) => string } = {
-  "DID_OPTIMIZE": (data: OptimizeProjectData): string => {
-    return `${data.optimizedCount > 0}`;
-  },
-  "OPTIMIZED_COUNT": (data: OptimizeProjectData): string => {
-    return `${data.optimizedCount}`;
-  },
-  "SKIPPED_COUNT": (data: OptimizeProjectData): string => {
-    return `${data.skippedCount}`;
-  },
-  "SVG_COUNT": (data: OptimizeProjectData): string => {
-    return `${data.svgCount}`;
-  },
-};
+const enum OutputName {
+  DID_OPTIMIZE = "DID_OPTIMIZE",
+  IGNORED_COUNT = "IGNORED_COUNT",
+  OPTIMIZED_COUNT = "OPTIMIZED_COUNT",
+  SVG_COUNT = "SVG_COUNT",
+}
+
+const outputsMap: Map<OutputName, DataToOutput> = new Map([
+  [
+    OutputName.DID_OPTIMIZE,
+    (data: OptimizeProjectData): string => `${data.optimizedCount > 0}`,
+  ],
+  [
+    OutputName.IGNORED_COUNT,
+    (data: OptimizeProjectData): string => `${data.ignoredCount}`,
+  ],
+  [
+    OutputName.OPTIMIZED_COUNT,
+    (data: OptimizeProjectData): string => `${data.optimizedCount}`,
+  ],
+  [
+    OutputName.SVG_COUNT,
+    (data: OptimizeProjectData): string => `${data.svgCount}`,
+  ],
+]);
 
 function getOutputNamesFor(event: string): OutputName[] {
   switch (event) {
@@ -34,26 +40,25 @@ function getOutputNamesFor(event: string): OutputName[] {
     case EVENT_PUSH:
     case EVENT_SCHEDULE:
       return [
-        OUTPUT_NAME_DID_OPTIMIZE,
-        OUTPUT_NAME_OPTIMIZED_COUNT,
-        OUTPUT_NAME_SKIPPED_COUNT,
-        OUTPUT_NAME_SVG_COUNT,
+        OutputName.DID_OPTIMIZE,
+        OutputName.IGNORED_COUNT,
+        OutputName.OPTIMIZED_COUNT,
+        OutputName.SVG_COUNT,
       ];
     default:
       return [];
   }
 }
 
-
 export function setOutputValues(
+  outputs: Outputter,
   event: string,
   data: OptimizeProjectData,
 ): void {
   const names = getOutputNamesFor(event);
   for (const name of names) {
-    // eslint-disable-next-line security/detect-object-injection
-    const fn = outputs[name];
+    const fn = outputsMap.get(name) as DataToOutput;
     const value = fn(data);
-    core.setOutput(name, value);
+    outputs.setOutput(name, value);
   }
 }

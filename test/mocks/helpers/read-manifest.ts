@@ -2,7 +2,6 @@ import * as yaml from "js-yaml";
 import * as path from "path";
 import * as fs from "fs";
 
-
 type ActionManifest = {
   inputs: {
     [key: string]: {
@@ -20,6 +19,5 @@ const actionManifestFile = path.resolve(
 );
 const rawActionManifest = fs.readFileSync(actionManifestFile).toString();
 const actionManifest = yaml.load(rawActionManifest) as ActionManifest;
-
 
 export { actionManifest };

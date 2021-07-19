@@ -16,8 +16,8 @@ Automatically run [SVGO] with GitHub Actions.
 
 Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO Action. You can
-check [what the Action does for each `on` event](/docs/events.md). The SVGO
-Action also [outputs some values](/docs/outputs.md) for subsequent steps.
+check [what the Action does for each `on` event](/docs/events.md) and [what the
+Action outputs](/docs/outputs.md) for subsequent steps.
 
 ```yaml
 name: SVGOptimizer
@@ -39,98 +39,37 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     # Enable the following to select a branch for scheduled or triggered runs.
-    # with:
-    #   path: main
+    #  with:
+    #    ref: main
     - uses: ericcornelissen/svgo-action@next
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-_Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
-GitHub's rest API_
+> :warning: This Action does not work for Pull Requests from forks. This is
+> because GitHub Actions do not have permission to alter forked repositories.
 
 ### Configure the Action
 
-There are a couple of ways for you to configure the Action. You can configure it
-[in the Workflow file], [in `.github/svgo-action.yml`], or [in another
-configuration file]. The table below shows the options that can be configured.
+This Action has a couple of options to configure its behaviour, namely:
 
-| Name                   | Description                             | Default            | Documentation                                 |
-| ---------------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
-| `comment`              | Leave comments on Pull Requests         | `false`            | [docs](/docs/options.md#comment)              |
-| `dry-run`              | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
-| `ignore`               | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
-| `svgo-options`         | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
-| `svgo-version`         | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
+| Name           | Description                             | Default            | Documentation                                 |
+| -------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
+| `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
+| `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
+| `svgo-options` | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
+| `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
 
-#### In the Workflow file
-
-The first way to configure the Action is inside the Workflow file, after the
-`repo-token`. For example:
+To configure these you add them to the Workflow file. For example:
 
 ```yaml
-with:
-  repo-token: ${{ secrets.GITHUB_TOKEN }}
-  comment: true
-  dry-run: true
-  ignore: do/not/optimize/**/*.svg
-  svgo-options: path/to/svgo-options.js
-  svgo-version: 2
-```
-
-#### In `.github/svgo-action.yml`
-
-If you prefer to separate the Action configuration from the Workflow file you
-can add a file called `svgo-action.yml` inside the `.github` directory. Then,
-you can configure the Action inside this file. For example:
-
-```yaml
-comment: true
-dry-run: true
-ignore: do/not/optimize/**/*.svg
-svgo-options: path/to/svgo-options.js
-svgo-version: 2
-```
-
-#### In Another Configuration File
-
-Lastly, if you prefer to use a different file from `.github/svgo-action.yml`,
-it is possible to specify a `configuration-path` in the Workflow file. This
-value should point to the configuration file you want to use. For example:
-
-> :warning: The configuration file must always be a valid YAML file.
-
-```yaml
-with:
-  repo-token: ${{ secrets.GITHUB_TOKEN }}
-  configuration-path: path/to/configuration/file.yml
+- uses: ericcornelissen/svgo-action@next
+  with:
+    dry-run: true
+    ignore: do/not/optimize/**/*.svg
+    svgo-options: path/to/svgo-options.js
+    svgo-version: 2
 ```
 
 ### Advanced Usage
-
-#### Manually Disabling the Action
-
-It is possible to manually disable the Action from a commit message. This can be
-achieved by including the string "_disable-svgo-action_" anywhere in the commit
-message.
-
-> :warning: This will only stop the Action from optimizing SVGs in the build
-> corresponding to the commit whose commit message contains the string.
-
-Another possibility is to disable the Action from a Pull Request comment. This
-can be achieved by including the string "_disable-svgo-action_" anywhere in any
-comment on the Pull Request.
-
-> :warning: This will stop the Action from optimizing SVGs in any subsequent
-> build for that Pull Request.
-
-If you want to enable the Action for a singe commit when it is disabled from a
-Pull Request comment, include the string "_enable-svgo-action_" anywhere in the
-commit message. Then, for that commit only, the Action will optimize SVGs.
-
-If instead you want to enable the Action again for all commits, include the
-string "_enable-svgo-action_" anywhere in a comment on the Pull Request after it
-has been disabled, and the Action will start optimizing SVGs again.
 
 #### Limit Runs
 
@@ -139,12 +78,12 @@ touch any SVG files, you may want the Action to run only when an SVG was
 actually changed. To do this you can change the Workflow file that uses this
 Action to be triggered only when SVG files change.
 
-> :warning: This will cause **any** Action specified in the Workflow file to be
-> run only when an SVG changes. If there are Actions that should run for every
-> push or Pull Request they must be specified in a separate Workflow file.
+> :warning: This will cause the entire Workflow to be run only when an SVG
+> changes. If there are steps that should run for every push or Pull Request
+> they must be specified in a separate Workflow file.
 
 To run this Action only when SVG files are changed, update the `on:`
-configuration as follows:
+configuration for `pull_request` and/or `push` as follows:
 
 ```yaml
 name: SVGOptimizer
@@ -174,7 +113,4 @@ on:
 
 [creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
-[in the workflow file]: #in-the-workflow-file
-[in `.github/svgo-action.yml`]: #in-githubsvgo-actionyml
-[in another configuration file]: #in-another-configuration-file
 [svgo]: https://github.com/svg/svgo

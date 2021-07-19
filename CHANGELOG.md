@@ -5,9 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased]
+## [Unreleased, v2]
 
-- Re-add warnings in Action logs and Pull Requests comments. ([#342])
+- BREAKING: Remove `SKIPPED_COUNT` output. ([#364])
+- Add `IGNORED_COUNT` output. ([#364])
+- Don't count optimized SVGs in `OPTIMIZED_COUNT`. ([#363])
+
+## [2.0.0-alpha.3] - 2021-05-02
+
+- BREAKING: Remove ability to leave comments on Pull Requests. ([#357])
+- BREAKING: Remove ability to cancel runs. ([#357])
+- BREAKING: Remove external configuration file. ([#358])
 
 ## [2.0.0-alpha.2] - 2021-03-08
 
@@ -20,8 +28,12 @@ Versioning].
 - BREAKING: Remove branch configuration option for scheduled runs.
 - BREAKING: Remove option to commit changes.
 - BREAKING: Remove `fileCount` and `ignoredCount` as templating variable.
-- BREAKING: Disabling from push event's now disables the action entirely.
+- BREAKING: Disabling from push events now disables the action entirely.
 - Warn about missing or invalid configuration files.
+
+## [Unreleased, v1]
+
+- Add warning about running the Action for Pull Requests from forks. ([#355])
 
 ## [1.3.3] - 2021-04-02
 
@@ -232,8 +244,13 @@ Versioning].
 [#335]: https://github.com/ericcornelissen/svgo-action/pull/335
 [#337]: https://github.com/ericcornelissen/svgo-action/pull/337
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
-[#342]: https://github.com/ericcornelissen/svgo-action/pull/342
 [#343]: https://github.com/ericcornelissen/svgo-action/pull/343
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
 [#346]: https://github.com/ericcornelissen/svgo-action/pull/346
+[#352]: https://github.com/ericcornelissen/svgo-action/pull/352
+[#355]: https://github.com/ericcornelissen/svgo-action/pull/355
+[#357]: https://github.com/ericcornelissen/svgo-action/pull/357
+[#358]: https://github.com/ericcornelissen/svgo-action/pull/358
+[#363]: https://github.com/ericcornelissen/svgo-action/pull/363
+[#364]: https://github.com/ericcornelissen/svgo-action/pull/364
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

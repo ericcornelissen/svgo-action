@@ -6,14 +6,10 @@ import * as svgoImport from "./mocks/svgo.mock";
 
 import { optimize } from "../src/optimize";
 
-
 const svgo = new svgoImport.SVGOptimizer();
 
-
 describe("::optimize", () => {
-
   describe.each([false, true])("dry run = %s", (dryRun) => {
-
     const folderContainingTwoSvgs = "/path/to/two/svgs";
 
     const nonSvgFile: FileInfo = {
@@ -63,9 +59,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).not.toHaveBeenCalled();
 
-      expect(result.files).toHaveLength(0);
+      expect(result.ignoredCount).toEqual(0);
       expect(result.optimizedCount).toEqual(0);
-      expect(result.skippedCount).toEqual(0);
       expect(result.svgCount).toEqual(0);
     });
 
@@ -80,9 +75,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).not.toHaveBeenCalled();
 
-      expect(result.files).toHaveLength(0);
+      expect(result.ignoredCount).toEqual(0);
       expect(result.optimizedCount).toEqual(0);
-      expect(result.skippedCount).toEqual(0);
       expect(result.svgCount).toEqual(0);
     });
 
@@ -97,9 +91,27 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.files).toHaveLength(1);
+      expect(result.ignoredCount).toEqual(0);
       expect(result.optimizedCount).toEqual(1);
-      expect(result.skippedCount).toEqual(0);
+      expect(result.svgCount).toEqual(1);
+    });
+
+    test("one optimized SVG file", async () => {
+      fs.listFiles.mockReturnValueOnce([svgFile2]);
+
+      const svgo = new svgoImport.SVGOptimizer();
+      svgo.optimize.mockImplementationOnce(async (svg) => svg);
+
+      const result = await optimize(fs, config, svgo);
+
+      expect(fs.listFiles).toHaveBeenCalledTimes(1);
+      expect(fs.readFile).toHaveBeenCalledTimes(1);
+      expect(fs.writeFile).toHaveBeenCalledTimes(0);
+
+      expect(svgo.optimize).toHaveBeenCalledTimes(1);
+
+      expect(result.ignoredCount).toEqual(0);
+      expect(result.optimizedCount).toEqual(0);
       expect(result.svgCount).toEqual(1);
     });
 
@@ -114,9 +126,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.files).toHaveLength(1);
+      expect(result.ignoredCount).toEqual(0);
       expect(result.optimizedCount).toEqual(1);
-      expect(result.skippedCount).toEqual(0);
       expect(result.svgCount).toEqual(1);
     });
 
@@ -131,9 +142,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(1);
 
-      expect(result.files).toHaveLength(1);
+      expect(result.ignoredCount).toEqual(0);
       expect(result.optimizedCount).toEqual(1);
-      expect(result.skippedCount).toEqual(0);
       expect(result.svgCount).toEqual(1);
     });
 
@@ -155,9 +165,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
-      expect(result.files).toHaveLength(optimizedCount);
+      expect(result.ignoredCount).toEqual(0);
       expect(result.optimizedCount).toEqual(optimizedCount);
-      expect(result.skippedCount).toEqual(0);
       expect(result.svgCount).toEqual(files.length);
     });
 
@@ -181,9 +190,8 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
-      expect(result.files).toHaveLength(optimizedCount);
+      expect(result.ignoredCount).toEqual(0);
       expect(result.optimizedCount).toEqual(optimizedCount);
-      expect(result.skippedCount).toEqual(0);
       expect(result.svgCount).toEqual(files.length - nonSvgFileCount);
     });
 
@@ -211,12 +219,9 @@ describe("::optimize", () => {
 
       expect(svgo.optimize).toHaveBeenCalledTimes(optimizedCount);
 
-      expect(result.files).toHaveLength(optimizedCount);
+      expect(result.ignoredCount).toEqual(ignoredCount);
       expect(result.optimizedCount).toEqual(optimizedCount);
-      expect(result.skippedCount).toEqual(2);
       expect(result.svgCount).toEqual(files.length - nonSvgFileCount);
     });
-
   });
-
 });

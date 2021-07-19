@@ -78,11 +78,10 @@ jobs:
       id: svgo
       uses: ./../action
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
         dry-run: true
     # And outputs things...
     - name: Check SVGO Action output
       run: |
-        if ! [ "${{ steps.svgo.outputs.SKIPPED_COUNT }}" = "0" ]; then
+        if ! [ "${{ steps.svgo.outputs.IGNORED_COUNT }}" = "0" ]; then
             exit 1
         fi

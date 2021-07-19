@@ -3,13 +3,12 @@
 import type { IMinimatch } from "minimatch";
 
 import type { FileInfo, FileSystem } from "./file-system";
-import type { OptimizeFileData, OptimizeProjectData } from "./types";
+import type { OptimizeProjectData } from "./types";
 
 import { Minimatch } from "minimatch";
 
 import { ActionConfig } from "./inputs";
 import { SVGOptimizer } from "./svgo";
-
 
 interface ReadFileInfo extends FileInfo {
   readonly path: string;
@@ -31,8 +30,12 @@ async function readSvg(
 async function readSvgs(
   fs: FileSystem,
   ignoreMatcher: IMinimatch,
-): Promise<{ files: ReadFileInfo[], totalSvgCount: number }> {
-  let totalSvgCount = 0;
+): Promise<{
+  files: ReadFileInfo[],
+  ignoredSvgCount: number,
+  totalSvgCount: number,
+}> {
+  let totalSvgCount = 0, ignoredSvgCount = 0;
   const promises: Promise<ReadFileInfo>[] = [];
   for (const file of fs.listFiles(".", true)) {
     if (file.extension !== ".svg") {
@@ -41,6 +44,7 @@ async function readSvgs(
 
     totalSvgCount++;
     if (ignoreMatcher.match(file.path)) {
+      ignoredSvgCount++;
       continue;
     }
 
@@ -49,7 +53,7 @@ async function readSvgs(
   }
 
   const files = await Promise.all(promises);
-  return { files, totalSvgCount };
+  return { files, ignoredSvgCount, totalSvgCount };
 }
 
 async function optimizeSvg(
@@ -71,7 +75,7 @@ async function optimizeSvgs(
   }
 
   const optimizedFiles = await Promise.all(promises);
-  return optimizedFiles;
+  return optimizedFiles.filter((f) => f.content !== f.optimizedContent);
 }
 
 async function writeOptimizedSvgs(
@@ -94,20 +98,19 @@ export async function optimize(
 ): Promise<OptimizeProjectData> {
   const ignoreMatcher = new Minimatch(config.ignoreGlob);
 
-  const { files, totalSvgCount } = await readSvgs(fs, ignoreMatcher);
+  const {
+    files,
+    ignoredSvgCount,
+    totalSvgCount,
+  } = await readSvgs(fs, ignoreMatcher);
   const optimizedFiles = await optimizeSvgs(svgo, files);
   if (!config.isDryRun) {
     await writeOptimizedSvgs(fs, optimizedFiles);
   }
 
   return {
-    files: optimizedFiles.map((file): OptimizeFileData => ({
-      path: file.path,
-      contentAfter: file.optimizedContent,
-      contentBefore: file.content,
-    })),
+    ignoredCount: ignoredSvgCount,
     optimizedCount: optimizedFiles.length,
-    skippedCount: totalSvgCount - optimizedFiles.length,
     svgCount: totalSvgCount,
   };
 }
