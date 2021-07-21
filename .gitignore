@@ -5,7 +5,8 @@
 # dependencies directory
 node_modules/
 
-# static analysis reports
+# reports and caches
+.cache/
 _reports/
 
 # TypeScript generated files
