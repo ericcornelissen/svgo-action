@@ -2,28 +2,28 @@ name: Automated Fixes
 on:
   push:
     branches:
-    - develop
+      - develop
 
 jobs:
-  lib-index-js:
+  lib:
     name: lib/index.js
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: 12.x
-    - name: Install dependencies
-      run: npm ci
-    - name: Build lib/index.js
-      run: npm run build
-    - name: Push updated lib/index.js
-      uses: stefanzweifel/git-auto-commit-action@v4.11.0
-      with:
-        commit_message: "chore: update lib/index.js"
-        commit_options: "--no-verify"
-        commit_user_name: "github-actions[bot]"
-        commit_user_email: "github-actions[bot]@users.noreply.github.com"
-        commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - name: Install dependencies
+        run: npm ci
+      - name: Build lib/index.js
+        run: npm run build
+      - name: Push updated lib/index.js
+        uses: stefanzweifel/git-auto-commit-action@v4.11.0
+        with:
+          commit_message: "chore: update lib/index.js"
+          commit_options: "--no-verify"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
