@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.5] - 2021-07-21
+
 - Fix ignored SVGO v2 configuration files. ([#380])
 
 ## [1.3.4] - 2021-06-27
