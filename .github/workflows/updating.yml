@@ -1,28 +1,36 @@
 name: Automated Fixes
 on:
   push:
-    branches: [develop]
+    branches:
+      - next
 
 jobs:
-  lib-index-js:
+  lib:
     name: lib/index.js
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-    - name: Use Node.js 12.x
-      uses: actions/setup-node@v2
-      with:
-        node-version: 12.x
-    - name: Install dependencies
-      run: npm ci
-    - name: Build lib/index.js
-      run: npm run build
-    - name: Push updated lib/index.js
-      uses: stefanzweifel/git-auto-commit-action@v4.11.0
-      with:
-        commit_message: "chore: update lib/index.js"
-        commit_options: "--no-verify"
-        commit_user_name: github-actions[bot]
-        commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
-        commit_author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      - name: Use Node.js 12.x
+        uses: actions/setup-node@v2
+        with:
+          node-version: 12.x
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: npm ci
+      - name: Build lib/index.js
+        run: npm run build
+      - name: Push updated lib/index.js
+        uses: stefanzweifel/git-auto-commit-action@v4.11.0
+        with:
+          commit_message: "chore: update lib/index.js"
+          commit_options: "--no-verify"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          commit_author: "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"

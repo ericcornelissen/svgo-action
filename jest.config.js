@@ -1,6 +1,8 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
+  cacheDirectory: "./.cache/jest",
+
   coverageDirectory: "_reports/coverage",
   collectCoverageFrom: [
     "src/**/*.ts",

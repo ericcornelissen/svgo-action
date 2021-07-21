@@ -5,7 +5,8 @@
 # dependencies directory
 node_modules/
 
-# static analysis reports
+# reports and caches
+.cache/
 _reports/
 
 # any generated files in lib/ that are not needed
