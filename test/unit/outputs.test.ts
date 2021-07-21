@@ -13,7 +13,9 @@ const SVG_COUNT = "SVG_COUNT";
 
 const EVENT_PULL_REQUEST = "pull_request";
 const EVENT_PUSH = "push";
+const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
 const EVENT_SCHEDULE = "schedule";
+const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
 
 describe.each([
   { ignoredCount: 3, optimizedCount: 1, svgCount: 4 },
@@ -34,7 +36,9 @@ describe.each([
   describe.each([
     EVENT_PULL_REQUEST,
     EVENT_PUSH,
+    EVENT_REPOSITORY_DISPATCH,
     EVENT_SCHEDULE,
+    EVENT_WORKFLOW_DISPATCH,
   ])("for known event '%s'", (eventName) => {
     const context = {
       eventName,
