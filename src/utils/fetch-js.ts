@@ -3,6 +3,8 @@
 
 import * as core from "@actions/core";
 
+import nodeEval from "node-eval";
+
 import { decode } from "../encoder";
 import { getFile } from "../github-api";
 import { Octokit } from "../types";
@@ -18,7 +20,7 @@ export async function fetchJsFile(
     core.debug(`found '${filePath}', decoding and loading JavaScript`);
 
     const rawJavaScript: string = decode(content, encoding);
-    return eval(rawJavaScript);
+    return nodeEval(rawJavaScript);
   } catch (_) {
     core.debug(`file not found ('${filePath}')`);
     return {};
