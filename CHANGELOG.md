@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased, v2]
 
+- _No changes yet_
+
+## [2.0.0-alpha.4] - 2021-07-21
+
 - BREAKING: Remove `SKIPPED_COUNT` output. ([#364])
 - Only optimize SVGs in the Pull Request in that context. ([#376])
 - Add `IGNORED_COUNT` output. ([#364])
