@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix ignored SVGO v2 configuration files. ([#380])
 
 ## [1.3.4] - 2021-06-27
 
@@ -228,4 +228,5 @@ Versioning].
 [#352]: https://github.com/ericcornelissen/svgo-action/pull/352
 [#355]: https://github.com/ericcornelissen/svgo-action/pull/355
 [#371]: https://github.com/ericcornelissen/svgo-action/pull/371
+[#380]: https://github.com/ericcornelissen/svgo-action/pull/380
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
