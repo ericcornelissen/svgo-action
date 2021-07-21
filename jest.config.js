@@ -1,6 +1,7 @@
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
+  cacheDirectory: "./.cache/jest",
 
   // Coverage reporting
   coverageDirectory: "_reports/coverage",
