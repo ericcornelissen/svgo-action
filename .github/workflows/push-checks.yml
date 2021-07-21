@@ -14,6 +14,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
         run: npm ci
       - name: Build SVGO Action
@@ -28,6 +35,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
         run: npm ci
       - name: Lint source
@@ -42,6 +56,21 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Cache Jest
+        uses: actions/cache@v2
+        with:
+          path: .cache/jest
+          key: ${{ runner.os }}-jest-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
+          restore-keys: |
+            ${{ runner.os }}-jest-${{ hashFiles('package-lock.json') }}-
+            ${{ runner.os }}-jest-
       - name: Install dependencies
         run: npm ci
       - name: Run tests
@@ -53,8 +82,8 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./_reports/coverage/lcov.info
-  test-integration:
-    name: Integration test
+  test-e2e:
+    name: End-to-end test
     needs: [build, test-unit]
     runs-on: ubuntu-latest
     steps:
@@ -64,6 +93,13 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
         run: npm ci
       - name: Build SVGO Action
