@@ -46,8 +46,8 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-> :warning: This Action does not work for Pull Requests from forks. This is
-> because GitHub Actions do not have permission to alter forked repositories.
+_Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
+GitHub's rest API_
 
 ### Configure the Action
 
@@ -99,12 +99,12 @@ on:
     - "**.svg"
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.2.2
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.2.2-undefined.svg?logo=github&logoColor=white&style=flat
-[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Adevelop
-[ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/develop?logo=github
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.5
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.5-undefined.svg?logo=github&logoColor=white&style=flat
+[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Anext
+[ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/next?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
-[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/develop/graph/badge.svg
+[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/next/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 [lgtm-image]: https://img.shields.io/lgtm/alerts/g/ericcornelissen/svgo-action.svg?logo=lgtm&logoWidth=18

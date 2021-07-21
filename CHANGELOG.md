@@ -37,9 +37,9 @@ Versioning].
 - BREAKING: Disabling from push events now disables the action entirely.
 - Warn about missing or invalid configuration files.
 
-## [Unreleased, v1]
+## [1.3.5] - 2021-07-21
 
-- _No changes yet_
+- Fix ignored SVGO v2 configuration files. ([#380])
 
 ## [1.3.4] - 2021-06-27
 
@@ -268,4 +268,5 @@ Versioning].
 [#371]: https://github.com/ericcornelissen/svgo-action/pull/371
 [#376]: https://github.com/ericcornelissen/svgo-action/pull/376
 [#378]: https://github.com/ericcornelissen/svgo-action/pull/378
+[#380]: https://github.com/ericcornelissen/svgo-action/pull/380
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
