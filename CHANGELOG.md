@@ -10,6 +10,7 @@ Versioning].
 - BREAKING: Remove `SKIPPED_COUNT` output. ([#364])
 - Only optimize SVGs in the Pull Request in that context. ([#376])
 - Add `IGNORED_COUNT` output. ([#364])
+- Add output values for `repository_dispatch` and `workflow_dispatch`. ([#378])
 - Don't count previously optimized SVGs in `OPTIMIZED_COUNT`. ([#363])
 
 ## [2.0.0-alpha.3] - 2021-05-02
@@ -262,4 +263,5 @@ Versioning].
 [#364]: https://github.com/ericcornelissen/svgo-action/pull/364
 [#371]: https://github.com/ericcornelissen/svgo-action/pull/371
 [#376]: https://github.com/ericcornelissen/svgo-action/pull/376
+[#378]: https://github.com/ericcornelissen/svgo-action/pull/378
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

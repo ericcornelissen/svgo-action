@@ -50,7 +50,9 @@ function getOutputNamesFor(event: string): [OutputName[], error] {
   switch (event) {
     case EVENTS.pullRequest:
     case EVENTS.push:
+    case EVENTS.repositoryDispatch:
     case EVENTS.schedule:
+    case EVENTS.workflowDispatch:
       return [[
         OutputName.DID_OPTIMIZE,
         OutputName.IGNORED_COUNT,
