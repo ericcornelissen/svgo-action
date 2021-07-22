@@ -1,9 +1,9 @@
 import {
-  buildParser,
+  buildSafeParser,
 } from "../../../src/parsers/builder";
 
 describe("parsers/builder.ts", () => {
-  describe("::buildParser", () => {
+  describe("buildSafeParser", () => {
     let parseFn;
 
     beforeAll(() => {
@@ -11,27 +11,35 @@ describe("parsers/builder.ts", () => {
     });
 
     beforeEach(() => {
-      parseFn.mockReset();
+      parseFn.mockClear();
     });
 
     test("build parser, parse success", () => {
       const parseOutput = { foo: "bar" };
       parseFn.mockReturnValueOnce(parseOutput);
 
-      const parser = buildParser(parseFn);
+      const parser = buildSafeParser(parseFn);
+      expect(parseFn).not.toHaveBeenCalled();
 
       const [result, err] = parser("{foo: bar}");
       expect(err).toBeNull();
+      expect(parseFn).toHaveBeenCalledTimes(1);
       expect(result).toEqual(parseOutput);
     });
 
     test("build parser, parse failure", () => {
-      parseFn.mockImplementationOnce(() => { throw new Error("parse error"); });
+      const errorMsg = "some message that's probably not in the source code";
+      parseFn.mockImplementationOnce(() => {
+        throw new Error(errorMsg);
+      });
 
-      const parser = buildParser(parseFn);
+      const parser = buildSafeParser(parseFn);
+      expect(parseFn).not.toHaveBeenCalled();
 
       const [, err] = parser("{foo: bar}");
       expect(err).not.toBeNull();
+      expect(err).toContain(errorMsg);
+      expect(parseFn).toHaveBeenCalledTimes(1);
     });
   });
 });

@@ -2,7 +2,7 @@ import type { FileSystem } from "../file-systems";
 import type { error } from "../types";
 import type { AllowedSvgoVersions } from "./types";
 
-import { parseJavaScript, parseYaml } from "../parsers";
+import parsers from "../parsers";
 import { SVGOptimizer } from "./svgo-wrapper";
 
 interface Params {
@@ -18,8 +18,10 @@ function parseRawConfig({ rawConfig, svgoVersion } : {
   svgoVersion: AllowedSvgoVersions,
 }): [unknown, error] {
   if (svgoVersion === 1) {
+    const parseYaml = parsers.NewYaml();
     return parseYaml(rawConfig);
   } else {
+    const parseJavaScript = parsers.NewJavaScript();
     return parseJavaScript(rawConfig);
   }
 }

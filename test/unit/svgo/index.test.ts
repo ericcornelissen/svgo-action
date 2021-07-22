@@ -3,7 +3,7 @@ import type { AllowedSvgoVersions } from "../../../src/svgo";
 import { when, resetAllWhenMocks } from "jest-when";
 
 import { _sampleFs as fs } from "../../__mocks__/file-systems.mock";
-import * as parsers from "../../__mocks__/parsers.mock";
+import parsers from "../../__mocks__/parsers.mock";
 
 const SVGOptimizerMock = jest.fn().mockName("SVGOptimizerMock constructor");
 const SVGOWrapperMock = { SVGOptimizer: SVGOptimizerMock };
@@ -27,8 +27,8 @@ describe("svgo/index.ts", () => {
 
     beforeEach(() => {
       fs.readFile.mockClear();
-      parsers.parseYaml.mockClear();
-      parsers.parseJavaScript.mockClear();
+      parsers.NewJavaScript.mockClear();
+      parsers.NewYaml.mockClear();
 
       resetAllWhenMocks();
     });
@@ -39,7 +39,7 @@ describe("svgo/index.ts", () => {
       const [result, err] = await svgo.New({ config, fs });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(parsers.parseYaml).toHaveBeenCalledTimes(1);
+      expect(parsers.NewYaml).toHaveBeenCalledTimes(1);
     });
 
     test("new SVGO v2", async () => {
@@ -48,7 +48,7 @@ describe("svgo/index.ts", () => {
       const [result, err] = await svgo.New({ config, fs });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(parsers.parseJavaScript).toHaveBeenCalledTimes(1);
+      expect(parsers.NewJavaScript).toHaveBeenCalledTimes(1);
     });
 
     test.each([
@@ -70,8 +70,12 @@ describe("svgo/index.ts", () => {
     ])("error parsing configuration file", async (config) => {
       const parseErr = errors.New("parse error");
 
-      parsers.parseJavaScript.mockReturnValueOnce([{}, parseErr]);
-      parsers.parseYaml.mockReturnValueOnce([{}, parseErr]);
+      parsers.NewJavaScript.mockReturnValueOnce(
+        jest.fn().mockReturnValue([{}, parseErr]),
+      );
+      parsers.NewYaml.mockReturnValueOnce(
+        jest.fn().mockReturnValue([{}, parseErr]),
+      );
 
       const [result, err] = await svgo.New({ config, fs });
       expect(err).not.toBeNull();

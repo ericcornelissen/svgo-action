@@ -1,3 +1,6 @@
+jest.dontMock("js-yaml");
+jest.dontMock("node-eval");
+
 import { SVGOptimizer } from "../../../src/svgo/svgo-wrapper";
 
 describe("SVGO", () => {

@@ -1,21 +1,43 @@
-const builderMock = {
-  buildParser: jest.fn().mockName("buildParser"),
-};
-const jsYamlMock = {
-  load: jest.fn().mockName("js-yaml.load"),
-};
-const nodeEvalMock = jest.fn().mockName("nodeEval");
+import { mocked } from "ts-jest/utils";
 
-jest.mock("js-yaml", () => jsYamlMock);
-jest.mock("node-eval", () => nodeEvalMock);
-jest.mock("../../../src/parsers/builder", () => builderMock);
+jest.mock("js-yaml");
+jest.mock("node-eval");
+jest.mock("../../../src/parsers/builder");
 
-import "../../../src/parsers/index";
+import * as yaml from "js-yaml";
+import nodeEval from "node-eval";
 
-test("parsers/index.js::JavaScript", () => {
-  expect(builderMock.buildParser).toHaveBeenCalledWith(nodeEvalMock);
-});
+import * as builder from "../../../src/parsers/builder";
+import parsers from "../../../src/parsers/index";
 
-test("parsers/index.js::YAML", () => {
-  expect(builderMock.buildParser).toHaveBeenCalledWith(jsYamlMock.load);
+const buildSafeParser = mocked(builder.buildSafeParser, true);
+
+describe("parsers/index.js", () => {
+  beforeEach(() => {
+    buildSafeParser.mockReset();
+  });
+
+  describe("::NewJavaScript", () => {
+    test("does use node-eval", () => {
+      parsers.NewJavaScript();
+      expect(buildSafeParser).toHaveBeenCalledWith(nodeEval);
+    });
+
+    test("does not use js-yaml", () => {
+      parsers.NewJavaScript();
+      expect(buildSafeParser).not.toHaveBeenCalledWith(yaml.load);
+    });
+  });
+
+  describe("::NewYaml", () => {
+    test("does use js-yaml", () => {
+      parsers.NewYaml();
+      expect(buildSafeParser).toHaveBeenCalledWith(yaml.load);
+    });
+
+    test("does not use node-eval", () => {
+      parsers.NewYaml();
+      expect(buildSafeParser).not.toHaveBeenCalledWith(nodeEval);
+    });
+  });
 });

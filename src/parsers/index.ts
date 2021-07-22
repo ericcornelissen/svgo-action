@@ -1,12 +1,19 @@
+import type { SafeParseFn } from "./types";
+
 import * as yaml from "js-yaml";
 import nodeEval from "node-eval";
 
-import { buildParser } from "./builder";
+import { buildSafeParser } from "./builder";
 
-const parseJavaScript = buildParser(nodeEval);
-const parseYaml = buildParser(yaml.load);
+function NewJavaScript(): SafeParseFn<unknown> {
+  return buildSafeParser(nodeEval);
+}
 
-export {
-  parseJavaScript,
-  parseYaml,
+function NewYaml(): SafeParseFn<unknown> {
+  return buildSafeParser(yaml.load);
+}
+
+export default {
+  NewJavaScript,
+  NewYaml,
 };

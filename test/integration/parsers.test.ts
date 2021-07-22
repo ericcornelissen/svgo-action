@@ -1,10 +1,17 @@
-import {
-  parseJavaScript,
-  parseYaml,
-} from "../../src/parsers";
+jest.dontMock("js-yaml");
+jest.dontMock("node-eval");
+jest.dontMock("../../src/parsers/builder");
+
+import parsers from "../../src/parsers";
 
 describe("package parsers", () => {
-  describe("::parseJavaScript", () => {
+  describe("::NewJavaScript", () => {
+    let parseJavaScript;
+
+    beforeEach(() => {
+      parseJavaScript = parsers.NewJavaScript();
+    });
+
     test("valid JavaScript", () => {
       const [result, err] = parseJavaScript(`
         module.exports = { multipass: true };
@@ -23,14 +30,19 @@ describe("package parsers", () => {
     });
   });
 
-  describe("::parseYaml", () => {
+  describe("::NewYaml", () => {
+    let parseYaml;
+
+    beforeEach(() => {
+      parseYaml = parsers.NewYaml();
+    });
+
     test("valid YAML", () => {
-      const [result, err] = parseYaml(
-        "multipass: true\n" +
-        "plugins:\n" +
-        "  - removeDoctype\n" +
-        "",
-      );
+      const [result, err] = parseYaml([
+        "multipass: true",
+        "plugins:",
+        "  - removeDoctype",
+      ].join("\n"));
 
       expect(err).toBeNull();
       expect(result).toEqual({
@@ -42,11 +54,10 @@ describe("package parsers", () => {
     });
 
     test("invalid YAML", () => {
-      const [, err] = parseYaml(
-        "- removeDoctype\n" +
-        "plugins\n" +
-        "",
-      );
+      const [, err] = parseYaml([
+        "- removeDoctype",
+        "plugins:",
+      ].join("\n"));
 
       expect(err).not.toBeNull();
     });

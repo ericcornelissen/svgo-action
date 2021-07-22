@@ -1,12 +1,15 @@
-const parseJavaScript = jest.fn()
-  .mockReturnValue([{ }, null])
-  .mockName("parsers.parseJavaScript");
+const parser = jest.fn()
+  .mockReturnValue([{ }, null]);
 
-const parseYaml = jest.fn()
-  .mockReturnValue([{ }, null])
-  .mockName("parsers.parseYaml");
+const NewJavaScript = jest.fn()
+  .mockReturnValue(parser)
+  .mockName("parsers.NewJavaScript");
 
-export {
-  parseJavaScript,
-  parseYaml,
+const NewYaml = jest.fn()
+  .mockReturnValue(parser)
+  .mockName("parsers.NewYaml");
+
+export default {
+  NewJavaScript,
+  NewYaml,
 };

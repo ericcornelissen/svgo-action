@@ -1,3 +1,6 @@
+jest.dontMock("js-yaml");
+jest.dontMock("node-eval");
+
 import { _sampleFs as fs } from "../__mocks__/file-systems.mock";
 import { _sampleConfig as baseConfig } from "../__mocks__/configs.mock";
 
