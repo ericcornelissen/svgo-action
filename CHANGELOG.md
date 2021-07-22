@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased, v2]
 
-- _No changes yet_
+- Only optimize SVGs in the pushed commits in that context. ([#382])
 
 ## [2.0.0-alpha.4] - 2021-07-21
 
@@ -269,4 +269,5 @@ Versioning].
 [#376]: https://github.com/ericcornelissen/svgo-action/pull/376
 [#378]: https://github.com/ericcornelissen/svgo-action/pull/378
 [#380]: https://github.com/ericcornelissen/svgo-action/pull/380
+[#382]: https://github.com/ericcornelissen/svgo-action/pull/382
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
