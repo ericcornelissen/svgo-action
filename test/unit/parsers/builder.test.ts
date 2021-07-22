@@ -29,6 +29,7 @@ describe("parsers/builder.ts", () => {
 
     test("build parser, parse failure", () => {
       const errorMsg = "some message that's probably not in the source code";
+
       parseFn.mockImplementationOnce(() => {
         throw new Error(errorMsg);
       });

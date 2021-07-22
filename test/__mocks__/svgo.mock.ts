@@ -5,7 +5,7 @@ import svgo from "../../src/svgo";
 type NewMock = jest.MockedFunction<typeof svgo.New>;
 
 const New: NewMock = jest.fn()
-  .mockResolvedValue([{ }, null])
+  .mockReturnValue([{ optimize: jest.fn() }, null])
   .mockName("svgo.New");
 
 export default {

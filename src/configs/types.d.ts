@@ -1,10 +1,10 @@
-import type { AllowedSvgoVersions } from "../svgo";
+import type { SupportedSvgoVersions } from "../svgo";
 
 interface Config {
   readonly ignoreGlob: string;
   readonly isDryRun: boolean;
   readonly svgoOptionsPath: string;
-  readonly svgoVersion: AllowedSvgoVersions;
+  readonly svgoVersion: SupportedSvgoVersions;
 }
 
 export type {

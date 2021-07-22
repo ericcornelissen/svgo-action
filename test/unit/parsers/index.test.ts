@@ -14,7 +14,7 @@ const buildSafeParser = mocked(builder.buildSafeParser, true);
 
 describe("parsers/index.js", () => {
   beforeEach(() => {
-    buildSafeParser.mockReset();
+    buildSafeParser.mockClear();
   });
 
   describe("::NewJavaScript", () => {

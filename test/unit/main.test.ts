@@ -7,6 +7,7 @@ import configsMock, { _sampleConfig } from "../__mocks__/configs.mock";
 import fileSystemsMock, { _sampleFs } from "../__mocks__/file-systems.mock";
 import optimizeMock, { _sampleData } from "../__mocks__/optimize.mock";
 import outputsMock from "../__mocks__/outputs.mock";
+import parsersMock from "../__mocks__/parsers.mock";
 import svgoMock, { _sampleSvgo } from "../__mocks__/svgo.mock";
 
 jest.mock("../../src/clients", () => clientsMock);
@@ -14,6 +15,7 @@ jest.mock("../../src/configs", () => configsMock);
 jest.mock("../../src/file-systems", () => fileSystemsMock);
 jest.mock("../../src/optimize", () => optimizeMock);
 jest.mock("../../src/outputs", () => outputsMock);
+jest.mock("../../src/parsers", () => parsersMock);
 jest.mock("../../src/svgo", () => svgoMock);
 
 const isEventSupported: jest.Mock<[string, boolean], []> = jest.fn()
@@ -41,13 +43,15 @@ describe("main.ts", () => {
     fileSystemsMock.New.mockClear();
     optimizeMock.optimizeSvgs.mockClear();
     outputsMock.setOutputValues.mockClear();
+    parsersMock.NewJavaScript.mockClear();
+    parsersMock.NewYaml.mockClear();
     svgoMock.New.mockClear();
 
     helpers.isEventSupported.mockClear();
   });
 
   describe("Successful run", () => {
-    test("call process", async () => {
+    test("call process (defaults)", async () => {
       await main({ core, github });
 
       expect(core.setFailed).not.toHaveBeenCalled();
@@ -57,6 +61,7 @@ describe("main.ts", () => {
       expect(fileSystemsMock.New).toHaveBeenCalledTimes(1);
       expect(optimizeMock.optimizeSvgs).toHaveBeenCalledTimes(1);
       expect(outputsMock.setOutputValues).toHaveBeenCalledTimes(1);
+      expect(parsersMock.NewJavaScript).toHaveBeenCalledTimes(1);
       expect(svgoMock.New).toHaveBeenCalledTimes(1);
 
       expect(helpers.isEventSupported).toHaveBeenCalledTimes(1);
@@ -102,6 +107,31 @@ describe("main.ts", () => {
         expect(core.info).not.toHaveBeenCalledWith(expectedMsg);
       });
     });
+
+    describe("SVGO version", () => {
+      function doMockSvgoVersion(svgoVersion: 1 | 2): void {
+        const config = Object.assign(_sampleConfig, { svgoVersion });
+        configsMock.New.mockReturnValueOnce([config, null]);
+      }
+
+      test("v1", async () => {
+        doMockSvgoVersion(1);
+
+        await main({ core, github });
+
+        expect(parsersMock.NewYaml).toHaveBeenCalledTimes(1);
+        expect(parsersMock.NewJavaScript).not.toHaveBeenCalled();
+      });
+
+      test("v2", async () => {
+        doMockSvgoVersion(2);
+
+        await main({ core, github });
+
+        expect(parsersMock.NewJavaScript).toHaveBeenCalledTimes(1);
+        expect(parsersMock.NewYaml).not.toHaveBeenCalled();
+      });
+    });
   });
 
   describe("Failed run", () => {
@@ -145,9 +175,53 @@ describe("main.ts", () => {
       expect(core.debug).toHaveBeenCalledWith(err);
     });
 
-    test.skip("svgo error", async () => {
+    test("svgo configuration file read error", async () => {
+      const err = errors.New("read file error");
+      fileSystemsMock.NewStandard.mockReturnValueOnce({
+        listFiles: jest.fn(),
+        readFile: jest.fn()
+          .mockResolvedValueOnce(["", err])
+          .mockName("fs.readFile"),
+        writeFile: jest.fn(),
+      });
+
+      await main({ core, github });
+
+      expect(core.setFailed).not.toHaveBeenCalledWith();
+      expect(core.warning).toHaveBeenCalledWith(
+        expect.stringContaining("configuration file"),
+      );
+    });
+
+    test("svgo options parse error, no read error (svgo v1)", async () => {
+      const config = Object.assign(_sampleConfig, { svgoVersion: 1 });
+      configsMock.New.mockReturnValueOnce([config, null]);
+
+      const err = errors.New("read file error");
+      const erroringParser = jest.fn().mockReturnValue([{}, err]);
+      parsersMock.NewYaml.mockReturnValueOnce(erroringParser);
+
+      await main({ core, github });
+
+      expect(core.setFailed).toHaveBeenCalledTimes(1);
+    });
+
+    test("svgo options parse error, no read error (svgo v2)", async () => {
+      const config = Object.assign(_sampleConfig, { svgoVersion: 2 });
+      configsMock.New.mockReturnValueOnce([config, null]);
+
+      const err = errors.New("read file error");
+      const erroringParser = jest.fn().mockReturnValue([{}, err]);
+      parsersMock.NewJavaScript.mockReturnValueOnce(erroringParser);
+
+      await main({ core, github });
+
+      expect(core.setFailed).toHaveBeenCalledTimes(1);
+    });
+
+    test("svgo creation error", async () => {
       const err = errors.New("SVGO error");
-      svgoMock.New.mockResolvedValueOnce([_sampleSvgo, err]);
+      svgoMock.New.mockReturnValueOnce([_sampleSvgo, err]);
 
       await main({ core, github });
 
@@ -155,8 +229,6 @@ describe("main.ts", () => {
       expect(core.setFailed).toHaveBeenCalledWith(
         expect.stringContaining("SVGO"),
       );
-
-      expect(core.debug).toHaveBeenCalledWith(err);
     });
 
     test("file system error", async () => {

@@ -5,6 +5,7 @@ import fileSystems from "../../src/file-systems";
 type FileSystemMock = jest.Mocked<FileSystem>;
 
 type NewMock = jest.MockedFunction<typeof fileSystems.New>;
+type NewStandardMock = jest.MockedFunction<typeof fileSystems.NewStandard>;
 
 function createFileSystemMock(): FileSystemMock {
   return {
@@ -21,11 +22,11 @@ function createFileSystemMock(): FileSystemMock {
 }
 
 const New: NewMock = jest.fn()
-  .mockImplementation(() => [createFileSystemMock, null])
+  .mockImplementation(() => [createFileSystemMock(), null])
   .mockName("file-systems.New");
 
-const NewStandard: NewMock = jest.fn()
-  .mockImplementation(() => [createFileSystemMock, null])
+const NewStandard: NewStandardMock = jest.fn()
+  .mockImplementation(() => createFileSystemMock())
   .mockName("file-systems.NewStandard");
 
 export default {

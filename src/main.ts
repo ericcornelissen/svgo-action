@@ -1,4 +1,4 @@
-import type { Core, GitHub } from "./types";
+import type { error, Core, GitHub } from "./types";
 
 import * as helpers from "./helpers";
 
@@ -7,6 +7,7 @@ import configs from "./configs";
 import fileSystems from "./file-systems";
 import { optimizeSvgs } from "./optimize";
 import { setOutputValues } from "./outputs";
+import parsers from "./parsers";
 import SVGO from "./svgo";
 
 interface Params {
@@ -14,7 +15,18 @@ interface Params {
   readonly github: GitHub;
 }
 
-const strict = false;
+function parseRawConfig({ rawConfig, svgoVersion }: {
+  rawConfig: string,
+  svgoVersion: number,
+}): [unknown, error] {
+  if (svgoVersion === 1) {
+    const parseYaml = parsers.NewYaml();
+    return parseYaml(rawConfig);
+  } else {
+    const parseJavaScript = parsers.NewJavaScript();
+    return parseJavaScript(rawConfig);
+  }
+}
 
 export default async function main({
   core,
@@ -38,9 +50,21 @@ export default async function main({
     return core.setFailed("Could not get GitHub client");
   }
 
+  const { svgoOptionsPath, svgoVersion } = config;
+
   const baseFs = fileSystems.NewStandard();
-  const [svgo, err2] = await SVGO.New({ config, fs: baseFs });
-  if (err2 !== null && strict) {
+  const [rawConfig, err1dot1] = await baseFs.readFile(svgoOptionsPath); // eslint-disable-line security/detect-non-literal-fs-filename
+  if (err1dot1 !== null) {
+    core.warning("SVGO configuration file not found");
+  }
+
+  const [svgoOptions, err1dot2] = parseRawConfig({ rawConfig, svgoVersion });
+  if (err1dot2 !== null && err1dot1 === null) {
+    return core.setFailed("Could not parse SVGO configuration");
+  }
+
+  const [svgo, err2] = SVGO.New({ config, svgoOptions });
+  if (err2 !== null) {
     core.debug(err2);
     return core.setFailed("Could not initialize SVGO");
   }

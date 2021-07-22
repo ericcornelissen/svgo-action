@@ -1,10 +1,12 @@
-import type svgoV2 from "svgo-v2";
+import type { error } from "../types";
 
-type SVGOptions = svgoV2.Options;
+type SupportedSvgoVersions = 1 | 2;
 
-type AllowedSvgoVersions = 1 | 2;
+interface SVGOptimizer {
+  optimize(svg: string): Promise<[string, error]>;
+}
 
 export type {
-  AllowedSvgoVersions,
-  SVGOptions,
+  SupportedSvgoVersions,
+  SVGOptimizer,
 };

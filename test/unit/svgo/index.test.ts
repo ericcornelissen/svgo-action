@@ -1,85 +1,52 @@
-import type { AllowedSvgoVersions } from "../../../src/svgo";
+import type { SupportedSvgoVersions } from "../../../src/svgo";
 
-import { when, resetAllWhenMocks } from "jest-when";
+import { mocked } from "ts-jest/utils";
 
-import { _sampleFs as fs } from "../../__mocks__/file-systems.mock";
-import parsers from "../../__mocks__/parsers.mock";
+jest.mock("../../../src/svgo/svgo-v1-wrapper");
+jest.mock("../../../src/svgo/svgo-v2-wrapper");
 
-const SVGOptimizerMock = jest.fn().mockName("SVGOptimizerMock constructor");
-const SVGOWrapperMock = { SVGOptimizer: SVGOptimizerMock };
-
-jest.mock("../../../src/parsers", () => parsers);
-jest.mock("../../../src/svgo/svgo-wrapper", () => SVGOWrapperMock);
-
+import * as svgoV1Wrapper from "../../../src/svgo/svgo-v1-wrapper";
+import * as svgoV2Wrapper from "../../../src/svgo/svgo-v2-wrapper";
 import svgo from "../../../src/svgo/index";
-import errors from "../../../src/errors";
+
+const SVGOptimizerV1 = mocked(svgoV1Wrapper.default);
+const SVGOptimizerV2 = mocked(svgoV2Wrapper.default);
 
 describe("svgo/index.ts", () => {
   describe("::New", () => {
     const v1Config = {
       svgoOptionsPath: ".svgo.yml",
-      svgoVersion: 1 as AllowedSvgoVersions,
+      svgoVersion: 1 as SupportedSvgoVersions,
     };
     const v2Config = {
       svgoOptionsPath: "svgo.config.js",
-      svgoVersion: 2 as AllowedSvgoVersions,
+      svgoVersion: 2 as SupportedSvgoVersions,
+    };
+    const svgoOptions = {
+      multipass: false,
     };
 
     beforeEach(() => {
-      fs.readFile.mockClear();
-      parsers.NewJavaScript.mockClear();
-      parsers.NewYaml.mockClear();
-
-      resetAllWhenMocks();
+      SVGOptimizerV1.mockClear();
+      SVGOptimizerV2.mockClear();
     });
 
-    test("new SVGO v1", async () => {
+    test("new SVGOptimizer for SVGO v1", () => {
       const config = v1Config;
 
-      const [result, err] = await svgo.New({ config, fs });
+      const [result, err] = svgo.New({ config, svgoOptions });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(parsers.NewYaml).toHaveBeenCalledTimes(1);
+      expect(SVGOptimizerV1).toHaveBeenCalledWith(svgoOptions);
     });
 
-    test("new SVGO v2", async () => {
+    test("new SVGOptimizer for SVGO v2", () => {
       const config = v2Config;
 
-      const [result, err] = await svgo.New({ config, fs });
+      const [result, err] = svgo.New({ config, svgoOptions });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(parsers.NewJavaScript).toHaveBeenCalledTimes(1);
-    });
-
-    test.each([
-      v1Config,
-      v2Config,
-    ])("error reading configuration file", async (config) => {
-      when(fs.readFile)
-        .calledWith(config.svgoOptionsPath)
-        .mockResolvedValueOnce(["", errors.New("reading error")]);
-
-      const [result, err] = await svgo.New({ config, fs });
-      expect(err).not.toBeNull();
-      expect(result).not.toBeNull();
-    });
-
-    test.each([
-      v1Config,
-      v2Config,
-    ])("error parsing configuration file", async (config) => {
-      const parseErr = errors.New("parse error");
-
-      parsers.NewJavaScript.mockReturnValueOnce(
-        jest.fn().mockReturnValue([{}, parseErr]),
-      );
-      parsers.NewYaml.mockReturnValueOnce(
-        jest.fn().mockReturnValue([{}, parseErr]),
-      );
-
-      const [result, err] = await svgo.New({ config, fs });
-      expect(err).not.toBeNull();
-      expect(result).not.toBeNull();
+      expect(SVGOptimizerV2).toHaveBeenCalledWith(svgoOptions);
     });
   });
 });

@@ -1,5 +1,5 @@
 import type { error, Inputter } from "../types";
-import type { AllowedSvgoVersions } from "../svgo";
+import type { SupportedSvgoVersions } from "../svgo";
 
 import { INPUT_NAMES } from "../constants";
 import errors from "../errors";
@@ -59,7 +59,7 @@ function getSvgoOptionsPath(inp: Inputter): [string, error] {
   return [err === null ? svgoOptionsPath : erroredValue, err];
 }
 
-function getSvgoVersion(inp: Inputter): [AllowedSvgoVersions, error] {
+function getSvgoVersion(inp: Inputter): [SupportedSvgoVersions, error] {
   const erroredValue = 2;
 
   const [rawSvgoVersion, err0] = safeGetInput(inp, INPUT_NAMES.svgoVersion);
