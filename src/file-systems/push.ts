@@ -68,16 +68,16 @@ export function createPushFileSystemBuilder({ fs, path }: Params) {
     client: GitHubClient,
     context: Context,
   ): Promise<[FileSystem, error]> {
-    const [prFiles, err] = await getPushFiles(client, context);
+    const [pushedFiles, err] = await getPushFiles(client, context);
     if (err !== null) {
       return [fs, err];
     }
 
-    const prFilePaths = prFiles.map((file) => path.resolve(".", file));
+    const pushedFilesPaths = pushedFiles.map((file) => path.resolve(".", file));
 
     return [
       {
-        listFiles: createListFiles(fs, prFilePaths),
+        listFiles: createListFiles(fs, pushedFilesPaths),
         readFile: fs.readFile,
         writeFile: fs.writeFile,
       },

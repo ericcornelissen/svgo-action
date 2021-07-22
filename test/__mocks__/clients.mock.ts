@@ -11,8 +11,14 @@ export default {
 };
 
 export const _sampleClient = {
+  commits: {
+    listFiles: jest.fn()
+      .mockResolvedValue([[], null])
+      .mockName("GitHubClient.commits.listFiles"),
+  },
   pulls: {
     listFiles: jest.fn()
+      .mockResolvedValue([[], null])
       .mockName("GitHubClient.pulls.listFiles"),
   },
 };

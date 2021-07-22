@@ -24,6 +24,11 @@ function createGitHubMock(params?: Params): GitHubMock {
       .mockImplementation(() => {
         return {
           rest: {
+            repos: {
+              getCommit: jest.fn()
+                .mockReturnValue({ })
+                .mockName("client.rest.repos.getCommit"),
+            },
             pulls: {
               listFiles: jest.fn()
                 .mockReturnValue([])

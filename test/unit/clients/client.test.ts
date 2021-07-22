@@ -15,6 +15,57 @@ describe("clients/client.ts", () => {
     client = new Client(octokit);
   });
 
+  describe("::commits", () => {
+    describe("::listFiles", () => {
+      beforeEach(() => {
+        octokit.rest.repos.getCommit.mockReset();
+      });
+
+      test.each([
+        [[/* no files */]],
+        [[{ filename: "foobar", status: "modified" }]],
+      ])("request success (files: `%p`)", async (files) => {
+        const owner = "pikachu";
+        const repo = "pokédex";
+        const ref = "commit-1";
+
+        octokit.rest.repos.getCommit.mockResolvedValueOnce({
+          data: { files },
+        });
+
+        const [result, err] = await client.commits.listFiles({
+          owner,
+          repo,
+          ref,
+        });
+
+        expect(err).toBeNull();
+        expect(result).toEqual(files);
+        expect(octokit.rest.repos.getCommit).toHaveBeenCalledWith({
+          owner,
+          repo,
+          ref,
+        });
+      });
+
+      test("request error", async () => {
+        const owner = "pikachu";
+        const repo = "pokédex";
+        const ref = "commit-1";
+
+        octokit.rest.pulls.listFiles.mockRejectedValueOnce(new Error());
+
+        const [, err] = await client.commits.listFiles({
+          owner,
+          repo,
+          ref,
+        });
+
+        expect(err).not.toBeNull();
+      });
+    });
+  });
+
   describe("::pulls", () => {
     describe("::listFiles", () => {
       beforeEach(() => {

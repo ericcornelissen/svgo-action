@@ -1,69 +1,51 @@
+import { when } from "jest-when";
+
 import { createGitHubMock } from "../../__mocks__/@actions/github.mock";
 import * as path from "../../__mocks__/path.mock";
 import { _sampleFs as fs } from "../../__mocks__/file-systems.mock";
 import { _sampleClient as client } from "../../__mocks__/clients.mock";
 
 import errors from "../../../src/errors";
-import { createPrFileSystemBuilder } from "../../../src/file-systems/pr";
+import { createPushFileSystemBuilder } from "../../../src/file-systems/push";
 
-describe("file-system/pr.ts", () => {
+describe("file-systems/push.ts", () => {
   let context;
 
   beforeAll(() => {
     const github = createGitHubMock();
     context = github.context;
     context.payload = {
-      pull_request: {
-        number: 42,
-      },
+      commits: [],
     };
   });
 
   describe("Getting", () => {
-    const pageSize = 100;
-
-    function createFilesList(length: number): unknown[] {
-      const result: unknown[] = [];
-      for (let _ = 0; _ < length; _++) {
-        result.push({
-          status: "added",
-          filename: "foo.bar",
-        });
-      }
-
-      return result;
-    }
-
     test.each([
-      1,
-      2,
-      3,
-    ])("paginate Pull Request files (%d pages)", async (pages) => {
-      const lastPageSize = 2;
-      expect(pages).toBeGreaterThan(0);
-      expect(pageSize).toBeGreaterThan(lastPageSize);
+      [[/* no commits */]],
+      [[{ id: "commit-1" }]],
+      [[{ id: "commit-1" }, { id: "commit-2" }]],
+    ])("get all files from all commits (commits: `%p`)", async (commits) => {
+      context.payload.commits = commits;
 
-      for (let _ = 0; _ < pages - 1; _++) {
-        const data = createFilesList(pageSize);
-        client.pulls.listFiles.mockResolvedValueOnce([{ data }, null]);
+      for (const commit of commits) {
+        when(client.commits.listFiles)
+          .calledWith(expect.objectContaining({ ref: commit.id }))
+          .mockResolvedValue([[], null]);
       }
 
-      const data = createFilesList(lastPageSize);
-      client.pulls.listFiles.mockResolvedValueOnce([{ data }, null]);
-
-      const builder = createPrFileSystemBuilder({ fs, path });
+      const builder = createPushFileSystemBuilder({ fs, path });
       const [, err] = await builder(client, context);
 
       expect(err).toBeNull();
     });
 
-    test("get Pull Request files error", async () => {
-      client.pulls.listFiles.mockResolvedValueOnce([
+    test("get commits/files error", async () => {
+      client.commits.listFiles.mockResolvedValueOnce([
         {},
         errors.New("request failed"),
       ]);
 
-      const builder = createPrFileSystemBuilder({ fs, path });
+      const builder = createPushFileSystemBuilder({ fs, path });
       const [, err] = await builder(client, context);
 
       expect(err).not.toBeNull();
@@ -76,16 +58,17 @@ describe("file-system/pr.ts", () => {
     });
 
     test.each([
-      allFilesAreInThePullRequest,
-      someFilesAreNotInThePullRequest,
-      fileThatWasDeletedInThePullRequest,
+      allFilesAreInTheCommits,
+      someFilesAreNotInTheCommits,
+      fileThatWasDeletedInTheCommits,
     ])("list files", async (fn) => {
-      const { data, expectedFiles, files } = fn();
+      const { commitFiles, expectedFiles, files } = fn();
 
-      client.pulls.listFiles.mockResolvedValueOnce([{ data }, null]);
+      context.payload.commits = [{ id: "commit-1" }];
+      client.commits.listFiles.mockResolvedValueOnce([commitFiles, null]);
       fs.listFiles.mockReturnValue(files);
 
-      const builder = createPrFileSystemBuilder({ fs, path });
+      const builder = createPushFileSystemBuilder({ fs, path });
       const [subject, err] = await builder(client, context);
       expect(err).toBeNull();
 
@@ -93,8 +76,8 @@ describe("file-system/pr.ts", () => {
       expect(result).toEqual(expectedFiles);
     });
 
-    function allFilesAreInThePullRequest() {
-      const data = [
+    function allFilesAreInTheCommits() {
+      const commitFiles = [
         { filename: "foo.bar", status: "added" },
         { filename: "hello.world", status: "modified" },
       ];
@@ -104,11 +87,11 @@ describe("file-system/pr.ts", () => {
       ];
       const expectedFiles = files;
 
-      return { data, expectedFiles, files };
+      return { commitFiles, expectedFiles, files };
     }
 
-    function someFilesAreNotInThePullRequest() {
-      const data = [
+    function someFilesAreNotInTheCommits() {
+      const commitFiles = [
         { filename: "foo.bar", status: "added" },
         { filename: "hello.world", status: "removed" },
       ];
@@ -120,11 +103,11 @@ describe("file-system/pr.ts", () => {
         { path: "./hello.world", extension: "world" },
       ];
 
-      return { data, expectedFiles, files };
+      return { commitFiles, expectedFiles, files };
     }
 
-    function fileThatWasDeletedInThePullRequest() {
-      const data = [
+    function fileThatWasDeletedInTheCommits() {
+      const commitFiles = [
         { filename: "foo.bar", status: "added" },
         { filename: "hello.world", status: "removed" },
       ];
@@ -136,7 +119,7 @@ describe("file-system/pr.ts", () => {
         { path: "./hello.world", extension: "world" },
       ];
 
-      return { data, expectedFiles, files };
+      return { commitFiles, expectedFiles, files };
     }
   });
 });
