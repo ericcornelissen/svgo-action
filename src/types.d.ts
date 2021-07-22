@@ -4,6 +4,9 @@ export type error = string | null;
 export type Context = {
   readonly eventName: string;
   readonly payload: {
+    readonly commits?: {
+      readonly id: string;
+    }[];
     readonly pull_request?: {
       readonly number: number;
     };

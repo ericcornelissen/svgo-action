@@ -14,11 +14,10 @@ describe("package file-system", () => {
     });
 
     test.each([
-      "push",
       "repository_dispatch",
       "schedule",
       "workflow_dispatch",
-    ])("create file system (%s)", async (eventName) => {
+    ])("create file system (event: '%s')", async (eventName) => {
       context.eventName = eventName;
 
       const [fs, err] = await fileSystems.New({ client, context });
@@ -27,7 +26,66 @@ describe("package file-system", () => {
       expect(fs).not.toBeNull();
     });
 
-    describe("Pull Request", () => {
+    describe("create file system (event: 'push')", () => {
+      beforeAll(() => {
+        client.commits.listFiles.mockResolvedValue([[], null]);
+      });
+
+      beforeEach(() => {
+        context.eventName = "push";
+        context.payload.commits = [{ id: "commit-1" }];
+
+        client.commits.listFiles.mockClear();
+      });
+
+      test("create a file system successfully", async () => {
+        client.commits.listFiles.mockResolvedValue([
+          [
+            { filename: "praise/the.sun", status: "modified" },
+            { filename: "foo.bar", status: "added" },
+            { filename: "hello.world", status: "removed" },
+          ],
+          null,
+        ]);
+
+        const [fs, err] = await fileSystems.New({ client, context });
+
+        expect(err).toBeNull();
+        expect(fs).not.toBeNull();
+      });
+
+      test.each([
+        [[{ id: "commit-1" }]],
+        [[{ id: "commit-1" }, { id: "commit-2" }]],
+      ])("uses the client", async (commits) => {
+        context.payload.commits = commits;
+
+        const [, err] = await fileSystems.New({ client, context });
+
+        expect(err).toBeNull();
+        for (const commit of commits) {
+          expect(client.commits.listFiles).toHaveBeenCalledWith({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            ref: commit.id,
+          });
+        }
+      });
+
+      test("could not get commit", async () => {
+        client.commits.listFiles.mockResolvedValueOnce([
+          {},
+          errors.New("could not get commit"),
+        ]);
+
+        const [, err] = await fileSystems.New({ client, context });
+
+        expect(err).not.toBeNull();
+        expect(client.commits.listFiles).toHaveBeenCalled();
+      });
+    });
+
+    describe("create file system (event: 'pull_request')", () => {
       const pageSize = 100;
 
       function createFilesList(length: number): unknown[] {

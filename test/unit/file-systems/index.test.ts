@@ -21,8 +21,16 @@ const prMock = {
   createPrFileSystemBuilder: jest.fn().mockReturnValue(newPullRequestMock),
 };
 
+const newPushMock = jest.fn()
+  .mockResolvedValue([BaseFileSystemMock, null])
+  .mockName("newPushMock");
+const pushMock = {
+  createPushFileSystemBuilder: jest.fn().mockReturnValue(newPushMock),
+};
+
 jest.mock("../../../src/file-systems/base", () => baseMock);
 jest.mock("../../../src/file-systems/pr", () => prMock);
+jest.mock("../../../src/file-systems/push", () => pushMock);
 
 import fileSystems from "../../../src/file-systems";
 import errors from "../../../src/errors";
@@ -37,7 +45,6 @@ describe("file-system/index.ts", () => {
     });
 
     test.each([
-      "push",
       "repository_dispatch",
       "schedule",
       "workflow_dispatch",
@@ -48,6 +55,29 @@ describe("file-system/index.ts", () => {
 
       expect(err).toBeNull();
       expect(fs).toBe(BaseFileSystemMock);
+    });
+
+    describe("create file system (event: 'push')", () => {
+      beforeEach(() => {
+        context.eventName = "push";
+      });
+
+      test("success", async () => {
+        const fileSystem = {};
+
+        newPushMock.mockResolvedValueOnce([fileSystem, null]);
+
+        const [fs, err] = await fileSystems.New({ client, context });
+        expect(err).toBeNull();
+        expect(fs).toBe(fileSystem);
+      });
+
+      test("failure", async () => {
+        newPushMock.mockResolvedValueOnce([null, errors.New("failed")]);
+
+        const [, err] = await fileSystems.New({ client, context });
+        expect(err).not.toBeNull();
+      });
     });
 
     describe("create file system (event: 'pull_request')", () => {
