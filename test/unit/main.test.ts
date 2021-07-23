@@ -136,17 +136,16 @@ describe("main.ts", () => {
 
   describe("Failed run", () => {
     test("config error", async () => {
-      const err = errors.New("No configuration found");
+      const errMsg = "No configuration found";
+      const err = errors.New(errMsg);
       configsMock.New.mockReturnValueOnce([_sampleConfig, err]);
 
       await main({ core, github });
 
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("configuration"),
+      expect(core.setFailed).not.toHaveBeenCalled();
+      expect(core.warning).toHaveBeenCalledWith(
+        expect.stringContaining(errMsg),
       );
-
-      expect(core.debug).toHaveBeenCalledWith(err);
     });
 
     test("event error", async () => {
