@@ -142,8 +142,9 @@ jobs:
 
 This example uses [actions/checkout] and [stefanzweifel/git-auto-commit-action]
 to optimize & commit all SVGs in the repository on `workflow_dispatch` events.
-That is, whenever you make an HTTP request to a certain GitHub endpoint. If
-there are no changes, nothing will be committed.
+You can trigger this either by making an HTTP request to a specific GitHub
+endpoint (see comment in the snippet) or on GitHub by navigating to the
+workflow's page in your repository.
 
 Check out [what the Action outputs] to customize the commit message to your
 liking.
@@ -155,14 +156,17 @@ name: Optimize
 on: [workflow_dispatch]
 
 # This Workflow is triggered through the GitHub API:
-#   curl -X Post \
+#   curl -X POST \
 #        -H "Authorization: Bearer <token>" \
-#        -d '{}' \
+#        -d '{"ref":"main"}' \
 #        https://api.github.com/repos/<owner>/<repo>/actions/workflows/optimize.yml/dispatches
 #
 # Replacing <token> by a personal access token with scope `public_repo`, <owner>
 # by the repositories owner (user or organization), <repo> by the repositories
 # name.
+#
+# NOTE: "main" in the payload (-d) refers to the branch on which the workflow
+# should be triggered. Usually you want this to be the default branch.
 #
 # NOTE: "optimize.yml" in the URL has to be updated if the workflow file is not
 # called "optimize.yml".
