@@ -34,8 +34,7 @@ export default async function main({
 }: Params): Promise<void> {
   const [config, err0] = configs.New({ inp: core });
   if (err0 !== null) {
-    core.debug(err0);
-    return core.setFailed("Could not get Action configuration");
+    core.warning(`Your SVGO Action configuration is incorrect: ${err0}`);
   }
 
   const context = github.context;
