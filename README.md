@@ -1,10 +1,8 @@
 # SVGO Action
 
-[![GitHub Marketplace][marketplace-image]][marketplace-url]
 [![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Maintainability][maintainability-image]][maintainability-url]
-[![LGTM Alerts][lgtm-image]][lgtm-url]
 [![Snyk Status][snyk-image]][snyk-url]
 [![FOSSA Status][fossa-image]][fossa-url]
 
@@ -14,31 +12,32 @@ Automatically run [SVGO] with GitHub Actions.
 
 ### Install the Action
 
-Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
-Workflow file]) with the following content to utilize the SVGO Action. You can
-check [what the Action does for each `on` event](/docs/events.md) and [what the
-Action outputs](/docs/outputs.md) for subsequent steps.
+Create a Workflow file (e.g.: `.github/workflows/optimize.yml`, see [Creating a
+Workflow file]) with the workflow below - or check out [the examples] for
+various complete workflows. You can also check [what the Action does for each
+`on` event] and [what the Action outputs] for subsequent steps.
 
 ```yaml
-name: SVGOptimizer
+name: Optimize
 on:
 # Disable the following line if you don't want the Action to run on PRs.
   pull_request:
-# Enable the following line if you want the Action to run on regular pushes.
-#  push:
-# Enable the following lines if you want the Action to run on a schedule.
-#  schedule:
-#  - cron:  '0 * * * 1'  # See https://crontab.guru/
+# Enable the following line if you want the Action to run on pushes.
+#   push:
+# Enable the following 2 lines if you want the Action to run on a schedule.
+#   schedule:
+#   - cron:  '0 * * * 1'  # See https://crontab.guru/
 # Enable one of the following lines if you want to manually trigger the Action.
-#  repository_dispatch:
-#  workflow_dispatch:
+#   repository_dispatch:
+#   workflow_dispatch:
 
 jobs:
-  triage:
+  svgs:
+    name: SVGs
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # Enable the following to select a branch for scheduled or triggered runs.
+    # Enable the next 2 lines to select a branch for schedule or dispatch runs.
     #  with:
     #    ref: main
     - uses: ericcornelissen/svgo-action@next
@@ -47,20 +46,21 @@ jobs:
 ```
 
 _Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
-GitHub's rest API_
+GitHub's rest API. This is only needed for `pull_request` and `push` events._
 
 ### Configure the Action
 
-This Action has a couple of options to configure its behaviour, namely:
+The following options are available when using the SVGO Action.
 
-| Name           | Description                             | Default            | Documentation                                 |
-| -------------- | --------------------------------------- | ------------------ | --------------------------------------------- |
-| `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)              |
-| `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)               |
-| `svgo-options` | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options)         |
-| `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version)         |
+| Name           | Description                             | Default            | Documentation                         |
+| -------------- | --------------------------------------- | ------------------ | ------------------------------------- |
+| `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)      |
+| `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)       |
+| `svgo-options` | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options) |
+| `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version) |
 
-To configure these you add them to the Workflow file. For example:
+To configure the Action you simply set a value for any of the above in the
+Workflow file. For example:
 
 ```yaml
 - uses: ericcornelissen/svgo-action@next
@@ -77,19 +77,16 @@ To configure these you add them to the Workflow file. For example:
 #### Limit Runs
 
 Even though this Action won't do anything if a push or Pull Request does not
-touch any SVG files, you may want the Action to run only when an SVG was
+touch any SVG files, you may want the Action to run only when an SVG has
 actually changed. To do this you can change the Workflow file that uses this
-Action to be triggered only when SVG files change.
+Action to be triggered only when SVG files change. Update the `on:` value for
+`pull_request` and/or `push` as follows:
 
 > :warning: This will cause the entire Workflow to be run only when an SVG
-> changes. If there are steps that should run for every push or Pull Request
-> they must be specified in a separate Workflow file.
-
-To run this Action only when SVG files are changed, update the `on:`
-configuration for `pull_request` and/or `push` as follows:
+> changes. Steps that should run for every push or Pull Request must be
+> specified in a separate Workflow file.
 
 ```yaml
-name: SVGOptimizer
 on:
   pull_request:
     paths:
@@ -99,21 +96,20 @@ on:
     - "**.svg"
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.5
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.5-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Anext
 [ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/next?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/next/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
-[lgtm-image]: https://img.shields.io/lgtm/alerts/g/ericcornelissen/svgo-action.svg?logo=lgtm&logoWidth=18
-[lgtm-url]: https://lgtm.com/projects/g/ericcornelissen/svgo-action/alerts/
 [snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
 [snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 [fossa-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield
 [fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
-[creating a workflow file]: https://docs.github.com/en/actions/configuring-and-managing-workflows/configuring-a-workflow#creating-a-workflow-file
+[creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [svgo]: https://github.com/svg/svgo
+[the examples]: ./docs/examples.md
+[what the action does for each `on` event]: ./docs/events.md
+[what the action outputs]: ./docs/outputs.md
