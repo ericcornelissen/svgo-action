@@ -31,12 +31,13 @@ ignored].
 
 The following [options] have can be used in the `pull_request` context.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `svgo-options` | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
@@ -67,12 +68,13 @@ ignored].
 
 The following [options] have can be used in the `push` context.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `svgo-options` | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
@@ -101,12 +103,13 @@ ignored].
 
 The following [options] have can be used in the `schedule` context.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :x:                | :heavy_check_mark: |
+| `svgo-options` | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
@@ -137,12 +140,13 @@ ignored].
 The following [options] have can be used in the `repository_dispatch` and
 `workflow_dispatch` contexts.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :x:                | :heavy_check_mark: |
+| `svgo-options` | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
