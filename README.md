@@ -38,8 +38,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     # Enable the next 2 lines to select a branch for schedule or dispatch runs.
-    #  with:
-    #    ref: main
+    #   with:
+    #     ref: main
     - uses: ericcornelissen/svgo-action@next
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
