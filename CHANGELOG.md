@@ -5,7 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased, v2]
+## [Unreleased]
+
+- _No changes yet_
+
+## [2.0.0-alpha.5] - 2021-07-23
 
 - Only optimize SVGs in the pushed commits in that context. ([#382])
 - Don't error if there is a mistake in the Action options. ([#385])
