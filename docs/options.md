@@ -90,7 +90,7 @@ default configuration.
 
 ### Examples
 
-To change the SVGO options file:
+To use a SVGO options file with a non-standard name:
 
 ```yaml
 # .github/workflows/optimize.yml
@@ -98,6 +98,16 @@ To change the SVGO options file:
 - uses: ericcornelissen/svgo-action@next
   with:
     svgo-options: my-svgo-options.js
+```
+
+To use an SVGO options file in a folder:
+
+```yaml
+# .github/workflows/optimize.yml
+
+- uses: ericcornelissen/svgo-action@next
+  with:
+    svgo-options: path/to/my-svgo-options.js
 ```
 
 ---
