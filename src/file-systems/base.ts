@@ -1,89 +1,110 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
 import type { error } from "../types";
-import type { FileInfo, FileSystem } from "./types";
-
-import * as fs from "fs";
-import * as path from "path";
+import type {
+  FileHandle,
+  FileSystem,
+  ListFilesFn,
+  ReadFileFn,
+  WriteFileFn,
+} from "./types";
 
 import errors from "../errors";
+import { LIST_FILES_ALWAYS_IGNORE } from "./constants";
 
-const LIST_FILES_ALWAYS_IGNORE: string[] = [
-  ".git",
-  "node_modules",
-  "vendor",
-];
-
-function* listFiles(fileOrFolder: string): Iterable<FileInfo> {
-  for (const entry of fs.readdirSync(fileOrFolder)) {
-    if (LIST_FILES_ALWAYS_IGNORE.includes(entry)) {
-      continue;
-    }
-
-    const entryPath = path.resolve(fileOrFolder, entry);
-    if (!fs.existsSync(entryPath)) {
-      continue;
-    }
-
-    const lstat = fs.lstatSync(entryPath);
-    if (lstat.isFile()) {
-      yield {
-        path: entryPath,
-        extension: path.extname(entryPath),
-      };
-    } else {
-      yield* listFiles(entryPath);
-    }
-  }
+interface Params {
+  fs: {
+    existsSync(path: string): boolean;
+    lstatSync(path: string): { isFile(): boolean };
+    readdirSync(path: string): Iterable<string>;
+    readFileSync(path: string): Buffer;
+    writeFileSync(path: string, content: string): void;
+  };
+  path: {
+    extname(filepath: string): string;
+    resolve(...paths: string[]): string;
+  };
 }
 
-async function readFile(file: FileInfo | string): Promise<[string, error]> {
-  let filePath: string;
-  if (typeof file === "string") {
-    filePath = file;
-  } else {
-    filePath = file.path;
+function newListFiles({ fs, path }: Params): ListFilesFn {
+  const projectRoot = path.resolve(".");
+
+  function* helper(fileOrFolder: string): Iterable<FileHandle> {
+    for (const entry of fs.readdirSync(fileOrFolder)) {
+      if (LIST_FILES_ALWAYS_IGNORE.includes(entry)) {
+        continue;
+      }
+
+      const entryPath = path.resolve(fileOrFolder, entry);
+      if (!fs.existsSync(entryPath)) {
+        continue;
+      }
+
+      const lstat = fs.lstatSync(entryPath);
+      if (lstat.isFile()) {
+        yield {
+          path: entryPath.replace(`${projectRoot}/`, ""),
+          extension: path.extname(entryPath),
+        };
+      } else {
+        yield* helper(entryPath);
+      }
+    }
   }
 
-  return new Promise((resolve) => {
-    if (!fs.existsSync(filePath)) {
-      const err = errors.New("file not found");
-      resolve(["", err]);
-    } else {
-      let content = "";
+  return function*() {
+    yield* helper(projectRoot);
+  };
+}
+
+function newReadFile({ fs }: Params): ReadFileFn {
+  return async function(file: FileHandle): Promise<[string, error]> {
+    return new Promise((resolve) => {
+      if (!fs.existsSync(file.path)) {
+        const err = errors.New("file not found");
+        resolve(["", err]);
+      } else {
+        let content = "";
+        let err: error = null;
+
+        try {
+          const buffer = fs.readFileSync(file.path);
+          content = buffer.toString();
+        } catch (thrownError) {
+          err = errors.New(`cannot read file '${file.path}' (${thrownError})`);
+        }
+
+        resolve([content, err]);
+      }
+    });
+  };
+}
+
+function newWriteFile({ fs }: Params): WriteFileFn {
+  return async function(
+    file: FileHandle,
+    content: string,
+  ): Promise<error> {
+    return new Promise((resolve) => {
       let err: error = null;
 
       try {
-        const buffer = fs.readFileSync(filePath);
-        content = buffer.toString();
+        fs.writeFileSync(file.path, content);
       } catch (thrownError) {
-        err = errors.New(`could not read file '${filePath}' (${thrownError})`);
+        err = errors.New(`cannot write file '${file.path}' (${thrownError})`);
       }
 
-      resolve([content, err]);
-    }
-  });
+      resolve(err);
+    });
+  };
 }
 
-async function writeFile(
-  file: FileInfo,
-  content: string,
-): Promise<error> {
-  return new Promise((resolve, _) => {
-    let err: error = null;
-
-    try {
-      fs.writeFileSync(file.path, content);
-    } catch (thrownError) {
-      err = errors.New(`could not write file '${file.path}' (${thrownError})`);
-    }
-
-    resolve(err);
-  });
+function NewBaseFileSystem(params: Params): FileSystem  {
+  return {
+    listFiles: newListFiles(params),
+    readFile: newReadFile(params),
+    writeFile: newWriteFile(params),
+  };
 }
 
-export const BaseFileSystem: FileSystem = {
-  listFiles,
-  readFile,
-  writeFile,
-};
+export default NewBaseFileSystem;

@@ -1,4 +1,4 @@
-const fsMock = {
+const fs = {
   // https://nodejs.org/api/fs.html#fs_fs_existssync_path
   existsSync: jest.fn()
     .mockReturnValue(false)
@@ -24,7 +24,7 @@ const fsMock = {
     .mockReturnValue(undefined)
     .mockName("fs.writeFileSync"),
 };
-const pathMock = {
+const path = {
   // https://nodejs.org/api/path.html#path_path_extname_path
   extname: jest.fn()
     .mockReturnValue("svg")
@@ -36,12 +36,9 @@ const pathMock = {
     .mockName("path.resolve"),
 };
 
-jest.mock("fs", () => fsMock);
-jest.mock("path", () => pathMock);
-
 import { when, resetAllWhenMocks } from "jest-when";
 
-import { BaseFileSystem } from "../../../src/file-systems/base";
+import NewBaseFileSystem from "../../../src/file-systems/base";
 
 describe("file-system/base.ts", () => {
   const file = {
@@ -49,13 +46,19 @@ describe("file-system/base.ts", () => {
     extension: "sun",
   };
 
+  let fileSystem;
+
+  beforeEach(() => {
+    fileSystem = NewBaseFileSystem({ fs, path });
+  });
+
   describe("::listFiles", () => {
     const lstatDir = { isFile() { return false; } };
     const lstatFile = { isFile() { return true; } };
 
     beforeEach(() => {
-      fsMock.lstatSync.mockClear();
-      fsMock.readdirSync.mockClear();
+      fs.lstatSync.mockClear();
+      fs.readdirSync.mockClear();
 
       resetAllWhenMocks();
     });
@@ -67,43 +70,43 @@ describe("file-system/base.ts", () => {
       const file1 = "hello.world";
       const file2 = "lorem.ipsum";
 
-      fsMock.readdirSync.mockReturnValueOnce([dir, file1, file2]);
-      fsMock.readdirSync.mockReturnValueOnce([dirDir, dirFile]);
-      fsMock.readdirSync.mockReturnValueOnce([]);
+      fs.readdirSync.mockReturnValueOnce([dir, file1, file2]);
+      fs.readdirSync.mockReturnValueOnce([dirDir, dirFile]);
+      fs.readdirSync.mockReturnValueOnce([]);
 
-      when(fsMock.existsSync)
+      when(fs.existsSync)
         .mockReturnValue(true)
         .calledWith(`./${dir}/${dirDir}`)
         .mockReturnValue(false);
 
-      when(fsMock.lstatSync)
+      when(fs.lstatSync)
         .calledWith(`./${dir}`)
         .mockReturnValueOnce(lstatDir);
-      when(fsMock.lstatSync)
+      when(fs.lstatSync)
         .calledWith(`./${dir}/${dirDir}`)
         .mockReturnValueOnce(lstatDir);
-      when(fsMock.lstatSync)
+      when(fs.lstatSync)
         .calledWith(`./${dir}/${dirFile}`)
         .mockReturnValueOnce(lstatFile);
-      when(fsMock.lstatSync)
+      when(fs.lstatSync)
         .calledWith(`./${file1}`)
         .mockReturnValueOnce(lstatFile);
-      when(fsMock.lstatSync)
+      when(fs.lstatSync)
         .calledWith(`./${file2}`)
         .mockReturnValueOnce(lstatFile);
 
-      const result = Array.from(BaseFileSystem.listFiles("."));
+      const result = Array.from(fileSystem.listFiles("."));
 
       expect(result).toContainEqual({
-        path: "./foo/baz",
+        path: "foo/baz",
         extension: "svg",
       });
       expect(result).toContainEqual({
-        path: "./hello.world",
+        path: "hello.world",
         extension: "svg",
       });
       expect(result).toContainEqual({
-        path: "./lorem.ipsum",
+        path: "lorem.ipsum",
         extension: "svg",
       });
     });
@@ -111,99 +114,81 @@ describe("file-system/base.ts", () => {
     test.each([
       ".git",
       "node_modules",
-      "vendor",
     ])("ignore '%s'", (dir) => {
-      fsMock.readdirSync.mockReturnValueOnce([dir]);
+      fs.readdirSync.mockReturnValueOnce([dir]);
 
-      const result = Array.from(BaseFileSystem.listFiles("."));
+      const result = Array.from(fileSystem.listFiles());
 
       expect(result).toEqual([]);
+      expect(fs.readdirSync).not.toHaveBeenCalledWith(
+        expect.stringContaining(dir),
+      );
     });
   });
 
   describe("::readFile", () => {
     beforeEach(() => {
-      fsMock.existsSync.mockClear();
-      fsMock.readFileSync.mockClear();
+      fs.existsSync.mockClear();
+      fs.readFileSync.mockClear();
     });
 
     test.each([
       "foobar",
       "Hello world!",
-    ])("read success, file is string", async (content) => {
-      const filePath = file.path;
-
-      fsMock.existsSync.mockReturnValueOnce(true);
-      fsMock.readFileSync.mockReturnValueOnce(Buffer.from(content));
-
-      const [, err]  = await BaseFileSystem.readFile(filePath);
-      expect(err).toBeNull();
-
-      expect(fsMock.existsSync).toHaveBeenCalledTimes(1);
-      expect(fsMock.existsSync).toHaveBeenCalledWith(filePath);
-
-      expect(fsMock.readFileSync).toHaveBeenCalledTimes(1);
-      expect(fsMock.readFileSync).toHaveBeenCalledWith(filePath);
-    });
-
-    test.each([
-      "foobar",
-      "Hello world!",
-    ])("read success, file is FileInfo", async (content) => {
+    ])("read success", async (content) => {
       const testFile = file;
 
-      fsMock.existsSync.mockReturnValueOnce(true);
-      fsMock.readFileSync.mockReturnValueOnce(Buffer.from(content));
+      fs.existsSync.mockReturnValueOnce(true);
+      fs.readFileSync.mockReturnValueOnce(Buffer.from(content));
 
-      const [, err]  = await BaseFileSystem.readFile(testFile);
+      const [, err]  = await fileSystem.readFile(testFile);
       expect(err).toBeNull();
 
-      expect(fsMock.existsSync).toHaveBeenCalledTimes(1);
-      expect(fsMock.existsSync).toHaveBeenCalledWith(testFile.path);
+      expect(fs.existsSync).toHaveBeenCalledTimes(1);
+      expect(fs.existsSync).toHaveBeenCalledWith(testFile.path);
 
-      expect(fsMock.readFileSync).toHaveBeenCalledTimes(1);
-      expect(fsMock.readFileSync).toHaveBeenCalledWith(testFile.path);
+      expect(fs.readFileSync).toHaveBeenCalledTimes(1);
+      expect(fs.readFileSync).toHaveBeenCalledWith(testFile.path);
     });
 
     test("file doesn't exist", async () => {
-      fsMock.existsSync.mockReturnValueOnce(false);
+      fs.existsSync.mockReturnValueOnce(false);
 
-      const [, err] = await BaseFileSystem.readFile("foo.bar");
+      const [, err] = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
     });
 
-    test("read failure", async () => {
-      fsMock.existsSync.mockReturnValueOnce(true);
-      fsMock.readFileSync.mockImplementationOnce(() => { throw new Error(); });
+    test("read failure (file exists)", async () => {
+      fs.existsSync.mockReturnValueOnce(true);
+      fs.readFileSync.mockImplementationOnce(() => { throw new Error(); });
 
-      const [, err]  = await BaseFileSystem.readFile("foo.bar");
+      const [, err]  = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
     });
   });
 
   describe("::writeFile", () => {
     beforeEach(() => {
-      fsMock.writeFileSync.mockClear();
+      fs.writeFileSync.mockClear();
     });
 
     test.each([
       "foobar",
       "Hello world!",
     ])("write success (%s)", async (content) => {
-      const err = await BaseFileSystem.writeFile(file, content);
+      fs.writeFileSync.mockReturnValueOnce(undefined);
+
+      const err = await fileSystem.writeFile(file, content);
       expect(err).toBeNull();
 
-      expect(fsMock.writeFileSync).toHaveBeenCalledTimes(1);
-      expect(fsMock.writeFileSync).toHaveBeenCalledWith(
-        file.path,
-        content,
-      );
+      expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
+      expect(fs.writeFileSync).toHaveBeenCalledWith(file.path, content);
     });
 
-    test("write failure", async () => {
-      fsMock.writeFileSync.mockImplementationOnce(() => { throw new Error(); });
+    test("write error", async () => {
+      fs.writeFileSync.mockImplementationOnce(() => { throw new Error(); });
 
-      const err = await BaseFileSystem.writeFile(file, "foobar");
+      const err = await fileSystem.writeFile(file, "foobar");
       expect(err).not.toBeNull();
     });
   });

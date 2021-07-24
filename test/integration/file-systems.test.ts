@@ -4,7 +4,7 @@ import { _sampleClient as client } from "../__mocks__/clients.mock";
 import errors from "../../src/errors";
 import fileSystems from "../../src/file-systems";
 
-describe("package file-system", () => {
+describe("package file-systems", () => {
   describe("::New", () => {
     let context;
 
@@ -33,7 +33,9 @@ describe("package file-system", () => {
 
       beforeEach(() => {
         context.eventName = "push";
-        context.payload.commits = [{ id: "commit-1" }];
+        context.payload.commits = [
+          { id: "commit-1" },
+        ];
 
         client.commits.listFiles.mockClear();
       });
@@ -101,7 +103,7 @@ describe("package file-system", () => {
       }
 
       beforeAll(() => {
-        client.pulls.listFiles.mockResolvedValue([{ data: [] }, null]);
+        client.pulls.listFiles.mockResolvedValue([[], null]);
       });
 
       beforeEach(() => {
@@ -141,11 +143,11 @@ describe("package file-system", () => {
 
         for (let _ = 0; _ < pages - 1; _++) {
           const data = createFilesList(pageSize);
-          client.pulls.listFiles.mockResolvedValueOnce([{ data }, null]);
+          client.pulls.listFiles.mockResolvedValueOnce([data, null]);
         }
 
         const data = createFilesList(lastPageSize);
-        client.pulls.listFiles.mockResolvedValueOnce([{ data }, null]);
+        client.pulls.listFiles.mockResolvedValueOnce([data, null]);
 
         const [, err] = await fileSystems.New({ client, context });
 
@@ -155,7 +157,7 @@ describe("package file-system", () => {
 
       test("could not get Pull Request files", async () => {
         client.pulls.listFiles.mockResolvedValueOnce([
-          { },
+          [],
           errors.New("could not get Pull Request files"),
         ]);
 

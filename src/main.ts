@@ -52,7 +52,10 @@ export default async function main({
   const { svgoOptionsPath, svgoVersion } = config;
 
   const baseFs = fileSystems.NewStandard();
-  const [rawConfig, err1dot1] = await baseFs.readFile(svgoOptionsPath); // eslint-disable-line security/detect-non-literal-fs-filename
+  const [rawConfig, err1dot1] = await baseFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
+    path: svgoOptionsPath,
+    extension: "js",
+  });
   if (err1dot1 !== null) {
     core.warning("SVGO configuration file not found");
   }

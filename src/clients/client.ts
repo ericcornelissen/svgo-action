@@ -84,13 +84,14 @@ class PullsClient {
     let err: error = null;
 
     try {
-      result = await this.octokit.rest.pulls.listFiles({
+      const response = await this.octokit.rest.pulls.listFiles({
         owner: params.owner,
         repo: params.repo,
         pull_number: params.pullNumber,
         per_page: params.perPage,
         page: params.page,
       });
+      result = response.data;
     } catch(thrownError) {
       err = errors.New(`could not list Pull Request files (${thrownError})`);
     }

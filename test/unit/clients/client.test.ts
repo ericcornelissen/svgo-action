@@ -24,7 +24,7 @@ describe("clients/client.ts", () => {
       test.each([
         [[/* no files */]],
         [[{ filename: "foobar", status: "modified" }]],
-      ])("request success (files: `%p`)", async (files) => {
+      ])("request success (files: `%j`)", async (files) => {
         const owner = "pikachu";
         const repo = "pokédex";
         const ref = "commit-1";
@@ -72,15 +72,19 @@ describe("clients/client.ts", () => {
         octokit.rest.pulls.listFiles.mockReset();
       });
 
-      test("request success", async () => {
-        const files = [];
+      test.each([
+        [[/* no files */]],
+        [[{ filename: "foobar", status: "modified" }]],
+      ])("request success", async (files) => {
         const owner = "pikachu";
         const repo = "pokédex";
         const pullNumber = 42;
         const perPage = 10;
         const page = 1;
 
-        octokit.rest.pulls.listFiles.mockResolvedValueOnce(files);
+        octokit.rest.pulls.listFiles.mockResolvedValueOnce({
+          data: files,
+        });
 
         const [result, err] = await client.pulls.listFiles({
           owner,
