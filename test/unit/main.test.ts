@@ -5,6 +5,7 @@ import { createCoreMock } from "../__mocks__/@actions/core.mock";
 import clientsMock, { _sampleClient }  from "../__mocks__/clients.mock";
 import configsMock, { _sampleConfig } from "../__mocks__/configs.mock";
 import fileSystemsMock, { _sampleFs } from "../__mocks__/file-systems.mock";
+import filtersMock from "../__mocks__/filters.mock";
 import optimizeMock, { _sampleData } from "../__mocks__/optimize.mock";
 import outputsMock from "../__mocks__/outputs.mock";
 import parsersMock from "../__mocks__/parsers.mock";
@@ -13,6 +14,7 @@ import svgoMock, { _sampleSvgo } from "../__mocks__/svgo.mock";
 jest.mock("../../src/clients", () => clientsMock);
 jest.mock("../../src/configs", () => configsMock);
 jest.mock("../../src/file-systems", () => fileSystemsMock);
+jest.mock("../../src/filters", () => filtersMock);
 jest.mock("../../src/optimize", () => optimizeMock);
 jest.mock("../../src/outputs", () => outputsMock);
 jest.mock("../../src/parsers", () => parsersMock);
@@ -41,6 +43,10 @@ describe("main.ts", () => {
     clientsMock.New.mockClear();
     configsMock.New.mockClear();
     fileSystemsMock.New.mockClear();
+    fileSystemsMock.NewFiltered.mockClear();
+    filtersMock.NewPrFilesFilter.mockClear();
+    filtersMock.NewPushedFilesFilter.mockClear();
+    filtersMock.NewSvgsFilter.mockClear();
     optimizeMock.optimizeSvgs.mockClear();
     outputsMock.setOutputValues.mockClear();
     parsersMock.NewJavaScript.mockClear();
@@ -59,6 +65,8 @@ describe("main.ts", () => {
       expect(clientsMock.New).toHaveBeenCalledTimes(1);
       expect(configsMock.New).toHaveBeenCalledTimes(1);
       expect(fileSystemsMock.New).toHaveBeenCalledTimes(1);
+      expect(fileSystemsMock.NewFiltered).toHaveBeenCalledTimes(1);
+      expect(filtersMock.NewSvgsFilter).toHaveBeenCalledTimes(1);
       expect(optimizeMock.optimizeSvgs).toHaveBeenCalledTimes(1);
       expect(outputsMock.setOutputValues).toHaveBeenCalledTimes(1);
       expect(parsersMock.NewJavaScript).toHaveBeenCalledTimes(1);
@@ -176,7 +184,7 @@ describe("main.ts", () => {
 
     test("svgo configuration file read error", async () => {
       const err = errors.New("read file error");
-      fileSystemsMock.NewStandard.mockReturnValueOnce({
+      fileSystemsMock.New.mockReturnValueOnce({
         listFiles: jest.fn(),
         readFile: jest.fn()
           .mockResolvedValueOnce(["", err])
@@ -230,9 +238,41 @@ describe("main.ts", () => {
       );
     });
 
+    test("filters error (event: \"push\")", async () => {
+      isEventSupported.mockReturnValueOnce(["push", true]);
+
+      const err = errors.New("create filter error");
+      filtersMock.NewPushedFilesFilter.mockReturnValueOnce([() => false, err]);
+
+      await main({ core, github });
+
+      expect(core.setFailed).toHaveBeenCalledTimes(1);
+      expect(core.setFailed).toHaveBeenCalledWith(
+        expect.stringContaining("filters"),
+      );
+
+      expect(core.debug).toHaveBeenCalledWith(err);
+    });
+
+    test("filters error (event: \"pull_request\")", async () => {
+      isEventSupported.mockReturnValueOnce(["pull_request", true]);
+
+      const err = errors.New("create filter error");
+      filtersMock.NewPrFilesFilter.mockReturnValueOnce([() => false, err]);
+
+      await main({ core, github });
+
+      expect(core.setFailed).toHaveBeenCalledTimes(1);
+      expect(core.setFailed).toHaveBeenCalledWith(
+        expect.stringContaining("filters"),
+      );
+
+      expect(core.debug).toHaveBeenCalledWith(err);
+    });
+
     test("file system error", async () => {
       const err = errors.New("File system error");
-      fileSystemsMock.New.mockResolvedValueOnce([_sampleFs, err]);
+      fileSystemsMock.NewFiltered.mockReturnValueOnce([_sampleFs, err]);
 
       await main({ core, github });
 

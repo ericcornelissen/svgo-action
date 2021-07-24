@@ -1,10 +1,13 @@
 import type { error, Core, GitHub } from "./types";
+import type { GitHubClient } from "./clients";
 
 import * as helpers from "./helpers";
 
 import clients from "./clients";
 import configs from "./configs";
+import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 import fileSystems from "./file-systems";
+import filters from "./filters";
 import { optimizeSvgs } from "./optimize";
 import { setOutputValues } from "./outputs";
 import parsers from "./parsers";
@@ -26,6 +29,28 @@ function parseRawConfig({ rawConfig, svgoVersion }: {
     const parseJavaScript = parsers.NewJavaScript();
     return parseJavaScript(rawConfig);
   }
+}
+
+async function getFilters({ client, event, github }: {
+  client: GitHubClient,
+  event: string,
+  github: GitHub,
+}): Promise<[((s: string) => boolean)[], error]> {
+  const { context } = github;
+
+  const result = [filters.NewSvgsFilter()];
+  let err: error = null;
+  if (event === EVENT_PULL_REQUEST) {
+    const [f, err0] = await filters.NewPrFilesFilter({ client, context });
+    result.push(f);
+    err = err0;
+  } else if (event === EVENT_PUSH) {
+    const [f, err1] = await filters.NewPushedFilesFilter({ client, context });
+    result.push(f);
+    err = err1;
+  }
+
+  return [result, err];
 }
 
 export default async function main({
@@ -51,10 +76,8 @@ export default async function main({
 
   const { svgoOptionsPath, svgoVersion } = config;
 
-  const baseFs = fileSystems.NewStandard();
-  const [rawConfig, err1dot1] = await baseFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
+  const [rawConfig, err1dot1] = await fileSystems.New().readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
     path: svgoOptionsPath,
-    extension: "js",
   });
   if (err1dot1 !== null) {
     core.warning("SVGO configuration file not found");
@@ -71,7 +94,13 @@ export default async function main({
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [fs, err3] = await fileSystems.New({ client, context });
+  const [filters, err21] = await getFilters({ event, client, github });
+  if (err21 !== null) {
+    core.debug(err21);
+    return core.setFailed("Could not initialize filters");
+  }
+
+  const [fs, err3] = fileSystems.NewFiltered({ filters });
   if (err3 !== null) {
     core.debug(err3);
     return core.setFailed("Could not initialize file system");

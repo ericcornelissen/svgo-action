@@ -2,7 +2,6 @@ import type { error, Context } from "../types";
 
 interface FileHandle {
   readonly path: string;
-  readonly extension: string;
 }
 
 interface FileSystem {

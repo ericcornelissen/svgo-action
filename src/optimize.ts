@@ -44,10 +44,6 @@ async function readSvgs(
   let totalSvgCount = 0, ignoredSvgCount = 0;
   const promises: Promise<[ReadFileHandle, error]>[] = [];
   for (const file of fs.listFiles()) {
-    if (file.extension !== ".svg") {
-      continue;
-    }
-
     totalSvgCount++;
     if (ignoreMatcher.match(file.path)) {
       ignoredSvgCount++;

@@ -1,51 +1,20 @@
-const fs = {
-  // https://nodejs.org/api/fs.html#fs_fs_existssync_path
-  existsSync: jest.fn()
-    .mockReturnValue(false)
-    .mockName("fs.existsSync"),
-
-  // https://nodejs.org/api/fs.html#fs_fs_lstatsync_path_options
-  lstatSync: jest.fn()
-    .mockReturnValue({ isFile() { return true; } })
-    .mockName("fs.lstatSync"),
-
-  // https://nodejs.org/api/fs.html#fs_fs_readdirsync_path_options
-  readdirSync: jest.fn()
-    .mockReturnValue([])
-    .mockName("fs.readFileSync"),
-
-  // https://nodejs.org/api/fs.html#fs_fs_readfilesync_path_options
-  readFileSync: jest.fn()
-    .mockReturnValue(Buffer.from("foobar"))
-    .mockName("fs.readFileSync"),
-
-  // https://nodejs.org/api/fs.html#fs_fs_writefilesync_file_data_options
-  writeFileSync: jest.fn()
-    .mockReturnValue(undefined)
-    .mockName("fs.writeFileSync"),
-};
-const path = {
-  // https://nodejs.org/api/path.html#path_path_extname_path
-  extname: jest.fn()
-    .mockReturnValue("svg")
-    .mockName("path.extname"),
-
-  // https://nodejs.org/api/path.html#path_path_resolve_paths
-  resolve: jest.fn()
-    .mockImplementation((...args) => args.join("/"))
-    .mockName("path.resolve"),
-};
+import type { Dirent, Stats } from "fs";
 
 import { when, resetAllWhenMocks } from "jest-when";
+import { mocked } from "ts-jest/utils";
+
+jest.mock("fs");
+jest.mock("path");
+
+import * as _fs from "fs";
+import * as _path from "path";
 
 import NewBaseFileSystem from "../../../src/file-systems/base";
 
-describe("file-system/base.ts", () => {
-  const file = {
-    path: "praise/the.sun",
-    extension: "sun",
-  };
+const fs = mocked(_fs);
+const path = mocked(_path);
 
+describe("file-systems/base.ts", () => {
   let fileSystem;
 
   beforeEach(() => {
@@ -53,8 +22,12 @@ describe("file-system/base.ts", () => {
   });
 
   describe("::listFiles", () => {
-    const lstatDir = { isFile() { return false; } };
-    const lstatFile = { isFile() { return true; } };
+    const lstatDir = {
+      isFile() { return false; },
+    } as Stats;
+    const lstatFile = {
+      isFile() { return true; },
+    } as Stats;
 
     beforeEach(() => {
       fs.lstatSync.mockClear();
@@ -64,11 +37,11 @@ describe("file-system/base.ts", () => {
     });
 
     test("list files", () => {
-      const dir = "foo";
-      const dirDir = "bar";
-      const dirFile = "baz";
-      const file1 = "hello.world";
-      const file2 = "lorem.ipsum";
+      const dir = "foo" as unknown as Dirent;
+      const dirDir = "bar" as unknown as Dirent;
+      const dirFile = "baz" as unknown as Dirent;
+      const file1 = "hello.world" as unknown as Dirent;
+      const file2 = "lorem.ipsum" as unknown as Dirent;
 
       fs.readdirSync.mockReturnValueOnce([dir, file1, file2]);
       fs.readdirSync.mockReturnValueOnce([dirDir, dirFile]);
@@ -95,19 +68,16 @@ describe("file-system/base.ts", () => {
         .calledWith(`./${file2}`)
         .mockReturnValueOnce(lstatFile);
 
-      const result = Array.from(fileSystem.listFiles("."));
+      const result = Array.from(fileSystem.listFiles());
 
       expect(result).toContainEqual({
         path: "foo/baz",
-        extension: "svg",
       });
       expect(result).toContainEqual({
         path: "hello.world",
-        extension: "svg",
       });
       expect(result).toContainEqual({
         path: "lorem.ipsum",
-        extension: "svg",
       });
     });
 
@@ -115,7 +85,7 @@ describe("file-system/base.ts", () => {
       ".git",
       "node_modules",
     ])("ignore '%s'", (dir) => {
-      fs.readdirSync.mockReturnValueOnce([dir]);
+      fs.readdirSync.mockReturnValueOnce([dir as unknown as Dirent]);
 
       const result = Array.from(fileSystem.listFiles());
 
@@ -127,6 +97,10 @@ describe("file-system/base.ts", () => {
   });
 
   describe("::readFile", () => {
+    const file = {
+      path: "praise/the.sun",
+    };
+
     beforeEach(() => {
       fs.existsSync.mockClear();
       fs.readFileSync.mockClear();
@@ -168,6 +142,10 @@ describe("file-system/base.ts", () => {
   });
 
   describe("::writeFile", () => {
+    const file = {
+      path: "praise/the.sun",
+    };
+
     beforeEach(() => {
       fs.writeFileSync.mockClear();
     });

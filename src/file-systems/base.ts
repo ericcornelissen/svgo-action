@@ -21,7 +21,6 @@ interface Params {
     writeFileSync(path: string, content: string): void;
   };
   path: {
-    extname(filepath: string): string;
     resolve(...paths: string[]): string;
   };
 }
@@ -44,7 +43,6 @@ function newListFiles({ fs, path }: Params): ListFilesFn {
       if (lstat.isFile()) {
         yield {
           path: entryPath.replace(`${projectRoot}/`, ""),
-          extension: path.extname(entryPath),
         };
       } else {
         yield* helper(entryPath);

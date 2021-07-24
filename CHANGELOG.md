@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix issue where the ignore glob did not work. ([62e2a65])
 
 ## [2.0.0-alpha.5] - 2021-07-23
 
@@ -277,3 +277,4 @@ Versioning].
 [#382]: https://github.com/ericcornelissen/svgo-action/pull/382
 [#385]: https://github.com/ericcornelissen/svgo-action/pull/385
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
+[62e2a65]: https://github.com/ericcornelissen/svgo-action/commit/62e2a654b0d7cf9d5225996731b4099242edcd0a

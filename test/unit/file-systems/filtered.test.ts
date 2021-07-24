@@ -3,7 +3,7 @@ import errors from "../../../src/errors";
 
 import NewFilteredFileSystem from "../../../src/file-systems/filtered";
 
-describe("file-system/filtered.ts", () => {
+describe("file-systems/filtered.ts", () => {
   let fileSystem;
   let baseFs;
 
