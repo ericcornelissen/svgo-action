@@ -1,11 +1,7 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import type { IMinimatch } from "minimatch";
-
 import type { FileHandle, FileSystem } from "../file-systems";
 import type { error, OptimizeProjectData } from "../types";
-
-import { Minimatch } from "minimatch";
 
 interface ReadFileHandle extends FileHandle {
   readonly path: string;
@@ -23,7 +19,6 @@ interface Optimizer {
 interface Params {
   readonly fs: FileSystem;
   readonly config: {
-    readonly ignoreGlob: string;
     readonly isDryRun: boolean;
   };
   readonly optimizer: Optimizer;
@@ -37,29 +32,20 @@ async function readFile(
   return [{ ...file, content }, err];
 }
 
-async function readFiles(
-  fs: FileSystem,
-  ignoreMatcher: IMinimatch,
-): Promise<{
+async function readFiles(fs: FileSystem): Promise<{
   files: [ReadFileHandle, error][],
-  ignoredSvgCount: number,
   totalSvgCount: number,
 }> {
-  let totalSvgCount = 0, ignoredSvgCount = 0;
+  let totalSvgCount = 0;
   const promises: Promise<[ReadFileHandle, error]>[] = [];
   for (const file of fs.listFiles()) {
     totalSvgCount++;
-    if (ignoreMatcher.match(file.path)) {
-      ignoredSvgCount++;
-      continue;
-    }
-
     const promise = readFile(fs, file);
     promises.push(promise);
   }
 
   const files = await Promise.all(promises);
-  return { files, ignoredSvgCount, totalSvgCount };
+  return { files, totalSvgCount };
 }
 
 async function optimizeFile(
@@ -105,13 +91,7 @@ async function Files({
   fs,
   optimizer,
 }: Params): Promise<[OptimizeProjectData, error]> {
-  const ignoreMatcher = new Minimatch(config.ignoreGlob);
-
-  const {
-    files,
-    ignoredSvgCount,
-    totalSvgCount,
-  } = await readFiles(fs, ignoreMatcher);
+  const { files, totalSvgCount  } = await readFiles(fs);
 
   const filesToOptimize = files
     .filter(([_, err]) => err === null)
@@ -123,7 +103,6 @@ async function Files({
   }
 
   const optimizeProjectData: OptimizeProjectData = {
-    ignoredCount: ignoredSvgCount,
     optimizedCount: optimizedFiles.length,
     svgCount: totalSvgCount,
   };

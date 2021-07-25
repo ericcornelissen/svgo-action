@@ -31,14 +31,19 @@ function parseRawConfig({ rawConfig, svgoVersion }: {
   }
 }
 
-async function getFilters({ client, event, github }: {
+async function getFilters({ client, config, event, github }: {
   client: GitHubClient,
+  config: { ignoreGlob: string },
   event: string,
   github: GitHub,
 }): Promise<[((s: string) => boolean)[], error]> {
   const { context } = github;
 
-  const result = [filters.NewSvgsFilter()];
+  const result = [
+    filters.NewGlobFilter(config.ignoreGlob),
+    filters.NewSvgsFilter(),
+  ];
+
   let err: error = null;
   if (event === EVENT_PULL_REQUEST) {
     const [f, err0] = await filters.NewPrFilesFilter({ client, context });
@@ -94,7 +99,7 @@ export default async function main({
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [filters, err21] = await getFilters({ event, client, github });
+  const [filters, err21] = await getFilters({ event, client, config, github });
   if (err21 !== null) {
     core.debug(err21);
     return core.setFailed("Could not initialize filters");

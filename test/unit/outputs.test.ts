@@ -7,7 +7,6 @@ import {
 } from "../../src/outputs";
 
 const DID_OPTIMIZE = "DID_OPTIMIZE";
-const IGNORED_COUNT = "IGNORED_COUNT";
 const OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
 const SVG_COUNT = "SVG_COUNT";
 
@@ -18,13 +17,12 @@ const EVENT_SCHEDULE = "schedule";
 const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
 
 describe.each([
-  { ignoredCount: 3, optimizedCount: 1, svgCount: 4 },
-  { ignoredCount: 2, optimizedCount: 7, svgCount: 18 },
-  { ignoredCount: 1, optimizedCount: 0, svgCount: 3 },
-])("Outputs (%o)", ({ ignoredCount, optimizedCount, svgCount }) => {
+  { optimizedCount: 1, svgCount: 4 },
+  { optimizedCount: 7, svgCount: 18 },
+  { optimizedCount: 0, svgCount: 3 },
+])("Outputs (%o)", ({ optimizedCount, svgCount }) => {
   const didOptimize = optimizedCount > 0;
   const data: OptimizeProjectData = {
-    ignoredCount,
     optimizedCount,
     svgCount,
   };
@@ -51,16 +49,6 @@ describe.each([
       expect(out.setOutput).toHaveBeenCalledWith(
         DID_OPTIMIZE,
         `${didOptimize}`,
-      );
-    });
-
-    test("ignored count", () => {
-      const err = setOutputValues({ context, data, out });
-
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(
-        IGNORED_COUNT,
-        `${ignoredCount}`,
       );
     });
 

@@ -13,7 +13,6 @@ export default {
 };
 
 export const _sampleData: OptimizeProjectData = {
-  ignoredCount: 0,
   optimizedCount: 0,
   svgCount: 0,
 };
