@@ -8,7 +8,7 @@ import configs from "./configs";
 import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 import fileSystems from "./file-systems";
 import filters from "./filters";
-import { optimizeSvgs } from "./optimize";
+import optimize from "./optimize";
 import { setOutputValues } from "./outputs";
 import parsers from "./parsers";
 import svgo from "./svgo";
@@ -112,7 +112,7 @@ export default async function main({
     core.info("Dry mode enabled, no changes will be written");
   }
 
-  const [optimizeData, err4] = await optimizeSvgs({ config, fs, optimizer });
+  const [optimizeData, err4] = await optimize.Files({ config, fs, optimizer });
   if (err4 !== null) {
     core.debug(err4);
     return core.setFailed("Failed to optimize all SVGs");

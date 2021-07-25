@@ -2,9 +2,9 @@
 
 import type { IMinimatch } from "minimatch";
 
-import type { Config } from "./configs";
-import type { FileHandle, FileSystem } from "./file-systems";
-import type { error, OptimizeProjectData } from "./types";
+import type { Config } from "../configs";
+import type { FileHandle, FileSystem } from "../file-systems";
+import type { error, OptimizeProjectData } from "../types";
 
 import { Minimatch } from "minimatch";
 
@@ -98,9 +98,9 @@ async function writeFiles(
   return await Promise.all(promises);
 }
 
-async function optimizeSvgs({
-  fs,
+async function Files({
   config,
+  fs,
   optimizer,
 }: Params): Promise<[OptimizeProjectData, error]> {
   const ignoreMatcher = new Minimatch(config.ignoreGlob);
@@ -129,6 +129,6 @@ async function optimizeSvgs({
   return [optimizeProjectData, null];
 }
 
-export {
-  optimizeSvgs,
+export default {
+  Files,
 };
