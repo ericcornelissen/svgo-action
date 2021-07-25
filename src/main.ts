@@ -11,7 +11,7 @@ import filters from "./filters";
 import { optimizeSvgs } from "./optimize";
 import { setOutputValues } from "./outputs";
 import parsers from "./parsers";
-import SVGO from "./svgo";
+import svgo from "./svgo";
 
 interface Params {
   readonly core: Core;
@@ -88,7 +88,7 @@ export default async function main({
     return core.setFailed("Could not parse SVGO configuration");
   }
 
-  const [svgo, err2] = SVGO.New({ config, svgoOptions });
+  const [optimizer, err2] = svgo.New({ config, svgoOptions });
   if (err2 !== null) {
     core.debug(err2);
     return core.setFailed("Could not initialize SVGO");
@@ -112,7 +112,7 @@ export default async function main({
     core.info("Dry mode enabled, no changes will be written");
   }
 
-  const [optimizeData, err4] = await optimizeSvgs({ config, fs, svgo });
+  const [optimizeData, err4] = await optimizeSvgs({ config, fs, optimizer });
   if (err4 !== null) {
     core.debug(err4);
     return core.setFailed("Failed to optimize all SVGs");
