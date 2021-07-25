@@ -74,21 +74,21 @@ export default async function main({
     return core.setFailed("Could not get GitHub client");
   }
 
-  const { svgoOptionsPath, svgoVersion } = config;
+  const { svgoConfigPath, svgoVersion } = config;
 
   const [rawConfig, err1dot1] = await fileSystems.New().readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
-    path: svgoOptionsPath,
+    path: svgoConfigPath,
   });
   if (err1dot1 !== null) {
     core.warning("SVGO configuration file not found");
   }
 
-  const [svgoOptions, err1dot2] = parseRawConfig({ rawConfig, svgoVersion });
+  const [svgoConfig, err1dot2] = parseRawConfig({ rawConfig, svgoVersion });
   if (err1dot2 !== null && err1dot1 === null) {
     return core.setFailed("Could not parse SVGO configuration");
   }
 
-  const [svgo, err2] = SVGO.New({ config, svgoOptions });
+  const [svgo, err2] = SVGO.New({ config, svgoConfig });
   if (err2 !== null) {
     core.debug(err2);
     return core.setFailed("Could not initialize SVGO");

@@ -35,7 +35,7 @@ The following [options] have can be used in the `pull_request` context.
 | -------------- | ------------------ |
 | `dry-run`      | :heavy_check_mark: |
 | `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: |
 | `svgo-version` | :heavy_check_mark: |
 
 ### Outputs
@@ -71,7 +71,7 @@ The following [options] have can be used in the `push` context.
 | -------------- | ------------------ |
 | `dry-run`      | :heavy_check_mark: |
 | `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: |
 | `svgo-version` | :heavy_check_mark: |
 
 ### Outputs
@@ -105,7 +105,7 @@ The following [options] have can be used in the `schedule` context.
 | -------------- | ------------------ |
 | `dry-run`      | :heavy_check_mark: |
 | `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: |
 | `svgo-version` | :heavy_check_mark: |
 
 ### Outputs
@@ -141,7 +141,7 @@ The following [options] have can be used in the `repository_dispatch` and
 | -------------- | ------------------ |
 | `dry-run`      | :heavy_check_mark: |
 | `ignore`       | :heavy_check_mark: |
-| `svgo-options` | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: |
 | `svgo-version` | :heavy_check_mark: |
 
 ### Outputs

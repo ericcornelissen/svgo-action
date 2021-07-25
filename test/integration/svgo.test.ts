@@ -43,14 +43,14 @@ describe("package svgo", () => {
       });
 
       test("invalid options", async () => {
-        const svgoOptions = {
+        const svgoConfig = {
           error: true,
           plugins: [
             { },
           ],
         };
 
-        const [svgo, err0] = SVGO.New({ config, svgoOptions });
+        const [svgo, err0] = SVGO.New({ config, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(validSvg);

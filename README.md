@@ -56,7 +56,7 @@ The following options are available when using the SVGO Action.
 | -------------- | --------------------------------------- | ------------------ | ------------------------------------- |
 | `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)      |
 | `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)       |
-| `svgo-options` | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options) |
+| `svgo-config`  | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-config)  |
 | `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version) |
 
 To configure the Action you simply set a value for any of the above in the
@@ -68,7 +68,7 @@ Workflow file. For example:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
     dry-run: true
     ignore: do/not/optimize/**/*.svg
-    svgo-options: path/to/svgo-options.js
+    svgo-config: path/to/svgo-config.js
     svgo-version: 2
 ```
 

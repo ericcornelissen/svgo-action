@@ -15,14 +15,14 @@ const SVGOptimizerV2 = mocked(svgoV2Wrapper.default);
 describe("svgo/index.ts", () => {
   describe("::New", () => {
     const v1Config = {
-      svgoOptionsPath: ".svgo.yml",
+      svgoConfigPath: ".svgo.yml",
       svgoVersion: 1 as SupportedSvgoVersions,
     };
     const v2Config = {
-      svgoOptionsPath: "svgo.config.js",
+      svgoConfigPath: "svgo.config.js",
       svgoVersion: 2 as SupportedSvgoVersions,
     };
-    const svgoOptions = {
+    const svgoConfig = {
       multipass: false,
     };
 
@@ -34,19 +34,19 @@ describe("svgo/index.ts", () => {
     test("new SVGOptimizer for SVGO v1", () => {
       const config = v1Config;
 
-      const [result, err] = svgo.New({ config, svgoOptions });
+      const [result, err] = svgo.New({ config, svgoConfig });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(SVGOptimizerV1).toHaveBeenCalledWith(svgoOptions);
+      expect(SVGOptimizerV1).toHaveBeenCalledWith(svgoConfig);
     });
 
     test("new SVGOptimizer for SVGO v2", () => {
       const config = v2Config;
 
-      const [result, err] = svgo.New({ config, svgoOptions });
+      const [result, err] = svgo.New({ config, svgoConfig });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(SVGOptimizerV2).toHaveBeenCalledWith(svgoOptions);
+      expect(SVGOptimizerV2).toHaveBeenCalledWith(svgoConfig);
     });
   });
 });

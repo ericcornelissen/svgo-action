@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- BREAKING: Rename `svgo-options` input to `svgo-config`.
 - Fix issue where the ignore glob did not work. ([62e2a65])
 
 ## [2.0.0-alpha.5] - 2021-07-23
