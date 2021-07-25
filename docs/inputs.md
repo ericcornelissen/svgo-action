@@ -1,6 +1,6 @@
-# SVGO Action Options
+# SVGO Action Inputs
 
-This documentation describes all the options of the SVGO Action.
+This documentation describes all the inputs of the SVGO Action.
 
 - [Dry Run](#dry-run)
 - [Ignore](#ignore)
@@ -18,11 +18,11 @@ to improve the documentation.
 | --------- | ------------- |
 | `dry-run` | `false`       |
 
-The `dry-run` option can be used to run the Action without having it write any
+The `dry-run` input can be used to run the Action without having it write any
 changes. This can be useful for debugging or when you just want to give the
 Action a try.
 
-> :warning: If you misconfigure this option the Action assumes you wanted to
+> :warning: If you misconfigure this input the Action assumes you wanted to
 > enable it and set `dry-run` to `true`.
 
 ### Examples
@@ -45,12 +45,12 @@ To enable dry runs:
 | -------- | ------------- |
 | `ignore` | `""`          |
 
-The `ignore` option allows you to specify SVGs that should be ignored by the
+The `ignore` input allows you to specify SVGs that should be ignored by the
 Action. By default, no files are ignored. The value is interpreted as a [glob].
 Any file that matches the configured glob will **not** be optimized by the
 Action.
 
-> :information_source: Regardless of the value of this option, the Action will
+> :information_source: Regardless of the value of this input, the Action will
 > only consider files with the `.svg` file extensions.
 
 ### Examples
@@ -83,7 +83,7 @@ To ignore all files in a specific folder and all its subfolders:
 | -------------- | ------------------ |
 | `svgo-options` | `"svgo.config.js"` |
 
-The `svgo-options` option allows you to specify the location of the options file
+The `svgo-options` input allows you to specify the location of the options file
 for [SVGO]. This configuration file must be a JavaScript file or in the [YAML]
 format. If the specified file is not found the Action will fall back on SVGO's
 default configuration.
@@ -118,7 +118,7 @@ To use an SVGO options file in a folder:
 | -------------- | ------------- |
 | `svgo-version` | `2`           |
 
-The `svgo-version` option allows you to specify the major version of [SVGO] that
+The `svgo-version` input allows you to specify the major version of [SVGO] that
 you want to use. This can be either `1` for the latest v1.x.x release or `2` for
 the latest v2.x.x release.
 

@@ -50,14 +50,14 @@ GitHub's rest API. This is only needed for `pull_request` and `push` events._
 
 ### Configure the Action
 
-The following options are available when using the SVGO Action.
+The following inputs are available when using the SVGO Action.
 
 | Name           | Description                             | Default            | Documentation                         |
 | -------------- | --------------------------------------- | ------------------ | ------------------------------------- |
-| `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](/docs/options.md#dry-run)      |
-| `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/options.md#ignore)       |
-| `svgo-options` | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/options.md#svgo-options) |
-| `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/options.md#svgo-version) |
+| `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](/docs/inputs.md#dry-run)      |
+| `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](/docs/inputs.md#ignore)       |
+| `svgo-options` | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](/docs/inputs.md#svgo-options) |
+| `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](/docs/inputs.md#svgo-version) |
 
 To configure the Action you simply set a value for any of the above in the
 Workflow file. For example:
