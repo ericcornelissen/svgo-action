@@ -2,7 +2,6 @@
 
 import type { IMinimatch } from "minimatch";
 
-import type { Config } from "../configs";
 import type { FileHandle, FileSystem } from "../file-systems";
 import type { error, OptimizeProjectData } from "../types";
 
@@ -23,7 +22,10 @@ interface Optimizer {
 
 interface Params {
   readonly fs: FileSystem;
-  readonly config: Config;
+  readonly config: {
+    readonly ignoreGlob: string;
+    readonly isDryRun: boolean;
+  };
   readonly optimizer: Optimizer;
 }
 
