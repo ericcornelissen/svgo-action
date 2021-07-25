@@ -40,12 +40,7 @@ interface PullsListFilesParams {
   readonly page?: number;
 }
 
-interface PullsListFilesResponse {
-  data: {
-    readonly filename: string;
-    readonly status: string;
-  }[];
-}
+type PullsListFilesResponse = GitFileInfo[];
 
 interface Octokit {
   readonly rest: {

@@ -8,23 +8,23 @@ interface Params {
   readonly config: {
     svgoVersion: SupportedSvgoVersions;
   };
-  readonly svgoOptions?: unknown;
+  readonly svgoConfig?: unknown;
 }
 
 function New({
   config,
-  svgoOptions,
+  svgoConfig,
 }: Params): [SVGOptimizer, error] {
   let svgOptimizer: SVGOptimizer = {} as SVGOptimizer;
   const err: error = null;
 
   switch (config.svgoVersion) {
     case 1:
-      svgOptimizer = new SVGOptimizerV1(svgoOptions);
+      svgOptimizer = new SVGOptimizerV1(svgoConfig);
       break;
     case 2:
     default:
-      svgOptimizer = new SVGOptimizerV2(svgoOptions);
+      svgOptimizer = new SVGOptimizerV2(svgoConfig);
       break;
   }
 

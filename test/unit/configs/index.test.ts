@@ -7,9 +7,9 @@ const gettersMock = {
   getIsDryRun: jest.fn()
     .mockReturnValue([false, null])
     .mockName("getters.getIsDryRun"),
-  getSvgoOptionsPath: jest.fn()
+  getSvgoConfigPath: jest.fn()
     .mockReturnValue(["", null])
-    .mockName("getters.getSvgoOptionsPath"),
+    .mockName("getters.getSvgoConfigPath"),
   getSvgoVersion: jest.fn()
     .mockReturnValue([2, null])
     .mockName("getters.getSvgoVersion"),
@@ -30,7 +30,7 @@ describe("configs/index.ts", () => {
 
       expect(gettersMock.getIgnoreGlob).toHaveBeenCalledTimes(1);
       expect(gettersMock.getIsDryRun).toHaveBeenCalledTimes(1);
-      expect(gettersMock.getSvgoOptionsPath).toHaveBeenCalledTimes(1);
+      expect(gettersMock.getSvgoConfigPath).toHaveBeenCalledTimes(1);
       expect(gettersMock.getSvgoVersion).toHaveBeenCalledTimes(1);
     });
 
@@ -88,11 +88,11 @@ describe("configs/index.ts", () => {
       });
     });
 
-    describe("::svgoOptionsPath", () => {
+    describe("::svgoConfigPath", () => {
       test("can get value", function () {
         const configuredValue = "foobar";
 
-        gettersMock.getSvgoOptionsPath.mockReturnValueOnce([
+        gettersMock.getSvgoConfigPath.mockReturnValueOnce([
           configuredValue,
           null,
         ]);
@@ -100,13 +100,13 @@ describe("configs/index.ts", () => {
         const [result, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.svgoOptionsPath).toEqual(configuredValue);
+        expect(result.svgoConfigPath).toEqual(configuredValue);
       });
 
       test("can't get value", function () {
-        const errorMsg = "couldn't get svgo-options";
+        const errorMsg = "couldn't get svgo-config";
 
-        gettersMock.getSvgoOptionsPath.mockReturnValueOnce([
+        gettersMock.getSvgoConfigPath.mockReturnValueOnce([
           "",
           errors.New(errorMsg),
         ]);

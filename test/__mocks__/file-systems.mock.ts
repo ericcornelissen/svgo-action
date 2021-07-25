@@ -5,7 +5,7 @@ import fileSystems from "../../src/file-systems";
 type FileSystemMock = jest.Mocked<FileSystem>;
 
 type NewMock = jest.MockedFunction<typeof fileSystems.New>;
-type NewStandardMock = jest.MockedFunction<typeof fileSystems.NewStandard>;
+type NewFilteredMock = jest.MockedFunction<typeof fileSystems.NewFiltered>;
 
 function createFileSystemMock(): FileSystemMock {
   return {
@@ -22,16 +22,16 @@ function createFileSystemMock(): FileSystemMock {
 }
 
 const New: NewMock = jest.fn()
-  .mockImplementation(() => [createFileSystemMock(), null])
+  .mockImplementation(() => createFileSystemMock())
   .mockName("file-systems.New");
 
-const NewStandard: NewStandardMock = jest.fn()
-  .mockImplementation(() => createFileSystemMock())
-  .mockName("file-systems.NewStandard");
+const NewFiltered: NewFilteredMock = jest.fn()
+  .mockImplementation(() => [createFileSystemMock(), null])
+  .mockName("file-systems.NewFiltered");
 
 export default {
   New,
-  NewStandard,
+  NewFiltered,
 };
 
 export const _sampleFs = createFileSystemMock();

@@ -52,11 +52,11 @@ function getIsDryRun(inp: Inputter): [boolean, error] {
   return [err === null ? isDryRun : erroredValue, err];
 }
 
-function getSvgoOptionsPath(inp: Inputter): [string, error] {
+function getSvgoConfigPath(inp: Inputter): [string, error] {
   const erroredValue = "svgo.config.js";
 
-  const [svgoOptionsPath, err] = safeGetInput(inp, INPUT_NAMES.svgoOptions);
-  return [err === null ? svgoOptionsPath : erroredValue, err];
+  const [svgoConfigPath, err] = safeGetInput(inp, INPUT_NAMES.svgoConfig);
+  return [err === null ? svgoConfigPath : erroredValue, err];
 }
 
 function getSvgoVersion(inp: Inputter): [SupportedSvgoVersions, error] {
@@ -79,6 +79,6 @@ function getSvgoVersion(inp: Inputter): [SupportedSvgoVersions, error] {
 export {
   getIgnoreGlob,
   getIsDryRun,
-  getSvgoOptionsPath,
+  getSvgoConfigPath,
   getSvgoVersion,
 };

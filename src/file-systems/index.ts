@@ -1,49 +1,35 @@
-import type { GitHubClient } from "../clients";
-import type { error, Context } from "../types";
-import type { FileInfo, FileSystem } from "./types";
-import type { PrContext } from "./pr";
-import type { PushContext } from "./push";
+import type { error } from "../types";
+import type { FileHandle, FileSystem } from "./types";
 
+import * as fs from "fs";
 import * as path from "path";
 
-import { EVENTS } from "../constants";
-import { BaseFileSystem } from "./base";
-import { createPrFileSystemBuilder } from "./pr";
-import { createPushFileSystemBuilder } from "./push";
+import NewBaseFileSystem from "./base";
+import NewFilteredFileSystem from "./filtered";
 
 interface Params {
-  readonly client: GitHubClient;
-  readonly context: Context;
+  readonly filters: FileFilter[];
 }
 
-const newPullRequest = createPrFileSystemBuilder({ fs: BaseFileSystem, path });
-const newPush = createPushFileSystemBuilder({ fs: BaseFileSystem, path });
-const newStandard = (): FileSystem => BaseFileSystem;
+type FileFilter = (filepath: string) => boolean;
 
-async function New({ client, context }: Params): Promise<[FileSystem, error]> {
-  let fileSystem: FileSystem;
-  let err: error = null;
-  switch (context.eventName) {
-    case EVENTS.pullRequest:
-      [fileSystem, err] = await newPullRequest(client, context as PrContext);
-      break;
-    case EVENTS.push:
-      [fileSystem, err] = await newPush(client, context as PushContext);
-      break;
-    default:
-      fileSystem = newStandard();
-      break;
-  }
+function New(): FileSystem {
+  const newFs = NewBaseFileSystem({ fs, path });
+  return newFs;
+}
 
-  return [fileSystem, err];
+function NewFiltered({ filters }: Params): [FileSystem, error] {
+  const fs = New();
+  const filteredFs = NewFilteredFileSystem({ fs, filters });
+  return [filteredFs, null];
 }
 
 export default {
   New,
-  NewStandard: newStandard,
+  NewFiltered,
 };
 
 export type {
-  FileInfo,
+  FileHandle,
   FileSystem,
 };

@@ -1,10 +1,13 @@
 import type { error, Core, GitHub } from "./types";
+import type { GitHubClient } from "./clients";
 
 import * as helpers from "./helpers";
 
 import clients from "./clients";
 import configs from "./configs";
+import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 import fileSystems from "./file-systems";
+import filters from "./filters";
 import { optimizeSvgs } from "./optimize";
 import { setOutputValues } from "./outputs";
 import parsers from "./parsers";
@@ -28,14 +31,35 @@ function parseRawConfig({ rawConfig, svgoVersion }: {
   }
 }
 
+async function getFilters({ client, event, github }: {
+  client: GitHubClient,
+  event: string,
+  github: GitHub,
+}): Promise<[((s: string) => boolean)[], error]> {
+  const { context } = github;
+
+  const result = [filters.NewSvgsFilter()];
+  let err: error = null;
+  if (event === EVENT_PULL_REQUEST) {
+    const [f, err0] = await filters.NewPrFilesFilter({ client, context });
+    result.push(f);
+    err = err0;
+  } else if (event === EVENT_PUSH) {
+    const [f, err1] = await filters.NewPushedFilesFilter({ client, context });
+    result.push(f);
+    err = err1;
+  }
+
+  return [result, err];
+}
+
 export default async function main({
   core,
   github,
 }: Params): Promise<void> {
   const [config, err0] = configs.New({ inp: core });
   if (err0 !== null) {
-    core.debug(err0);
-    return core.setFailed("Could not get Action configuration");
+    core.warning(`Your SVGO Action configuration is incorrect: ${err0}`);
   }
 
   const context = github.context;
@@ -50,26 +74,33 @@ export default async function main({
     return core.setFailed("Could not get GitHub client");
   }
 
-  const { svgoOptionsPath, svgoVersion } = config;
+  const { svgoConfigPath, svgoVersion } = config;
 
-  const baseFs = fileSystems.NewStandard();
-  const [rawConfig, err1dot1] = await baseFs.readFile(svgoOptionsPath); // eslint-disable-line security/detect-non-literal-fs-filename
+  const [rawConfig, err1dot1] = await fileSystems.New().readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
+    path: svgoConfigPath,
+  });
   if (err1dot1 !== null) {
     core.warning("SVGO configuration file not found");
   }
 
-  const [svgoOptions, err1dot2] = parseRawConfig({ rawConfig, svgoVersion });
+  const [svgoConfig, err1dot2] = parseRawConfig({ rawConfig, svgoVersion });
   if (err1dot2 !== null && err1dot1 === null) {
     return core.setFailed("Could not parse SVGO configuration");
   }
 
-  const [svgo, err2] = SVGO.New({ config, svgoOptions });
+  const [svgo, err2] = SVGO.New({ config, svgoConfig });
   if (err2 !== null) {
     core.debug(err2);
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [fs, err3] = await fileSystems.New({ client, context });
+  const [filters, err21] = await getFilters({ event, client, github });
+  if (err21 !== null) {
+    core.debug(err21);
+    return core.setFailed("Could not initialize filters");
+  }
+
+  const [fs, err3] = fileSystems.NewFiltered({ filters });
   if (err3 !== null) {
     core.debug(err3);
     return core.setFailed("Could not initialize file system");

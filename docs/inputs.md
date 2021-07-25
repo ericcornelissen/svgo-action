@@ -4,7 +4,7 @@ This documentation describes all the inputs of the SVGO Action.
 
 - [Dry Run](#dry-run)
 - [Ignore](#ignore)
-- [SVGO Options](#svgo-options)
+- [SVGO Config](#svgo-config)
 - [SVGO Version](#svgo-version)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
@@ -77,37 +77,37 @@ To ignore all files in a specific folder and all its subfolders:
 
 ---
 
-## SVGO Options
+## SVGO Config
 
-| Name           | Default value      |
-| -------------- | ------------------ |
-| `svgo-options` | `"svgo.config.js"` |
+| Name          | Default value      |
+| ------------- | ------------------ |
+| `svgo-config` | `"svgo.config.js"` |
 
-The `svgo-options` input allows you to specify the location of the options file
+The `svgo-config` input allows you to specify the location of the config file
 for [SVGO]. This configuration file must be a JavaScript file or in the [YAML]
 format. If the specified file is not found the Action will fall back on SVGO's
 default configuration.
 
 ### Examples
 
-To use a SVGO options file with a non-standard name:
+To use an SVGO config file with a non-standard name:
 
 ```yaml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@next
   with:
-    svgo-options: my-svgo-options.js
+    svgo-config: my-svgo-config.js
 ```
 
-To use an SVGO options file in a folder:
+To use an SVGO config file in a folder:
 
 ```yaml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@next
   with:
-    svgo-options: path/to/my-svgo-options.js
+    svgo-config: path/to/my-svgo-config.js
 ```
 
 ---
@@ -122,10 +122,10 @@ The `svgo-version` input allows you to specify the major version of [SVGO] that
 you want to use. This can be either `1` for the latest v1.x.x release or `2` for
 the latest v2.x.x release.
 
-If `svgo-version` is `2` you must have an SVGO options file written in
-JavaScript. If `svgo-version` is `1` you must have an SVGO options file written
-in [YAML]. You can change the SVGO options file used by this Action with the
-[SVGO Options](#svgo-options) option.
+If `svgo-version` is `2` you must have an SVGO config file written in JavaScript
+If `svgo-version` is `1` you must have an SVGO config file written in [YAML].
+You can change the SVGO config file used by this Action with the [SVGO
+Config](#svgo-config) input.
 
 > :information_source: If you plan to set this to `1`, we recommend upgrading to
 > SVGO v2 instead. For more information see the [SVGO v2 release notes].
@@ -134,7 +134,7 @@ in [YAML]. You can change the SVGO options file used by this Action with the
 
 To change the SVGO major version to v1.x.x:
 
-> :warning: If you set `svgo-version: 1` you **must** set `svgo-options` to a
+> :warning: If you set `svgo-version: 1` you **must** set `svgo-config` to a
 > [YAML] file.
 
 ```yaml
@@ -142,7 +142,7 @@ To change the SVGO major version to v1.x.x:
 
 - uses: ericcornelissen/svgo-action@next
   with:
-    svgo-options: .svgo.yml
+    svgo-config: .svgo.yml
     svgo-version: 1
 ```
 

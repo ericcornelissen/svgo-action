@@ -1,106 +1,50 @@
-import { createGitHubMock } from "../../__mocks__/@actions/github.mock";
-import { _sampleClient as client } from "../../__mocks__/clients.mock";
+import type { error } from "../../../src/types";
 
-const BaseFileSystemMock = {
-  listFiles: jest.fn()
-    .mockReturnValue([])
-    .mockName("BaseFileSystem.listFiles"),
-  readFile: jest.fn()
-    .mockReturnValue(["", null])
-    .mockName("BaseFileSystem.readFile"),
-  writeFile: jest.fn()
-    .mockReturnValue(null)
-    .mockName("BaseFileSystem.writeFile"),
-};
-const baseMock = { BaseFileSystem: BaseFileSystemMock };
+import { mocked } from "ts-jest/utils";
 
-const newPullRequestMock = jest.fn()
-  .mockResolvedValue([BaseFileSystemMock, null])
-  .mockName("newPullRequest");
-const prMock = {
-  createPrFileSystemBuilder: jest.fn().mockReturnValue(newPullRequestMock),
-};
+jest.mock("../../../src/file-systems/base");
+jest.mock("../../../src/file-systems/filtered");
 
-const newPushMock = jest.fn()
-  .mockResolvedValue([BaseFileSystemMock, null])
-  .mockName("newPushMock");
-const pushMock = {
-  createPushFileSystemBuilder: jest.fn().mockReturnValue(newPushMock),
-};
+import _NewBaseFileSystem from "../../../src/file-systems/base";
+import _NewFilteredFileSystem from "../../../src/file-systems/filtered";
+import fileSystems from "../../../src/file-systems/index";
 
-jest.mock("../../../src/file-systems/base", () => baseMock);
-jest.mock("../../../src/file-systems/pr", () => prMock);
-jest.mock("../../../src/file-systems/push", () => pushMock);
+const NewBaseFileSystem = mocked(_NewBaseFileSystem);
+const NewFilteredFileSystem = mocked(_NewFilteredFileSystem);
 
-import fileSystems from "../../../src/file-systems";
-import errors from "../../../src/errors";
+describe("file-systems/index.ts", () => {
+  const fileSystem = {
+    listFiles: () => [],
+    readFile: (): Promise<[string, error]> => Promise.resolve(["", null]),
+    writeFile: (): Promise<error> => Promise.resolve(null),
+  };
 
-describe("file-system/index.ts", () => {
+  beforeEach(() => {
+    NewBaseFileSystem.mockClear();
+    NewFilteredFileSystem.mockClear();
+  });
+
   describe("::New", () => {
-    let context;
+    test("create file system", () => {
+      NewBaseFileSystem.mockReturnValueOnce(fileSystem);
 
-    beforeAll(() => {
-      const github = createGitHubMock();
-      context = github.context;
+      const fs = fileSystems.New();
+      expect(fs).toBe(fileSystem);
+
+      expect(NewBaseFileSystem).toHaveBeenCalled();
+      expect(NewFilteredFileSystem).not.toHaveBeenCalled();
     });
+  });
 
-    test.each([
-      "repository_dispatch",
-      "schedule",
-      "workflow_dispatch",
-    ])("create file system (event: '%s')", async (eventName) => {
-      context.eventName = eventName;
+  describe("::NewFiltered", () => {
+    test("create file system", () => {
+      NewFilteredFileSystem.mockReturnValueOnce(fileSystem);
 
-      const [fs, err] = await fileSystems.New({ client, context });
-
+      const [fs, err] = fileSystems.NewFiltered({ filters: [] });
       expect(err).toBeNull();
-      expect(fs).toBe(BaseFileSystemMock);
-    });
+      expect(fs).toBe(fileSystem);
 
-    describe("create file system (event: 'push')", () => {
-      beforeEach(() => {
-        context.eventName = "push";
-      });
-
-      test("success", async () => {
-        const fileSystem = {};
-
-        newPushMock.mockResolvedValueOnce([fileSystem, null]);
-
-        const [fs, err] = await fileSystems.New({ client, context });
-        expect(err).toBeNull();
-        expect(fs).toBe(fileSystem);
-      });
-
-      test("failure", async () => {
-        newPushMock.mockResolvedValueOnce([null, errors.New("failed")]);
-
-        const [, err] = await fileSystems.New({ client, context });
-        expect(err).not.toBeNull();
-      });
-    });
-
-    describe("create file system (event: 'pull_request')", () => {
-      beforeEach(() => {
-        context.eventName = "pull_request";
-      });
-
-      test("success", async () => {
-        const fileSystem = {};
-
-        newPullRequestMock.mockResolvedValueOnce([fileSystem, null]);
-
-        const [fs, err] = await fileSystems.New({ client, context });
-        expect(err).toBeNull();
-        expect(fs).toBe(fileSystem);
-      });
-
-      test("failure", async () => {
-        newPullRequestMock.mockResolvedValueOnce([null, errors.New("failed")]);
-
-        const [, err] = await fileSystems.New({ client, context });
-        expect(err).not.toBeNull();
-      });
+      expect(NewFilteredFileSystem).toHaveBeenCalled();
     });
   });
 });

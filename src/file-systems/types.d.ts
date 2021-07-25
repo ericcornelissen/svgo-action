@@ -1,8 +1,7 @@
 import type { error, Context } from "../types";
 
-interface FileInfo {
+interface FileHandle {
   readonly path: string;
-  readonly extension: string;
 }
 
 interface FileSystem {
@@ -11,18 +10,15 @@ interface FileSystem {
   readonly writeFile: WriteFileFn;
 }
 
-type ListFilesFn = (
-  fileOrFolder: string,
-  recursive?: boolean,
-) => Iterable<FileInfo>;
+type ListFilesFn = () => Iterable<FileHandle>;
 
-type ReadFileFn = (file: FileInfo | string) => Promise<[string, error]>;
+type ReadFileFn = (file: FileHandle) => Promise<[string, error]>;
 
-type WriteFileFn = (file: FileInfo, content: string) => Promise<error>;
+type WriteFileFn = (file: FileHandle, content: string) => Promise<error>;
 
 export {
   Context,
-  FileInfo,
+  FileHandle,
   FileSystem,
   ListFilesFn,
   ReadFileFn,
