@@ -14,12 +14,12 @@ to improve the documentation.
 
 This table lists and describes all output values of the SVGO Action.
 
-| Output name       | Description                                             | Example |
-| ----------------- | ------------------------------------------------------- | ------- |
-| `DID_OPTIMIZE`    | Boolean value indicating if any SVG have been optimized | `true`  |
-| `IGNORED_COUNT`   | The number of SVGs that were ignored due to the config  | `3`     |
-| `OPTIMIZED_COUNT` | The number of SVGs that were optimized                  | `1`     |
-| `SVG_COUNT`       | The number of SVGs that were detected                   | `4`     |
+| Output name       | Description                                            | Example |
+| ----------------- | ------------------------------------------------------ | ------- |
+| `DID_OPTIMIZE`    | Boolean indicating if any SVGs were optimized          | `true`  |
+| `IGNORED_COUNT`   | The number of SVGs that were ignored due to the config | `3`     |
+| `OPTIMIZED_COUNT` | The number of SVGs that were optimized                 | `1`     |
+| `SVG_COUNT`       | The number of SVGs that were detected                  | `4`     |
 
 ## Usage
 
