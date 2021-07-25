@@ -7,6 +7,11 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.0.0-alpha.6] - 2021-07-25
+
+- BREAKING: Rename `svgo-options` input to `svgo-config`.  ([64d0e89])
 - Fix issue where the ignore glob did not work. ([62e2a65])
 
 ## [2.0.0-alpha.5] - 2021-07-23
@@ -276,5 +281,6 @@ Versioning].
 [#380]: https://github.com/ericcornelissen/svgo-action/pull/380
 [#382]: https://github.com/ericcornelissen/svgo-action/pull/382
 [#385]: https://github.com/ericcornelissen/svgo-action/pull/385
-[8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
 [62e2a65]: https://github.com/ericcornelissen/svgo-action/commit/62e2a654b0d7cf9d5225996731b4099242edcd0a
+[64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
+[8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

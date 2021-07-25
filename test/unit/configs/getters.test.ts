@@ -5,7 +5,7 @@ import inp from "../../__mocks__/inputter.mock";
 import {
   getIgnoreGlob,
   getIsDryRun,
-  getSvgoOptionsPath,
+  getSvgoConfigPath,
   getSvgoVersion,
 } from "../../../src/configs/getters";
 
@@ -68,8 +68,8 @@ describe("config/getters.ts", () => {
     });
   });
 
-  describe("::getSvgoOptionsPath", () => {
-    const inputKey = "svgo-options";
+  describe("::getSvgoConfigPath", () => {
+    const inputKey = "svgo-config";
 
     test.each([
       ".svgo.yml",
@@ -79,7 +79,7 @@ describe("config/getters.ts", () => {
         .calledWith(inputKey, expect.anything())
         .mockReturnValueOnce(configuredValue);
 
-      const [result, err] = getSvgoOptionsPath(inp);
+      const [result, err] = getSvgoConfigPath(inp);
       expect(err).toBeNull();
       expect(result).toEqual(configuredValue);
     });
@@ -91,7 +91,7 @@ describe("config/getters.ts", () => {
         .calledWith(inputKey, expect.anything())
         .mockImplementationOnce(() => { throw new Error(""); });
 
-      const [result, err] = getSvgoOptionsPath(inp);
+      const [result, err] = getSvgoConfigPath(inp);
       expect(err).not.toBeNull();
       expect(result).toEqual(expected);
     });

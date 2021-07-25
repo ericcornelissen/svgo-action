@@ -6,7 +6,7 @@ import configs from "../../src/configs";
 
 const DRY_RUN = "dry-run";
 const IGNORE = "ignore";
-const SVGO_OPTIONS = "svgo-options";
+const SVGO_OPTIONS = "svgo-config";
 const SVGO_VERSION = "svgo-version";
 
 describe("package configs", () => {
@@ -113,43 +113,43 @@ describe("package configs", () => {
       });
     });
 
-    describe("::svgoOptionsPath", () => {
-      const defaultSvgoOptionsPath = "svgo.config.js";
+    describe("::svgoConfigPath", () => {
+      const defaultSvgoConfigPath = "svgo.config.js";
 
-      function doMockSvgoOptionsInput(fn: () => string): void {
+      function doMockSvgoConfigInput(fn: () => string): void {
         when(inp.getInput)
           .calledWith(SVGO_OPTIONS, expect.anything())
           .mockImplementation(fn);
       }
 
       test("not configured", async () => {
-        doMockSvgoOptionsInput(() => defaultSvgoOptionsPath);
+        doMockSvgoConfigInput(() => defaultSvgoConfigPath);
 
         const [config, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(config.svgoOptionsPath).toEqual(defaultSvgoOptionsPath);
+        expect(config.svgoConfigPath).toEqual(defaultSvgoConfigPath);
       });
 
       test.each([
         "svgo.config.js",
         ".svgo.yml",
       ])("configured to '%s'", async (value) => {
-        doMockSvgoOptionsInput(() => value);
+        doMockSvgoConfigInput(() => value);
 
         const [config, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(config.svgoOptionsPath).toEqual(value);
+        expect(config.svgoConfigPath).toEqual(value);
       });
 
       test("configured incorrectly", async () => {
-        doMockSvgoOptionsInput(() => { throw new Error(); });
+        doMockSvgoConfigInput(() => { throw new Error(); });
 
         const [config, err] = configs.New({ inp });
 
         expect(err).not.toBeNull();
-        expect(config.svgoOptionsPath).toEqual("svgo.config.js");
+        expect(config.svgoConfigPath).toEqual("svgo.config.js");
       });
     });
 

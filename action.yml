@@ -15,7 +15,7 @@ inputs:
     description: 'A glob of SVGs that should not be optimized'
     default: ''
     required: false
-  svgo-options:
+  svgo-config:
     description: 'The path of the configuration file for SVGO'
     default: 'svgo.config.js'
     required: false

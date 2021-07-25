@@ -4,7 +4,7 @@ This documentation describes all the options of the SVGO Action.
 
 - [Dry Run](#dry-run)
 - [Ignore](#ignore)
-- [SVGO Options](#svgo-options)
+- [SVGO Config](#svgo-config)
 - [SVGO Version](#svgo-version)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
@@ -77,27 +77,27 @@ To ignore all files in a specific folder and all its subfolders:
 
 ---
 
-## SVGO Options
+## SVGO Config
 
-| Name           | Default value      |
-| -------------- | ------------------ |
-| `svgo-options` | `"svgo.config.js"` |
+| Name          | Default value      |
+| ------------- | ------------------ |
+| `svgo-config` | `"svgo.config.js"` |
 
-The `svgo-options` option allows you to specify the location of the options file
+The `svgo-config` option allows you to specify the location of the config file
 for [SVGO]. This configuration file must be a JavaScript file or in the [YAML]
 format. If the specified file is not found the Action will fall back on SVGO's
 default configuration.
 
 ### Examples
 
-To change the SVGO options file:
+To change the SVGO config file:
 
 ```yaml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@next
   with:
-    svgo-options: my-svgo-options.js
+    svgo-config: my-svgo-config.js
 ```
 
 ---
@@ -128,7 +128,7 @@ To change the SVGO major version to v1.x.x:
 
 - uses: ericcornelissen/svgo-action@next
   with:
-    svgo-options: .svgo.yml
+    svgo-config: .svgo.yml
     svgo-version: 1
 ```
 

@@ -5,7 +5,7 @@ import errors from "../errors";
 import {
   getIgnoreGlob,
   getIsDryRun,
-  getSvgoOptionsPath,
+  getSvgoConfigPath,
   getSvgoVersion,
 } from "./getters";
 
@@ -16,14 +16,14 @@ interface Params {
 function New({ inp }: Params): [Config, error] {
   const [ignoreGlob, err0] = getIgnoreGlob(inp);
   const [isDryRun, err1] = getIsDryRun(inp);
-  const [svgoOptionsPath, err2] = getSvgoOptionsPath(inp);
+  const [svgoConfigPath, err2] = getSvgoConfigPath(inp);
   const [svgoVersion, err3] = getSvgoVersion(inp);
 
   return [
     {
       ignoreGlob,
       isDryRun,
-      svgoOptionsPath,
+      svgoConfigPath,
       svgoVersion,
     },
     errors.Combine(err0, err1, err2, err3),
