@@ -91,7 +91,7 @@ async function Files({
   fs,
   optimizer,
 }: Params): Promise<[OptimizeProjectData, error]> {
-  const { files, totalSvgCount  } = await readFiles(fs);
+  const { files, totalSvgCount } = await readFiles(fs);
 
   const filesToOptimize = files
     .filter(([_, err]) => err === null)
