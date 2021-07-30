@@ -1,3 +1,7 @@
+const NewGlobFilter = jest.fn()
+  .mockReturnValue(() => false)
+  .mockName("NewGlobFilter");
+
 const NewPrFilesFilter = jest.fn()
   .mockReturnValue([() => false, null])
   .mockName("NewPrFilesFilter");
@@ -11,6 +15,7 @@ const NewSvgsFilter = jest.fn()
   .mockName("NewSvgsFilter");
 
 export default {
+  NewGlobFilter,
   NewPrFilesFilter,
   NewPushedFilesFilter,
   NewSvgsFilter,

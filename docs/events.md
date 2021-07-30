@@ -46,7 +46,6 @@ The following [outputs] are available in the `pull_request` context.
 | Name              | Outputted          |
 | ----------------- | ------------------ |
 | `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `IGNORED_COUNT`   | :heavy_check_mark: |
 | `OPTIMIZED_COUNT` | :heavy_check_mark: |
 | `SVG_COUNT`       | :heavy_check_mark: |
 
@@ -83,7 +82,6 @@ The following [outputs] are available in the `push` context.
 | Name              | Outputted          |
 | ----------------- | ------------------ |
 | `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `IGNORED_COUNT`   | :heavy_check_mark: |
 | `OPTIMIZED_COUNT` | :heavy_check_mark: |
 | `SVG_COUNT`       | :heavy_check_mark: |
 
@@ -118,7 +116,6 @@ The following [outputs] are available in the `schedule` context.
 | Name              | Outputted          |
 | ----------------- | ------------------ |
 | `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `IGNORED_COUNT`   | :heavy_check_mark: |
 | `OPTIMIZED_COUNT` | :heavy_check_mark: |
 | `SVG_COUNT`       | :heavy_check_mark: |
 
@@ -156,7 +153,6 @@ The following [outputs] are available in the `repository_dispatch` and
 | Name              | Outputted          |
 | ----------------- | ------------------ |
 | `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `IGNORED_COUNT`   | :heavy_check_mark: |
 | `OPTIMIZED_COUNT` | :heavy_check_mark: |
 | `SVG_COUNT`       | :heavy_check_mark: |
 

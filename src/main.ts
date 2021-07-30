@@ -8,10 +8,10 @@ import configs from "./configs";
 import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 import fileSystems from "./file-systems";
 import filters from "./filters";
-import { optimizeSvgs } from "./optimize";
+import optimize from "./optimize";
 import { setOutputValues } from "./outputs";
 import parsers from "./parsers";
-import SVGO from "./svgo";
+import svgo from "./svgo";
 
 interface Params {
   readonly core: Core;
@@ -31,14 +31,19 @@ function parseRawConfig({ rawConfig, svgoVersion }: {
   }
 }
 
-async function getFilters({ client, event, github }: {
+async function getFilters({ client, config, event, github }: {
   client: GitHubClient,
+  config: { ignoreGlob: string },
   event: string,
   github: GitHub,
 }): Promise<[((s: string) => boolean)[], error]> {
   const { context } = github;
 
-  const result = [filters.NewSvgsFilter()];
+  const result = [
+    filters.NewGlobFilter(config.ignoreGlob),
+    filters.NewSvgsFilter(),
+  ];
+
   let err: error = null;
   if (event === EVENT_PULL_REQUEST) {
     const [f, err0] = await filters.NewPrFilesFilter({ client, context });
@@ -88,13 +93,13 @@ export default async function main({
     return core.setFailed("Could not parse SVGO configuration");
   }
 
-  const [svgo, err2] = SVGO.New({ config, svgoConfig });
+  const [optimizer, err2] = svgo.New({ config, svgoConfig });
   if (err2 !== null) {
     core.debug(err2);
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [filters, err21] = await getFilters({ event, client, github });
+  const [filters, err21] = await getFilters({ event, client, config, github });
   if (err21 !== null) {
     core.debug(err21);
     return core.setFailed("Could not initialize filters");
@@ -112,7 +117,7 @@ export default async function main({
     core.info("Dry mode enabled, no changes will be written");
   }
 
-  const [optimizeData, err4] = await optimizeSvgs({ config, fs, svgo });
+  const [optimizeData, err4] = await optimize.Files({ config, fs, optimizer });
   if (err4 !== null) {
     core.debug(err4);
     return core.setFailed("Failed to optimize all SVGs");

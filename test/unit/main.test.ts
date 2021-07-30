@@ -47,7 +47,7 @@ describe("main.ts", () => {
     filtersMock.NewPrFilesFilter.mockClear();
     filtersMock.NewPushedFilesFilter.mockClear();
     filtersMock.NewSvgsFilter.mockClear();
-    optimizeMock.optimizeSvgs.mockClear();
+    optimizeMock.Files.mockClear();
     outputsMock.setOutputValues.mockClear();
     parsersMock.NewJavaScript.mockClear();
     parsersMock.NewYaml.mockClear();
@@ -67,7 +67,7 @@ describe("main.ts", () => {
       expect(fileSystemsMock.New).toHaveBeenCalledTimes(1);
       expect(fileSystemsMock.NewFiltered).toHaveBeenCalledTimes(1);
       expect(filtersMock.NewSvgsFilter).toHaveBeenCalledTimes(1);
-      expect(optimizeMock.optimizeSvgs).toHaveBeenCalledTimes(1);
+      expect(optimizeMock.Files).toHaveBeenCalledTimes(1);
       expect(outputsMock.setOutputValues).toHaveBeenCalledTimes(1);
       expect(parsersMock.NewJavaScript).toHaveBeenCalledTimes(1);
       expect(svgoMock.New).toHaveBeenCalledTimes(1);
@@ -286,7 +286,7 @@ describe("main.ts", () => {
 
     test("optimize error", async () => {
       const err = errors.New("Optimization error");
-      optimizeMock.optimizeSvgs.mockResolvedValueOnce([_sampleData, err]);
+      optimizeMock.Files.mockResolvedValueOnce([_sampleData, err]);
 
       await main({ core, github });
 
