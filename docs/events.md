@@ -29,7 +29,7 @@ ignored].
 
 ### Inputs
 
-The following [inputs] can be used in the `pull_request` context.
+The following [inputs] are available in the `pull_request` context.
 
 | Name           | Supported          | Required           |
 | -------------- | ------------------ | ------------------ |
@@ -65,7 +65,7 @@ ignored].
 
 ### Inputs
 
-The following [inputs] can be used in the `push` context.
+The following [inputs] are available in the `push` context.
 
 | Name           | Supported          | Required           |
 | -------------- | ------------------ | ------------------ |
@@ -91,15 +91,15 @@ The following [outputs] are available in the `push` context.
 
 > Find out more in the GitHub Actions documentation on [`schedule` events].
 
-In the `schedule` context the SVGO Action will optimize all SVGs in the project
-at the scheduled time.
+In the `schedule` context the SVGO Action will optimize all SVGs in the
+repository at the scheduled time.
 
 The Action will never modify SVGs that are already optimized or [SVGs that are
 ignored].
 
 ### Inputs
 
-The following [inputs] can be used in the `schedule` context.
+The following [inputs] are available in the `schedule` context.
 
 | Name           | Supported          | Required           |
 | -------------- | ------------------ | ------------------ |
@@ -134,7 +134,7 @@ ignored].
 
 ### Inputs
 
-The following [inputs] can be used in the `repository_dispatch` and
+The following [inputs] are available in the `repository_dispatch` and
 `workflow_dispatch` contexts.
 
 | Name           | Supported          | Required           |

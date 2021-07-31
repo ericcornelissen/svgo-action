@@ -1,9 +1,9 @@
 # SVGO Action Outputs
 
-This documentation lists and describes all values outputted by the SVGO Action.
-These values can be used in the steps that follow it to, for example, run a step
-only if any SVGs were optimized or to build a message describing how many SVGs
-were optimized.
+This documentation describes all values outputted by the SVGO Action. These
+values can be used in the steps that follow it to, for example, run a step only
+if any SVGs were optimized or to build a message describing how many SVGs were
+optimized.
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.

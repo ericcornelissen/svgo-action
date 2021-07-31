@@ -16,8 +16,8 @@ to improve the documentation.
 ## Optimize on Pushes
 
 This example uses [actions/checkout] and [stefanzweifel/git-auto-commit-action]
-to automatically optimize & commit new or modified SVGs in commits pushed to the
-`main` branch. If there are no changes, nothing will be committed.
+to automatically optimize and commit new or modified SVGs in commits pushed to
+the `main` branch. If there are no changes, nothing will be committed.
 
 Check out [what the Action outputs] to customize the commit message to your
 liking.
@@ -103,7 +103,7 @@ jobs:
 ## Scheduled Optimization Commits
 
 This example uses [actions/checkout] and [stefanzweifel/git-auto-commit-action]
-to optimize & commit all SVGs in the repository every Monday. If there are no
+to optimize and commit all SVGs in the repository every Monday. If there are no
 changes, nothing will be committed.
 
 Check out [what the Action outputs] to customize the commit message to your
@@ -141,7 +141,7 @@ jobs:
 ## Optimize SVGs on Demand
 
 This example uses [actions/checkout] and [stefanzweifel/git-auto-commit-action]
-to optimize & commit all SVGs in the repository on `workflow_dispatch` events.
+to optimize and commit all SVGs in the repository on `workflow_dispatch` events.
 You can trigger this either by making an HTTP request to a specific GitHub
 endpoint (see comment in the snippet) or on GitHub by navigating to the
 workflow's page in your repository.

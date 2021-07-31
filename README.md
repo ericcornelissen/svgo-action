@@ -52,12 +52,12 @@ GitHub's rest API. This is only needed for `pull_request` and `push` events._
 
 The following inputs are available when using the SVGO Action.
 
-| Name           | Description                             | Default            | Documentation                         |
-| -------------- | --------------------------------------- | ------------------ | ------------------------------------- |
-| `dry-run`      | Prevent the Action from writing changes | `false`            | [docs](./docs/inputs.md#dry-run)      |
-| `ignore`       | A [glob] of SVGs that should be ignored | `""`               | [docs](./docs/inputs.md#ignore)       |
-| `svgo-config`  | Specify the [SVGO] configuration file   | `"svgo.config.js"` | [docs](./docs/inputs.md#svgo-config)  |
-| `svgo-version` | The (major) version of [SVGO] to use    | `2`                | [docs](./docs/inputs.md#svgo-version) |
+| Name           | Description                               | Default            | Documentation                         |
+| -------------- | ----------------------------------------- | ------------------ | ------------------------------------- |
+| `dry-run`      | Prevent the Action from writing changes   | `false`            | [docs](./docs/inputs.md#dry-run)      |
+| `ignore`       | A [glob] of SVGs that should be ignored   | `""`               | [docs](./docs/inputs.md#ignore)       |
+| `svgo-config`  | The path of the [SVGO] configuration file | `"svgo.config.js"` | [docs](./docs/inputs.md#svgo-config)  |
+| `svgo-version` | The (major) version of [SVGO] to use      | `2`                | [docs](./docs/inputs.md#svgo-version) |
 
 To configure the Action you simply set a value for any of the above in the
 Workflow file. For example:
@@ -77,10 +77,10 @@ Workflow file. For example:
 #### Limit Runs
 
 Even though this Action won't do anything if a push or Pull Request does not
-touch any SVG files, you may want the Action to run only when an SVG has
-actually changed. To do this you can change the Workflow file that uses this
-Action to be triggered only when SVG files change. Update the `on:` value for
-`pull_request` and/or `push` as follows:
+touch any SVGs, you may want the Action to run only when an SVG has actually
+changed. To do this you can change the Workflow file that uses this Action to be
+triggered only when SVGs change. Update the value of `pull_request` and/or
+`push` as follows:
 
 > :warning: This will cause the entire Workflow to be run only when an SVG
 > changes. Steps that should run for every push or Pull Request must be

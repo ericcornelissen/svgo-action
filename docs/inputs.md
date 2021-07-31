@@ -84,9 +84,9 @@ To ignore all files in a specific folder and all its subfolders:
 | `svgo-config` | `"svgo.config.js"` |
 
 The `svgo-config` input allows you to specify the location of the config file
-for [SVGO]. This configuration file must be a JavaScript file or in the [YAML]
-format. If the specified file is not found the Action will fall back on SVGO's
-default configuration.
+for [SVGO]. The configuration file must be a JavaScript or a [YAML] file. If the
+specified file is not found the Action will fall back on SVGO's default
+configuration.
 
 ### Examples
 
@@ -122,9 +122,9 @@ The `svgo-version` input allows you to specify the major version of [SVGO] that
 you want to use. This can be either `1` for the latest v1.x.x release or `2` for
 the latest v2.x.x release.
 
-If `svgo-version` is `2` you must have an SVGO config file written in JavaScript
-If `svgo-version` is `1` you must have an SVGO config file written in [YAML].
-You can change the SVGO config file used by this Action with the [SVGO
+If `svgo-version` is `2` you must have an JavaScript-based SVGO config file. If
+`svgo-version` is `1` you must have a [YAML]-based SVGO config file. You can
+change the SVGO config file used by this Action with the [SVGO
 Config](#svgo-config) input.
 
 > :information_source: If you plan to set this to `1`, we recommend upgrading to
