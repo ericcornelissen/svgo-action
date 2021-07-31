@@ -27,16 +27,17 @@ but have not been modified in the Pull Request will not be optimized.
 The Action will never modify SVGs that are already optimized or [SVGs that are
 ignored].
 
-### Options
+### Inputs
 
-The following [options] have can be used in the `pull_request` context.
+The following [inputs] are available in the `pull_request` context.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-config`  | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
@@ -62,16 +63,17 @@ repository but have not been modified in the commit(s) will not be optimized.
 The Action will never modify SVGs that are already optimized or [SVGs that are
 ignored].
 
-### Options
+### Inputs
 
-The following [options] have can be used in the `push` context.
+The following [inputs] are available in the `push` context.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-config`  | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
@@ -89,22 +91,23 @@ The following [outputs] are available in the `push` context.
 
 > Find out more in the GitHub Actions documentation on [`schedule` events].
 
-In the `schedule` context the SVGO Action will optimize all SVGs in the project
-at the scheduled time.
+In the `schedule` context the SVGO Action will optimize all SVGs in the
+repository at the scheduled time.
 
 The Action will never modify SVGs that are already optimized or [SVGs that are
 ignored].
 
-### Options
+### Inputs
 
-The following [options] have can be used in the `schedule` context.
+The following [inputs] are available in the `schedule` context.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-config`  | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :x:                | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
@@ -129,17 +132,18 @@ will optimize all SVGs in the repository.
 The Action will never modify SVGs that are already optimized or [SVGs that are
 ignored].
 
-### Options
+### Inputs
 
-The following [options] have can be used in the `repository_dispatch` and
+The following [inputs] are available in the `repository_dispatch` and
 `workflow_dispatch` contexts.
 
-| Name           | Supported          |
-| -------------- | ------------------ |
-| `dry-run`      | :heavy_check_mark: |
-| `ignore`       | :heavy_check_mark: |
-| `svgo-config`  | :heavy_check_mark: |
-| `svgo-version` | :heavy_check_mark: |
+| Name           | Supported          | Required           |
+| -------------- | ------------------ | ------------------ |
+| `dry-run`      | :heavy_check_mark: | :x:                |
+| `ignore`       | :heavy_check_mark: | :x:                |
+| `repo-token`   | :x:                | :heavy_check_mark: |
+| `svgo-config`  | :heavy_check_mark: | :x:                |
+| `svgo-version` | :heavy_check_mark: | :x:                |
 
 ### Outputs
 
@@ -159,7 +163,7 @@ The following [outputs] are available in the `repository_dispatch` and
 [`workflow_dispatch` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch
 [branch and tag filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
-[options]: ./options.md
+[inputs]: ./inputs.md
 [outputs]: ./outputs.md
 [path filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestpaths
-[svgs that are ignored]: ./options.md#ignore
+[svgs that are ignored]: ./inputs.md#ignore

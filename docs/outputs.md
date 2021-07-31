@@ -1,9 +1,9 @@
 # SVGO Action Outputs
 
-This documentation lists and describes all values outputted by the SVGO Action.
-These values can be used in the steps that follow it to, for example, run a step
-only if any SVGs were optimized or to build a message describing how many SVGs
-were optimized.
+This documentation describes all values outputted by the SVGO Action. These
+values can be used in the steps that follow it to, for example, run a step only
+if any SVGs were optimized or to build a message describing how many SVGs were
+optimized.
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -14,11 +14,11 @@ to improve the documentation.
 
 This table lists and describes all output values of the SVGO Action.
 
-| Output name       | Description                                             | Example |
-| ----------------- | ------------------------------------------------------- | ------- |
-| `DID_OPTIMIZE`    | Boolean value indicating if any SVG have been optimized | `true`  |
-| `OPTIMIZED_COUNT` | The number of SVGs that were optimized                  | `1`     |
-| `SVG_COUNT`       | The number of SVGs that were detected                   | `4`     |
+| Output name       | Description                                   | Example |
+| ----------------- | --------------------------------------------- | ------- |
+| `DID_OPTIMIZE`    | Boolean indicating if any SVGs were optimized | `true`  |
+| `OPTIMIZED_COUNT` | The number of SVGs that were optimized        | `1`     |
+| `SVG_COUNT`       | The number of SVGs that were detected         | `4`     |
 
 ## Usage
 
