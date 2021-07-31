@@ -45,7 +45,7 @@ describe("errors.ts", () => {
       [[err0, errNull], `${err0}`],
       [[errNull, err1], `${err1}`],
       [[err0, errNull, err1], `${err0},${err1}`],
-    ])("multiple errors (`%p`)", async (errs, expected) => {
+    ])("multiple errors, %#", async (errs, expected) => {
       const result = errors.Combine(...errs);
       expect(result).not.toBeNull();
       expect(result).toEqual(expected);

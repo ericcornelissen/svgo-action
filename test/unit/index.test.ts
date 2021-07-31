@@ -1,17 +1,23 @@
-import * as core from "../__mocks__/@actions/core.mock";
-import * as github from "../__mocks__/@actions/github.mock";
+import { mocked } from "ts-jest/utils";
 
-const mainMock = jest.fn().mockName("main");
+jest.mock("@actions/core");
+jest.mock("@actions/github");
+jest.mock("../../src/main");
 
-jest.mock("@actions/core", () => core);
-jest.mock("@actions/github", () => github);
-jest.mock("../../src/main", () => mainMock);
+import * as core from "@actions/core";
+import * as github from "@actions/github";
+
+import _main from  "../../src/main";
+
+const main = mocked(_main);
 
 import "../../src/index";
 
-test("action initialization", () => {
-  expect(mainMock).toHaveBeenCalledWith({
-    core,
-    github,
+describe("index.ts", () => {
+  test("action initialization", () => {
+    expect(main).toHaveBeenCalledWith({
+      core,
+      github,
+    });
   });
 });

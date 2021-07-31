@@ -1,12 +1,16 @@
 import { mocked } from "ts-jest/utils";
 
+import inp from "../../__mocks__/inputter.mock";
+
+jest.mock("@actions/github");
+jest.mock("../../../src/clients");
 jest.mock("../../../src/filters/pr-files");
 jest.mock("../../../src/filters/pushed-files");
 jest.mock("../../../src/filters/svgs");
 
-import { _sampleClient as client } from "../../__mocks__/clients.mock";
+import * as github from "@actions/github";
 
-import filters from "../../../src/filters/index";
+import clients from "../../../src/clients/index";
 import _NewPrFilesFilter from "../../../src/filters/pr-files";
 import _NewPushedFilesFilter from "../../../src/filters/pushed-files";
 import _NewSvgsFilter from "../../../src/filters/svgs";
@@ -15,7 +19,11 @@ const NewPrFilesFilter = mocked(_NewPrFilesFilter);
 const NewPushedFilesFilter = mocked(_NewPushedFilesFilter);
 const NewSvgsFilter = mocked(_NewSvgsFilter);
 
+import filters from "../../../src/filters/index";
+
 describe("filters/index.ts", () => {
+  let client;
+
   const context = {
     payload: {
       commits: [],
@@ -28,6 +36,10 @@ describe("filters/index.ts", () => {
       repo: "pokédex",
     },
   };
+
+  beforeAll(() => {
+    [client] = clients.New({ github, inp });
+  });
 
   beforeEach(() => {
     NewPrFilesFilter.mockClear();

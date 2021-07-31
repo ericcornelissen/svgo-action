@@ -1,6 +1,6 @@
-import type { error, Outputter } from "./types";
+import type { error, Outputter } from "../types";
 
-import { EVENTS } from "./constants";
+import { EVENTS } from "../constants";
 
 interface Context {
   readonly eventName: string;

@@ -1,4 +1,7 @@
 import { when, resetAllWhenMocks } from "jest-when";
+
+jest.mock("../../../src/errors");
+
 import errors from "../../../src/errors";
 
 import NewFilteredFileSystem from "../../../src/file-systems/filtered";
@@ -59,7 +62,7 @@ describe("file-systems/filtered.ts", () => {
       () => [filter1],
       () => [filter2],
       () => [filter1, filter2],
-    ])("some filters don't pass", (getFilters) => {
+    ])("some filters don't pass, %#", (getFilters) => {
       const negativeFilters = getFilters();
       const files = [file1, file2, file3];
 
@@ -100,7 +103,7 @@ describe("file-systems/filtered.ts", () => {
     test.each([
       "foobar",
       "Hello world!",
-    ])("read not-filtered file", async (content) => {
+    ])("read not-filtered file, (content: '%s')", async (content) => {
       baseFs.readFile.mockResolvedValueOnce([content, null]);
 
       const [result, err] = await fileSystem.readFile(file);
@@ -112,7 +115,7 @@ describe("file-systems/filtered.ts", () => {
       () => [filter1],
       () => [filter2],
       () => [filter1, filter2],
-    ])("read filtered file", async (getFilters) => {
+    ])("read filtered file, %#", async (getFilters) => {
       const negativeFilters = getFilters();
 
       baseFs.readFile.mockResolvedValueOnce(["foobar", null]);
@@ -142,7 +145,7 @@ describe("file-systems/filtered.ts", () => {
     test.each([
       "foobar",
       "Hello world!",
-    ])("write not-filtered file", async (content) => {
+    ])("write not-filtered file (content: '%s')", async (content) => {
       baseFs.writeFile.mockResolvedValueOnce(null);
 
       const err = await fileSystem.writeFile(file, content);
@@ -153,7 +156,7 @@ describe("file-systems/filtered.ts", () => {
       () => [filter1],
       () => [filter2],
       () => [filter1, filter2],
-    ])("write filtered file", async (getFilters) => {
+    ])("write filtered file, %#", async (getFilters) => {
       const negativeFilters = getFilters();
 
       baseFs.writeFile.mockResolvedValueOnce(null);

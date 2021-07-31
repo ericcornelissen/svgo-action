@@ -10,7 +10,6 @@ import type {
 } from "./types";
 
 import errors from "../errors";
-import { LIST_FILES_ALWAYS_IGNORE } from "./constants";
 
 interface Params {
   fs: {
@@ -24,6 +23,11 @@ interface Params {
     resolve(...paths: string[]): string;
   };
 }
+
+const LIST_FILES_ALWAYS_IGNORE: string[] = [
+  ".git",
+  "node_modules",
+];
 
 function newListFiles({ fs, path }: Params): ListFilesFn {
   const projectRoot = path.resolve(".");

@@ -1,10 +1,19 @@
-import { _sampleClient as client } from "../../__mocks__/clients.mock";
+import inp from "../../__mocks__/inputter.mock";
+
+jest.mock("@actions/github");
+jest.mock("../../../src/clients");
+jest.mock("../../../src/errors");
+
+import * as github from "@actions/github";
+
+import clients from "../../../src/clients";
+import errors from "../../../src/errors";
 
 import New from "../../../src/filters/pr-files";
-import errors from "../../../src/errors";
 
 describe("filters/pr-files.ts", () => {
   describe("::New", () => {
+    let client;
     let context;
 
     const pageSize = 100;
@@ -20,6 +29,10 @@ describe("filters/pr-files.ts", () => {
 
       return result;
     }
+
+    beforeAll(() => {
+      [client] = clients.New({ github, inp });
+    });
 
     beforeEach(() => {
       context = {

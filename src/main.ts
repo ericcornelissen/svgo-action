@@ -1,74 +1,33 @@
-import type { error, Core, GitHub } from "./types";
-import type { GitHubClient } from "./clients";
-
-import * as helpers from "./helpers";
+import type { Core, GitHub } from "./types";
 
 import clients from "./clients";
-import configs from "./configs";
-import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 import fileSystems from "./file-systems";
-import filters from "./filters";
+import inputs from "./inputs";
 import optimize from "./optimize";
 import { setOutputValues } from "./outputs";
-import parsers from "./parsers";
 import svgo from "./svgo";
+
+import {
+  getFilters,
+  isEventSupported,
+  parseRawSvgoConfig,
+} from "./helpers";
 
 interface Params {
   readonly core: Core;
   readonly github: GitHub;
 }
 
-function parseRawConfig({ rawConfig, svgoVersion }: {
-  rawConfig: string,
-  svgoVersion: number,
-}): [unknown, error] {
-  if (svgoVersion === 1) {
-    const parseYaml = parsers.NewYaml();
-    return parseYaml(rawConfig);
-  } else {
-    const parseJavaScript = parsers.NewJavaScript();
-    return parseJavaScript(rawConfig);
-  }
-}
-
-async function getFilters({ client, config, event, github }: {
-  client: GitHubClient,
-  config: { ignoreGlob: string },
-  event: string,
-  github: GitHub,
-}): Promise<[((s: string) => boolean)[], error]> {
-  const { context } = github;
-
-  const result = [
-    filters.NewGlobFilter(config.ignoreGlob),
-    filters.NewSvgsFilter(),
-  ];
-
-  let err: error = null;
-  if (event === EVENT_PULL_REQUEST) {
-    const [f, err0] = await filters.NewPrFilesFilter({ client, context });
-    result.push(f);
-    err = err0;
-  } else if (event === EVENT_PUSH) {
-    const [f, err1] = await filters.NewPushedFilesFilter({ client, context });
-    result.push(f);
-    err = err1;
-  }
-
-  return [result, err];
-}
-
-export default async function main({
+async function main({
   core,
   github,
 }: Params): Promise<void> {
-  const [config, err0] = configs.New({ inp: core });
+  const [config, err0] = inputs.New({ inp: core });
   if (err0 !== null) {
     core.warning(`Your SVGO Action configuration is incorrect: ${err0}`);
   }
-
   const context = github.context;
-  const [event, ok0] = helpers.isEventSupported({ context });
+  const [event, ok0] = isEventSupported({ context });
   if (!ok0) {
     return core.setFailed(`Event not supported '${event}'`);
   }
@@ -81,14 +40,15 @@ export default async function main({
 
   const { svgoConfigPath, svgoVersion } = config;
 
-  const [rawConfig, err1dot1] = await fileSystems.New().readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
+  const configFs = fileSystems.New({ filters: [] });
+  const [rawConfig, err1dot1] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
     path: svgoConfigPath,
   });
   if (err1dot1 !== null) {
     core.warning("SVGO configuration file not found");
   }
 
-  const [svgoConfig, err1dot2] = parseRawConfig({ rawConfig, svgoVersion });
+  const [svgoConfig, err1dot2] = parseRawSvgoConfig({ rawConfig, svgoVersion });
   if (err1dot2 !== null && err1dot1 === null) {
     return core.setFailed("Could not parse SVGO configuration");
   }
@@ -105,11 +65,7 @@ export default async function main({
     return core.setFailed("Could not initialize filters");
   }
 
-  const [fs, err3] = fileSystems.NewFiltered({ filters });
-  if (err3 !== null) {
-    core.debug(err3);
-    return core.setFailed("Could not initialize file system");
-  }
+  const fs = fileSystems.New({ filters });
 
   core.info(`Running SVGO Action in '${event}' context`);
   core.info(`Using SVGO major version ${config.svgoVersion}`);
@@ -123,10 +79,11 @@ export default async function main({
     return core.setFailed("Failed to optimize all SVGs");
   }
 
-  // const err5 = setOutputValues(core, event, optimizeData);
   const err5 = setOutputValues({ context, data: optimizeData, out: core });
   if (err5 !== null) {
     core.debug(err5);
     return core.setFailed("Failed to set output values");
   }
 }
+
+export default main;

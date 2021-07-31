@@ -1,11 +1,11 @@
 import { mocked } from "ts-jest/utils";
 
+jest.mock("../../../src/errors");
 jest.mock("../../../src/optimize/optimize");
 jest.mock("../../../src/optimize/read");
 jest.mock("../../../src/optimize/write");
 
 import errors from "../../../src/errors";
-import optimize from "../../../src/optimize/index";
 import * as _optimize from "../../../src/optimize/optimize";
 import * as _read from "../../../src/optimize/read";
 import * as _write from "../../../src/optimize/write";
@@ -13,6 +13,8 @@ import * as _write from "../../../src/optimize/write";
 const optimizeAll = mocked(_optimize.optimizeAll);
 const readFiles = mocked(_read.readFiles);
 const writeFiles = mocked(_write.writeFiles);
+
+import optimize from "../../../src/optimize/index";
 
 describe("optimize/index.ts", () => {
   describe("::Files", () => {

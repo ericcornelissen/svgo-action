@@ -1,4 +1,7 @@
-import * as githubMock from "../../__mocks__/@actions/github.mock";
+jest.mock("@actions/github");
+jest.mock("../../../src/errors");
+
+import * as github from "@actions/github";
 
 import Client from "../../../src/clients/client";
 
@@ -7,7 +10,6 @@ describe("clients/client.ts", () => {
   let octokit;
 
   beforeAll(() => {
-    const github = githubMock.createGitHubMock();
     octokit = github.getOctokit("token");
   });
 
@@ -24,7 +26,7 @@ describe("clients/client.ts", () => {
       test.each([
         [[/* no files */]],
         [[{ filename: "foobar", status: "modified" }]],
-      ])("request success (files: `%j`)", async (files) => {
+      ])("request success, %#", async (files) => {
         const owner = "pikachu";
         const repo = "pokédex";
         const ref = "commit-1";
@@ -75,7 +77,7 @@ describe("clients/client.ts", () => {
       test.each([
         [[/* no files */]],
         [[{ filename: "foobar", status: "modified" }]],
-      ])("request success", async (files) => {
+      ])("request success, %#", async (files) => {
         const owner = "pikachu";
         const repo = "pokédex";
         const pullNumber = 42;

@@ -1,10 +1,19 @@
-import { _sampleClient as client } from "../../__mocks__/clients.mock";
+import inp from "../../__mocks__/inputter.mock";
+
+jest.mock("@actions/github");
+jest.mock("../../../src/clients");
+jest.mock("../../../src/errors");
+
+import * as github from "@actions/github";
+
+import clients from "../../../src/clients";
+import errors from "../../../src/errors";
 
 import New from "../../../src/filters/pushed-files";
-import errors from "../../../src/errors";
 
 describe("filters/pushed-files.ts", () => {
   describe("::New", () => {
+    let client;
     let context;
 
     function createFilesList(length: number): unknown[] {
@@ -18,6 +27,10 @@ describe("filters/pushed-files.ts", () => {
 
       return result;
     }
+
+    beforeAll(() => {
+      [client] = clients.New({ github, inp });
+    });
 
     beforeEach(() => {
       context = {

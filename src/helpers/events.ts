@@ -1,12 +1,14 @@
 import { SUPPORTED_EVENTS } from "../constants";
 
-type Context = {
+interface Context {
   readonly eventName: string;
-};
+}
 
-function isEventSupported(params: {
-  context: Context,
-}): [string, boolean] {
+interface Params {
+  readonly context: Context;
+}
+
+function isEventSupported(params: Params): [string, boolean] {
   const { context } = params;
 
   const eventName = context.eventName;

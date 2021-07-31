@@ -2,7 +2,10 @@ import type { FileWriter } from "../../../src/optimize/write";
 
 import { when, resetAllWhenMocks } from "jest-when";
 
+jest.mock("../../../src/errors");
+
 import errors from "../../../src/errors";
+
 import { writeFiles } from "../../../src/optimize/write";
 
 describe("optimize/write.ts", () => {

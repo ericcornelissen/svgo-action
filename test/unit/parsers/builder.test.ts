@@ -1,3 +1,5 @@
+jest.mock("../../../src/errors");
+
 import {
   buildSafeParser,
 } from "../../../src/parsers/builder";
