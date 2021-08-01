@@ -2,7 +2,7 @@ import type { Inputter } from "../../src/types";
 
 type InputterMock = jest.Mocked<Inputter>;
 
-const inputterMock: InputterMock = {
+const inputter: InputterMock = {
   getBooleanInput: jest.fn()
     .mockReturnValue(false)
     .mockName("inputter.getBooleanInput"),
@@ -11,4 +11,4 @@ const inputterMock: InputterMock = {
     .mockName("inputter.getInput"),
 };
 
-export default inputterMock;
+export default inputter;

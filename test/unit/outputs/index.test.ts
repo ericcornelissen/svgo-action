@@ -1,6 +1,6 @@
 import type { OptimizeProjectData } from "../../../src/types";
 
-import out from "../../__mocks__/outputter.mock";
+import out from "../../__common__/outputter.mock";
 
 import {
   setOutputValues,

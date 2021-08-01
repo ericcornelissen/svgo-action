@@ -1,11 +1,15 @@
 import { mocked } from "ts-jest/utils";
 
+import optimizer from "../../__common__/optimizer.mock";
+
 jest.mock("../../../src/errors");
+jest.mock("../../../src/file-systems");
 jest.mock("../../../src/optimize/optimize");
 jest.mock("../../../src/optimize/read");
 jest.mock("../../../src/optimize/write");
 
 import errors from "../../../src/errors";
+import fileSystems from "../../../src/file-systems";
 import * as _optimize from "../../../src/optimize/optimize";
 import * as _read from "../../../src/optimize/read";
 import * as _write from "../../../src/optimize/write";
@@ -19,26 +23,9 @@ import optimize from "../../../src/optimize/index";
 describe("optimize/index.ts", () => {
   describe("::Files", () => {
     let fs;
-    let optimizer;
 
     beforeAll(() => {
-      fs = {
-        listFiles: jest.fn()
-          .mockReturnValue([])
-          .mockName("fs.listFiles"),
-        readFile: jest.fn()
-          .mockResolvedValue(["", null])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn()
-          .mockResolvedValue(null)
-          .mockName("fs.writeFile"),
-      };
-
-      optimizer = {
-        optimize: jest.fn()
-          .mockResolvedValue(["", null])
-          .mockName("optimizer.optimize"),
-      };
+      fs = fileSystems.New({ filters: [] });
     });
 
     beforeEach(() => {

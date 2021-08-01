@@ -1,4 +1,4 @@
-import inp from "../../__mocks__/inputter.mock";
+import inp from "../../__common__/inputter.mock";
 
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");

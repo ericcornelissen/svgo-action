@@ -1,10 +1,8 @@
+import type { SupportedSvgoVersions } from "../../src/svgo";
+
 jest.dontMock("js-yaml"); // used by svgo-v1
 jest.dontMock("svgo-v1");
 jest.dontMock("svgo-v2");
-jest.dontMock("../../src/svgo/svgo-v1-wrapper");
-jest.dontMock("../../src/svgo/svgo-v2-wrapper");
-
-import type { SupportedSvgoVersions } from "../../src/svgo";
 
 import SVGO from "../../src/svgo";
 
@@ -12,7 +10,7 @@ describe("package svgo", () => {
   const consoleErrorBackup = console.error; // eslint-disable-line no-console
 
   beforeAll(() => {
-    // prevent SVGO v2 from outputting an error
+    // prevent SVGO v1 from outputting an error
     console.error = () => void 0; // eslint-disable-line no-console
   });
 

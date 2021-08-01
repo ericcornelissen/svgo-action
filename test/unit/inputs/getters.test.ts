@@ -1,6 +1,6 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../../__mocks__/inputter.mock";
+import inp from "../../__common__/inputter.mock";
 
 jest.mock("../../../src/errors");
 
