@@ -5,10 +5,11 @@
 The table below tells you which version of the SVGO Action are currently being
 supported with security updates.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 1.x.x   | :white_check_mark: |
-| < 1.0.0 | :x:                |
+| Version | Supported          | Until      |
+| ------: | :----------------- | :--------- |
+|   2.x.x | :white_check_mark: | -          |
+|   1.x.x | :white_check_mark: | 2022-08-31 |
+|   0.x.x | :x:                | 2020-08-31 |
 
 ## Reporting a Vulnerability
 

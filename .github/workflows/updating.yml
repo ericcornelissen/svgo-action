@@ -1,8 +1,7 @@
 name: Automated Fixes
 on:
   push:
-    branches:
-      - next
+    branches: [main, main-v1]
 
 jobs:
   lib:
