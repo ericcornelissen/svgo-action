@@ -1,9 +1,9 @@
 name: Code analysis
 on:
   push:
-    branches: [develop, master]
+    branches: [main, main-v1]
   pull_request:
-    branches: [develop]
+    branches: [main, main-v1]
   schedule:
     - cron: '0 7 * * 3'
 
