@@ -1,131 +1,110 @@
-# Contributing to SVGO action
+# Contributing Guidelines
 
-SVGO action welcomes contributions and corrections. Before contributing, please
-make sure you read the relevant section in this document. If you decide to
-contribute anything, please use the following this workflow:
+The _SVGO Action_ project welcomes contributions and corrections of all forms.
+For v1 this includes improvements to the documentation, new tests, and bug
+fixes. We recommend you [open an issue] before making any significant changes so
+you can be sure your work won't be rejected. For changes such as fixing a typo
+you can open a Pull Request directly.
 
-1. Fork this repository<sup>1</sup>
-1. Create a new branch<sup>2</sup> from the latest `develop`
-1. Make your changes on the new branch
-1. Commit to the new branch and push the commits
-1. Make a Pull Request<sup>3</sup>
+If you plan to make a contribution, please do make sure to read through the
+relevant sections of this document.
 
-## Table of Contents
+- [Bug Reports](#bug-reports)
+- [Feature Requests](#feature-requests)
+- [Corrections](#corrections)
+- [Workflow](#workflow)
+- [Project Setup](#project-setup)
+- [Making Changes](#making-changes)
+- [Testing](#testing)
 
-* [New Features](#new-features)
-* [Bug Fixes](#bug-fixes)
-  * [Bug Reports](#bug-reports)
-* [Corrections](#corrections)
-
-## New Features
-
-New features are welcomed, but we want to avoid feature creep. For this reason
-we recommend you [open an issue with a feature request] so you don't spend time
-working on something that won't be included. Be sure to check if the feature
-hasn't been requested before!
-
-Once the feature you want has been approved, you can start implementing it (if
-you want to do that). It is advised to indicate you're working on the feature so
-others don't start working on the same feature as you do. Also, don't start
-working on a feature which someone else is working on. Give everyone a change to
-make contributions!
-
-> :warning: If you, for whatever reason, can no longer continue you contribution
-> please let us know so others have an opportunity to work on it. If we don't
-> hear from you for an extended period of time we may decide to allow others
-> to work on the feature you've been assigned to.
-
-When you open a Pull Request that implements a new feature make sure to link to
-the relevant feature request and explain how you implemented the feature as
-clearly as possible.
-
-## Bug Fixes
-
-Bug fixes are very important. We ask you to **always** open an issue describing
-the bug as soon as possible so that we, and others, are aware of the bug. You
-can read more about creating [a bug report here](#bug-reports).
-
-You may consider waiting until the bug is confirmed, or you may start working on
-a fix immediately if you're 100% sure the bug report is valid. When you open a
-Pull Request that fixes the bug make sure to link to the relevant bug report and
-explain how you fixed the bug as clearly as possible.
-
-### Bug Reports
-
-If you want to report a bug, please [open an issue with a bug report] and
-provide as much details as possible. Consider providing the following
-information:
-
-* The version of SVGO Action you're using.
-* What is the expected behaviour and what is the actual behaviour.
-* A link to the action run where the bug occurs.
-
-To help us diagnose the problem, it is very helpful if you enable debug logging
-for Actions<sup>4</sup> in the repository where the bug occurs.
-
-## Corrections
-
-Corrections, be it fixing typos or refactoring code, are valuable contributions
-and a good place to start contributing. If you want to improve the documentation
-feel free to open a Pull Request with the changes you want to make directly, or
-open an issue first if you prefer.
-
-If you want to improve the code base make sure to follow the code style that
-is enforced through our [ESLint] configuration. If your improvements can be
-enforced through ESLint, please update the ESLint configuration accordingly<sup>
-5</sup>. If you need an extra package to be able to enforce your style, feel
-free to add it as a `devDependency`.
-
-> :warning: Keep in mind that the maintainers of this project can determine the
-> code style of this project as they see fit. That is, your changes may be
-> rejected "just because the maintainers don't like it". For this reason, do
-> make sure to explain why you think your refactoring changes improve the code.
+> :information_source: This document covers contributing to v1 of the Action. If
+> you want to make a contribution to the latest version of the Action check out
+> the [Contributing Guidelines on `main`].
 
 ---
 
-<details>
-  <summary>1: Forking a repository.</summary>
+## Bug Reports
 
-  Read more about [forking a repository].
-</details>
+> :warning: Support for bug fixes in SVGO Action v1 ends on 2022-05-31. Bugs
+> reported after that date have no guarantee of being fixed.
 
-<details>
-  <summary>2: Using branches.</summary>
+If you have problems with _SVGO Action_ or think you've found a bug, please
+report it to the developers; we ask you to **always** open an issue describing
+the bug as soon as possible so that we, and others, are aware of the bug.
 
-  Read more about [using branches].
-</details>
+Before reporting a bug, make sure you've actually found a real bug. Carefully
+read the documentation and see if it really says you can do what you're trying
+to do. If it's not clear whether you should be able to do something or not,
+report that too; it's a bug in the documentation! Also, make sure the bug has
+not already been reported.
 
-<details>
-  <summary>3: Creating a Pull Request.</summary>
+When preparing to report a bug, try to isolate it to a small working example
+that reproduces the problem. Once you have this, collect additional information
+such as:
 
-  Read more about [creating a Pull Request].
-</details>
+- The version of SVGO Action you're using.
+- A description of the expected behaviour and the actual behaviour.
+- Error and/or warning messages.
+- A link to an action run where the bug occurs with [debug logging] enabled.
 
-<details>
-  <summary>4: Enabling debug logging for Actions.</summary>
+Once you have a precise problem you can report it as a [Bug Report].
 
-  To enable debug logging for Actions you must set a secret named
-  "ACTIONS_RUNNER_DEBUG" to "true" in the repository where the action is
-  running.
+## Feature Requests
 
-  Read more about [enabling debug logging].
-</details>
+No new features will be added to v1 going forward.
 
-<details>
-  <summary>5: Updating the ESLint configuration.</summary>
+## Corrections
 
-  You can read more about how configuring ESLint work in their documentation
-  (link below). If you're unsure how to configure ESlint you can ask for help
-  in the Pull Request with your changes.
+Corrections such as fixing typos are valuable contributions and a good place to
+start contributing. If you want to improve the documentation in this way feel
+free to open a Pull Request with the changes you want to make directly, or [open
+an issue] first if you prefer.
 
-  Read more about [configuring ESLint].
-</details>
+## Workflow
 
-[open an issue with a bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
-[open an issue with a feature request]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=enhancement&template=feature_request.md
-[eslint]: https://eslint.org/
-[forking a repository]: https://help.github.com/en/github/getting-started-with-github/fork-a-repo
-[using branches]: https://guides.github.com/introduction/flow/
-[creating a pull request]: https://help.github.com/en/desktop/contributing-to-projects/creating-a-pull-request
-[enabling debug logging]: https://help.github.com/en/actions/configuring-and-managing-workflows/managing-a-workflow-run#enabling-debug-logging
-[configuring ESLint]: https://eslint.org/docs/user-guide/getting-started
+If you decide to make a contribution, please do use the following workflow:
+
+- Fork the repository.
+- Create a new branch from the latest `main-v1`.
+- Make your changes on the new branch.
+- Commit to the new branch and push the commit(s).
+- Open a Pull Request against `main-v1`.
+
+## Project Setup
+
+To be able to contribute you need at least the following:
+
+- _Git_;
+- _NodeJS_ v14 or lower and _NPM_ v6 or lower;
+- (Recommended) a code editor with _[EditorConfig]_ support;
+
+We use [Husky] to automatically install git hooks. Please enable it when
+contributing to _SVGO Action_.
+
+## Making Changes
+
+Before you start making changes, be sure to run `npm install`.
+
+When making changes it is important that 1) your changes are properly formatted
+and 2) your changes are properly tested if it is a code change. The former can
+be achieved with the `npm run format` command. The latter requires you to add
+new test cases to the project, you can use `npm run test` to verify the new (and
+old) tests pass. `npm run test:coverage` is available to run tests and generate
+a coverage report. The report is available in HTML format at
+`_reports/coverage/lcov-report/index.html`.
+
+## Testing
+
+It is important to test any changes and equally important to add tests for
+previously untested code. Tests for this project are written using [Jest] and
+[Sinon]. All tests go directly into the `test/` folders and all test files
+should follow the naming convention `[FILENAME].test.ts`.
+
+[bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
+[contributing guidelines on `main`]: https://github.com/ericcornelissen/svgo-action/blob/main/CONTRIBUTING.md
+[debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
+[editorconfig]: https://editorconfig.org/
+[husky]: https://typicode.github.io/husky/#/
+[jest]: https://jestjs.io/
+[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new/choose
+[sinon]: https://sinonjs.org/
