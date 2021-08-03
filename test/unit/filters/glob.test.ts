@@ -1,4 +1,5 @@
 import type { IMinimatch } from "minimatch";
+
 import { mocked } from "ts-jest/utils";
 
 jest.mock("minimatch");

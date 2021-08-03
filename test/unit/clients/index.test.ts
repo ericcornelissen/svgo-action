@@ -1,10 +1,14 @@
-import { when } from "jest-when";
+import { when, resetAllWhenMocks } from "jest-when";
+import { mocked } from "ts-jest/utils";
 
-import inp from "../../__mocks__/inputter.mock";
+import inp from "../../__common__/inputter.mock";
 
-const ClientMock = jest.fn().mockName("ClientMock constructor");
+jest.mock("../../../src/clients/client");
+jest.mock("../../../src/errors");
 
-jest.mock("../../../src/clients/client", () => ClientMock);
+import _Client from "../../../src/clients/client";
+
+const Client = mocked(_Client);
 
 import clients from "../../../src/clients/index";
 
@@ -19,6 +23,8 @@ describe("clients/index.ts", () => {
   beforeEach(() => {
     inp.getInput.mockReset();
     getOctokit.mockReset();
+
+    resetAllWhenMocks();
   });
 
   describe("::New", () => {
@@ -38,10 +44,10 @@ describe("clients/index.ts", () => {
 
       expect(err).toBeNull();
       expect(result).toBeDefined();
-      expect(ClientMock).toHaveBeenCalledTimes(1);
+      expect(Client).toHaveBeenCalledTimes(1);
     });
 
-    test.each(["foo", "bar"])("get repo-token (token: %s)", (token) => {
+    test.each(["foo", "bar"])("get repo-token (token: '%s')", (token) => {
       doMockGetInputRepoToken(() => token);
 
       const [, err] = clients.New({ github, inp });

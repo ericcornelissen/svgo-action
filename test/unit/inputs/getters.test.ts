@@ -1,22 +1,28 @@
-import { when } from "jest-when";
+import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../../__mocks__/inputter.mock";
+import inp from "../../__common__/inputter.mock";
+
+jest.mock("../../../src/errors");
 
 import {
   getIgnoreGlob,
   getIsDryRun,
   getSvgoConfigPath,
   getSvgoVersion,
-} from "../../../src/configs/getters";
+} from "../../../src/inputs/getters";
 
-describe("config/getters.ts", () => {
+describe("inputs/getters.ts", () => {
+  beforeEach(() => {
+    resetAllWhenMocks();
+  });
+
   describe("::getIgnoreGlob", () => {
     const inputKey = "ignore";
 
     test.each([
       "foobar",
       "Hello world!",
-    ])("can get input", (configuredValue) => {
+    ])("can get input ('%s')", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValueOnce(configuredValue);
@@ -45,7 +51,7 @@ describe("config/getters.ts", () => {
     test.each([
       true,
       false,
-    ])("can get input", (configuredValue) => {
+    ])("can get input (`%p`)", (configuredValue) => {
       when(inp.getBooleanInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValueOnce(configuredValue);
@@ -74,7 +80,7 @@ describe("config/getters.ts", () => {
     test.each([
       ".svgo.yml",
       "svgo.config.js",
-    ])("can get input", (configuredValue) => {
+    ])("can get input ('%s')", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValueOnce(configuredValue);
@@ -103,7 +109,7 @@ describe("config/getters.ts", () => {
     test.each([
       1,
       2,
-    ])("can get input, valid", (configuredValue) => {
+    ])("can get input, valid (`%d`)", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValueOnce(`${configuredValue}`);
@@ -116,7 +122,7 @@ describe("config/getters.ts", () => {
     test.each([
       "42",
       "foobar",
-    ])("can get input, invalid", (configuredValue) => {
+    ])("can get input, invalid ('%s')", (configuredValue) => {
       const expected = 2;
 
       when(inp.getInput)

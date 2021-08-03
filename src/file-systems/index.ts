@@ -1,4 +1,3 @@
-import type { error } from "../types";
 import type { FileHandle, FileSystem } from "./types";
 
 import * as fs from "fs";
@@ -13,20 +12,14 @@ interface Params {
 
 type FileFilter = (filepath: string) => boolean;
 
-function New(): FileSystem {
-  const newFs = NewBaseFileSystem({ fs, path });
+function New({ filters }: Params): FileSystem {
+  const baseFs = NewBaseFileSystem({ fs, path });
+  const newFs = NewFilteredFileSystem({ fs: baseFs, filters });
   return newFs;
-}
-
-function NewFiltered({ filters }: Params): [FileSystem, error] {
-  const fs = New();
-  const filteredFs = NewFilteredFileSystem({ fs, filters });
-  return [filteredFs, null];
 }
 
 export default {
   New,
-  NewFiltered,
 };
 
 export type {

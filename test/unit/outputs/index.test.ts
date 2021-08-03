@@ -1,31 +1,31 @@
-import type { OptimizeProjectData } from "../../src/types";
+import type { OptimizeProjectData } from "../../../src/types";
 
-import out from "../__mocks__/outputter.mock";
+import out from "../../__common__/outputter.mock";
 
 import {
   setOutputValues,
-} from "../../src/outputs";
-
-const DID_OPTIMIZE = "DID_OPTIMIZE";
-const OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
-const SVG_COUNT = "SVG_COUNT";
-
-const EVENT_PULL_REQUEST = "pull_request";
-const EVENT_PUSH = "push";
-const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
-const EVENT_SCHEDULE = "schedule";
-const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
+} from "../../../src/outputs";
 
 describe.each([
   { optimizedCount: 1, svgCount: 4 },
   { optimizedCount: 7, svgCount: 18 },
   { optimizedCount: 0, svgCount: 3 },
-])("Outputs (%o)", ({ optimizedCount, svgCount }) => {
+])("Outputs", ({ optimizedCount, svgCount }) => {
   const didOptimize = optimizedCount > 0;
   const data: OptimizeProjectData = {
     optimizedCount,
     svgCount,
   };
+
+  const DID_OPTIMIZE = "DID_OPTIMIZE";
+  const OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
+  const SVG_COUNT = "SVG_COUNT";
+
+  const EVENT_PULL_REQUEST = "pull_request";
+  const EVENT_PUSH = "push";
+  const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
+  const EVENT_SCHEDULE = "schedule";
+  const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
 
   beforeEach(() => {
     out.setOutput.mockReset();
@@ -37,7 +37,7 @@ describe.each([
     EVENT_REPOSITORY_DISPATCH,
     EVENT_SCHEDULE,
     EVENT_WORKFLOW_DISPATCH,
-  ])("for known event '%s'", (eventName) => {
+  ])("known event ('%s')", (eventName) => {
     const context = {
       eventName,
     };
@@ -70,7 +70,7 @@ describe.each([
     });
   });
 
-  describe("for unknown event", () => {
+  describe("unknown event", () => {
     const context = {
       eventName: "uNkNoWn EvEnT",
     };

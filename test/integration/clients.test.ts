@@ -1,59 +1,48 @@
-import { when } from "jest-when";
+import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../__mocks__/inputter.mock";
-import * as githubMock from "../__mocks__/@actions/github.mock";
+import inp from "../__common__/inputter.mock";
+
+jest.mock("@actions/github");
+
+import * as github from "@actions/github";
 
 import clients from "../../src/clients";
-import Client from "../../src/clients/client";
 
 describe("package clients", () => {
-  describe("::New", () => {
-    let github, getOctokit;
+  function doMockGetInputRepoToken(fn: () => string): void {
+    when(inp.getInput)
+      .calledWith("repo-token", expect.anything())
+      .mockImplementationOnce(fn);
+  }
 
-    beforeAll(() => {
-      getOctokit = jest.fn().mockName("getOctokit");
-      github = { getOctokit };
-    });
+  beforeEach(() => {
+    resetAllWhenMocks();
+  });
 
-    beforeEach(() => {
-      inp.getInput.mockReset();
-      getOctokit.mockReset();
-    });
+  test("create client", () => {
+    doMockGetInputRepoToken(() => "token");
 
-    function doMockGetInputRepoToken(fn: () => string): void {
-      when(inp.getInput)
-        .calledWith("repo-token", expect.anything())
-        .mockImplementation(fn);
-    }
+    const [result, err] = clients.New({ github, inp });
 
-    test("create client", () => {
-      const client = { foo: "bar" };
+    expect(err).toBeNull();
+    expect(result).toBeDefined();
+  });
 
-      doMockGetInputRepoToken(() => "token");
-      getOctokit.mockReturnValue(client);
+  test.each(["foo", "bar"])("get repo-token (token: '%s')", (token) => {
+    doMockGetInputRepoToken(() => token);
 
-      const [result, err] = clients.New({ github, inp });
+    const [, err] = clients.New({ github, inp });
 
-      expect(err).toBeNull();
-      expect(result).toBeDefined();
-    });
+    expect(err).toBeNull();
+    expect(github.getOctokit).toHaveBeenCalledWith(token);
+  });
 
-    test.each(["foo", "bar"])("get repo-token (token: %s)", (token) => {
-      doMockGetInputRepoToken(() => token);
+  test("no repo-token", () => {
+    doMockGetInputRepoToken(() => { throw new Error(); });
 
-      const [, err] = clients.New({ github, inp });
+    const [, err] = clients.New({ github, inp });
 
-      expect(err).toBeNull();
-      expect(getOctokit).toHaveBeenCalledWith(token);
-    });
-
-    test("no repo-token", () => {
-      doMockGetInputRepoToken(() => { throw new Error(); });
-
-      const [, err] = clients.New({ github, inp });
-
-      expect(err).not.toBeNull();
-    });
+    expect(err).not.toBeNull();
   });
 
   describe("Client", () => {
@@ -61,16 +50,19 @@ describe("package clients", () => {
     let octokit;
 
     beforeAll(() => {
-      const github = githubMock.createGitHubMock();
       octokit = github.getOctokit("token");
     });
 
     beforeEach(() => {
-      client = new Client(octokit);
+      [client] = clients.New({ github, inp });
     });
 
     describe("::commits", () => {
       describe("::listFiles", () => {
+        const owner = "pikachu";
+        const repo = "pokédex";
+        const ref = "commit-1";
+
         beforeEach(() => {
           octokit.rest.repos.getCommit.mockReset();
         });
@@ -78,11 +70,7 @@ describe("package clients", () => {
         test.each([
           [[/* no files */]],
           [[{ filename: "foobar", status: "modified" }]],
-        ])("request success (files: `%j`)", async (files) => {
-          const owner = "pikachu";
-          const repo = "pokédex";
-          const ref = "commit-1";
-
+        ])("request success, %#", async (files) => {
           octokit.rest.repos.getCommit.mockResolvedValueOnce({
             data: { files },
           });
@@ -103,10 +91,6 @@ describe("package clients", () => {
         });
 
         test("request error", async () => {
-          const owner = "pikachu";
-          const repo = "pokédex";
-          const ref = "commit-1";
-
           octokit.rest.repos.getCommit.mockRejectedValueOnce(new Error());
 
           const [, err] = await client.commits.listFiles({
@@ -122,6 +106,12 @@ describe("package clients", () => {
 
     describe("::pulls", () => {
       describe("::listFiles", () => {
+        const owner = "pikachu";
+        const repo = "pokédex";
+        const pullNumber = 42;
+        const perPage = 10;
+        const page = 1;
+
         beforeEach(() => {
           octokit.rest.pulls.listFiles.mockReset();
         });
@@ -129,13 +119,7 @@ describe("package clients", () => {
         test.each([
           [[/* no files */]],
           [[{ filename: "foobar", status: "modified" }]],
-        ])("request success (files: `%j`)", async (files) => {
-          const owner = "pikachu";
-          const repo = "pokédex";
-          const pullNumber = 42;
-          const perPage = 10;
-          const page = 1;
-
+        ])("request success, %#", async (files) => {
           octokit.rest.pulls.listFiles.mockResolvedValueOnce({
             data: files,
           });
@@ -160,12 +144,6 @@ describe("package clients", () => {
         });
 
         test("request error", async () => {
-          const owner = "pikachu";
-          const repo = "pokédex";
-          const pullNumber = 42;
-          const perPage = 10;
-          const page = 1;
-
           octokit.rest.pulls.listFiles.mockRejectedValueOnce(new Error());
 
           const [, err] = await client.pulls.listFiles({

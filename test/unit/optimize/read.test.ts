@@ -2,7 +2,10 @@ import type { FileReader } from "../../../src/optimize/read";
 
 import { when, resetAllWhenMocks } from "jest-when";
 
+jest.mock("../../../src/errors");
+
 import errors from "../../../src/errors";
+
 import { readFiles } from "../../../src/optimize/read";
 
 describe("optimize/read.ts", () => {

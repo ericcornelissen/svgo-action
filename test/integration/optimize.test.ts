@@ -1,11 +1,15 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
+import optimizer from "../__common__/optimizer.mock";
+
+jest.mock("../../src/file-systems");
+
+import fileSystems from "../../src/file-systems";
 import optimize from "../../src/optimize";
 
 describe("package optimize", () => {
   describe("::Files", () => {
     let fs;
-    let optimizer;
 
     const testCases = [
       [[
@@ -21,23 +25,7 @@ describe("package optimize", () => {
     ];
 
     beforeAll(() => {
-      fs = {
-        listFiles: jest.fn()
-          .mockReturnValue([])
-          .mockName("fs.listFiles"),
-        readFile: jest.fn()
-          .mockResolvedValue(["", null])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn()
-          .mockResolvedValue(null)
-          .mockName("fs.writeFile"),
-      };
-
-      optimizer = {
-        optimize: jest.fn()
-          .mockResolvedValue(["optimized SVG", null])
-          .mockName("optimizer.optimize"),
-      };
+      fs = fileSystems.New({ filters: [] });
     });
 
     beforeEach(() => {
@@ -50,7 +38,7 @@ describe("package optimize", () => {
       resetAllWhenMocks();
     });
 
-    test.each(testCases)("optimize files (%j)", async (files) => {
+    test.each(testCases)("optimize files, %#", async (files) => {
       const config = { isDryRun: false };
 
       fs.listFiles.mockReturnValue(files);
@@ -71,7 +59,7 @@ describe("package optimize", () => {
       expect(fs.writeFile).toHaveBeenCalledTimes(files.length);
     });
 
-    test.each(testCases)("dry run enabled (%j)", async (files) => {
+    test.each(testCases)("dry run enabled, %#", async (files) => {
       const config = { isDryRun: true };
 
       fs.listFiles.mockReturnValue(files);

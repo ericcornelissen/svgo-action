@@ -5,14 +5,15 @@ import { mocked } from "ts-jest/utils";
 
 jest.mock("fs");
 jest.mock("path");
+jest.mock("../../../src/errors");
 
 import * as _fs from "fs";
 import * as _path from "path";
 
-import NewBaseFileSystem from "../../../src/file-systems/base";
-
 const fs = mocked(_fs);
 const path = mocked(_path);
+
+import NewBaseFileSystem from "../../../src/file-systems/base";
 
 describe("file-systems/base.ts", () => {
   let fileSystem;
@@ -109,7 +110,7 @@ describe("file-systems/base.ts", () => {
     test.each([
       "foobar",
       "Hello world!",
-    ])("read success", async (content) => {
+    ])("read success (content: '%s')", async (content) => {
       const testFile = file;
 
       fs.existsSync.mockReturnValueOnce(true);
@@ -153,7 +154,7 @@ describe("file-systems/base.ts", () => {
     test.each([
       "foobar",
       "Hello world!",
-    ])("write success (%s)", async (content) => {
+    ])("write success (content: '%s')", async (content) => {
       fs.writeFileSync.mockReturnValueOnce(undefined);
 
       const err = await fileSystem.writeFile(file, content);

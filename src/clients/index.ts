@@ -1,14 +1,12 @@
-import type { error, Inputter } from "../types";
-import type { GitHubClient, Octokit } from "./types";
+import type { error, GitHub, Inputter } from "../types";
+import type { GitHubClient } from "./types";
 
 import { INPUT_NAME_REPO_TOKEN } from "../constants";
 import errors from "../errors";
 import Client from "./client";
 
 interface Params {
-  readonly github: {
-    getOctokit(token: string): Octokit;
-  };
+  readonly github: GitHub;
   readonly inp: Inputter;
 }
 

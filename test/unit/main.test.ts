@@ -1,59 +1,55 @@
-import type { Core, GitHub } from "../../src/types";
+import { mocked } from "ts-jest/utils";
 
-import { createGitHubMock } from "../__mocks__/@actions/github.mock";
-import { createCoreMock } from "../__mocks__/@actions/core.mock";
-import clientsMock, { _sampleClient }  from "../__mocks__/clients.mock";
-import configsMock, { _sampleConfig } from "../__mocks__/configs.mock";
-import fileSystemsMock, { _sampleFs } from "../__mocks__/file-systems.mock";
-import filtersMock from "../__mocks__/filters.mock";
-import optimizeMock, { _sampleData } from "../__mocks__/optimize.mock";
-import outputsMock from "../__mocks__/outputs.mock";
-import parsersMock from "../__mocks__/parsers.mock";
-import svgoMock, { _sampleSvgo } from "../__mocks__/svgo.mock";
+jest.mock("@actions/core");
+jest.mock("@actions/github");
+jest.mock("../../src/clients");
+jest.mock("../../src/errors");
+jest.mock("../../src/file-systems");
+jest.mock("../../src/helpers");
+jest.mock("../../src/inputs");
+jest.mock("../../src/optimize");
+jest.mock("../../src/outputs");
+jest.mock("../../src/svgo");
 
-jest.mock("../../src/clients", () => clientsMock);
-jest.mock("../../src/configs", () => configsMock);
-jest.mock("../../src/file-systems", () => fileSystemsMock);
-jest.mock("../../src/filters", () => filtersMock);
-jest.mock("../../src/optimize", () => optimizeMock);
-jest.mock("../../src/outputs", () => outputsMock);
-jest.mock("../../src/parsers", () => parsersMock);
-jest.mock("../../src/svgo", () => svgoMock);
+import * as _core from "@actions/core";
+import * as _github from "@actions/github";
 
-const isEventSupported: jest.Mock<[string, boolean], []> = jest.fn()
-  .mockReturnValue(["push", true]);
+import _clients from "../../src/clients";
+import _errors from "../../src/errors";
+import _fileSystems from "../../src/file-systems";
+import * as _helpers from "../../src/helpers";
+import _inputs from "../../src/inputs";
+import _optimize from "../../src/optimize";
+import * as _outputs from "../../src/outputs";
+import _svgo from "../../src/svgo";
 
-const helpers = {
-  isEventSupported,
-};
+const core = mocked(_core);
+const github = mocked(_github);
+const clients = mocked(_clients);
+const inputs = mocked(_inputs);
+const errors = mocked(_errors);
+const fileSystems = mocked(_fileSystems);
+const helpers = mocked(_helpers);
+const optimize = mocked(_optimize);
+const outputs = mocked(_outputs);
+const svgo = mocked(_svgo);
 
-jest.mock("../../src/helpers", () => helpers);
-
-import errors from "../../src/errors";
 import main from "../../src/main";
 
 describe("main.ts", () => {
-  let core: Core;
-  let github: GitHub;
-
   beforeEach(() => {
-    core = createCoreMock();
-    github = createGitHubMock();
+    core.info.mockClear();
+    core.setFailed.mockClear();
 
-    clientsMock.New.mockClear();
-    configsMock.New.mockClear();
-    fileSystemsMock.New.mockClear();
-    fileSystemsMock.NewFiltered.mockClear();
-    filtersMock.NewPrFilesFilter.mockClear();
-    filtersMock.NewPushedFilesFilter.mockClear();
-    filtersMock.NewSvgsFilter.mockClear();
-    optimizeMock.Files.mockClear();
-    outputsMock.setOutputValues.mockClear();
-    parsersMock.NewJavaScript.mockClear();
-    parsersMock.NewYaml.mockClear();
-    svgoMock.New.mockClear();
-
+    clients.New.mockClear();
+    fileSystems.New.mockClear();
+    helpers.getFilters.mockClear();
     helpers.isEventSupported.mockClear();
+    helpers.parseRawSvgoConfig.mockClear();
+    inputs.New.mockClear();
+    optimize.Files.mockClear();
+    outputs.setOutputValues.mockClear();
+    svgo.New.mockClear();
   });
 
   describe("Successful run", () => {
@@ -62,17 +58,15 @@ describe("main.ts", () => {
 
       expect(core.setFailed).not.toHaveBeenCalled();
 
-      expect(clientsMock.New).toHaveBeenCalledTimes(1);
-      expect(configsMock.New).toHaveBeenCalledTimes(1);
-      expect(fileSystemsMock.New).toHaveBeenCalledTimes(1);
-      expect(fileSystemsMock.NewFiltered).toHaveBeenCalledTimes(1);
-      expect(filtersMock.NewSvgsFilter).toHaveBeenCalledTimes(1);
-      expect(optimizeMock.Files).toHaveBeenCalledTimes(1);
-      expect(outputsMock.setOutputValues).toHaveBeenCalledTimes(1);
-      expect(parsersMock.NewJavaScript).toHaveBeenCalledTimes(1);
-      expect(svgoMock.New).toHaveBeenCalledTimes(1);
-
+      expect(clients.New).toHaveBeenCalledTimes(1);
+      expect(fileSystems.New).toHaveBeenCalledTimes(2);
+      expect(helpers.getFilters).toHaveBeenCalledTimes(1);
       expect(helpers.isEventSupported).toHaveBeenCalledTimes(1);
+      expect(helpers.parseRawSvgoConfig).toHaveBeenCalledTimes(1);
+      expect(inputs.New).toHaveBeenCalledTimes(1);
+      expect(optimize.Files).toHaveBeenCalledTimes(1);
+      expect(outputs.setOutputValues).toHaveBeenCalledTimes(1);
+      expect(svgo.New).toHaveBeenCalledTimes(1);
     });
 
     test.each([
@@ -95,8 +89,9 @@ describe("main.ts", () => {
       const expectedMsg = expect.stringContaining("Dry mode enabled");
 
       function doMockDryMode(isDryRun: boolean): void {
-        const config = Object.assign(_sampleConfig, { isDryRun });
-        configsMock.New.mockReturnValueOnce([config, null]);
+        const [baseConfig] = inputs.New({ inp: core });
+        const config = Object.assign(baseConfig, { isDryRun });
+        inputs.New.mockReturnValueOnce([config, null]);
       }
 
       test("enabled", async () => {
@@ -115,38 +110,15 @@ describe("main.ts", () => {
         expect(core.info).not.toHaveBeenCalledWith(expectedMsg);
       });
     });
-
-    describe("SVGO version", () => {
-      function doMockSvgoVersion(svgoVersion: 1 | 2): void {
-        const config = Object.assign(_sampleConfig, { svgoVersion });
-        configsMock.New.mockReturnValueOnce([config, null]);
-      }
-
-      test("v1", async () => {
-        doMockSvgoVersion(1);
-
-        await main({ core, github });
-
-        expect(parsersMock.NewYaml).toHaveBeenCalledTimes(1);
-        expect(parsersMock.NewJavaScript).not.toHaveBeenCalled();
-      });
-
-      test("v2", async () => {
-        doMockSvgoVersion(2);
-
-        await main({ core, github });
-
-        expect(parsersMock.NewJavaScript).toHaveBeenCalledTimes(1);
-        expect(parsersMock.NewYaml).not.toHaveBeenCalled();
-      });
-    });
   });
 
   describe("Failed run", () => {
     test("config error", async () => {
+      const [baseConfig] = inputs.New({ inp: core });
+
       const errMsg = "No configuration found";
       const err = errors.New(errMsg);
-      configsMock.New.mockReturnValueOnce([_sampleConfig, err]);
+      inputs.New.mockReturnValueOnce([baseConfig, err]);
 
       await main({ core, github });
 
@@ -169,8 +141,10 @@ describe("main.ts", () => {
     });
 
     test("client error", async () => {
+      const [client] = clients.New({ github, inp: core });
+
       const err = errors.New("GitHub client error");
-      clientsMock.New.mockReturnValueOnce([_sampleClient, err]);
+      clients.New.mockReturnValueOnce([client, err]);
 
       await main({ core, github });
 
@@ -184,7 +158,7 @@ describe("main.ts", () => {
 
     test("svgo configuration file read error", async () => {
       const err = errors.New("read file error");
-      fileSystemsMock.New.mockReturnValueOnce({
+      fileSystems.New.mockReturnValueOnce({
         listFiles: jest.fn(),
         readFile: jest.fn()
           .mockResolvedValueOnce(["", err])
@@ -200,26 +174,9 @@ describe("main.ts", () => {
       );
     });
 
-    test("svgo options parse error, no read error (svgo v1)", async () => {
-      const config = Object.assign(_sampleConfig, { svgoVersion: 1 });
-      configsMock.New.mockReturnValueOnce([config, null]);
-
+    test("svgo options parse error", async () => {
       const err = errors.New("read file error");
-      const erroringParser = jest.fn().mockReturnValue([{}, err]);
-      parsersMock.NewYaml.mockReturnValueOnce(erroringParser);
-
-      await main({ core, github });
-
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-    });
-
-    test("svgo options parse error, no read error (svgo v2)", async () => {
-      const config = Object.assign(_sampleConfig, { svgoVersion: 2 });
-      configsMock.New.mockReturnValueOnce([config, null]);
-
-      const err = errors.New("read file error");
-      const erroringParser = jest.fn().mockReturnValue([{}, err]);
-      parsersMock.NewJavaScript.mockReturnValueOnce(erroringParser);
+      helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
 
       await main({ core, github });
 
@@ -227,8 +184,11 @@ describe("main.ts", () => {
     });
 
     test("svgo creation error", async () => {
+      const [config] = inputs.New({ inp: core });
+      const [optimizer] = svgo.New({ config });
+
       const err = errors.New("SVGO error");
-      svgoMock.New.mockReturnValueOnce([_sampleSvgo, err]);
+      svgo.New.mockReturnValueOnce([optimizer, err]);
 
       await main({ core, github });
 
@@ -239,54 +199,27 @@ describe("main.ts", () => {
     });
 
     test("filters error (event: \"push\")", async () => {
-      isEventSupported.mockReturnValueOnce(["push", true]);
-
       const err = errors.New("create filter error");
-      filtersMock.NewPushedFilesFilter.mockReturnValueOnce([() => false, err]);
+      helpers.getFilters.mockResolvedValueOnce([[], err]);
 
       await main({ core, github });
 
       expect(core.setFailed).toHaveBeenCalledTimes(1);
       expect(core.setFailed).toHaveBeenCalledWith(
         expect.stringContaining("filters"),
-      );
-
-      expect(core.debug).toHaveBeenCalledWith(err);
-    });
-
-    test("filters error (event: \"pull_request\")", async () => {
-      isEventSupported.mockReturnValueOnce(["pull_request", true]);
-
-      const err = errors.New("create filter error");
-      filtersMock.NewPrFilesFilter.mockReturnValueOnce([() => false, err]);
-
-      await main({ core, github });
-
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("filters"),
-      );
-
-      expect(core.debug).toHaveBeenCalledWith(err);
-    });
-
-    test("file system error", async () => {
-      const err = errors.New("File system error");
-      fileSystemsMock.NewFiltered.mockReturnValueOnce([_sampleFs, err]);
-
-      await main({ core, github });
-
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("file system"),
       );
 
       expect(core.debug).toHaveBeenCalledWith(err);
     });
 
     test("optimize error", async () => {
+      const [config] = inputs.New({ inp: core });
+      const fs = fileSystems.New({ filters: [] });
+      const [optimizer] = svgo.New({ config });
+      const [data] = await optimize.Files({ config, fs, optimizer });
+
       const err = errors.New("Optimization error");
-      optimizeMock.Files.mockResolvedValueOnce([_sampleData, err]);
+      optimize.Files.mockResolvedValueOnce([data, err]);
 
       await main({ core, github });
 
@@ -300,7 +233,7 @@ describe("main.ts", () => {
 
     test("outputs error", async () => {
       const err = errors.New("Output error");
-      outputsMock.setOutputValues.mockReturnValueOnce(err);
+      outputs.setOutputValues.mockReturnValueOnce(err);
 
       await main({ core, github });
 

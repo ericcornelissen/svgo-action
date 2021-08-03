@@ -1,26 +1,17 @@
-import inp from "../../__mocks__/inputter.mock";
+import { mocked } from "ts-jest/utils";
 
-const gettersMock = {
-  getIgnoreGlob: jest.fn()
-    .mockReturnValue(["", null])
-    .mockName("getters.getIgnoreGlob"),
-  getIsDryRun: jest.fn()
-    .mockReturnValue([false, null])
-    .mockName("getters.getIsDryRun"),
-  getSvgoConfigPath: jest.fn()
-    .mockReturnValue(["", null])
-    .mockName("getters.getSvgoConfigPath"),
-  getSvgoVersion: jest.fn()
-    .mockReturnValue([2, null])
-    .mockName("getters.getSvgoVersion"),
-};
+import inp from "../../__common__/inputter.mock";
 
-jest.mock("../../../src/configs/getters", () => gettersMock);
+jest.mock("../../../src/errors");
+jest.mock("../../../src/inputs/getters");
 
-import configs from "../../../src/configs/index";
+import * as _getters from "../../../src/inputs/getters";
+import configs from "../../../src/inputs/index";
 import errors from "../../../src/errors";
 
-describe("configs/index.ts", () => {
+const getters = mocked(_getters);
+
+describe("inputs/index.ts", () => {
   describe("::New", () => {
     test("create config", () => {
       const [result, err] = configs.New({ inp });
@@ -28,17 +19,17 @@ describe("configs/index.ts", () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
 
-      expect(gettersMock.getIgnoreGlob).toHaveBeenCalledTimes(1);
-      expect(gettersMock.getIsDryRun).toHaveBeenCalledTimes(1);
-      expect(gettersMock.getSvgoConfigPath).toHaveBeenCalledTimes(1);
-      expect(gettersMock.getSvgoVersion).toHaveBeenCalledTimes(1);
+      expect(getters.getIgnoreGlob).toHaveBeenCalledTimes(1);
+      expect(getters.getIsDryRun).toHaveBeenCalledTimes(1);
+      expect(getters.getSvgoConfigPath).toHaveBeenCalledTimes(1);
+      expect(getters.getSvgoVersion).toHaveBeenCalledTimes(1);
     });
 
     describe("::ignoreGlob", () => {
       test("can get value", function () {
         const configuredValue = "foobar";
 
-        gettersMock.getIgnoreGlob.mockReturnValueOnce([configuredValue, null]);
+        getters.getIgnoreGlob.mockReturnValueOnce([configuredValue, null]);
 
         const [result, err] = configs.New({ inp });
 
@@ -49,7 +40,7 @@ describe("configs/index.ts", () => {
       test("can't get value", function () {
         const errorMsg = "couldn't get ignoreGlob";
 
-        gettersMock.getIgnoreGlob.mockReturnValueOnce([
+        getters.getIgnoreGlob.mockReturnValueOnce([
           "",
           errors.New(errorMsg),
         ]);
@@ -65,7 +56,7 @@ describe("configs/index.ts", () => {
       test("can get value", function () {
         const configuredValue = false;
 
-        gettersMock.getIsDryRun.mockReturnValueOnce([configuredValue, null]);
+        getters.getIsDryRun.mockReturnValueOnce([configuredValue, null]);
 
         const [result, err] = configs.New({ inp });
 
@@ -76,7 +67,7 @@ describe("configs/index.ts", () => {
       test("can't get value", function () {
         const errorMsg = "couldn't get dry-run";
 
-        gettersMock.getIsDryRun.mockReturnValueOnce([
+        getters.getIsDryRun.mockReturnValueOnce([
           true,
           errors.New(errorMsg),
         ]);
@@ -92,7 +83,7 @@ describe("configs/index.ts", () => {
       test("can get value", function () {
         const configuredValue = "foobar";
 
-        gettersMock.getSvgoConfigPath.mockReturnValueOnce([
+        getters.getSvgoConfigPath.mockReturnValueOnce([
           configuredValue,
           null,
         ]);
@@ -106,7 +97,7 @@ describe("configs/index.ts", () => {
       test("can't get value", function () {
         const errorMsg = "couldn't get svgo-config";
 
-        gettersMock.getSvgoConfigPath.mockReturnValueOnce([
+        getters.getSvgoConfigPath.mockReturnValueOnce([
           "",
           errors.New(errorMsg),
         ]);
@@ -122,7 +113,7 @@ describe("configs/index.ts", () => {
       test("can get value", function () {
         const configuredValue =  2;
 
-        gettersMock.getSvgoVersion.mockReturnValueOnce([
+        getters.getSvgoVersion.mockReturnValueOnce([
           configuredValue,
           null,
         ]);
@@ -136,8 +127,8 @@ describe("configs/index.ts", () => {
       test("can't get value", function () {
         const errorMsg = "couldn't get svgo-version";
 
-        gettersMock.getSvgoVersion.mockReturnValueOnce([
-          "",
+        getters.getSvgoVersion.mockReturnValueOnce([
+          2,
           errors.New(errorMsg),
         ]);
 

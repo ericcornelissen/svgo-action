@@ -3,6 +3,7 @@ import { when, resetAllWhenMocks } from "jest-when";
 import { invalidSvg, optimizedSvg, validSvg } from "./common";
 
 jest.mock("svgo-v1");
+jest.mock("../../../src/errors");
 
 import SVGO from "svgo-v1";
 
