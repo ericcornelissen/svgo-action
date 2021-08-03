@@ -20,14 +20,14 @@ various complete workflows. You can also check [what the Action does for each
 ```yaml
 name: Optimize
 on:
-# Disable the following line if you don't want the Action to run on PRs.
+# Disable the next line if you don't want the Action to run on PRs.
   pull_request:
-# Enable the following line if you want the Action to run on pushes.
+# Enable the next line if you want the Action to run on pushes.
 #   push:
-# Enable the following 2 lines if you want the Action to run on a schedule.
+# Enable the next 2 lines if you want the Action to run on a schedule.
 #   schedule:
 #   - cron:  '0 * * * 1'  # See https://crontab.guru/
-# Enable one of the following lines if you want to manually trigger the Action.
+# Enable one of the next 2 lines if you want to manually trigger the Action.
 #   repository_dispatch:
 #   workflow_dispatch:
 
@@ -40,7 +40,7 @@ jobs:
     # Enable the next 2 lines to select a branch for schedule or dispatch runs.
     #   with:
     #     ref: main
-    - uses: ericcornelissen/svgo-action@next
+    - uses: ericcornelissen/svgo-action@v2
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -63,7 +63,7 @@ To configure the Action you simply set a value for any of the above in the
 Workflow file. For example:
 
 ```yaml
-- uses: ericcornelissen/svgo-action@next
+- uses: ericcornelissen/svgo-action@v2
   with:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
     dry-run: true
@@ -96,10 +96,10 @@ on:
     - "**.svg"
 ```
 
-[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Anext
-[ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/next?logo=github
+[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Amain
+[ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/main?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
-[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/next/graph/badge.svg
+[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
 [maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 [snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json

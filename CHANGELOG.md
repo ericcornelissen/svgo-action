@@ -7,45 +7,24 @@ Versioning].
 
 ## [Unreleased]
 
-- BREAKING: Remove `IGNROED_COUNT` output. ([#390])
+- _No changes yet_
 
-## [2.0.0-alpha.6] - 2021-07-25
+## [2.0.0]
 
-- BREAKING: Rename `svgo-options` input to `svgo-config`. ([64d0e89])
-- Fix issue where the ignore glob did not work. ([62e2a65])
+### Breaking changes
 
-## [2.0.0-alpha.5] - 2021-07-23
+- Now operates on local clone of the repository.
+- Remove ability to commit changes. ([#357])
+- Remove ability to create Pull Request comments. ([#357])
+- Remove ability to cancel runs. ([#357])
+- Remove support for an external configuration file. ([#358])
+- Rename `svgo-options` input to `svgo-config`. ([64d0e89])
+- Remove branch configuration option for scheduled runs.
+- Remove `SKIPPED_COUNT` output. ([#364])
 
-- Only optimize SVGs in the pushed commits in that context. ([#382])
-- Don't error if there is a mistake in the Action options. ([#385])
+### Changes
 
-## [2.0.0-alpha.4] - 2021-07-21
-
-- BREAKING: Remove `SKIPPED_COUNT` output. ([#364])
-- Only optimize SVGs in the Pull Request in that context. ([#376])
-- Add `IGNORED_COUNT` output. ([#364])
-- Add output values for `repository_dispatch` and `workflow_dispatch`. ([#378])
-- Don't count previously optimized SVGs in `OPTIMIZED_COUNT`. ([#363])
-
-## [2.0.0-alpha.3] - 2021-05-02
-
-- BREAKING: Remove ability to leave comments on Pull Requests. ([#357])
-- BREAKING: Remove ability to cancel runs. ([#357])
-- BREAKING: Remove external configuration file. ([#358])
-
-## [2.0.0-alpha.2] - 2021-03-08
-
-- Re-add the ability to leave comments on Pull Requests. ([#343])
-- Fix documentation on manually triggered events in v2. ([#346])
-
-## [2.0.0-alpha.1] - 2021-03-02
-
-- BREAKING: Work on local clone of the repository.
-- BREAKING: Remove branch configuration option for scheduled runs.
-- BREAKING: Remove option to commit changes.
-- BREAKING: Remove `fileCount` and `ignoredCount` as templating variable.
-- BREAKING: Disabling from push events now disables the action entirely.
-- Warn about missing or invalid configuration files.
+- Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
 
 ## [1.3.5] - 2021-07-21
 
@@ -276,12 +255,6 @@ Versioning].
 [#363]: https://github.com/ericcornelissen/svgo-action/pull/363
 [#364]: https://github.com/ericcornelissen/svgo-action/pull/364
 [#371]: https://github.com/ericcornelissen/svgo-action/pull/371
-[#376]: https://github.com/ericcornelissen/svgo-action/pull/376
-[#378]: https://github.com/ericcornelissen/svgo-action/pull/378
 [#380]: https://github.com/ericcornelissen/svgo-action/pull/380
-[#382]: https://github.com/ericcornelissen/svgo-action/pull/382
-[#385]: https://github.com/ericcornelissen/svgo-action/pull/385
-[#390]: https://github.com/ericcornelissen/svgo-action/pull/390
-[62e2a65]: https://github.com/ericcornelissen/svgo-action/commit/62e2a654b0d7cf9d5225996731b4099242edcd0a
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

@@ -32,7 +32,7 @@ To enable dry runs:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@next
+- uses: ericcornelissen/svgo-action@v2
   with:
     dry-run: true
 ```
@@ -60,7 +60,7 @@ To ignore all files in a specific folder:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@next
+- uses: ericcornelissen/svgo-action@v2
   with:
     ignore: not/optimized/*
 ```
@@ -70,7 +70,7 @@ To ignore all files in a specific folder and all its subfolders:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@next
+- uses: ericcornelissen/svgo-action@v2
   with:
     ignore: not/optimized/**/
 ```
@@ -95,7 +95,7 @@ To use an SVGO config file with a non-standard name:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@next
+- uses: ericcornelissen/svgo-action@v2
   with:
     svgo-config: my-svgo-config.js
 ```
@@ -105,7 +105,7 @@ To use an SVGO config file in a folder:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@next
+- uses: ericcornelissen/svgo-action@v2
   with:
     svgo-config: path/to/my-svgo-config.js
 ```
@@ -140,7 +140,7 @@ To change the SVGO major version to v1.x.x:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@next
+- uses: ericcornelissen/svgo-action@v2
   with:
     svgo-config: .svgo.yml
     svgo-version: 1
