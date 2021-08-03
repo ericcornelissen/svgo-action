@@ -2,6 +2,9 @@ module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
   cacheDirectory: "./.cache/jest",
+  modulePathIgnorePatterns: [
+    "<rootDir>/src/.*/__mocks__/.*",
+  ],
 
   coverageDirectory: "_reports/coverage",
   collectCoverageFrom: [
