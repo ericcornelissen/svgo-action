@@ -12,7 +12,7 @@ relevant sections of this document.
 
 - [Bug Reports](#bug-reports)
 - [Feature Requests](#feature-requests)
-- [Corrections](#feature-requests)
+- [Corrections](#corrections)
 - [Workflow](#workflow)
 - [Project Setup](#project-setup)
 - [Making Changes](#making-changes)
@@ -22,8 +22,7 @@ relevant sections of this document.
   - [Integration Tests](#integration-tests)
 
 > :information_source: If you want to make a contribution to v1 of the Action,
-> please refer to the [Contributing Guidelines for v1]. This document only
-> covers how to make contributions to v2 of the Action.
+> please refer to the [Contributing Guidelines for v1].
 
 ---
 
@@ -43,7 +42,7 @@ When preparing to report a bug, try to isolate it to a small working example
 that reproduces the problem. Once you have this, collect additional information
 such as:
 
-- The version of SVGO Action you're using.
+- The exact version of SVGO Action you're using.
 - A description of the expected behaviour and the actual behaviour.
 - Error and/or warning messages.
 - A link to an action run where the bug occurs with [debug logging] enabled.
@@ -72,10 +71,10 @@ clearly as possible.
 > on it. If we don't hear from you for an extended period of time we may decide
 > to allow others to work on the feature you've been assigned to.
 
-### Corrections
+## Corrections
 
 Corrections, be it fixing typos or refactoring code, are valuable contributions
-and a good place to start contributing. If you want to improve the documentation
+and a good place to start. If you want to improve the documentation in this way
 feel free to open a Pull Request with the changes you want to make directly, or
 [open an issue] first if you prefer.
 
@@ -97,7 +96,7 @@ If you decide to make a contribution, please do use the following workflow:
 - Create a new branch from the latest `main`.
 - Make your changes on the new branch.
 - Commit to the new branch and push the commit(s).
-- Open a Pull Request.
+- Open a Pull Request against `main`.
 
 ## Project Setup
 
@@ -129,9 +128,9 @@ the naming convention `[FILENAME].test.ts`.
 
 The tests for _SVGO Action_ are split between unit and integration test. Various
 commands are available to run the tests, as shown in the overview below. You can
-run a command as `npm run [SCRIPT]:[MODIFIED]`, e.g. `npm run test:unit`.
+run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test:unit`.
 
-| Scripts            | Modified      | Description                         |
+| Scripts            | Modifier      | Description                         |
 | :----------------- | :------------ | :---------------------------------- |
 | `test`, `coverage` |               | Runs all tests                      |
 | `test`, `coverage` | `unit`        | Runs all and only unit tests        |
@@ -144,17 +143,17 @@ entire source code is generated. The report is available in HTML format at
 ### Mocking
 
 We make extensive use of [mocking]. A mock for a particular file goes into the
-`__mocks__` folder inside the folder of that file. The name of a mock file
-should always match the name of the file it mocks.
+`__mocks__` folder in the folder of that file. The name of a mock file should
+always match the name of the file it mocks.
 
 Mocks for node modules go into the `__mocks__` directory at the root of the
 project. The name of the mock file should always match the name of the node
-modules. In the case of a scoped node module, the mock file should be placed in
-a folders with the name of the scope. For example, the mock file for
-`@actions/core` can be found at `__mocks__/@actions/core.ts`.
+module. In the case of a scoped node module, the mock file should be placed in a
+folders with the name of the scope. For example, the mock for `@actions/core`
+can be found at `__mocks__/@actions/core.ts`.
 
 Any mocks that are not tied to a file or node modules should be placed in the
-`test/` directory and follow the naming convention `[FILENAME].mock.ts`.
+`test/__common__` folder and follow the naming convention `[FILENAME].mock.ts`.
 
 ### Unit Tests
 
