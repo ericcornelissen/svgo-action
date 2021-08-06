@@ -54,6 +54,6 @@ export interface Outputter {
 }
 
 export interface GitHub {
-  getOctokit(token: string): Client;
+  getOctokit(token: string): any;
   readonly context: Context;
 }
