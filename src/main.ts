@@ -7,6 +7,7 @@ import optimize from "./optimize";
 import { setOutputValues } from "./outputs";
 import svgo from "./svgo";
 
+import { EVENTS } from "./constants";
 import {
   getFilters,
   isEventSupported,
@@ -17,6 +18,11 @@ interface Params {
   readonly core: Core;
   readonly github: GitHub;
 }
+
+const CLIENT_REQUIRED_EVENTS = [
+  EVENTS.pullRequest,
+  EVENTS.push,
+];
 
 async function main({
   core,
@@ -33,7 +39,7 @@ async function main({
   }
 
   const [client, err1] = clients.New({ github, inp: core });
-  if (err1 !== null) {
+  if (err1 !== null && CLIENT_REQUIRED_EVENTS.includes(event)) {
     core.debug(err1);
     return core.setFailed("Could not get GitHub client");
   }
