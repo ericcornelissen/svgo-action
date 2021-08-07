@@ -30,7 +30,7 @@ describe("clients/index.ts", () => {
   describe("::New", () => {
     function doMockGetInputRepoToken(fn: () => string): void {
       when(inp.getInput)
-        .calledWith("repo-token", expect.anything())
+        .calledWith("repo-token", expect.objectContaining({ required: true }))
         .mockImplementation(fn);
     }
 
@@ -62,6 +62,7 @@ describe("clients/index.ts", () => {
       const [, err] = clients.New({ github, inp });
 
       expect(err).not.toBeNull();
+      expect(err).toContain("missing");
     });
   });
 });

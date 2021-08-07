@@ -51,19 +51,23 @@ describe("clients/client.ts", () => {
       });
 
       test("request error", async () => {
+        const errorMsg = "something went wrong...";
         const owner = "pikachu";
         const repo = "pokédex";
         const ref = "commit-1";
 
-        octokit.rest.pulls.listFiles.mockRejectedValueOnce(new Error());
+        octokit.rest.repos.getCommit.mockRejectedValueOnce(new Error(errorMsg));
 
-        const [, err] = await client.commits.listFiles({
+        const [result, err] = await client.commits.listFiles({
           owner,
           repo,
           ref,
         });
 
         expect(err).not.toBeNull();
+        expect(err).toContain(errorMsg);
+
+        expect(result).toBeInstanceOf(Array);
       });
     });
   });
@@ -108,13 +112,14 @@ describe("clients/client.ts", () => {
       });
 
       test("request error", async () => {
+        const errorMsg = "something went wrong...";
         const owner = "pikachu";
         const repo = "pokédex";
         const pullNumber = 42;
         const perPage = 10;
         const page = 1;
 
-        octokit.rest.pulls.listFiles.mockRejectedValueOnce(new Error());
+        octokit.rest.pulls.listFiles.mockRejectedValueOnce(new Error(errorMsg));
 
         const [, err] = await client.pulls.listFiles({
           owner,
@@ -125,6 +130,7 @@ describe("clients/client.ts", () => {
         });
 
         expect(err).not.toBeNull();
+        expect(err).toContain(errorMsg);
       });
     });
   });
