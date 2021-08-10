@@ -36,12 +36,6 @@ const svgo = mocked(_svgo);
 
 import main from "../../src/main";
 
-const EVENT_PUSH = "push";
-const EVENT_PULL_REQUEST = "pull_request";
-const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
-const EVENT_SCHEDULE = "schedule";
-const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
-
 describe("main.ts", () => {
   beforeEach(() => {
     core.info.mockClear();
@@ -75,11 +69,11 @@ describe("main.ts", () => {
   });
 
   test.each([
-    EVENT_PUSH,
-    EVENT_PULL_REQUEST,
-    EVENT_REPOSITORY_DISPATCH,
-    EVENT_SCHEDULE,
-    EVENT_WORKFLOW_DISPATCH,
+    "push",
+    "pull_request",
+    "repository_dispatch",
+    "schedule",
+    "workflow_dispatch",
   ])("logs events ('%s')", async (eventName) => {
     helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
 
@@ -143,12 +137,8 @@ describe("main.ts", () => {
     );
   });
 
-  test.each([
-    EVENT_REPOSITORY_DISPATCH,
-    EVENT_SCHEDULE,
-    EVENT_WORKFLOW_DISPATCH,
-  ])("client error, success (%s)", async (eventName) => {
-    helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
+  test("client error, client not required", async () => {
+    helpers.isClientRequired.mockReturnValue(false);
 
     const [client] = clients.New({ github, inp: core });
 
@@ -160,11 +150,8 @@ describe("main.ts", () => {
     expect(core.setFailed).not.toHaveBeenCalled();
   });
 
-  test.each([
-    EVENT_PUSH,
-    EVENT_PULL_REQUEST,
-  ])("client error, failure (%s)", async (eventName) => {
-    helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
+  test("client error, client required (%s)", async () => {
+    helpers.isClientRequired.mockReturnValue(true);
 
     const [client] = clients.New({ github, inp: core });
 
