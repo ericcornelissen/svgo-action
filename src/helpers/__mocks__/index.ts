@@ -2,7 +2,7 @@ const event = "push";
 
 const getFilters = jest.fn()
   .mockResolvedValue([[], null])
-  .mockName("helpers.isEventSupported");
+  .mockName("helpers.getFilters");
 
 const isEventSupported = jest.fn()
   .mockReturnValue([event, true])
@@ -10,7 +10,7 @@ const isEventSupported = jest.fn()
 
 const parseRawSvgoConfig = jest.fn()
   .mockReturnValue([{ }, null])
-  .mockName("helpers.isEventSupported");
+  .mockName("helpers.parseRawSvgoConfig");
 
 export {
   getFilters,

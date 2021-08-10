@@ -59,7 +59,7 @@ async function main({
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [filters, err21] = await getFilters({ event, client, config, github });
+  const [filters, err21] = await getFilters({ client, config, github });
   if (err21 !== null) {
     core.debug(err21);
     return core.setFailed("Could not initialize filters");
