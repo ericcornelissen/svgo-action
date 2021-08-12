@@ -7,8 +7,11 @@ module.exports = {
     "!src/**/__mocks__/**/*.ts",
   ],
   commandRunner: {
-    command: "npm run test:unit",
+    command: "npm run test:unit -- --runInBand --bail",
   },
+
+  timeoutMS: 1000,
+  timeoutFactor: 2.5,
 
   disableTypeChecks: "{src,test}/**/*.ts",
   checkers: ["typescript"],
