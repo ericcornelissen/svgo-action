@@ -52,197 +52,208 @@ describe("main.ts", () => {
     svgo.New.mockClear();
   });
 
-  describe("Successful run", () => {
-    test("call process (defaults)", async () => {
+  test("call process (defaults)", async () => {
+    await main({ core, github });
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+
+    expect(clients.New).toHaveBeenCalledTimes(1);
+    expect(fileSystems.New).toHaveBeenCalledTimes(2);
+    expect(helpers.getFilters).toHaveBeenCalledTimes(1);
+    expect(helpers.isEventSupported).toHaveBeenCalledTimes(1);
+    expect(helpers.parseRawSvgoConfig).toHaveBeenCalledTimes(1);
+    expect(inputs.New).toHaveBeenCalledTimes(1);
+    expect(optimize.Files).toHaveBeenCalledTimes(1);
+    expect(outputs.setOutputValues).toHaveBeenCalledTimes(1);
+    expect(svgo.New).toHaveBeenCalledTimes(1);
+  });
+
+  test.each([
+    "push",
+    "pull_request",
+    "repository_dispatch",
+    "schedule",
+    "workflow_dispatch",
+  ])("logs events ('%s')", async (eventName) => {
+    helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
+
+    await main({ core, github });
+
+    expect(core.info).toHaveBeenCalledWith(
+      expect.stringContaining(`'${eventName}'`),
+    );
+  });
+
+  describe("Dry mode", () => {
+    const expectedMsg = expect.stringContaining("Dry mode enabled");
+
+    function doMockDryMode(isDryRun: boolean): void {
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign(baseConfig, { isDryRun });
+      inputs.New.mockReturnValueOnce([config, null]);
+    }
+
+    test("enabled", async () => {
+      doMockDryMode(true);
+
       await main({ core, github });
 
-      expect(core.setFailed).not.toHaveBeenCalled();
-
-      expect(clients.New).toHaveBeenCalledTimes(1);
-      expect(fileSystems.New).toHaveBeenCalledTimes(2);
-      expect(helpers.getFilters).toHaveBeenCalledTimes(1);
-      expect(helpers.isEventSupported).toHaveBeenCalledTimes(1);
-      expect(helpers.parseRawSvgoConfig).toHaveBeenCalledTimes(1);
-      expect(inputs.New).toHaveBeenCalledTimes(1);
-      expect(optimize.Files).toHaveBeenCalledTimes(1);
-      expect(outputs.setOutputValues).toHaveBeenCalledTimes(1);
-      expect(svgo.New).toHaveBeenCalledTimes(1);
+      expect(core.info).toHaveBeenCalledWith(expectedMsg);
     });
 
-    test.each([
-      "push",
-      "pull_request",
-      "repository_dispatch",
-      "schedule",
-      "workflow_dispatch",
-    ])("logs events ('%s')", async (eventName) => {
-      helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
+    test("disabled", async () => {
+      doMockDryMode(false);
 
       await main({ core, github });
 
-      expect(core.info).toHaveBeenCalledWith(
-        expect.stringContaining(`'${eventName}'`),
-      );
-    });
-
-    describe("Dry mode", () => {
-      const expectedMsg = expect.stringContaining("Dry mode enabled");
-
-      function doMockDryMode(isDryRun: boolean): void {
-        const [baseConfig] = inputs.New({ inp: core });
-        const config = Object.assign(baseConfig, { isDryRun });
-        inputs.New.mockReturnValueOnce([config, null]);
-      }
-
-      test("enabled", async () => {
-        doMockDryMode(true);
-
-        await main({ core, github });
-
-        expect(core.info).toHaveBeenCalledWith(expectedMsg);
-      });
-
-      test("disabled", async () => {
-        doMockDryMode(false);
-
-        await main({ core, github });
-
-        expect(core.info).not.toHaveBeenCalledWith(expectedMsg);
-      });
+      expect(core.info).not.toHaveBeenCalledWith(expectedMsg);
     });
   });
 
-  describe("Failed run", () => {
-    test("config error", async () => {
-      const [baseConfig] = inputs.New({ inp: core });
+  test("config error", async () => {
+    const [baseConfig] = inputs.New({ inp: core });
 
-      const errMsg = "No configuration found";
-      const err = errors.New(errMsg);
-      inputs.New.mockReturnValueOnce([baseConfig, err]);
+    const errMsg = "No configuration found";
+    const err = errors.New(errMsg);
+    inputs.New.mockReturnValueOnce([baseConfig, err]);
 
-      await main({ core, github });
+    await main({ core, github });
 
-      expect(core.setFailed).not.toHaveBeenCalled();
-      expect(core.warning).toHaveBeenCalledWith(
-        expect.stringContaining(errMsg),
-      );
+    expect(core.setFailed).not.toHaveBeenCalled();
+    expect(core.warning).toHaveBeenCalledWith(
+      expect.stringContaining(errMsg),
+    );
+  });
+
+  test("event error", async () => {
+    const eventName = "unknown";
+    helpers.isEventSupported.mockReturnValueOnce([eventName, false]);
+
+    await main({ core, github });
+
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledWith(
+      expect.stringContaining(`'${eventName}'`),
+    );
+  });
+
+  test("client error, client not required", async () => {
+    helpers.isClientRequired.mockReturnValue(false);
+
+    const [client] = clients.New({ github, inp: core });
+
+    const err = errors.New("GitHub client error");
+    clients.New.mockReturnValueOnce([client, err]);
+
+    await main({ core, github });
+
+    expect(core.setFailed).not.toHaveBeenCalled();
+  });
+
+  test("client error, client required (%s)", async () => {
+    helpers.isClientRequired.mockReturnValue(true);
+
+    const [client] = clients.New({ github, inp: core });
+
+    const err = errors.New("GitHub client error");
+    clients.New.mockReturnValueOnce([client, err]);
+
+    await main({ core, github });
+
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledWith(
+      expect.stringContaining("GitHub client"),
+    );
+
+    expect(core.debug).toHaveBeenCalledWith(err);
+  });
+
+  test("svgo configuration file read error", async () => {
+    const err = errors.New("read file error");
+    fileSystems.New.mockReturnValueOnce({
+      listFiles: jest.fn(),
+      readFile: jest.fn()
+        .mockResolvedValueOnce(["", err])
+        .mockName("fs.readFile"),
+      writeFile: jest.fn(),
     });
 
-    test("event error", async () => {
-      const eventName = "unknown";
-      helpers.isEventSupported.mockReturnValueOnce([eventName, false]);
+    await main({ core, github });
 
-      await main({ core, github });
+    expect(core.setFailed).not.toHaveBeenCalledWith();
+    expect(core.warning).toHaveBeenCalledWith(
+      expect.stringContaining("configuration file"),
+    );
+  });
 
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining(`'${eventName}'`),
-      );
-    });
+  test("svgo options parse error", async () => {
+    const err = errors.New("read file error");
+    helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
 
-    test("client error", async () => {
-      const [client] = clients.New({ github, inp: core });
+    await main({ core, github });
 
-      const err = errors.New("GitHub client error");
-      clients.New.mockReturnValueOnce([client, err]);
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+  });
 
-      await main({ core, github });
+  test("svgo creation error", async () => {
+    const [config] = inputs.New({ inp: core });
+    const [optimizer] = svgo.New({ config });
 
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("GitHub client"),
-      );
+    const err = errors.New("SVGO error");
+    svgo.New.mockReturnValueOnce([optimizer, err]);
 
-      expect(core.debug).toHaveBeenCalledWith(err);
-    });
+    await main({ core, github });
 
-    test("svgo configuration file read error", async () => {
-      const err = errors.New("read file error");
-      fileSystems.New.mockReturnValueOnce({
-        listFiles: jest.fn(),
-        readFile: jest.fn()
-          .mockResolvedValueOnce(["", err])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn(),
-      });
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledWith(
+      expect.stringContaining("SVGO"),
+    );
+  });
 
-      await main({ core, github });
+  test("filters error (event: \"push\")", async () => {
+    const err = errors.New("create filter error");
+    helpers.getFilters.mockResolvedValueOnce([[], err]);
 
-      expect(core.setFailed).not.toHaveBeenCalledWith();
-      expect(core.warning).toHaveBeenCalledWith(
-        expect.stringContaining("configuration file"),
-      );
-    });
+    await main({ core, github });
 
-    test("svgo options parse error", async () => {
-      const err = errors.New("read file error");
-      helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledWith(
+      expect.stringContaining("filters"),
+    );
 
-      await main({ core, github });
+    expect(core.debug).toHaveBeenCalledWith(err);
+  });
 
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-    });
+  test("optimize error", async () => {
+    const [config] = inputs.New({ inp: core });
+    const fs = fileSystems.New({ filters: [] });
+    const [optimizer] = svgo.New({ config });
+    const [data] = await optimize.Files({ config, fs, optimizer });
 
-    test("svgo creation error", async () => {
-      const [config] = inputs.New({ inp: core });
-      const [optimizer] = svgo.New({ config });
+    const err = errors.New("Optimization error");
+    optimize.Files.mockResolvedValueOnce([data, err]);
 
-      const err = errors.New("SVGO error");
-      svgo.New.mockReturnValueOnce([optimizer, err]);
+    await main({ core, github });
 
-      await main({ core, github });
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledWith(
+      expect.stringContaining("optimize"),
+    );
 
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("SVGO"),
-      );
-    });
+    expect(core.debug).toHaveBeenCalledWith(err);
+  });
 
-    test("filters error (event: \"push\")", async () => {
-      const err = errors.New("create filter error");
-      helpers.getFilters.mockResolvedValueOnce([[], err]);
+  test("outputs error", async () => {
+    const err = errors.New("Output error");
+    outputs.setOutputValues.mockReturnValueOnce(err);
 
-      await main({ core, github });
+    await main({ core, github });
 
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("filters"),
-      );
+    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    expect(core.setFailed).toHaveBeenCalledWith(
+      expect.stringContaining("output"),
+    );
 
-      expect(core.debug).toHaveBeenCalledWith(err);
-    });
-
-    test("optimize error", async () => {
-      const [config] = inputs.New({ inp: core });
-      const fs = fileSystems.New({ filters: [] });
-      const [optimizer] = svgo.New({ config });
-      const [data] = await optimize.Files({ config, fs, optimizer });
-
-      const err = errors.New("Optimization error");
-      optimize.Files.mockResolvedValueOnce([data, err]);
-
-      await main({ core, github });
-
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("optimize"),
-      );
-
-      expect(core.debug).toHaveBeenCalledWith(err);
-    });
-
-    test("outputs error", async () => {
-      const err = errors.New("Output error");
-      outputs.setOutputValues.mockReturnValueOnce(err);
-
-      await main({ core, github });
-
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("output"),
-      );
-
-      expect(core.debug).toHaveBeenCalledWith(err);
-    });
+    expect(core.debug).toHaveBeenCalledWith(err);
   });
 });
