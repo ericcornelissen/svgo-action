@@ -1,4 +1,5 @@
 import {
+  isClientRequired,
   isEventSupported,
 } from "../../../src/helpers/events";
 
@@ -8,6 +9,25 @@ describe("helpers/events.ts", () => {
   const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
   const EVENT_SCHEDULE = "schedule";
   const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
+
+  describe("::isClientRequired", () => {
+    test.each([
+      EVENT_PULL_REQUEST,
+      EVENT_PUSH,
+    ])("events where client is required (%s)", (eventName) => {
+      const result = isClientRequired(eventName);
+      expect(result).toBe(true);
+    });
+
+    test.each([
+      EVENT_REPOSITORY_DISPATCH,
+      EVENT_SCHEDULE,
+      EVENT_WORKFLOW_DISPATCH,
+    ])("events where client is not required (%s)", (eventName) => {
+      const result = isClientRequired(eventName);
+      expect(result).toBe(false);
+    });
+  });
 
   describe("::isEventSupported", () => {
     test.each([
