@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Don't require `repo-token` in scheduled and dispatched events. ([#396])
 
 ## [2.0.0]
 
@@ -256,5 +256,6 @@ Versioning].
 [#364]: https://github.com/ericcornelissen/svgo-action/pull/364
 [#371]: https://github.com/ericcornelissen/svgo-action/pull/371
 [#380]: https://github.com/ericcornelissen/svgo-action/pull/380
+[#396]: https://github.com/ericcornelissen/svgo-action/pull/396
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

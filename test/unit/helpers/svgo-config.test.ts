@@ -6,7 +6,9 @@ jest.mock("../../../src/parsers");
 import errors from "../../../src/errors";
 import _parsers from "../../../src/parsers";
 
-import parseRawSvgoConfig from "../../../src/helpers/svgo-config";
+import {
+  parseRawSvgoConfig,
+} from "../../../src/helpers/svgo-config";
 
 const parsers = mocked(_parsers);
 

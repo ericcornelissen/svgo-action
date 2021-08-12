@@ -41,4 +41,6 @@ async function getFilters({
   return [result, err];
 }
 
-export default getFilters;
+export {
+  getFilters,
+};

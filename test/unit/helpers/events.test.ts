@@ -1,4 +1,6 @@
-import isEventSupported from "../../../src/helpers/events";
+import {
+  isEventSupported,
+} from "../../../src/helpers/events";
 
 describe("helpers/events.ts", () => {
   const EVENT_PULL_REQUEST = "pull_request";

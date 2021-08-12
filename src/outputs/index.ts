@@ -1,6 +1,12 @@
 import type { error, Outputter } from "../types";
 
-import { EVENTS } from "../constants";
+import {
+  EVENT_PULL_REQUEST,
+  EVENT_PUSH,
+  EVENT_REPOSITORY_DISPATCH,
+  EVENT_SCHEDULE,
+  EVENT_WORKFLOW_DISPATCH,
+} from "../constants";
 
 interface Context {
   readonly eventName: string;
@@ -42,11 +48,11 @@ const outputsMap: Map<OutputName, DataToOutput> = new Map([
 
 function getOutputNamesFor(event: string): [OutputName[], error] {
   switch (event) {
-    case EVENTS.pullRequest:
-    case EVENTS.push:
-    case EVENTS.repositoryDispatch:
-    case EVENTS.schedule:
-    case EVENTS.workflowDispatch:
+    case EVENT_PULL_REQUEST:
+    case EVENT_PUSH:
+    case EVENT_REPOSITORY_DISPATCH:
+    case EVENT_SCHEDULE:
+    case EVENT_WORKFLOW_DISPATCH:
       return [[
         OutputName.DID_OPTIMIZE,
         OutputName.OPTIMIZED_COUNT,

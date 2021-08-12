@@ -6,9 +6,9 @@ officially supported.
 
 - [`on: pull_request`](#on-pull_request)
 - [`on: push`](#on-push)
-- [`on: repository_dispatch`](#manual-trigger-events)
+- [`on: repository_dispatch`](#dispatch-events)
 - [`on: schedule`](#on-schedule)
-- [`on: workflow_dispatch`](#manual-trigger-events)
+- [`on: workflow_dispatch`](#dispatch-events)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -105,7 +105,7 @@ The following [inputs] are available in the `schedule` context.
 | -------------- | ------------------ | ------------------ |
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
-| `repo-token`   | :x:                | :heavy_check_mark: |
+| `repo-token`   | :x:                | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -121,7 +121,7 @@ The following [outputs] are available in the `schedule` context.
 
 ---
 
-## Manual Trigger Events
+## Dispatch Events
 
 > Find out more in the GitHub Actions documentation on [`repository_dispatch`
 > events] and [`workflow_dispatch` events].
@@ -141,7 +141,7 @@ The following [inputs] are available in the `repository_dispatch` and
 | -------------- | ------------------ | ------------------ |
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
-| `repo-token`   | :x:                | :heavy_check_mark: |
+| `repo-token`   | :x:                | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 

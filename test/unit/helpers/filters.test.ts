@@ -13,7 +13,9 @@ import errors from "../../../src/errors";
 import clients from "../../../src/clients";
 import _filters from "../../../src/filters";
 
-import getFilters from "../../../src/helpers/filters";
+import {
+  getFilters,
+} from "../../../src/helpers/filters";
 
 const filters = mocked(_filters);
 

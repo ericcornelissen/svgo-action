@@ -9,6 +9,7 @@ import svgo from "./svgo";
 
 import {
   getFilters,
+  isClientRequired,
   isEventSupported,
   parseRawSvgoConfig,
 } from "./helpers";
@@ -33,7 +34,7 @@ async function main({
   }
 
   const [client, err1] = clients.New({ github, inp: core });
-  if (err1 !== null) {
+  if (err1 !== null && isClientRequired(event)) {
     core.debug(err1);
     return core.setFailed("Could not get GitHub client");
   }
