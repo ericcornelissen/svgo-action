@@ -9,6 +9,7 @@ import svgo from "./svgo";
 
 import {
   getFilters,
+  isClientRequired,
   isEventSupported,
   parseRawSvgoConfig,
 } from "./helpers";
@@ -33,7 +34,7 @@ async function main({
   }
 
   const [client, err1] = clients.New({ github, inp: core });
-  if (err1 !== null) {
+  if (err1 !== null && isClientRequired(event)) {
     core.debug(err1);
     return core.setFailed("Could not get GitHub client");
   }
@@ -59,7 +60,7 @@ async function main({
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [filters, err21] = await getFilters({ event, client, config, github });
+  const [filters, err21] = await getFilters({ client, config, github });
   if (err21 !== null) {
     core.debug(err21);
     return core.setFailed("Could not initialize filters");

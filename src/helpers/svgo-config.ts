@@ -20,4 +20,6 @@ function parseRawSvgoConfig({
   }
 }
 
-export default parseRawSvgoConfig;
+export {
+  parseRawSvgoConfig,
+};

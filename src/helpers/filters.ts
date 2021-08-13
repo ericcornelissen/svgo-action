@@ -11,17 +11,16 @@ interface Config {
 interface Params {
   readonly client: GitHubClient;
   readonly config: Config;
-  readonly event: string;
   readonly github: GitHub;
 }
 
 async function getFilters({
   client,
   config,
-  event,
   github,
 }: Params): Promise<[((s: string) => boolean)[], error]> {
   const { context } = github;
+  const event = context.eventName;
 
   const result = [
     filters.NewGlobFilter(config.ignoreGlob),
@@ -42,4 +41,6 @@ async function getFilters({
   return [result, err];
 }
 
-export default getFilters;
+export {
+  getFilters,
+};

@@ -8,10 +8,5 @@ git stash -q -u --keep-index
 npm run format
 git update-index --again
 
-# Verify building is possible, but ignore built files
-npm run build
-git checkout -- lib/.svgo.yml
-git checkout -- lib/index.js
-
 # Restore unstaged files
-git stash pop -q
+git stash pop -q || true
