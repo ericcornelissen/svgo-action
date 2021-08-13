@@ -41,12 +41,13 @@ describe("file-systems/base.ts", () => {
       const dir = "foo" as unknown as Dirent;
       const dirDir = "bar" as unknown as Dirent;
       const dirFile = "baz" as unknown as Dirent;
+      const dirDirFile = "praise-the.sun" as unknown as Dirent;
       const file1 = "hello.world" as unknown as Dirent;
       const file2 = "lorem.ipsum" as unknown as Dirent;
 
       fs.readdirSync.mockReturnValueOnce([dir, file1, file2]);
       fs.readdirSync.mockReturnValueOnce([dirDir, dirFile]);
-      fs.readdirSync.mockReturnValueOnce([]);
+      fs.readdirSync.mockReturnValueOnce([dirDirFile]);
 
       when(fs.existsSync)
         .mockReturnValue(true)
@@ -68,9 +69,13 @@ describe("file-systems/base.ts", () => {
       when(fs.lstatSync)
         .calledWith(`./${file2}`)
         .mockReturnValueOnce(lstatFile);
+      when(fs.lstatSync)
+        .calledWith(`./${dir}/${dirDir}/${dirDirFile}`)
+        .mockReturnValueOnce(lstatFile);
 
       const result = Array.from(fileSystem.listFiles());
 
+      expect(result).toHaveLength(3);
       expect(result).toContainEqual({
         path: "foo/baz",
       });
@@ -86,7 +91,19 @@ describe("file-systems/base.ts", () => {
       ".git",
       "node_modules",
     ])("ignore '%s'", (dir) => {
+      const fileInDir = "foo.bar" as unknown as Dirent;
+
+      fs.readdirSync.mockReset();
       fs.readdirSync.mockReturnValueOnce([dir as unknown as Dirent]);
+      fs.readdirSync.mockReturnValueOnce([fileInDir]);
+      fs.existsSync.mockReturnValue(true);
+
+      when(fs.lstatSync)
+        .calledWith(dir)
+        .mockReturnValueOnce(lstatDir);
+      when(fs.lstatSync)
+        .calledWith(`./${fileInDir}`)
+        .mockReturnValueOnce(lstatFile);
 
       const result = Array.from(fileSystem.listFiles());
 
@@ -129,16 +146,20 @@ describe("file-systems/base.ts", () => {
     test("file doesn't exist", async () => {
       fs.existsSync.mockReturnValueOnce(false);
 
-      const [, err] = await fileSystem.readFile("foo.bar");
+      const [result, err] = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
+      expect(err).toContain("file not found");
+      expect(result).toEqual("");
     });
 
     test("read failure (file exists)", async () => {
       fs.existsSync.mockReturnValueOnce(true);
       fs.readFileSync.mockImplementationOnce(() => { throw new Error(); });
 
-      const [, err]  = await fileSystem.readFile("foo.bar");
+      const [result, err]  = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
+      expect(err).toContain("cannot read file");
+      expect(result).toEqual("");
     });
   });
 
@@ -169,6 +190,7 @@ describe("file-systems/base.ts", () => {
 
       const err = await fileSystem.writeFile(file, "foobar");
       expect(err).not.toBeNull();
+      expect(err).toContain("cannot write file");
     });
   });
 });
