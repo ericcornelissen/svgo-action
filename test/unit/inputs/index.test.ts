@@ -50,6 +50,13 @@ describe("inputs/index.ts", () => {
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
+
+      test("default value", function () {
+        const [, err] = configs.New({ inp });
+
+        expect(err).toBeNull();
+        expect(getters.getIgnoreGlob).toHaveBeenCalledWith(inp, "");
+      });
     });
 
     describe("::isDryRun", () => {
@@ -76,6 +83,13 @@ describe("inputs/index.ts", () => {
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
+      });
+
+      test("default value", function () {
+        const [, err] = configs.New({ inp });
+
+        expect(err).toBeNull();
+        expect(getters.getIsDryRun).toHaveBeenCalledWith(inp, false);
       });
     });
 
@@ -107,6 +121,16 @@ describe("inputs/index.ts", () => {
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
+
+      test("default value", function () {
+        const [, err] = configs.New({ inp });
+
+        expect(err).toBeNull();
+        expect(getters.getSvgoConfigPath).toHaveBeenCalledWith(
+          inp,
+          "svgo.config.js",
+        );
+      });
     });
 
     describe("::svgoVersion", () => {
@@ -136,6 +160,13 @@ describe("inputs/index.ts", () => {
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
+      });
+
+      test("default value", function () {
+        const [, err] = configs.New({ inp });
+
+        expect(err).toBeNull();
+        expect(getters.getSvgoVersion).toHaveBeenCalledWith(inp, 2);
       });
     });
   });

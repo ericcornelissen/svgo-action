@@ -14,10 +14,10 @@ interface Params {
 }
 
 function New({ inp }: Params): [Config, error] {
-  const [ignoreGlob, err0] = getIgnoreGlob(inp);
-  const [isDryRun, err1] = getIsDryRun(inp);
-  const [svgoConfigPath, err2] = getSvgoConfigPath(inp);
-  const [svgoVersion, err3] = getSvgoVersion(inp);
+  const [ignoreGlob, err0] = getIgnoreGlob(inp, "");
+  const [isDryRun, err1] = getIsDryRun(inp, false);
+  const [svgoConfigPath, err2] = getSvgoConfigPath(inp, "svgo.config.js");
+  const [svgoVersion, err3] = getSvgoVersion(inp, 2);
 
   return [
     {
