@@ -10,7 +10,7 @@ module.exports = {
     command: "npm run test:unit -- --runInBand --bail",
   },
 
-  timeoutMS: 1000,
+  timeoutMS: 25000,
   timeoutFactor: 2.5,
 
   disableTypeChecks: "{src,test}/**/*.ts",

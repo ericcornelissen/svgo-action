@@ -1,79 +1,115 @@
 import type { error, Inputter } from "../types";
 import type { SupportedSvgoVersions } from "../svgo";
 
-import { INPUT_NAMES } from "../constants";
+import {
+  INPUT_NAME_IGNORE,
+  INPUT_NAME_DRY_RUN,
+  INPUT_NAME_SVGO_CONFIG,
+  INPUT_NAME_SVGO_VERSION,
+} from "../constants";
 import errors from "../errors";
 
-const INPUT_NOT_REQUIRED = { required: false };
+const GET_INPUT_OPTIONS = { required: true };
 
-function safeGetInput(
+interface Params<T> {
+  readonly inp: Inputter;
+  readonly inputName: string;
+  readonly defaultValue: T;
+}
+
+function safeGetInput({
+  inp,
+  inputName,
+  defaultValue,
+}: Params<string>): [string, error] {
+  let result;
+
+  try {
+    result = inp.getInput(inputName, GET_INPUT_OPTIONS);
+  } catch (_) {
+    result = defaultValue;
+  }
+
+  return [result, null];
+}
+
+function safeGetBooleanInput({
+  inp,
+  inputName,
+  defaultValue,
+}: Params<boolean>): [boolean, error] {
+  let result;
+
+  try {
+    result = inp.getBooleanInput(inputName, GET_INPUT_OPTIONS);
+  } catch (_) {
+    result = defaultValue;
+  }
+
+  return [result, null];
+}
+
+function safeGetNumericInput({
+  inp,
+  inputName,
+  defaultValue,
+}: Params<number>): [number, error] {
+  let result;
+
+  try {
+    const _result = inp.getInput(inputName, GET_INPUT_OPTIONS);
+    result = parseInt(_result, 10);
+  } catch (_) {
+    result = defaultValue;
+  }
+
+  return [result, null];
+}
+
+function getIgnoreGlob(
   inp: Inputter,
-  inputName: string,
+  defaultValue: string,
 ): [string, error] {
-  let result = "";
-  let err: error = null;
-
-  try {
-    result = inp.getInput(inputName, INPUT_NOT_REQUIRED);
-  } catch (_) {
-    err = errors.New(`could not get input '${inputName}'`);
-  }
-
-  return [result, err];
+  const inputName = INPUT_NAME_IGNORE;
+  return safeGetInput({ inp, inputName, defaultValue });
 }
 
-function safeGetBooleanInput(
+function getIsDryRun(
   inp: Inputter,
-  inputName: string,
+  defaultValue: boolean,
 ): [boolean, error] {
-  let result = false;
-  let err: error = null;
-
-  try {
-    result = inp.getBooleanInput(inputName, INPUT_NOT_REQUIRED);
-  } catch (_) {
-    err = errors.New(`could not get input '${inputName}'`);
-  }
-
-  return [result, err];
+  const inputName = INPUT_NAME_DRY_RUN;
+  return safeGetBooleanInput({ inp, inputName, defaultValue });
 }
 
-function getIgnoreGlob(inp: Inputter): [string, error] {
-  const erroredValue = "";
-
-  const [ignoreGlob, err] = safeGetInput(inp, INPUT_NAMES.ignore);
-  return [err === null ? ignoreGlob : erroredValue, err];
+function getSvgoConfigPath(
+  inp: Inputter,
+  defaultValue: string,
+): [string, error] {
+  const inputName = INPUT_NAME_SVGO_CONFIG;
+  return safeGetInput({ inp, inputName, defaultValue });
 }
 
-function getIsDryRun(inp: Inputter): [boolean, error] {
-  const erroredValue = true;
+function getSvgoVersion(
+  inp: Inputter,
+  defaultValue: SupportedSvgoVersions,
+): [SupportedSvgoVersions, error] {
+  const inputName = INPUT_NAME_SVGO_VERSION;
 
-  const [isDryRun, err] = safeGetBooleanInput(inp, INPUT_NAMES.dryRun);
-  return [err === null ? isDryRun : erroredValue, err];
-}
+  const [svgoVersion, err] = safeGetNumericInput({
+    inp,
+    inputName,
+    defaultValue,
+  });
 
-function getSvgoConfigPath(inp: Inputter): [string, error] {
-  const erroredValue = "svgo.config.js";
-
-  const [svgoConfigPath, err] = safeGetInput(inp, INPUT_NAMES.svgoConfig);
-  return [err === null ? svgoConfigPath : erroredValue, err];
-}
-
-function getSvgoVersion(inp: Inputter): [SupportedSvgoVersions, error] {
-  const erroredValue = 2;
-
-  const [rawSvgoVersion, err0] = safeGetInput(inp, INPUT_NAMES.svgoVersion);
-  if (err0 !== null) {
-    return [erroredValue, err0];
-  }
-
-  const svgoVersion = parseInt(rawSvgoVersion, 10);
   if (svgoVersion !== 1 && svgoVersion !== 2) {
-    const err1 = errors.New(`invalid SVGO version '${svgoVersion}'`);
-    return [erroredValue, err1];
+    return [
+      defaultValue,
+      errors.New(`invalid SVGO version '${svgoVersion}'`),
+    ];
   }
 
-  return [svgoVersion, null];
+  return [svgoVersion, err];
 }
 
 export {

@@ -4,6 +4,7 @@ This documentation describes all the inputs of the SVGO Action.
 
 - [Dry Run](#dry-run)
 - [Ignore](#ignore)
+- [Repository Token](#repository-token)
 - [SVGO Config](#svgo-config)
 - [SVGO Version](#svgo-version)
 
@@ -77,6 +78,30 @@ To ignore all files in a specific folder and all its subfolders:
 
 ---
 
+## Repository Token
+
+| Name         | Default value |
+| ------------ | ------------- |
+| `repo-token` | `""`          |
+
+The `repo-token` input is required when using this Action [`on: pull_request`]
+or [`on: push`]. It is needed to make API request to GitHub so that the Action
+can determine which SVGs should be optimized.
+
+### Examples
+
+To set the `repo-token` you will typically want to use:
+
+```yaml
+# .github/workflows/optimize.yml
+
+- uses: ericcornelissen/svgo-action@v2
+  with:
+    repo-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+---
+
 ## SVGO Config
 
 | Name          | Default value      |
@@ -87,6 +112,9 @@ The `svgo-config` input allows you to specify the location of the config file
 for [SVGO]. The configuration file must be a JavaScript or a [YAML] file. If the
 specified file is not found the Action will fall back on SVGO's default
 configuration.
+
+> :information_source: If `svgo-version` is configured to `1` the default value
+> of `svgo-config` changes to `".svgo.yml"`.
 
 ### Examples
 
@@ -107,7 +135,7 @@ To use an SVGO config file in a folder:
 
 - uses: ericcornelissen/svgo-action@v2
   with:
-    svgo-config: path/to/my-svgo-config.js
+    svgo-config: path/to/svgo.config.js
 ```
 
 ---
@@ -122,9 +150,9 @@ The `svgo-version` input allows you to specify the major version of [SVGO] that
 you want to use. This can be either `1` for the latest v1.x.x release or `2` for
 the latest v2.x.x release.
 
-If `svgo-version` is `2` you must have an JavaScript-based SVGO config file. If
+If `svgo-version` is `2` you must have a JavaScript-based SVGO config file. If
 `svgo-version` is `1` you must have a [YAML]-based SVGO config file. You can
-change the SVGO config file used by this Action with the [SVGO
+change the SVGO config file used by the Action using the [SVGO
 Config](#svgo-config) input.
 
 > :information_source: If you plan to set this to `1`, we recommend upgrading to
@@ -132,19 +160,19 @@ Config](#svgo-config) input.
 
 ### Examples
 
-To change the SVGO major version to v1.x.x:
-
-> :warning: If you set `svgo-version: 1` you **must** set `svgo-config` to a
-> [YAML] file.
+To change the SVGO major version to v1.x.x (note that the default `svgo-config`
+will be `".svgo.yml"`):
 
 ```yaml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v2
   with:
-    svgo-config: .svgo.yml
     svgo-version: 1
 ```
+
+[`on: pull_request`]: ./events.md#on-pull_request
+[`on: push`]: ./events.md#on-push
 
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md

@@ -8,6 +8,8 @@ Versioning].
 ## [Unreleased]
 
 - Don't require `repo-token` in scheduled and dispatched events. ([#396])
+- Change `svgo-config` default based on `svgo-version` value. ([#400], [#402])
+- Add `repo-token` where missing to the documentation. ([#401])
 
 ## [2.0.0]
 
@@ -257,5 +259,8 @@ Versioning].
 [#371]: https://github.com/ericcornelissen/svgo-action/pull/371
 [#380]: https://github.com/ericcornelissen/svgo-action/pull/380
 [#396]: https://github.com/ericcornelissen/svgo-action/pull/396
+[#400]: https://github.com/ericcornelissen/svgo-action/pull/400
+[#401]: https://github.com/ericcornelissen/svgo-action/pull/401
+[#402]: https://github.com/ericcornelissen/svgo-action/pull/402
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
