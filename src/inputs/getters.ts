@@ -9,7 +9,7 @@ import {
 } from "../constants";
 import errors from "../errors";
 
-const INPUT_NOT_REQUIRED = { required: false };
+const GET_INPUT_OPTIONS = { required: true };
 
 interface Params<T> {
   readonly inp: Inputter;
@@ -22,16 +22,15 @@ function safeGetInput({
   inputName,
   defaultValue,
 }: Params<string>): [string, error] {
-  let result = defaultValue;
-  let err: error = null;
+  let result;
 
   try {
-    result = inp.getInput(inputName, INPUT_NOT_REQUIRED);
+    result = inp.getInput(inputName, GET_INPUT_OPTIONS);
   } catch (_) {
-    err = errors.New(`could not get input '${inputName}'`);
+    result = defaultValue;
   }
 
-  return [result, err];
+  return [result, null];
 }
 
 function safeGetBooleanInput({
@@ -39,16 +38,15 @@ function safeGetBooleanInput({
   inputName,
   defaultValue,
 }: Params<boolean>): [boolean, error] {
-  let result = defaultValue;
-  let err: error = null;
+  let result;
 
   try {
-    result = inp.getBooleanInput(inputName, INPUT_NOT_REQUIRED);
+    result = inp.getBooleanInput(inputName, GET_INPUT_OPTIONS);
   } catch (_) {
-    err = errors.New(`could not get input '${inputName}'`);
+    result = defaultValue;
   }
 
-  return [result, err];
+  return [result, null];
 }
 
 function safeGetNumericInput({
@@ -56,17 +54,16 @@ function safeGetNumericInput({
   inputName,
   defaultValue,
 }: Params<number>): [number, error] {
-  let result = defaultValue;
-  let err: error = null;
+  let result;
 
   try {
-    const _result = inp.getInput(inputName, INPUT_NOT_REQUIRED);
+    const _result = inp.getInput(inputName, GET_INPUT_OPTIONS);
     result = parseInt(_result, 10);
   } catch (_) {
-    err = errors.New(`could not get input '${inputName}'`);
+    result = defaultValue;
   }
 
-  return [result, err];
+  return [result, null];
 }
 
 function getIgnoreGlob(
