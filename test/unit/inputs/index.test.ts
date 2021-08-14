@@ -122,7 +122,21 @@ describe("inputs/index.ts", () => {
         expect(err).toContain(errorMsg);
       });
 
-      test("default value", function () {
+      test("default value for svgo-version 1", function () {
+        getters.getSvgoVersion.mockReturnValueOnce([1, null]);
+
+        const [, err] = configs.New({ inp });
+
+        expect(err).toBeNull();
+        expect(getters.getSvgoConfigPath).toHaveBeenCalledWith(
+          inp,
+          ".svgo.yml",
+        );
+      });
+
+      test("default value for svgo-version 2", function () {
+        getters.getSvgoVersion.mockReturnValueOnce([2, null]);
+
         const [, err] = configs.New({ inp });
 
         expect(err).toBeNull();
