@@ -110,6 +110,7 @@ describe("filters/pushed-files.ts", () => {
 
       const [filter, err] = await New({ client, context });
       expect(err).not.toBeNull();
+      expect(err).toContain("could not get commit");
       expect(filter).not.toBeNull();
 
       const result = filter("foo.bar");
@@ -121,6 +122,7 @@ describe("filters/pushed-files.ts", () => {
 
       const [filter, err] = await New({ client, context });
       expect(err).not.toBeNull();
+      expect(err).toContain("missing commits");
       expect(filter).not.toBeNull();
 
       const result = filter("foo.bar");

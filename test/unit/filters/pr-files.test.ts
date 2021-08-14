@@ -113,6 +113,7 @@ describe("filters/pr-files.ts", () => {
 
       const [filter, err] = await New({ client, context });
       expect(err).not.toBeNull();
+      expect(err).toContain("could not get Pull Request");
       expect(filter).not.toBeNull();
 
       const result = filter("foo.bar");
@@ -124,6 +125,7 @@ describe("filters/pr-files.ts", () => {
 
       const [filter, err] = await New({ client, context });
       expect(err).not.toBeNull();
+      expect(err).toContain("missing Pull Request number");
       expect(filter).not.toBeNull();
 
       const result = filter("foo.bar");
