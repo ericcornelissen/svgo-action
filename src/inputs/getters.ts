@@ -101,9 +101,6 @@ function getSvgoVersion(
     inputName,
     defaultValue,
   });
-  if (err !== null) {
-    return [defaultValue, err];
-  }
 
   if (svgoVersion !== 1 && svgoVersion !== 2) {
     return [
@@ -112,7 +109,7 @@ function getSvgoVersion(
     ];
   }
 
-  return [svgoVersion, null];
+  return [svgoVersion, err];
 }
 
 export {

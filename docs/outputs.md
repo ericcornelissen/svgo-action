@@ -33,8 +33,6 @@ example:
 steps:
 - uses: ericcornelissen/svgo-action@v2
   id: svgo  # <-- You need to give the SVGO Action's step a unique id
-  with:
-    repo-token: ${{ secrets.GITHUB_TOKEN }}
 - name: Did any SVGs get optimized?
   run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
   #                   ^^^^         ^^^^^^^^^^^^
