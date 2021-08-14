@@ -56,6 +56,7 @@ The following inputs are available when using the SVGO Action.
 | -------------- | ----------------------------------------- | ------------------ | ------------------------------------- |
 | `dry-run`      | Prevent the Action from writing changes   | `false`            | [docs](./docs/inputs.md#dry-run)      |
 | `ignore`       | A [glob] of SVGs that should be ignored   | `""`               | [docs](./docs/inputs.md#ignore)       |
+| `repo-token`   | A GitHub token (`secrets.GITHUB_TOKEN`)   | `""`               | [docs](./docs/inputs.md#repo-token)   |
 | `svgo-config`  | The path of the [SVGO] configuration file | `"svgo.config.js"` | [docs](./docs/inputs.md#svgo-config)  |
 | `svgo-version` | The (major) version of [SVGO] to use      | `2`                | [docs](./docs/inputs.md#svgo-version) |
 
