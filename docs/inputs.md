@@ -4,6 +4,7 @@ This documentation describes all the inputs of the SVGO Action.
 
 - [Dry Run](#dry-run)
 - [Ignore](#ignore)
+- [Repository Token](#repository-token)
 - [SVGO Config](#svgo-config)
 - [SVGO Version](#svgo-version)
 
@@ -77,6 +78,30 @@ To ignore all files in a specific folder and all its subfolders:
 
 ---
 
+## Repository Token
+
+| Name         | Default value |
+| ------------ | ------------- |
+| `repo-token` | `""`          |
+
+The `repo-token` input is required when using this Action [`on: pull_request`]
+or [`on: push`]. It is needed to make API request to GitHub so that the Action
+can determine which SVGs should be optimized.
+
+### Examples
+
+To set the `repo-token` you will typically want to use:
+
+```yaml
+# .github/workflows/optimize.yml
+
+- uses: ericcornelissen/svgo-action@v2
+  with:
+    repo-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+---
+
 ## SVGO Config
 
 | Name          | Default value      |
@@ -145,6 +170,9 @@ To change the SVGO major version to v1.x.x:
     svgo-config: .svgo.yml
     svgo-version: 1
 ```
+
+[`on: pull_request`]: ./events.md#on-pull_request
+[`on: push`]: ./events.md#on-push
 
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
