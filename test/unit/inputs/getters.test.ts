@@ -40,7 +40,7 @@ describe("inputs/getters.ts", () => {
         .mockImplementationOnce(() => { throw new Error(""); });
 
       const [result, err] = getIgnoreGlob(inp, defaultValue);
-      expect(err).not.toBeNull();
+      expect(err).toBeNull();
       expect(result).toEqual(defaultValue);
     });
   });
@@ -69,7 +69,7 @@ describe("inputs/getters.ts", () => {
         .mockImplementationOnce(() => { throw new Error(""); });
 
       const [result, err] = getIsDryRun(inp, defaultValue);
-      expect(err).not.toBeNull();
+      expect(err).toBeNull();
       expect(result).toEqual(defaultValue);
     });
   });
@@ -98,7 +98,7 @@ describe("inputs/getters.ts", () => {
         .mockImplementationOnce(() => { throw new Error(""); });
 
       const [result, err] = getSvgoConfigPath(inp, defaultValue);
-      expect(err).not.toBeNull();
+      expect(err).toBeNull();
       expect(result).toEqual(defaultValue);
     });
   });
@@ -142,7 +142,7 @@ describe("inputs/getters.ts", () => {
         .mockImplementationOnce(() => { throw new Error(""); });
 
       const [result, err] = getSvgoVersion(inp, defaultValue);
-      expect(err).not.toBeNull();
+      expect(err).toBeNull();
       expect(result).toEqual(defaultValue);
     });
   });
