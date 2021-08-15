@@ -1,7 +1,5 @@
-export type error = string | null;
-
-// Type representing the relevant information of `@actions/github.context`.
-export type Context = {
+// Type representing the relevant API of `@actions/github.context`.
+interface Context {
   readonly eventName: string;
   readonly payload: {
     readonly commits?: {
@@ -17,30 +15,45 @@ export type Context = {
   };
 }
 
-// Type representing the relevant information of `@actions/core`.
-export interface Core extends Inputter, Outputter {
+// Type representing the relevant API of `@actions/core`.
+interface Core extends Inputter, Outputter {
   info(message: string): void;
   setFailed(message: string | Error): void;
   warning(message: string | Error): void;
   debug(message: string): void;
 }
 
-// Type representing an object from which the Action inputs can be obtained.
-interface InputterOptions {
-  readonly required?: boolean;
+// Type for errors.
+type error = string | null;
+
+// Type representing the relevant API of `@actions/github`.
+interface GitHub {
+  getOctokit(token: string): Client;
+  readonly context: Context;
 }
 
-export interface Inputter {
+// Type representing an object from which the Action inputs can be obtained.
+interface Inputter {
   getInput(name: string, options: InputterOptions): string;
   getBooleanInput(name: string, options: InputterOptions): boolean;
 }
 
+// Type representing the options for the `Inputter` interface.
+interface InputterOptions {
+  readonly required?: boolean;
+}
+
 // Type representing an object to which Action outputs can be outputted.
-export interface Outputter {
+interface Outputter {
   setOutput(name: string, value: string): void;
 }
 
-export interface GitHub {
-  getOctokit(token: string): Client;
-  readonly context: Context;
-}
+export {
+  error,
+  Context,
+  Core,
+  Inputter,
+  InputterOptions,
+  Outputter,
+  GitHub,
+};
