@@ -25,12 +25,6 @@ export interface Core extends Inputter, Outputter {
   debug(message: string): void;
 }
 
-// Type representing data about the optimization process.
-export type OptimizeProjectData = {
-  readonly optimizedCount: number;
-  readonly svgCount: number;
-}
-
 // Type representing the data of a file that is being processed by the Action.
 export type FileData = {
   readonly content: string;
