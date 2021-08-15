@@ -25,13 +25,6 @@ export interface Core extends Inputter, Outputter {
   debug(message: string): void;
 }
 
-// Type representing the data of a file that is being processed by the Action.
-export type FileData = {
-  readonly content: string;
-  readonly originalEncoding: string;
-  readonly path: string;
-}
-
 // Type representing an object from which the Action inputs can be obtained.
 interface InputterOptions {
   readonly required?: boolean;
