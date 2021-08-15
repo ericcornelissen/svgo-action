@@ -1,3 +1,5 @@
+import type { GitHub as _GitHub } from "@actions/github/lib/utils";
+
 // Type representing the relevant API of `@actions/github.context`.
 interface Context {
   readonly eventName: string;
@@ -28,7 +30,7 @@ type error = string | null;
 
 // Type representing the relevant API of `@actions/github`.
 interface GitHub {
-  getOctokit(token: string): Client;
+  getOctokit(token: string): Octokit;
   readonly context: Context;
 }
 
@@ -43,6 +45,9 @@ interface InputterOptions {
   readonly required?: boolean;
 }
 
+// Type representing `@actions/github`'s Octokit.
+type Octokit = InstanceType<typeof _GitHub>;
+
 // Type representing an object to which Action outputs can be outputted.
 interface Outputter {
   setOutput(name: string, value: string): void;
@@ -52,8 +57,9 @@ export {
   error,
   Context,
   Core,
+  GitHub,
   Inputter,
   InputterOptions,
+  Octokit,
   Outputter,
-  GitHub,
 };
