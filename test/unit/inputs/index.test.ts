@@ -94,6 +94,10 @@ describe("inputs/index.ts", () => {
     });
 
     describe("::svgoConfigPath", () => {
+      beforeEach(() => {
+        getters.getSvgoConfigPath.mockClear();
+      });
+
       test("can get value", function () {
         const configuredValue = "foobar";
 
