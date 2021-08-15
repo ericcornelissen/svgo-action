@@ -180,12 +180,13 @@ to mock anything. Exceptions being, e.g., file system operations.
 
 We employ [Mutation Testing] to improve the quality of unit tests. We use the
 mutation testing framework [StrykerJS]. By default the mutation tests run on all
-the source code using all the unit tests.
+the source code using all the unit tests. After running the mutation tests, the
+mutation report is available in HTML format at `_reports/mutation/index.html`.
 
 You can change the mutation test configuration (in `stryker.config.js`) to focus
 on a subset of the source code or unit tests (we ask that you don't commit such
-changes). For example, to run mutation tests for a particular file you can change
-the Stryker configuration as follows.
+changes). For example, to run mutation tests for a particular file you can
+change the Stryker configuration as follows.
 
 ```diff
   mutate: [
