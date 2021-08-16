@@ -7,11 +7,15 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.0.1] - 2021-08-14
+
 - Don't require `repo-token` in scheduled and dispatched events. ([#396])
 - Change `svgo-config` default based on `svgo-version` value. ([#400], [#402])
 - Add `repo-token` where missing to the documentation. ([#401])
 
-## [2.0.0]
+## [2.0.0] - 2021-08-01
 
 ### Breaking changes
 

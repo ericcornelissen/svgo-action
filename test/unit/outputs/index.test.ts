@@ -1,5 +1,3 @@
-import type { OptimizeProjectData } from "../../../src/types";
-
 import out from "../../__common__/outputter.mock";
 
 import {
@@ -12,7 +10,7 @@ describe.each([
   { optimizedCount: 0, svgCount: 3 },
 ])("Outputs", ({ optimizedCount, svgCount }) => {
   const didOptimize = optimizedCount > 0;
-  const data: OptimizeProjectData = {
+  const data = {
     optimizedCount,
     svgCount,
   };
