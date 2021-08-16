@@ -42,33 +42,6 @@ interface PullsListFilesParams {
 
 type PullsListFilesResponse = GitFileInfo[];
 
-interface Octokit {
-  readonly rest: {
-    readonly pulls: {
-      listFiles(params: {
-        owner: string;
-        repo: string;
-        pull_number: number;
-        per_page?: number;
-        page?: number;
-      }): Promise<{
-        data: { filename: string; status: string; }[]
-      }>;
-    };
-    readonly repos: {
-      getCommit(params: {
-        owner: string;
-        repo: string;
-        ref: string;
-      }): Promise<{
-        data: {
-          files: { filename: string; status: string; }[];
-        }
-      }>;
-    };
-  };
-}
-
 export type {
   CommitsGetCommitParams,
   CommitsGetCommitResponse,
@@ -76,7 +49,6 @@ export type {
   CommitsListFilesResponse,
   GitFileInfo,
   GitHubClient,
-  Octokit,
   PullsListFilesParams,
   PullsListFilesResponse,
 };

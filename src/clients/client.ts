@@ -1,4 +1,4 @@
-import type { error } from "../types";
+import type { error, Octokit } from "../types";
 import type {
   CommitsGetCommitParams,
   CommitsGetCommitResponse,
@@ -8,7 +8,6 @@ import type {
   GitHubClient,
   PullsListFilesParams,
   PullsListFilesResponse,
-  Octokit,
 } from "./types";
 
 import errors from "../errors";
@@ -39,7 +38,7 @@ class CommitsClient {
   private async getCommit(
     params: CommitsGetCommitParams,
   ): Promise<[CommitsGetCommitResponse, error]> {
-    let result: CommitsGetCommitResponse = {} as CommitsGetCommitResponse;
+    let result: CommitsGetCommitResponse = { files: [] };
     let err: error = null;
 
     try {
@@ -48,7 +47,8 @@ class CommitsClient {
         repo: params.repo,
         ref: params.ref,
       });
-      result = response.data;
+
+      result = response.data as CommitsGetCommitResponse;
     } catch (thrownError) {
       err = errors.New(`could not get commit '${params.ref}' (${thrownError})`);
     }
@@ -80,7 +80,7 @@ class PullsClient {
   public async listFiles(
     params: PullsListFilesParams,
   ): Promise<[PullsListFilesResponse, error]> {
-    let result;
+    let result: PullsListFilesResponse = [];
     let err: error = null;
 
     try {
