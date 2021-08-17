@@ -48,6 +48,7 @@ describe("package inputs", () => {
     }
 
     test("not configured", async () => {
+      doMockIgnoreInput(() => { throw new Error(); });
 
       const [config, err] = inputs.New({ inp });
 
@@ -66,15 +67,6 @@ describe("package inputs", () => {
       expect(err).toBeNull();
       expect(config.ignoreGlob).toEqual(value);
     });
-
-    test("configured incorrectly", async () => {
-      doMockIgnoreInput(() => { throw new Error(); });
-
-      const [config, err] = inputs.New({ inp });
-
-      expect(err).not.toBeNull();
-      expect(config.ignoreGlob).toEqual(DEFAULT_IGNORE);
-    });
   });
 
   describe("::isDryRun", () => {
@@ -85,7 +77,7 @@ describe("package inputs", () => {
     }
 
     test("not configured", async () => {
-      doMockDryRunInput(() => DEFAULT_DRY_RUN);
+      doMockDryRunInput(() => { throw new Error(); });
 
       const [config, err] = inputs.New({ inp });
 
@@ -101,15 +93,6 @@ describe("package inputs", () => {
       expect(err).toBeNull();
       expect(config.isDryRun).toEqual(value);
     });
-
-    test("configured incorrectly", async () => {
-      doMockDryRunInput(() => { throw new Error(); });
-
-      const [config, err] = inputs.New({ inp });
-
-      expect(err).not.toBeNull();
-      expect(config.isDryRun).toEqual(true);
-    });
   });
 
   describe("::svgoConfigPath", () => {
@@ -120,12 +103,12 @@ describe("package inputs", () => {
     }
 
     test("not configured", async () => {
-      doMockSvgoConfigInput(() => DEFAULT_SVGO_CONFIG);
+      doMockSvgoConfigInput(() => { throw new Error(); });
 
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoConfigPath).toEqual(DEFAULT_SVGO_CONFIG);
+      expect(config.svgoConfigPath).toEqual("svgo.config.js");
     });
 
     test.each([
@@ -139,15 +122,6 @@ describe("package inputs", () => {
       expect(err).toBeNull();
       expect(config.svgoConfigPath).toEqual(value);
     });
-
-    test("configured incorrectly", async () => {
-      doMockSvgoConfigInput(() => { throw new Error(); });
-
-      const [config, err] = inputs.New({ inp });
-
-      expect(err).not.toBeNull();
-      expect(config.svgoConfigPath).toEqual("svgo.config.js");
-    });
   });
 
   describe("::svgoVersion", () => {
@@ -158,6 +132,8 @@ describe("package inputs", () => {
     }
 
     test("not configured", async () => {
+      doMockSvgoVersionInput(() => { throw new Error(); });
+
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
@@ -182,15 +158,6 @@ describe("package inputs", () => {
       "Hello world!",
     ])("configured to '%s' (invalid)", async (value) => {
       doMockSvgoVersionInput(() => value);
-
-      const [config, err] = inputs.New({ inp });
-
-      expect(err).not.toBeNull();
-      expect(config.svgoVersion).toEqual(DEFAULT_SVGO_VERSION);
-    });
-
-    test("configured incorrectly", async () => {
-      doMockSvgoVersionInput(() => { throw new Error(); });
 
       const [config, err] = inputs.New({ inp });
 
