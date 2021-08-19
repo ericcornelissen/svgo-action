@@ -40,6 +40,7 @@ describe("main.ts", () => {
   beforeEach(() => {
     core.info.mockClear();
     core.setFailed.mockClear();
+    core.warning.mockClear();
 
     clients.New.mockClear();
     fileSystems.New.mockClear();
@@ -66,22 +67,43 @@ describe("main.ts", () => {
     expect(optimize.Files).toHaveBeenCalledTimes(1);
     expect(outputs.setOutputValues).toHaveBeenCalledTimes(1);
     expect(svgo.New).toHaveBeenCalledTimes(1);
+
+    expect(core.warning).not.toHaveBeenCalled();
   });
 
-  test.each([
-    "push",
-    "pull_request",
-    "repository_dispatch",
-    "schedule",
-    "workflow_dispatch",
-  ])("logs events ('%s')", async (eventName) => {
-    helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
+  describe("logs", () => {
+    test.each([
+      "push",
+      "pull_request",
+      "repository_dispatch",
+      "schedule",
+      "workflow_dispatch",
+    ])("events ('%s')", async (eventName) => {
+      helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
 
-    await main({ core, github });
+      await main({ core, github });
 
-    expect(core.info).toHaveBeenCalledWith(
-      expect.stringContaining(`'${eventName}'`),
-    );
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`'${eventName}'`),
+      );
+    });
+
+    test.each([
+      1,
+      2,
+    ])("SVGO (major) version (`%s`)", async (_svgoVersion) => {
+      const svgoVersion = _svgoVersion as 1 | 2;
+
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign({ }, baseConfig, { svgoVersion });
+      inputs.New.mockReturnValueOnce([config, null]);
+
+      await main({ core, github });
+
+      expect(core.info).toHaveBeenCalledWith(
+        expect.stringContaining(`version ${svgoVersion}`),
+      );
+    });
   });
 
   describe("Dry mode", () => {
@@ -168,31 +190,62 @@ describe("main.ts", () => {
     expect(core.debug).toHaveBeenCalledWith(err);
   });
 
-  test("svgo configuration file read error", async () => {
-    const err = errors.New("read file error");
-    fileSystems.New.mockReturnValueOnce({
-      listFiles: jest.fn(),
-      readFile: jest.fn()
-        .mockResolvedValueOnce(["", err])
-        .mockName("fs.readFile"),
-      writeFile: jest.fn(),
+  describe("svgo configuration", () => {
+    test("read error only", async () => {
+      const err = errors.New("read file error");
+      fileSystems.New.mockReturnValueOnce({
+        listFiles: jest.fn(),
+        readFile: jest.fn()
+          .mockResolvedValueOnce(["", err])
+          .mockName("fs.readFile"),
+        writeFile: jest.fn(),
+      });
+
+      await main({ core, github });
+
+      expect(core.setFailed).not.toHaveBeenCalledWith();
+      expect(core.warning).toHaveBeenCalledWith(
+        expect.stringContaining("configuration file"),
+      );
     });
 
-    await main({ core, github });
+    test("parse error only", async () => {
+      const err = errors.New("parse file error");
 
-    expect(core.setFailed).not.toHaveBeenCalledWith();
-    expect(core.warning).toHaveBeenCalledWith(
-      expect.stringContaining("configuration file"),
-    );
-  });
+      fileSystems.New.mockReturnValueOnce({
+        listFiles: jest.fn(),
+        readFile: jest.fn()
+          .mockResolvedValueOnce(["", null])
+          .mockName("fs.readFile"),
+        writeFile: jest.fn(),
+      });
+      helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
 
-  test("svgo options parse error", async () => {
-    const err = errors.New("read file error");
-    helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
+      await main({ core, github });
 
-    await main({ core, github });
+      expect(core.setFailed).toHaveBeenCalledTimes(1);
+      expect(core.setFailed).toHaveBeenCalledWith(
+        expect.stringContaining("SVGO configuration"),
+      );
+    });
 
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
+    test("read error & parse error", async () => {
+      const parseErr = errors.New("parse file error");
+      const readErr = errors.New("read file error");
+
+      fileSystems.New.mockReturnValueOnce({
+        listFiles: jest.fn(),
+        readFile: jest.fn()
+          .mockResolvedValueOnce(["", readErr])
+          .mockName("fs.readFile"),
+        writeFile: jest.fn(),
+      });
+      helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, parseErr]);
+
+      await main({ core, github });
+
+      expect(core.setFailed).not.toHaveBeenCalled();
+    });
   });
 
   test("svgo creation error", async () => {
