@@ -9,8 +9,9 @@
   "scripts": {
     "prebuild": "node script/prebuild.js",
     "build": "ncc build src/index.ts -m -o lib",
-    "clean": "run-p clean:reports",
+    "clean": "run-p clean:reports clean:temp",
     "clean:reports": "rm -rf ./_reports",
+    "clean:temp": "rm -rf ./.cache ./.temp",
     "coverage": "npm run test -- --coverage",
     "coverage:unit": "npm run test:unit -- --coverage",
     "coverage:integration": "npm run test:integration -- --coverage",
@@ -24,7 +25,8 @@
     "postinstall": "is-ci || husky install script/hooks",
     "test": "jest",
     "test:unit": "jest test/unit",
-    "test:integration": "jest test/integration"
+    "test:integration": "jest test/integration",
+    "test:mutation": "stryker run stryker.config.js"
   },
   "repository": {
     "type": "git",
@@ -55,6 +57,8 @@
   "devDependencies": {
     "@commitlint/cli": "13.1.0",
     "@commitlint/config-conventional": "13.1.0",
+    "@stryker-mutator/core": "5.2.3",
+    "@stryker-mutator/typescript-checker": "5.2.3",
     "@types/jest": "26.0.24",
     "@types/jest-when": "2.7.3",
     "@types/js-yaml": "4.0.2",

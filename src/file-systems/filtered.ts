@@ -18,7 +18,7 @@ interface Params {
   readonly filters: Iterable<FileFilter>;
 }
 
-const errFileNotFound = errors.New("file not found");
+const errFileNotFound = errors.New("file not found (no access)");
 
 function asOneFilter(filters: Iterable<FileFilter>): FileFilter {
   return function(filepath: string): boolean {

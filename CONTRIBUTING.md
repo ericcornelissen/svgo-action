@@ -20,6 +20,7 @@ relevant sections of this document.
   - [Mocking](#mocking)
   - [Unit Tests](#unit-tests)
   - [Integration Tests](#integration-tests)
+  - [Mutation Testing](#mutation-testing)
 
 > :information_source: If you want to make a contribution to v1 of the Action,
 > please refer to the [Contributing Guidelines for v1].
@@ -130,11 +131,12 @@ The tests for _SVGO Action_ are split between unit and integration test. Various
 commands are available to run the tests, as shown in the overview below. You can
 run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test:unit`.
 
-| Scripts            | Modifier      | Description                         |
-| :----------------- | :------------ | :---------------------------------- |
-| `test`, `coverage` |               | Runs all tests                      |
-| `test`, `coverage` | `unit`        | Runs all and only unit tests        |
-| `test`, `coverage` | `integration` | Runs all and only integration tests |
+| Scripts            | Modifier      | Description                           |
+| :----------------- | :------------ | :------------------------------------ |
+| `test`, `coverage` |               | Runs all tests                        |
+| `test`, `coverage` | `unit`        | Runs all and only unit tests          |
+| `test`, `coverage` | `integration` | Runs all and only integration tests   |
+| `test`             | `mutation`    | Runs mutation tests on the unit tests |
 
 Whenever you use the `coverage` variant of a script, a coverage report over the
 entire source code is generated. The report is available in HTML format at
@@ -174,6 +176,31 @@ test suite aims to verify that different units work together correctly. As such,
 while an integration test should still focus on one thing, it is not necessary
 to mock anything. Exceptions being, e.g., file system operations.
 
+### Mutation Testing
+
+We employ [Mutation Testing] to improve the quality of unit tests. We use the
+mutation testing framework [StrykerJS]. By default the mutation tests run on all
+the source code using all the unit tests. After running the mutation tests, the
+mutation report is available in HTML format at `_reports/mutation/index.html`.
+
+You can change the mutation test configuration (in `stryker.config.js`) to focus
+on a subset of the source code or unit tests (we ask that you don't commit such
+changes). For example, to run mutation tests for a particular file you can
+change the Stryker configuration as follows.
+
+```diff
+  mutate: [
+-   "src/**/*.ts",
++   "src/path/to/file.ts",
+    "!src/**/*.d.ts",
+    "!src/**/__mocks__/**/*.ts",
+  ],
+  commandRunner: {
+-   command: "npm run test:unit -- --runInBand --bail",
++   command: "npm run test -- --runInBand --bail test/unit/path/to/file.test.ts",
+  },
+```
+
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines for v1]: https://github.com/ericcornelissen/svgo-action/blob/main-v1/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
@@ -182,5 +209,7 @@ to mock anything. Exceptions being, e.g., file system operations.
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
 [mocking]: https://stackoverflow.com/a/2666006
+[mutation testing]: https://en.wikipedia.org/wiki/Mutation_testing
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new/choose
 [sinon]: https://sinonjs.org/
+[strykerjs]: https://stryker-mutator.io/
