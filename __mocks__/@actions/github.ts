@@ -1,6 +1,13 @@
 const context = {
   eventName: "push",
-  payload: { },
+  payload: {
+    commits: [
+      { id: "commit-1" },
+    ],
+    pull_request: {
+      number: 42,
+    },
+  },
   repo: {
     owner: "pikachu",
     repo: "pokédex",
