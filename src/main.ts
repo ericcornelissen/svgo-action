@@ -60,7 +60,8 @@ async function main({
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [filters, err21] = await getFilters({ client, config, github });
+  const cfg = { ignoreGlobs: [config.ignoreGlob] };
+  const [filters, err21] = await getFilters({ client, config: cfg, github });
   if (err21 !== null) {
     core.debug(err21);
     return core.setFailed("Could not initialize filters");
