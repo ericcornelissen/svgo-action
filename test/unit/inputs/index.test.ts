@@ -34,7 +34,7 @@ describe("inputs/index.ts", () => {
         const [result, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.ignoreGlob).toEqual(configuredValue);
+        expect(result.ignoreGlobs).toEqual([configuredValue]);
       });
 
       test("can't get value", function () {

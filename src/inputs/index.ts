@@ -38,7 +38,7 @@ function New({ inp }: Params): [Config, error] {
 
   return [
     {
-      ignoreGlob,
+      ignoreGlobs: [ignoreGlob],
       isDryRun,
       svgoConfigPath,
       svgoVersion,
