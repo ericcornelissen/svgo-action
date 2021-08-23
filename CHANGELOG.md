@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update SVGO v2 to `v2.4.0`. ([#406])
 
 ## [2.0.1] - 2021-08-14
 
@@ -31,6 +31,10 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.6] - 2021-08-23
+
+- Update SVGO v2 to `v2.4.0`. ([#407])
 
 ## [1.3.5] - 2021-07-21
 
@@ -266,5 +270,7 @@ Versioning].
 [#400]: https://github.com/ericcornelissen/svgo-action/pull/400
 [#401]: https://github.com/ericcornelissen/svgo-action/pull/401
 [#402]: https://github.com/ericcornelissen/svgo-action/pull/402
+[#406]: https://github.com/ericcornelissen/svgo-action/pull/406
+[#407]: https://github.com/ericcornelissen/svgo-action/pull/407
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
