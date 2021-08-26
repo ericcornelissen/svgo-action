@@ -2,7 +2,7 @@ import type { error, Inputter } from "../types";
 import type { Config } from "./types";
 
 import {
-  DEFAULT_IGNORE_GLOB,
+  DEFAULT_IGNORE_GLOBS,
   DEFAULT_IS_DRY_RUN,
   DEFAULT_SVGO_V1_CONFIG_PATH,
   DEFAULT_SVGO_V2_CONFIG_PATH,
@@ -10,7 +10,7 @@ import {
 } from "../constants";
 import errors from "../errors";
 import {
-  getIgnoreGlob,
+  getIgnoreGlobs,
   getIsDryRun,
   getSvgoConfigPath,
   getSvgoVersion,
@@ -29,7 +29,7 @@ function getDefaultSvgoConfigPath(svgoVersion: number): string {
 }
 
 function New({ inp }: Params): [Config, error] {
-  const [ignoreGlob, err0] = getIgnoreGlob(inp, DEFAULT_IGNORE_GLOB);
+  const [ignoreGlobs, err0] = getIgnoreGlobs(inp, DEFAULT_IGNORE_GLOBS);
   const [isDryRun, err1] = getIsDryRun(inp, DEFAULT_IS_DRY_RUN);
   const [svgoVersion, err3] = getSvgoVersion(inp, DEFAULT_SVGO_VERSION);
 
@@ -38,7 +38,7 @@ function New({ inp }: Params): [Config, error] {
 
   return [
     {
-      ignoreGlobs: [ignoreGlob],
+      ignoreGlobs,
       isDryRun,
       svgoConfigPath,
       svgoVersion,

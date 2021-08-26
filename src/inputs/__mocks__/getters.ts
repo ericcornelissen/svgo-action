@@ -1,6 +1,6 @@
-const getIgnoreGlob = jest.fn()
+const getIgnoreGlobs = jest.fn()
   .mockReturnValue(["", null])
-  .mockName("getters.getIgnoreGlob");
+  .mockName("getters.getIgnoreGlobs");
 
 const getIsDryRun = jest.fn()
   .mockReturnValue([false, null])
@@ -15,7 +15,7 @@ const getSvgoVersion = jest.fn()
   .mockName("getters.getSvgoVersion");
 
 export {
-  getIgnoreGlob,
+  getIgnoreGlobs,
   getIsDryRun,
   getSvgoConfigPath,
   getSvgoVersion,
