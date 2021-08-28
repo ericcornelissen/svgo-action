@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add support for multiple ignore globs. ([#405])
 
 ## [2.0.1] - 2021-08-14
 
@@ -266,5 +266,6 @@ Versioning].
 [#400]: https://github.com/ericcornelissen/svgo-action/pull/400
 [#401]: https://github.com/ericcornelissen/svgo-action/pull/401
 [#402]: https://github.com/ericcornelissen/svgo-action/pull/402
+[#405]: https://github.com/ericcornelissen/svgo-action/pull/405
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
