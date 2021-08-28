@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.0.3] - 2021-08-28
+
 - Add support for multiple ignore globs. ([#405])
 - Update SVGO v2 to `v2.5.0`. ([#410])
 
