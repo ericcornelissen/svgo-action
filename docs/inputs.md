@@ -46,13 +46,13 @@ To enable dry runs:
 | -------- | ------------- |
 | `ignore` | `""`          |
 
-The `ignore` input allows you to specify SVGs that should be ignored by the
-Action. By default, no files are ignored. The value is interpreted as a [glob].
-Any file that matches the configured glob will **not** be optimized by the
-Action.
+The `ignore` input allows you to specify what SVGs should be ignored by the
+Action. By default, no files are ignored. The value is interpreted as a [glob],
+if there are multiple lines each line is interpreted as a [glob]. Any file that
+matches (any of) the configured glob(s) will **not** be optimized by the Action.
 
 > :information_source: Regardless of the value of this input, the Action will
-> only consider files with the `.svg` file extensions.
+> only consider files with the `.svg` file extension.
 
 ### Examples
 
@@ -74,6 +74,18 @@ To ignore all files in a specific folder and all its subfolders:
 - uses: ericcornelissen/svgo-action@v2
   with:
     ignore: not/optimized/**/
+```
+
+To use multiple ignore globs, use [YAML] multiline strings:
+
+```yaml
+# .github/workflows/optimize.yml
+
+- uses: ericcornelissen/svgo-action@v2
+  with:
+    ignore: |
+      folder1/*
+      folder2/**/
 ```
 
 ---
