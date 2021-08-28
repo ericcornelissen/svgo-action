@@ -10,6 +10,7 @@ import {
 import errors from "../errors";
 
 const GET_INPUT_OPTIONS = { required: true };
+const NEWLINE_EXPR = /\r?\n/;
 
 interface Params<T> {
   readonly inp: Inputter;
@@ -66,12 +67,13 @@ function safeGetNumericInput({
   return [result, null];
 }
 
-function getIgnoreGlob(
+function getIgnoreGlobs(
   inp: Inputter,
   defaultValue: string,
-): [string, error] {
+): [string[], error] {
   const inputName = INPUT_NAME_IGNORE;
-  return safeGetInput({ inp, inputName, defaultValue });
+  const [value, err] = safeGetInput({ inp, inputName, defaultValue });
+  return [value.split(NEWLINE_EXPR), err];
 }
 
 function getIsDryRun(
@@ -113,7 +115,7 @@ function getSvgoVersion(
 }
 
 export {
-  getIgnoreGlob,
+  getIgnoreGlobs,
   getIsDryRun,
   getSvgoConfigPath,
   getSvgoVersion,

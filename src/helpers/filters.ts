@@ -5,7 +5,7 @@ import { EVENT_PULL_REQUEST, EVENT_PUSH } from "../constants";
 import filters from "../filters";
 
 interface Config {
-  readonly ignoreGlob: string;
+  readonly ignoreGlobs: string[];
 }
 
 interface Params {
@@ -23,7 +23,7 @@ async function getFilters({
   const event = context.eventName;
 
   const result = [
-    filters.NewGlobFilter(config.ignoreGlob),
+    ...config.ignoreGlobs.map(filters.NewGlobFilter),
     filters.NewSvgsFilter(),
   ];
 

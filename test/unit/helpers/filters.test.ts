@@ -21,7 +21,7 @@ const filters = mocked(_filters);
 
 describe("helpers/filters.ts", () => {
   describe("::getFilters", () => {
-    const config = { ignoreGlob: "foo/**/bar" };
+    let config;
     let client;
 
     beforeAll(() => {
@@ -36,17 +36,58 @@ describe("helpers/filters.ts", () => {
       filters.NewPushedFilesFilter.mockClear();
     });
 
-    test("returns a glob filter", async () => {
-      github.context.eventName = "foobar";
+    beforeEach(() => {
+      config = {
+        ignoreGlobs: [],
+      };
+    });
 
-      const globFilter = jest.fn();
-      filters.NewGlobFilter.mockReturnValue(globFilter);
+    describe("Glob filter", () => {
+      beforeEach(() => {
+        github.context.eventName = "foobar";
+      });
 
-      const [result, err] = await getFilters({ client, config, github });
-      expect(err).toBeNull();
-      expect(result).toContain(globFilter);
+      test("zero globs", async () => {
+        config.ignoreGlobs = [];
 
-      expect(filters.NewGlobFilter).toHaveBeenCalledTimes(1);
+        const globFilter = jest.fn();
+        filters.NewGlobFilter.mockReturnValue(globFilter);
+
+        const [, err] = await getFilters({ client, config, github });
+        expect(err).toBeNull();
+        expect(filters.NewGlobFilter).toHaveBeenCalledTimes(0);
+      });
+
+      test("one glob", async () => {
+        config.ignoreGlobs = ["foobar/**"];
+
+        const globFilter = jest.fn();
+        filters.NewGlobFilter.mockReturnValue(globFilter);
+
+        const [result, err] = await getFilters({ client, config, github });
+        expect(err).toBeNull();
+        expect(result).toContain(globFilter);
+
+        expect(filters.NewGlobFilter).toHaveBeenCalledTimes(1);
+      });
+
+      test("multiple globs", async () => {
+        const glob1 = "foo/**";
+        const glob2 = "bar/**";
+        config.ignoreGlobs = [glob1, glob2];
+
+        const globFilter1 = jest.fn();
+        const globFilter2 = jest.fn();
+        filters.NewGlobFilter.mockReturnValueOnce(globFilter1);
+        filters.NewGlobFilter.mockReturnValueOnce(globFilter2);
+
+        const [result, err] = await getFilters({ client, config, github });
+        expect(err).toBeNull();
+        expect(result).toContain(globFilter1);
+        expect(result).toContain(globFilter2);
+
+        expect(filters.NewGlobFilter).toHaveBeenCalledTimes(2);
+      });
     });
 
     test("returns an SVGs filter", async () => {

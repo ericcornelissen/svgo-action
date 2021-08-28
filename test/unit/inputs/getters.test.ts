@@ -5,7 +5,7 @@ import inp from "../../__common__/inputter.mock";
 jest.mock("../../../src/errors");
 
 import {
-  getIgnoreGlob,
+  getIgnoreGlobs,
   getIsDryRun,
   getSvgoConfigPath,
   getSvgoVersion,
@@ -18,7 +18,7 @@ describe("inputs/getters.ts", () => {
     resetAllWhenMocks();
   });
 
-  describe("::getIgnoreGlob", () => {
+  describe("::getIgnoreGlobs", () => {
     const inputKey = "ignore";
 
     beforeEach(() => {
@@ -28,14 +28,33 @@ describe("inputs/getters.ts", () => {
     test.each([
       "foobar",
       "Hello world!",
-    ])("can get input ('%s')", (configuredValue) => {
+    ])("can get input, single line ('%s')", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValueOnce(configuredValue);
 
-      const [result, err] = getIgnoreGlob(inp, "foobar");
+      const [result, err] = getIgnoreGlobs(inp, "foobar");
       expect(err).toBeNull();
-      expect(result).toEqual(configuredValue);
+      expect(result).toEqual([configuredValue]);
+    });
+
+    test.each([
+      [
+        "foo\nbar",
+        ["foo", "bar"],
+      ],
+      [
+        "Hello\r\nworld!",
+        ["Hello", "world!"],
+      ],
+    ])("can get input, multi line (%#)", (configuredValues, expectedValues) => {
+      when(inp.getInput)
+        .calledWith(inputKey, expect.anything())
+        .mockReturnValueOnce(configuredValues);
+
+      const [result, err] = getIgnoreGlobs(inp, "foobar");
+      expect(err).toBeNull();
+      expect(result).toEqual(expectedValues);
     });
 
     test("can't get input", () => {
@@ -45,18 +64,18 @@ describe("inputs/getters.ts", () => {
         .calledWith(inputKey, expect.anything())
         .mockImplementationOnce(() => { throw new Error(""); });
 
-      const [result, err] = getIgnoreGlob(inp, defaultValue);
+      const [result, err] = getIgnoreGlobs(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result).toEqual(defaultValue);
+      expect(result).toEqual([defaultValue]);
     });
 
     test("gets the input once", () => {
-      getIgnoreGlob(inp, "foobar");
+      getIgnoreGlobs(inp, "foobar");
       expect(inp.getInput).toHaveBeenCalledTimes(1);
     });
 
     test("gets the input as being required", () => {
-      getIgnoreGlob(inp, "foobar");
+      getIgnoreGlobs(inp, "foobar");
       expect(inp.getInput).toHaveBeenCalledWith(
         expect.any(String),
         expectedGetInputOptions,

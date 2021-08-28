@@ -19,7 +19,7 @@ describe("inputs/index.ts", () => {
       expect(err).toBeNull();
       expect(result).toBeDefined();
 
-      expect(getters.getIgnoreGlob).toHaveBeenCalledTimes(1);
+      expect(getters.getIgnoreGlobs).toHaveBeenCalledTimes(1);
       expect(getters.getIsDryRun).toHaveBeenCalledTimes(1);
       expect(getters.getSvgoConfigPath).toHaveBeenCalledTimes(1);
       expect(getters.getSvgoVersion).toHaveBeenCalledTimes(1);
@@ -27,23 +27,20 @@ describe("inputs/index.ts", () => {
 
     describe("::ignoreGlob", () => {
       test("can get value", function () {
-        const configuredValue = "foobar";
+        const configuredValues = ["foobar"];
 
-        getters.getIgnoreGlob.mockReturnValueOnce([configuredValue, null]);
+        getters.getIgnoreGlobs.mockReturnValueOnce([configuredValues, null]);
 
         const [result, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.ignoreGlob).toEqual(configuredValue);
+        expect(result.ignoreGlobs).toEqual(configuredValues);
       });
 
       test("can't get value", function () {
         const errorMsg = "couldn't get ignoreGlob";
 
-        getters.getIgnoreGlob.mockReturnValueOnce([
-          "",
-          errors.New(errorMsg),
-        ]);
+        getters.getIgnoreGlobs.mockReturnValueOnce([[], errors.New(errorMsg)]);
 
         const [, err] = configs.New({ inp });
 
@@ -55,7 +52,7 @@ describe("inputs/index.ts", () => {
         const [, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(getters.getIgnoreGlob).toHaveBeenCalledWith(inp, "");
+        expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, "");
       });
     });
 
