@@ -3,6 +3,7 @@ module.exports = {
   testEnvironment: "node",
   cacheDirectory: "./.cache/jest",
   modulePathIgnorePatterns: [
+    "<rootDir>/.temp/.*",
     "<rootDir>/src/.*/__mocks__/.*",
   ],
 

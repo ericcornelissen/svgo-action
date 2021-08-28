@@ -123,8 +123,10 @@ describe("file-systems/filtered.ts", () => {
         negativeFilter.mockReturnValue(false);
       }
 
-      const [, err] = await fileSystem.readFile(file);
+      const [result, err] = await fileSystem.readFile(file);
       expect(err).not.toBeNull();
+      expect(err).toContain("no access");
+      expect(result).toEqual("");
     });
 
     test("read error", async () => {
@@ -166,6 +168,7 @@ describe("file-systems/filtered.ts", () => {
 
       const err = await fileSystem.writeFile(file, "foobar");
       expect(err).not.toBeNull();
+      expect(err).toContain("no access");
     });
 
     test("write error", async () => {

@@ -77,6 +77,7 @@ describe.each([
       const err = setOutputValues({ context, data, out });
 
       expect(err).not.toBeNull();
+      expect(err).toContain("unknown event");
     });
   });
 });

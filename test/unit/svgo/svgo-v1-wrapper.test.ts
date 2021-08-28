@@ -45,9 +45,10 @@ describe("svgo/svgo-v1-wrapper.ts", () => {
 
       const svgOptimizer = new SVGOptimizer();
 
-      const [, err] = await svgOptimizer.optimize(invalidSvg);
+      const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
       expect(err).toContain(errorMsg);
+      expect(result).toEqual("");
     });
   });
 });
