@@ -12,8 +12,6 @@ import {
 } from "../../../src/inputs/getters";
 
 describe("inputs/getters.ts", () => {
-  const expectedGetInputOptions = { required: true };
-
   beforeEach(() => {
     resetAllWhenMocks();
   });
@@ -31,7 +29,7 @@ describe("inputs/getters.ts", () => {
     ])("can get input, single line ('%s')", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockReturnValueOnce(configuredValue);
+        .mockReturnValue(configuredValue);
 
       const [result, err] = getIgnoreGlobs(inp, "foobar");
       expect(err).toBeNull();
@@ -50,7 +48,7 @@ describe("inputs/getters.ts", () => {
     ])("can get input, multi line (%#)", (configuredValues, expectedValues) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockReturnValueOnce(configuredValues);
+        .mockReturnValue(configuredValues);
 
       const [result, err] = getIgnoreGlobs(inp, "foobar");
       expect(err).toBeNull();
@@ -62,24 +60,11 @@ describe("inputs/getters.ts", () => {
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockImplementationOnce(() => { throw new Error(""); });
+        .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getIgnoreGlobs(inp, defaultValue);
       expect(err).toBeNull();
       expect(result).toEqual([defaultValue]);
-    });
-
-    test("gets the input once", () => {
-      getIgnoreGlobs(inp, "foobar");
-      expect(inp.getInput).toHaveBeenCalledTimes(1);
-    });
-
-    test("gets the input as being required", () => {
-      getIgnoreGlobs(inp, "foobar");
-      expect(inp.getInput).toHaveBeenCalledWith(
-        expect.any(String),
-        expectedGetInputOptions,
-      );
     });
   });
 
@@ -96,7 +81,7 @@ describe("inputs/getters.ts", () => {
     ])("can get input (`%p`)", (configuredValue) => {
       when(inp.getBooleanInput)
         .calledWith(inputKey, expect.anything())
-        .mockReturnValueOnce(configuredValue);
+        .mockReturnValue(configuredValue);
 
       const [result, err] = getIsDryRun(inp, !configuredValue);
       expect(err).toBeNull();
@@ -108,24 +93,12 @@ describe("inputs/getters.ts", () => {
 
       when(inp.getBooleanInput)
         .calledWith(inputKey, expect.anything())
-        .mockImplementationOnce(() => { throw new Error(""); });
+        .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getIsDryRun(inp, defaultValue);
-      expect(err).toBeNull();
-      expect(result).toEqual(defaultValue);
-    });
-
-    test("gets the input once", () => {
-      getIsDryRun(inp, false);
-      expect(inp.getBooleanInput).toHaveBeenCalledTimes(1);
-    });
-
-    test("gets the input as being required", () => {
-      getIsDryRun(inp, false);
-      expect(inp.getBooleanInput).toHaveBeenCalledWith(
-        expect.any(String),
-        expectedGetInputOptions,
-      );
+      expect(err).not.toBeNull();
+      expect(err).toContain("invalid dry-run value");
+      expect(result).toEqual(true);
     });
   });
 
@@ -142,7 +115,7 @@ describe("inputs/getters.ts", () => {
     ])("can get input ('%s')", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockReturnValueOnce(configuredValue);
+        .mockReturnValue(configuredValue);
 
       const [result, err] = getSvgoConfigPath(inp, "foo.bar");
       expect(err).toBeNull();
@@ -154,24 +127,11 @@ describe("inputs/getters.ts", () => {
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockImplementationOnce(() => { throw new Error(""); });
+        .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getSvgoConfigPath(inp, defaultValue);
       expect(err).toBeNull();
       expect(result).toEqual(defaultValue);
-    });
-
-    test("gets the input once", () => {
-      getSvgoConfigPath(inp, "foo.bar");
-      expect(inp.getInput).toHaveBeenCalledTimes(1);
-    });
-
-    test("gets the input as being required", () => {
-      getSvgoConfigPath(inp, "foo.bar");
-      expect(inp.getInput).toHaveBeenCalledWith(
-        expect.any(String),
-        expectedGetInputOptions,
-      );
     });
   });
 
@@ -188,7 +148,7 @@ describe("inputs/getters.ts", () => {
     ])("can get input, valid (`%d`)", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockReturnValueOnce(`${configuredValue}`);
+        .mockReturnValue(`${configuredValue}`);
 
       const [result, err] = getSvgoVersion(inp, configuredValue === 1 ? 2 : 1);
       expect(err).toBeNull();
@@ -196,14 +156,31 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
+      "0",
+      "3",
       "42",
+    ])("can get input, unsupported ('%s')", (configuredValue) => {
+      const defaultValue = 2;
+
+      when(inp.getInput)
+        .calledWith(inputKey, expect.anything())
+        .mockReturnValue(configuredValue);
+
+      const [result, err] = getSvgoVersion(inp, defaultValue);
+      expect(err).not.toBeNull();
+      expect(err).toContain("unsupported SVGO version");
+      expect(result).toEqual(defaultValue);
+    });
+
+    test.each([
       "foobar",
+      "Hello world",
     ])("can get input, invalid ('%s')", (configuredValue) => {
       const defaultValue = 2;
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockReturnValueOnce(configuredValue);
+        .mockReturnValue(configuredValue);
 
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).not.toBeNull();
@@ -216,24 +193,11 @@ describe("inputs/getters.ts", () => {
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
-        .mockImplementationOnce(() => { throw new Error(""); });
+        .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
       expect(result).toEqual(defaultValue);
-    });
-
-    test("gets the input once", () => {
-      getSvgoVersion(inp, 2);
-      expect(inp.getInput).toHaveBeenCalledTimes(1);
-    });
-
-    test("gets the input as being required", () => {
-      getSvgoVersion(inp, 2);
-      expect(inp.getInput).toHaveBeenCalledWith(
-        expect.any(String),
-        expectedGetInputOptions,
-      );
     });
   });
 });
