@@ -19,12 +19,12 @@ const getOctokit = jest.fn()
     rest: {
       repos: {
         getCommit: jest.fn()
-          .mockReturnValue({ })
+          .mockReturnValue({ data: { files: [] } })
           .mockName("Octokit.rest.repos.getCommit"),
       },
       pulls: {
         listFiles: jest.fn()
-          .mockReturnValue([])
+          .mockReturnValue({ data: [] })
           .mockName("Octokit.rest.pulls.listFiles"),
       },
     },
