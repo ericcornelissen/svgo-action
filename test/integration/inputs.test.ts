@@ -71,6 +71,9 @@ describe("package inputs", () => {
 
   describe("::isDryRun", () => {
     function doMockDryRunInput(fn: () => boolean): void {
+      when(inp.getInput)
+        .calledWith(DRY_RUN, expect.anything())
+        .mockImplementation(() => `${fn()}`);
       when(inp.getBooleanInput)
         .calledWith(DRY_RUN, expect.anything())
         .mockImplementation(fn);
