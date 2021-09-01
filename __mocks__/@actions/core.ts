@@ -7,12 +7,12 @@ const defaultInputs = {
 };
 
 function simulateGetInput(key: string) {
-  const inputObject = defaultInputs[key]; // eslint-disable-line security/detect-object-injection
-  if (inputObject === undefined) {
+  const inputValue = defaultInputs[key]; // eslint-disable-line security/detect-object-injection
+  if (inputValue === undefined) {
     throw new Error(`unknown input ${key}`);
   }
 
-  return inputObject.default;
+  return inputValue;
 }
 
 const debug = jest.fn()

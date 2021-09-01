@@ -72,7 +72,7 @@ describe("package helpers", () => {
 
     beforeEach(() => {
       config = {
-        ignoreGlob: "",
+        ignoreGlobs: [],
       };
     });
 
@@ -116,7 +116,7 @@ describe("package helpers", () => {
       EVENT_WORKFLOW_DISPATCH,
     ])("filters out ignored files ('%s')", async (eventName) => {
       github.context.eventName = eventName;
-      config.ignoreGlob = "foo/*";
+      config.ignoreGlobs = ["foo/*"];
 
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
