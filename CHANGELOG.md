@@ -7,7 +7,12 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Fix bug when the `dry-run` value is invalid. ([#413])
+
+## [2.0.3] - 2021-08-28
+
+- Add support for multiple ignore globs. ([#405])
+- Update SVGO v2 to `v2.5.0`. ([#410])
 
 ## [2.0.2] - 2021-08-23
 
@@ -274,7 +279,10 @@ Versioning].
 [#400]: https://github.com/ericcornelissen/svgo-action/pull/400
 [#401]: https://github.com/ericcornelissen/svgo-action/pull/401
 [#402]: https://github.com/ericcornelissen/svgo-action/pull/402
+[#405]: https://github.com/ericcornelissen/svgo-action/pull/405
 [#406]: https://github.com/ericcornelissen/svgo-action/pull/406
 [#407]: https://github.com/ericcornelissen/svgo-action/pull/407
+[#410]: https://github.com/ericcornelissen/svgo-action/pull/410
+[#413]: https://github.com/ericcornelissen/svgo-action/pull/413
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

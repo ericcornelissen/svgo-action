@@ -40,7 +40,7 @@ describe("package inputs", () => {
       .mockReturnValue(`${DEFAULT_SVGO_VERSION}`);
   });
 
-  describe("::ignoreGlob", () => {
+  describe("::ignoreGlobs", () => {
     function doMockIgnoreInput(fn: () => string): void {
       when(inp.getInput)
         .calledWith(IGNORE, expect.anything())
@@ -53,7 +53,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.ignoreGlob).toEqual(DEFAULT_IGNORE);
+      expect(config.ignoreGlobs).toEqual([DEFAULT_IGNORE]);
     });
 
     test.each([
@@ -65,7 +65,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.ignoreGlob).toEqual(value);
+      expect(config.ignoreGlobs).toEqual([value]);
     });
   });
 

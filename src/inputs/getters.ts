@@ -1,4 +1,4 @@
-import type { error, Inputter } from "../types";
+import type { error, Inputter, InputterOptions } from "../types";
 import type { SupportedSvgoVersions } from "../svgo";
 
 import {
@@ -9,7 +9,12 @@ import {
 } from "../constants";
 import errors from "../errors";
 
-const GET_INPUT_OPTIONS = { required: true };
+const NEWLINE_EXPR = /\r?\n/;
+
+interface InputValue<T> {
+  readonly value: T;
+  readonly valid: boolean;
+}
 
 interface Params<T> {
   readonly inp: Inputter;
@@ -17,61 +22,91 @@ interface Params<T> {
   readonly defaultValue: T;
 }
 
-function safeGetInput({
+type GetInput<T> = (name: string, options: InputterOptions) => T;
+
+const INPUT_OPTIONS_REQUIRED = { required: true };
+const INPUT_OPTIONS_NOT_REQUIRED = { required: false };
+
+function isInputProvided({
   inp,
   inputName,
-  defaultValue,
-}: Params<string>): [string, error] {
-  let result;
-
+}: {
+  inp: Inputter;
+  inputName: string;
+}): boolean {
   try {
-    result = inp.getInput(inputName, GET_INPUT_OPTIONS);
+    inp.getInput(inputName, INPUT_OPTIONS_REQUIRED);
   } catch (_) {
-    result = defaultValue;
+    return false;
   }
 
-  return [result, null];
+  return true;
 }
 
-function safeGetBooleanInput({
+function isInputValid({
+  getInput,
+  inputName,
+}: {
+  getInput: (inputName: string, options: { required: boolean }) => void;
+  inputName: string;
+}): boolean {
+  let valid = true;
+  try {
+    getInput(inputName, INPUT_OPTIONS_NOT_REQUIRED);
+  } catch(_) {
+    valid = false;
+  }
+
+  return valid;
+}
+
+function safeGetInput<T>({
   inp,
   inputName,
+  getInput,
   defaultValue,
-}: Params<boolean>): [boolean, error] {
-  let result;
-
-  try {
-    result = inp.getBooleanInput(inputName, GET_INPUT_OPTIONS);
-  } catch (_) {
-    result = defaultValue;
+}: Params<T> & { getInput: GetInput<T> }): InputValue<T> {
+  const provided = isInputProvided({ inp, inputName });
+  if (!provided) {
+    return { valid: true, value: defaultValue };
   }
 
-  return [result, null];
-}
-
-function safeGetNumericInput({
-  inp,
-  inputName,
-  defaultValue,
-}: Params<number>): [number, error] {
-  let result;
-
-  try {
-    const _result = inp.getInput(inputName, GET_INPUT_OPTIONS);
-    result = parseInt(_result, 10);
-  } catch (_) {
-    result = defaultValue;
+  const valid = isInputValid({ getInput, inputName });
+  if (!valid) {
+    return { valid, value: defaultValue };
   }
 
-  return [result, null];
+  const value = getInput(inputName, INPUT_OPTIONS_NOT_REQUIRED);
+  return { valid, value };
 }
 
-function getIgnoreGlob(
+function getBooleanInput(params: Params<boolean>): InputValue<boolean> {
+  return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
+}
+
+function getStringInput(params: Params<string>): InputValue<string> {
+  return safeGetInput({ ...params, getInput: params.inp.getInput });
+}
+
+function getNumericInput(params: Params<number>): InputValue<number> {
+  return safeGetInput({
+    ...params,
+    getInput: (inputName: string, options: InputterOptions) => {
+      const resultStr = params.inp.getInput(inputName, options);
+      const result = parseInt(resultStr, 10);
+      if (isNaN(result)) throw new TypeError();
+      return result;
+    },
+  });
+}
+
+function getIgnoreGlobs(
   inp: Inputter,
   defaultValue: string,
-): [string, error] {
+): [string[], error] {
   const inputName = INPUT_NAME_IGNORE;
-  return safeGetInput({ inp, inputName, defaultValue });
+  const input = getStringInput({ inp, inputName, defaultValue });
+  return [input.value.split(NEWLINE_EXPR), null];
 }
 
 function getIsDryRun(
@@ -79,7 +114,12 @@ function getIsDryRun(
   defaultValue: boolean,
 ): [boolean, error] {
   const inputName = INPUT_NAME_DRY_RUN;
-  return safeGetBooleanInput({ inp, inputName, defaultValue });
+  const input = getBooleanInput({ inp, inputName, defaultValue });
+  if (!input.valid) {
+    return [true, errors.New("invalid dry-run value")];
+  }
+
+  return [input.value, null];
 }
 
 function getSvgoConfigPath(
@@ -87,7 +127,8 @@ function getSvgoConfigPath(
   defaultValue: string,
 ): [string, error] {
   const inputName = INPUT_NAME_SVGO_CONFIG;
-  return safeGetInput({ inp, inputName, defaultValue });
+  const input = getStringInput({ inp, inputName, defaultValue });
+  return [input.value, null];
 }
 
 function getSvgoVersion(
@@ -95,25 +136,24 @@ function getSvgoVersion(
   defaultValue: SupportedSvgoVersions,
 ): [SupportedSvgoVersions, error] {
   const inputName = INPUT_NAME_SVGO_VERSION;
+  const input = getNumericInput({ inp, inputName, defaultValue });
+  if (!input.valid) {
+    return [defaultValue, errors.New("invalid SVGO version value")];
+  }
 
-  const [svgoVersion, err] = safeGetNumericInput({
-    inp,
-    inputName,
-    defaultValue,
-  });
-
+  const svgoVersion = input.value;
   if (svgoVersion !== 1 && svgoVersion !== 2) {
     return [
       defaultValue,
-      errors.New(`invalid SVGO version '${svgoVersion}'`),
+      errors.New(`unsupported SVGO version '${svgoVersion}'`),
     ];
   }
 
-  return [svgoVersion, err];
+  return [svgoVersion, null];
 }
 
 export {
-  getIgnoreGlob,
+  getIgnoreGlobs,
   getIsDryRun,
   getSvgoConfigPath,
   getSvgoVersion,
