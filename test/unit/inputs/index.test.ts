@@ -26,7 +26,7 @@ describe("inputs/index.ts", () => {
     });
 
     describe("::ignoreGlob", () => {
-      test("can get value", function () {
+      test("can get value", () => {
         const configuredValues = ["foobar"];
 
         getters.getIgnoreGlobs.mockReturnValueOnce([configuredValues, null]);
@@ -37,7 +37,7 @@ describe("inputs/index.ts", () => {
         expect(result.ignoreGlobs).toEqual(configuredValues);
       });
 
-      test("can't get value", function () {
+      test("can't get value", () => {
         const errorMsg = "couldn't get ignoreGlob";
 
         getters.getIgnoreGlobs.mockReturnValueOnce([[], errors.New(errorMsg)]);
@@ -48,7 +48,7 @@ describe("inputs/index.ts", () => {
         expect(err).toContain(errorMsg);
       });
 
-      test("default value", function () {
+      test("default value", () => {
         const [, err] = configs.New({ inp });
 
         expect(err).toBeNull();
@@ -57,7 +57,7 @@ describe("inputs/index.ts", () => {
     });
 
     describe("::isDryRun", () => {
-      test("can get value", function () {
+      test("can get value", () => {
         const configuredValue = false;
 
         getters.getIsDryRun.mockReturnValueOnce([configuredValue, null]);
@@ -68,7 +68,7 @@ describe("inputs/index.ts", () => {
         expect(result.isDryRun).toEqual(configuredValue);
       });
 
-      test("can't get value", function () {
+      test("can't get value", () => {
         const errorMsg = "couldn't get dry-run";
 
         getters.getIsDryRun.mockReturnValueOnce([
@@ -82,7 +82,7 @@ describe("inputs/index.ts", () => {
         expect(err).toContain(errorMsg);
       });
 
-      test("default value", function () {
+      test("default value", () => {
         const [, err] = configs.New({ inp });
 
         expect(err).toBeNull();
@@ -95,7 +95,7 @@ describe("inputs/index.ts", () => {
         getters.getSvgoConfigPath.mockClear();
       });
 
-      test("can get value", function () {
+      test("can get value", () => {
         const configuredValue = "foobar";
 
         getters.getSvgoConfigPath.mockReturnValueOnce([
@@ -109,7 +109,7 @@ describe("inputs/index.ts", () => {
         expect(result.svgoConfigPath).toEqual(configuredValue);
       });
 
-      test("can't get value", function () {
+      test("can't get value", () => {
         const errorMsg = "couldn't get svgo-config";
 
         getters.getSvgoConfigPath.mockReturnValueOnce([
@@ -123,7 +123,7 @@ describe("inputs/index.ts", () => {
         expect(err).toContain(errorMsg);
       });
 
-      test("default value for svgo-version 1", function () {
+      test("default value for svgo-version 1", () => {
         getters.getSvgoVersion.mockReturnValueOnce([1, null]);
 
         const [, err] = configs.New({ inp });
@@ -135,7 +135,7 @@ describe("inputs/index.ts", () => {
         );
       });
 
-      test("default value for svgo-version 2", function () {
+      test("default value for svgo-version 2", () => {
         getters.getSvgoVersion.mockReturnValueOnce([2, null]);
 
         const [, err] = configs.New({ inp });
@@ -149,7 +149,7 @@ describe("inputs/index.ts", () => {
     });
 
     describe("::svgoVersion", () => {
-      test("can get value", function () {
+      test("can get value", () => {
         const configuredValue =  2;
 
         getters.getSvgoVersion.mockReturnValueOnce([
@@ -163,7 +163,7 @@ describe("inputs/index.ts", () => {
         expect(result.svgoVersion).toEqual(configuredValue);
       });
 
-      test("can't get value", function () {
+      test("can't get value", () => {
         const errorMsg = "couldn't get svgo-version";
 
         getters.getSvgoVersion.mockReturnValueOnce([
@@ -177,7 +177,7 @@ describe("inputs/index.ts", () => {
         expect(err).toContain(errorMsg);
       });
 
-      test("default value", function () {
+      test("default value", () => {
         const [, err] = configs.New({ inp });
 
         expect(err).toBeNull();
