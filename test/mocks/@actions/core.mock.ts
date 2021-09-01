@@ -33,6 +33,8 @@ export const getInput = jest.fn()
 
 export const info = jest.fn().mockName("core.info");
 
+export const notice = jest.fn().mockName("core.notice");
+
 export const setFailed = jest.fn().mockName("core.setFailed");
 
 export const setOutput = jest.fn().mockName("core.setOutput");
