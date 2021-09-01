@@ -100,4 +100,8 @@ export default async function main(): Promise<void> {
   run(client, config, svgo);
 }
 
+core.notice(`General support for SVGO Action v1 ends on 2022-05-31 and security
+updates will be supported until 2022-08-31. Please upgrade to SVGO Action v2 as
+soon as possible.`);
+
 main();
