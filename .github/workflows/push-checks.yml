@@ -88,7 +88,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./_reports/coverage/lcov.info
-          # flags: ${{ matrix.type }}
+          flags: ${{ matrix.type }}
   test-e2e:
     name: Test - end-to-end
     needs: [test]

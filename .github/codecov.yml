@@ -10,11 +10,19 @@ coverage:
           - src/
 
 comment:
-  layout: "diff, files"
+  layout: "diff, flags, files"
   behavior: default  # update, if exists. Otherwise post new.
   require_changes: true  # only post the comment if coverage changes
   require_base: no
   require_head: yes
+
+flags:
+  unit:
+    paths:
+      - src/**/*.ts
+  integration:
+    paths:
+      - src/**/*.ts
 
 ignore:
   - "lib/*"
