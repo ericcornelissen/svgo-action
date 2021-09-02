@@ -53,7 +53,7 @@ jobs:
       matrix:
         type:
           - unit
-          # - integration
+          - integration
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
