@@ -8,6 +8,8 @@ node_modules/
 # reports and caches
 .cache/
 _reports/
+.temp/
+*.log
 
 # TypeScript generated files
 lib/**/*
