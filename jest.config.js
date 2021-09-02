@@ -14,7 +14,7 @@ module.exports = {
   coveragePathIgnorePatterns: [
     "lib",
     "node_modules",
-    "test/mocks",
+    "test",
   ],
   coverageThreshold: {
     global: {
