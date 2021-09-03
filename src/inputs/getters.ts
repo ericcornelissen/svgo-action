@@ -9,8 +9,6 @@ import {
 } from "../constants";
 import errors from "../errors";
 
-const NEWLINE_EXPR = /\r?\n/;
-
 interface InputValue<T> {
   readonly value: T;
   readonly valid: boolean;
@@ -84,8 +82,8 @@ function getBooleanInput(params: Params<boolean>): InputValue<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getStringInput(params: Params<string>): InputValue<string> {
-  return safeGetInput({ ...params, getInput: params.inp.getInput });
+function getMultilineInput(params: Params<string[]>): InputValue<string[]> {
+  return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
 }
 
 function getNumericInput(params: Params<number>): InputValue<number> {
@@ -100,13 +98,18 @@ function getNumericInput(params: Params<number>): InputValue<number> {
   });
 }
 
+function getStringInput(params: Params<string>): InputValue<string> {
+  return safeGetInput({ ...params, getInput: params.inp.getInput });
+}
+
 function getIgnoreGlobs(
   inp: Inputter,
-  defaultValue: string,
+  _defaultValue: string,
 ): [string[], error] {
+  const defaultValue = [_defaultValue];
   const inputName = INPUT_NAME_IGNORE;
-  const input = getStringInput({ inp, inputName, defaultValue });
-  return [input.value.split(NEWLINE_EXPR), null];
+  const input = getMultilineInput({ inp, inputName, defaultValue });
+  return [input.value, null];
 }
 
 function getIsDryRun(

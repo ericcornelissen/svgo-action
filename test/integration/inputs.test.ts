@@ -10,7 +10,7 @@ describe("package inputs", () => {
   const SVGO_CONFIG = "svgo-config";
   const SVGO_VERSION = "svgo-version";
 
-  const DEFAULT_IGNORE = "";
+  const DEFAULT_IGNORE = [""];
   const DEFAULT_DRY_RUN = false;
   const DEFAULT_SVGO_CONFIG = "svgo.config.js";
   const DEFAULT_SVGO_VERSION = 2;
@@ -23,7 +23,7 @@ describe("package inputs", () => {
   });
 
   beforeEach(() => {
-    when(inp.getInput)
+    when(inp.getMultilineInput)
       .calledWith(IGNORE, expect.anything())
       .mockReturnValue(DEFAULT_IGNORE);
 
@@ -41,8 +41,8 @@ describe("package inputs", () => {
   });
 
   describe("::ignoreGlobs", () => {
-    function doMockIgnoreInput(fn: () => string): void {
-      when(inp.getInput)
+    function doMockIgnoreInput(fn: () => string[]): void {
+      when(inp.getMultilineInput)
         .calledWith(IGNORE, expect.anything())
         .mockImplementation(fn);
     }
@@ -53,14 +53,14 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.ignoreGlobs).toEqual([DEFAULT_IGNORE]);
+      expect(config.ignoreGlobs).toEqual(DEFAULT_IGNORE);
     });
 
     test.each([
       "foo",
       "bar",
     ])("configured to '%s'", async (value) => {
-      doMockIgnoreInput(() => value);
+      doMockIgnoreInput(() => [value]);
 
       const [config, err] = inputs.New({ inp });
 
