@@ -9,6 +9,7 @@ node_modules/
 .cache/
 .temp/
 _reports/
+*.log
 
 # any generated files in lib/ that are not needed
 lib/**/*
