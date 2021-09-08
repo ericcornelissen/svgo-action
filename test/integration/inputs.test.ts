@@ -10,7 +10,7 @@ describe("package inputs", () => {
   const SVGO_CONFIG = "svgo-config";
   const SVGO_VERSION = "svgo-version";
 
-  const DEFAULT_IGNORE = [""];
+  const DEFAULT_IGNORE = [];
   const DEFAULT_DRY_RUN = false;
   const DEFAULT_SVGO_CONFIG = "svgo.config.js";
   const DEFAULT_SVGO_VERSION = 2;

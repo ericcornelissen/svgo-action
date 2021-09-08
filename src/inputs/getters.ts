@@ -104,9 +104,8 @@ function getStringInput(params: Params<string>): InputValue<string> {
 
 function getIgnoreGlobs(
   inp: Inputter,
-  _defaultValue: string,
+  defaultValue: string[],
 ): [string[], error] {
-  const defaultValue = [_defaultValue];
   const inputName = INPUT_NAME_IGNORE;
   const input = getMultilineInput({ inp, inputName, defaultValue });
   return [input.value, null];

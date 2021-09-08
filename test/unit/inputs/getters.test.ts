@@ -31,7 +31,7 @@ describe("inputs/getters.ts", () => {
         .calledWith(inputKey, expect.anything())
         .mockReturnValue([configuredValue]);
 
-      const [result, err] = getIgnoreGlobs(inp, "foobar");
+      const [result, err] = getIgnoreGlobs(inp, []);
       expect(err).toBeNull();
       expect(result).toEqual([configuredValue]);
     });
@@ -44,13 +44,13 @@ describe("inputs/getters.ts", () => {
         .calledWith(inputKey, expect.anything())
         .mockReturnValue(configuredValues);
 
-      const [result, err] = getIgnoreGlobs(inp, "foobar");
+      const [result, err] = getIgnoreGlobs(inp, []);
       expect(err).toBeNull();
       expect(result).toEqual(configuredValues);
     });
 
     test("can't get input", () => {
-      const defaultValue = "";
+      const defaultValue = [];
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
@@ -58,7 +58,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getIgnoreGlobs(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result).toEqual([defaultValue]);
+      expect(result).toEqual(defaultValue);
     });
   });
 
