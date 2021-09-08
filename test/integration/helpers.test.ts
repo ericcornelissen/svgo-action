@@ -1,3 +1,5 @@
+import type { Octokit } from "../../src/types";
+
 import { mocked } from "ts-jest/utils";
 
 import inp from "../__common__/inputter.mock";
@@ -65,7 +67,7 @@ describe("package helpers", () => {
               }),
           },
         },
-      } as any);
+      } as unknown as Octokit);
 
       [client] = clients.New({ github, inp });
     });
