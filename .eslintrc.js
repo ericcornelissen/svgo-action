@@ -64,6 +64,7 @@ module.exports = {
 
     // @typescript-eslint
     // https://github.com/typescript-eslint/typescript-eslint#readme
+    "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-unused-vars": ["error", {
       argsIgnorePattern: "_+",
     }],
