@@ -52,7 +52,7 @@ describe("inputs/index.ts", () => {
         const [, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, "");
+        expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, []);
       });
     });
 

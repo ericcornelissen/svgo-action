@@ -36,8 +36,9 @@ interface GitHub {
 
 // Type representing an object from which the Action inputs can be obtained.
 interface Inputter {
-  getInput(name: string, options: InputterOptions): string;
   getBooleanInput(name: string, options: InputterOptions): boolean;
+  getInput(name: string, options: InputterOptions): string;
+  getMultilineInput(name: string, options: InputterOptions): string[];
 }
 
 // Type representing the options for the `Inputter` interface.
