@@ -91,7 +91,7 @@ jobs:
       with:
         commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
     - name: Comment on Pull Request
-      uses: thollander/actions-comment-pull-request@1.0.3
+      uses: thollander/actions-comment-pull-request@v1
       if: ${{steps.svgo.outputs.DID_OPTIMIZE && github.event_name == 'pull_request'}}
       with:
         GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
