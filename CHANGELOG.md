@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Fix bug when the `dry-run` value is invalid. ([#413])
+- Improve multiline support for ignore globs. ([#420])
 
 ## [2.0.3] - 2021-08-28
 
@@ -284,5 +285,6 @@ Versioning].
 [#407]: https://github.com/ericcornelissen/svgo-action/pull/407
 [#410]: https://github.com/ericcornelissen/svgo-action/pull/410
 [#413]: https://github.com/ericcornelissen/svgo-action/pull/413
+[#420]: https://github.com/ericcornelissen/svgo-action/pull/420
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
