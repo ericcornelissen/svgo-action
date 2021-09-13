@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.8] - 2021-09-13
+
 - Update SVGO v2 to `v2.6.0`. ([#426])
 
 ## [1.3.7] - 2021-08-30
