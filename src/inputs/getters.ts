@@ -10,6 +10,7 @@ import {
 import errors from "../errors";
 
 interface InputValue<T> {
+  readonly provided: boolean;
   readonly value: T;
   readonly valid: boolean;
 }
@@ -66,16 +67,16 @@ function safeGetInput<T>({
 }: Params<T> & { getInput: GetInput<T> }): InputValue<T> {
   const provided = isInputProvided({ inp, inputName });
   if (!provided) {
-    return { valid: true, value: defaultValue };
+    return { provided, valid: true, value: defaultValue };
   }
 
   const valid = isInputValid({ getInput, inputName });
   if (!valid) {
-    return { valid, value: defaultValue };
+    return { provided, valid, value: defaultValue };
   }
 
   const value = getInput(inputName, INPUT_OPTIONS_NOT_REQUIRED);
-  return { valid, value };
+  return { provided, valid, value };
 }
 
 function getBooleanInput(params: Params<boolean>): InputValue<boolean> {
