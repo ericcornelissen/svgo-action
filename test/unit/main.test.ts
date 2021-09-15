@@ -250,7 +250,9 @@ describe("main.ts", () => {
 
   test("svgo creation error", async () => {
     const [config] = inputs.New({ inp: core });
-    const [optimizer] = svgo.New({ config });
+    const [optimizer] = svgo.New({
+      config: { svgoVersion: config.svgoVersion.value },
+    });
 
     const err = errors.New("SVGO error");
     svgo.New.mockReturnValueOnce([optimizer, err]);
@@ -280,8 +282,14 @@ describe("main.ts", () => {
   test("optimize error", async () => {
     const [config] = inputs.New({ inp: core });
     const fs = fileSystems.New({ filters: [] });
-    const [optimizer] = svgo.New({ config });
-    const [data] = await optimize.Files({ config, fs, optimizer });
+    const [optimizer] = svgo.New({
+      config: { svgoVersion: config.svgoVersion.value },
+    });
+    const [data] = await optimize.Files({
+      config: { isDryRun: config.isDryRun.value },
+      fs,
+      optimizer,
+    });
 
     const err = errors.New("Optimization error");
     optimize.Files.mockResolvedValueOnce([data, err]);

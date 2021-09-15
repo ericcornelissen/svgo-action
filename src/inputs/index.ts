@@ -38,10 +38,10 @@ function New({ inp }: Params): [Config, error] {
 
   return [
     {
-      ignoreGlobs: ignoreGlobs.value,
-      isDryRun: isDryRun.value,
-      svgoConfigPath: svgoConfigPath.value,
-      svgoVersion: svgoVersion.value,
+      ignoreGlobs,
+      isDryRun,
+      svgoConfigPath,
+      svgoVersion,
     },
     errors.Combine(err0, err1, err2, err3),
   ];

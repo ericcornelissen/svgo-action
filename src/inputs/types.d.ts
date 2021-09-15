@@ -1,10 +1,10 @@
 import type { SupportedSvgoVersions } from "../svgo";
 
 interface Config {
-  readonly ignoreGlobs: string[];
-  readonly isDryRun: boolean;
-  readonly svgoConfigPath: string;
-  readonly svgoVersion: SupportedSvgoVersions;
+  readonly ignoreGlobs: InputValue<string[]>;
+  readonly isDryRun: InputValue<boolean>;
+  readonly svgoConfigPath: InputValue<string>;
+  readonly svgoVersion: InputValue<SupportedSvgoVersions>;
 }
 
 interface InputValue<T> {

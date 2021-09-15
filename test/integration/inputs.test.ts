@@ -53,7 +53,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.ignoreGlobs).toEqual(DEFAULT_IGNORE);
+      expect(config.ignoreGlobs.value).toEqual(DEFAULT_IGNORE);
     });
 
     test.each([
@@ -65,7 +65,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.ignoreGlobs).toEqual([value]);
+      expect(config.ignoreGlobs.value).toEqual([value]);
     });
   });
 
@@ -85,7 +85,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.isDryRun).toEqual(DEFAULT_DRY_RUN);
+      expect(config.isDryRun.value).toEqual(DEFAULT_DRY_RUN);
     });
 
     test.each([true, false])("configured to `%p`", async (value) => {
@@ -94,7 +94,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.isDryRun).toEqual(value);
+      expect(config.isDryRun.value).toEqual(value);
     });
   });
 
@@ -111,7 +111,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoConfigPath).toEqual("svgo.config.js");
+      expect(config.svgoConfigPath.value).toEqual("svgo.config.js");
     });
 
     test.each([
@@ -123,7 +123,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoConfigPath).toEqual(value);
+      expect(config.svgoConfigPath.value).toEqual(value);
     });
   });
 
@@ -140,7 +140,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoVersion).toEqual(DEFAULT_SVGO_VERSION);
+      expect(config.svgoVersion.value).toEqual(DEFAULT_SVGO_VERSION);
     });
 
     test.each([
@@ -152,7 +152,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoVersion).toEqual(value);
+      expect(config.svgoVersion.value).toEqual(value);
     });
 
     test.each([
@@ -165,7 +165,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).not.toBeNull();
-      expect(config.svgoVersion).toEqual(DEFAULT_SVGO_VERSION);
+      expect(config.svgoVersion.value).toEqual(DEFAULT_SVGO_VERSION);
     });
   });
 });
