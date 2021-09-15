@@ -7,6 +7,12 @@ interface Config {
   readonly svgoVersion: SupportedSvgoVersions;
 }
 
+interface InputValue<T> {
+  readonly provided: boolean;
+  readonly value: T;
+}
+
 export type {
   Config,
+  InputValue,
 };

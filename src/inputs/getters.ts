@@ -1,4 +1,5 @@
 import type { error, Inputter, InputterOptions } from "../types";
+import type { InputValue } from "./types";
 import type { SupportedSvgoVersions } from "../svgo";
 
 import {
@@ -9,9 +10,7 @@ import {
 } from "../constants";
 import errors from "../errors";
 
-interface InputValue<T> {
-  readonly provided: boolean;
-  readonly value: T;
+interface InputtedValue<T> extends InputValue<T> {
   readonly valid: boolean;
 }
 
@@ -64,7 +63,7 @@ function safeGetInput<T>({
   inputName,
   getInput,
   defaultValue,
-}: Params<T> & { getInput: GetInput<T> }): InputValue<T> {
+}: Params<T> & { getInput: GetInput<T> }): InputtedValue<T> {
   const provided = isInputProvided({ inp, inputName });
   if (!provided) {
     return { provided, valid: true, value: defaultValue };
@@ -79,15 +78,17 @@ function safeGetInput<T>({
   return { provided, valid, value };
 }
 
-function getBooleanInput(params: Params<boolean>): InputValue<boolean> {
+function getBooleanInput(params: Params<boolean>): InputtedValue<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getMultilineInput(params: Params<string[]>): InputValue<string[]> {
+function getMultilineInput(params: Params<string[]>): InputtedValue<string[]> {
   return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
 }
 
-function getNumericInput<T extends number>(params: Params<T>): InputValue<T> {
+function getNumericInput<T extends number>(
+  params: Params<T>,
+): InputtedValue<T> {
   return safeGetInput({
     ...params,
     getInput: (inputName: string, options: InputterOptions): T => {
@@ -99,7 +100,7 @@ function getNumericInput<T extends number>(params: Params<T>): InputValue<T> {
   });
 }
 
-function getStringInput(params: Params<string>): InputValue<string> {
+function getStringInput(params: Params<string>): InputtedValue<string> {
   return safeGetInput({ ...params, getInput: params.inp.getInput });
 }
 
