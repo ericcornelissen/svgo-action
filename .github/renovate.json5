@@ -16,6 +16,12 @@
       automerge: true,
     },
     {
+      // Configure @vercel/ncc: don't upgrade beyond v0.30.0
+      // See: https://github.com/ericcornelissen/svgo-action/issues/425
+      matchPackageNames: ["@vercel/ncc"],
+      allowedVersions: "<=0.30.0"
+    },
+    {
       // Configure SVGO v1: don't upgrade to v2.x.x
       matchPackageNames: ["svgo-v1"],
       allowedVersions: "<2.0.0"

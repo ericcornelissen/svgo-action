@@ -9,6 +9,9 @@ const inputter: InputterMock = {
   getInput: jest.fn()
     .mockReturnValue("")
     .mockName("inputter.getInput"),
+  getMultilineInput: jest.fn()
+    .mockReturnValue([])
+    .mockName("inputter.getMultilineInput"),
 };
 
 export default inputter;

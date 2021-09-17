@@ -7,7 +7,7 @@ module.exports = {
     "!src/**/__mocks__/**/*.ts",
   ],
   commandRunner: {
-    command: "npm run test:unit -- --runInBand --bail",
+    command: "npm run test:unit -- --runInBand",
   },
 
   timeoutMS: 25000,

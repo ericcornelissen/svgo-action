@@ -13,6 +13,8 @@ const getters = mocked(_getters);
 
 describe("inputs/index.ts", () => {
   describe("::New", () => {
+    const provided = true;
+
     test("create config", () => {
       const [result, err] = configs.New({ inp });
 
@@ -29,18 +31,24 @@ describe("inputs/index.ts", () => {
       test("can get value", () => {
         const configuredValues = ["foobar"];
 
-        getters.getIgnoreGlobs.mockReturnValueOnce([configuredValues, null]);
+        getters.getIgnoreGlobs.mockReturnValueOnce([
+          { provided, value: configuredValues },
+          null,
+        ]);
 
         const [result, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.ignoreGlobs).toEqual(configuredValues);
+        expect(result.ignoreGlobs.value).toEqual(configuredValues);
       });
 
       test("can't get value", () => {
         const errorMsg = "couldn't get ignoreGlob";
 
-        getters.getIgnoreGlobs.mockReturnValueOnce([[], errors.New(errorMsg)]);
+        getters.getIgnoreGlobs.mockReturnValueOnce([
+          { provided, value: [] },
+          errors.New(errorMsg),
+        ]);
 
         const [, err] = configs.New({ inp });
 
@@ -52,7 +60,7 @@ describe("inputs/index.ts", () => {
         const [, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, "");
+        expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, []);
       });
     });
 
@@ -60,19 +68,22 @@ describe("inputs/index.ts", () => {
       test("can get value", () => {
         const configuredValue = false;
 
-        getters.getIsDryRun.mockReturnValueOnce([configuredValue, null]);
+        getters.getIsDryRun.mockReturnValueOnce([
+          { provided, value: configuredValue },
+          null,
+        ]);
 
         const [result, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.isDryRun).toEqual(configuredValue);
+        expect(result.isDryRun.value).toEqual(configuredValue);
       });
 
       test("can't get value", () => {
         const errorMsg = "couldn't get dry-run";
 
         getters.getIsDryRun.mockReturnValueOnce([
-          true,
+          { provided, value: true },
           errors.New(errorMsg),
         ]);
 
@@ -99,21 +110,21 @@ describe("inputs/index.ts", () => {
         const configuredValue = "foobar";
 
         getters.getSvgoConfigPath.mockReturnValueOnce([
-          configuredValue,
+          { provided, value: configuredValue },
           null,
         ]);
 
         const [result, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.svgoConfigPath).toEqual(configuredValue);
+        expect(result.svgoConfigPath.value).toEqual(configuredValue);
       });
 
       test("can't get value", () => {
         const errorMsg = "couldn't get svgo-config";
 
         getters.getSvgoConfigPath.mockReturnValueOnce([
-          "",
+          { provided, value: "" },
           errors.New(errorMsg),
         ]);
 
@@ -124,7 +135,10 @@ describe("inputs/index.ts", () => {
       });
 
       test("default value for svgo-version 1", () => {
-        getters.getSvgoVersion.mockReturnValueOnce([1, null]);
+        getters.getSvgoVersion.mockReturnValueOnce([
+          { provided, value: 1 },
+          null,
+        ]);
 
         const [, err] = configs.New({ inp });
 
@@ -136,7 +150,10 @@ describe("inputs/index.ts", () => {
       });
 
       test("default value for svgo-version 2", () => {
-        getters.getSvgoVersion.mockReturnValueOnce([2, null]);
+        getters.getSvgoVersion.mockReturnValueOnce([
+          { provided, value: 2 },
+          null,
+        ]);
 
         const [, err] = configs.New({ inp });
 
@@ -153,21 +170,21 @@ describe("inputs/index.ts", () => {
         const configuredValue =  2;
 
         getters.getSvgoVersion.mockReturnValueOnce([
-          configuredValue,
+          { provided, value: configuredValue },
           null,
         ]);
 
         const [result, err] = configs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.svgoVersion).toEqual(configuredValue);
+        expect(result.svgoVersion.value).toEqual(configuredValue);
       });
 
       test("can't get value", () => {
         const errorMsg = "couldn't get svgo-version";
 
         getters.getSvgoVersion.mockReturnValueOnce([
-          2,
+          { provided, value: 2 },
           errors.New(errorMsg),
         ]);
 

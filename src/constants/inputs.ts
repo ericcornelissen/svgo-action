@@ -1,4 +1,4 @@
-const DEFAULT_IGNORE_GLOBS = "";
+const DEFAULT_IGNORE_GLOBS = [];
 const DEFAULT_IS_DRY_RUN = false;
 const DEFAULT_SVGO_V1_CONFIG_PATH = ".svgo.yml";
 const DEFAULT_SVGO_V2_CONFIG_PATH = "svgo.config.js";

@@ -16,12 +16,20 @@ import svgo from "../../../src/svgo/index";
 describe("svgo/index.ts", () => {
   describe("::New", () => {
     const v1Config = {
-      svgoConfigPath: ".svgo.yml",
-      svgoVersion: 1 as SupportedSvgoVersions,
+      svgoConfigPath: {
+        value: ".svgo.yml",
+      },
+      svgoVersion: {
+        value: 1 as SupportedSvgoVersions,
+      },
     };
     const v2Config = {
-      svgoConfigPath: "svgo.config.js",
-      svgoVersion: 2 as SupportedSvgoVersions,
+      svgoConfigPath: {
+        value: "svgo.config.js",
+      },
+      svgoVersion: {
+        value: 2 as SupportedSvgoVersions,
+      },
     };
     const svgoConfig = {
       multipass: false,

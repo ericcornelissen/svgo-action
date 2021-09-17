@@ -1,5 +1,6 @@
 import type { error, Inputter, InputterOptions } from "../types";
 import type { SupportedSvgoVersions } from "../svgo";
+import type { InputValue } from "./types";
 
 import {
   INPUT_NAME_IGNORE,
@@ -9,10 +10,7 @@ import {
 } from "../constants";
 import errors from "../errors";
 
-const NEWLINE_EXPR = /\r?\n/;
-
-interface InputValue<T> {
-  readonly value: T;
+interface InputInfo<T> extends InputValue<T> {
   readonly valid: boolean;
 }
 
@@ -65,91 +63,95 @@ function safeGetInput<T>({
   inputName,
   getInput,
   defaultValue,
-}: Params<T> & { getInput: GetInput<T> }): InputValue<T> {
+}: Params<T> & { getInput: GetInput<T> }): InputInfo<T> {
   const provided = isInputProvided({ inp, inputName });
   if (!provided) {
-    return { valid: true, value: defaultValue };
+    return { provided, valid: true, value: defaultValue };
   }
 
   const valid = isInputValid({ getInput, inputName });
   if (!valid) {
-    return { valid, value: defaultValue };
+    return { provided, valid, value: defaultValue };
   }
 
   const value = getInput(inputName, INPUT_OPTIONS_NOT_REQUIRED);
-  return { valid, value };
+  return { provided, valid, value };
 }
 
-function getBooleanInput(params: Params<boolean>): InputValue<boolean> {
+function getBooleanInput(params: Params<boolean>): InputInfo<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getDecimalInput(params: Params<number>): InputValue<number> {
+function getDecimalInput<T extends number>(params: Params<T>): InputInfo<T> {
   return safeGetInput({
     ...params,
-    getInput: (inputName: string, options: InputterOptions) => {
+    getInput: (inputName: string, options: InputterOptions): T => {
       const resultStr = params.inp.getInput(inputName, options);
-      const result = parseInt(resultStr, 10);
+      const result = parseInt(resultStr, 10) as T;
       if (isNaN(result)) throw new TypeError();
       return result;
     },
   });
 }
 
-function getStringInput(params: Params<string>): InputValue<string> {
+function getMultilineInput(params: Params<string[]>): InputInfo<string[]> {
+  return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
+}
+
+function getStringInput(params: Params<string>): InputInfo<string> {
   return safeGetInput({ ...params, getInput: params.inp.getInput });
 }
 
 function getIgnoreGlobs(
   inp: Inputter,
-  defaultValue: string,
-): [string[], error] {
+  defaultValue: string[],
+): [InputValue<string[]>, error] {
   const inputName = INPUT_NAME_IGNORE;
-  const input = getStringInput({ inp, inputName, defaultValue });
-  return [input.value.split(NEWLINE_EXPR), null];
+  const input = getMultilineInput({ inp, inputName, defaultValue });
+  return [input, null];
 }
 
 function getIsDryRun(
   inp: Inputter,
   defaultValue: boolean,
-): [boolean, error] {
+): [InputValue<boolean>, error] {
   const inputName = INPUT_NAME_DRY_RUN;
   const input = getBooleanInput({ inp, inputName, defaultValue });
   if (!input.valid) {
-    return [true, errors.New("invalid dry-run value")];
+    return [input, errors.New("invalid dry-run value")];
   }
 
-  return [input.value, null];
+  return [input, null];
 }
 
 function getSvgoConfigPath(
   inp: Inputter,
   defaultValue: string,
-): [string, error] {
+): [InputValue<string>, error] {
   const inputName = INPUT_NAME_SVGO_CONFIG;
   const input = getStringInput({ inp, inputName, defaultValue });
-  return [input.value, null];
+  return [input, null];
 }
 
 function getSvgoVersion(
   inp: Inputter,
   defaultValue: SupportedSvgoVersions,
-): [SupportedSvgoVersions, error] {
+): [InputValue<SupportedSvgoVersions>, error] {
   const inputName = INPUT_NAME_SVGO_VERSION;
   const input = getDecimalInput({ inp, inputName, defaultValue });
   if (!input.valid) {
-    return [defaultValue, errors.New("invalid SVGO version value")];
+    return [input, errors.New("invalid SVGO version value")];
   }
 
   const svgoVersion = input.value;
   if (svgoVersion !== 1 && svgoVersion !== 2) {
     return [
-      defaultValue,
+      { ...input, value: defaultValue },
       errors.New(`unsupported SVGO version '${svgoVersion}'`),
     ];
   }
 
-  return [svgoVersion, null];
+  return [input, null];
 }
 
 export {

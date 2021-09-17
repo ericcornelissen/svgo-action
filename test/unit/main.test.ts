@@ -91,11 +91,11 @@ describe("main.ts", () => {
     test.each([
       1,
       2,
-    ])("SVGO (major) version (`%s`)", async (_svgoVersion) => {
-      const svgoVersion = _svgoVersion as 1 | 2;
+    ])("SVGO (major) version (`%s`)", async (svgoVersion) => {
+      const value = svgoVersion as 1 | 2;
 
       const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign({ }, baseConfig, { svgoVersion });
+      const config = Object.assign({ }, baseConfig, { svgoVersion: { value } });
       inputs.New.mockReturnValueOnce([config, null]);
 
       await main({ core, github });
@@ -109,9 +109,9 @@ describe("main.ts", () => {
   describe("Dry mode", () => {
     const expectedMsg = expect.stringContaining("Dry mode enabled");
 
-    function doMockDryMode(isDryRun: boolean): void {
+    function doMockDryMode(value: boolean): void {
       const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign(baseConfig, { isDryRun });
+      const config = Object.assign(baseConfig, { isDryRun: { value } });
       inputs.New.mockReturnValueOnce([config, null]);
     }
 

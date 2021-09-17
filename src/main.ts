@@ -43,7 +43,7 @@ async function main({
 
   const configFs = fileSystems.New({ filters: [] });
   const [rawConfig, err1dot1] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
-    path: svgoConfigPath,
+    path: svgoConfigPath.value,
   });
   if (err1dot1 !== null) {
     core.warning("SVGO configuration file not found");
@@ -69,8 +69,8 @@ async function main({
   const fs = fileSystems.New({ filters });
 
   core.info(`Running SVGO Action in '${event}' context`);
-  core.info(`Using SVGO major version ${config.svgoVersion}`);
-  if (config.isDryRun) {
+  core.info(`Using SVGO major version ${config.svgoVersion.value}`);
+  if (config.isDryRun.value) {
     core.info("Dry mode enabled, no changes will be written");
   }
 

@@ -10,7 +10,7 @@ describe("package inputs", () => {
   const SVGO_CONFIG = "svgo-config";
   const SVGO_VERSION = "svgo-version";
 
-  const DEFAULT_IGNORE = "";
+  const DEFAULT_IGNORE = [];
   const DEFAULT_DRY_RUN = false;
   const DEFAULT_SVGO_CONFIG = "svgo.config.js";
   const DEFAULT_SVGO_VERSION = 2;
@@ -23,7 +23,7 @@ describe("package inputs", () => {
   });
 
   beforeEach(() => {
-    when(inp.getInput)
+    when(inp.getMultilineInput)
       .calledWith(IGNORE, expect.anything())
       .mockReturnValue(DEFAULT_IGNORE);
 
@@ -41,8 +41,8 @@ describe("package inputs", () => {
   });
 
   describe("::ignoreGlobs", () => {
-    function doMockIgnoreInput(fn: () => string): void {
-      when(inp.getInput)
+    function doMockIgnoreInput(fn: () => string[]): void {
+      when(inp.getMultilineInput)
         .calledWith(IGNORE, expect.anything())
         .mockImplementation(fn);
     }
@@ -53,24 +53,27 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.ignoreGlobs).toEqual([DEFAULT_IGNORE]);
+      expect(config.ignoreGlobs.value).toEqual(DEFAULT_IGNORE);
     });
 
     test.each([
       "foo",
       "bar",
     ])("configured to '%s'", async (value) => {
-      doMockIgnoreInput(() => value);
+      doMockIgnoreInput(() => [value]);
 
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.ignoreGlobs).toEqual([value]);
+      expect(config.ignoreGlobs.value).toEqual([value]);
     });
   });
 
   describe("::isDryRun", () => {
     function doMockDryRunInput(fn: () => boolean): void {
+      when(inp.getInput)
+        .calledWith(DRY_RUN, expect.anything())
+        .mockImplementation(() => `${fn()}`);
       when(inp.getBooleanInput)
         .calledWith(DRY_RUN, expect.anything())
         .mockImplementation(fn);
@@ -82,7 +85,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.isDryRun).toEqual(DEFAULT_DRY_RUN);
+      expect(config.isDryRun.value).toEqual(DEFAULT_DRY_RUN);
     });
 
     test.each([true, false])("configured to `%p`", async (value) => {
@@ -91,7 +94,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.isDryRun).toEqual(value);
+      expect(config.isDryRun.value).toEqual(value);
     });
   });
 
@@ -108,7 +111,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoConfigPath).toEqual("svgo.config.js");
+      expect(config.svgoConfigPath.value).toEqual("svgo.config.js");
     });
 
     test.each([
@@ -120,7 +123,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoConfigPath).toEqual(value);
+      expect(config.svgoConfigPath.value).toEqual(value);
     });
   });
 
@@ -137,7 +140,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoVersion).toEqual(DEFAULT_SVGO_VERSION);
+      expect(config.svgoVersion.value).toEqual(DEFAULT_SVGO_VERSION);
     });
 
     test.each([
@@ -149,7 +152,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoVersion).toEqual(value);
+      expect(config.svgoVersion.value).toEqual(value);
     });
 
     test.each([
@@ -162,7 +165,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).not.toBeNull();
-      expect(config.svgoVersion).toEqual(DEFAULT_SVGO_VERSION);
+      expect(config.svgoVersion.value).toEqual(DEFAULT_SVGO_VERSION);
     });
   });
 });

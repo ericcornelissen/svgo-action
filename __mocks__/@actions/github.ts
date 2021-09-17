@@ -1,6 +1,13 @@
 const context = {
   eventName: "push",
-  payload: { },
+  payload: {
+    commits: [
+      { id: "commit-1" },
+    ],
+    pull_request: {
+      number: 42,
+    },
+  },
   repo: {
     owner: "pikachu",
     repo: "pokédex",
@@ -12,12 +19,12 @@ const getOctokit = jest.fn()
     rest: {
       repos: {
         getCommit: jest.fn()
-          .mockReturnValue({ })
+          .mockReturnValue({ data: { files: [] } })
           .mockName("Octokit.rest.repos.getCommit"),
       },
       pulls: {
         listFiles: jest.fn()
-          .mockReturnValue([])
+          .mockReturnValue({ data: [] })
           .mockName("Octokit.rest.pulls.listFiles"),
       },
     },

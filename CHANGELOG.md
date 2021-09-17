@@ -7,7 +7,14 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.0.4] - 2021-09-14
+
 - Fix bug when the `dry-run` value is invalid. ([#413])
+- Improve multiline support for ignore globs. ([#420])
+- Fix mistake in the Pull Request example workflow. ([#424])
+- Update SVGO v2 to `v2.6.0`. ([#427])
 
 ## [2.0.3] - 2021-08-28
 
@@ -40,6 +47,14 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.8] - 2021-09-13
+
+- Update SVGO v2 to `v2.6.0`. ([#426])
+
+## [1.3.7] - 2021-08-30
+
+- Update SVGO v2 to `v2.5.0`. ([#411])
 
 ## [1.3.6] - 2021-08-23
 
@@ -283,6 +298,11 @@ Versioning].
 [#406]: https://github.com/ericcornelissen/svgo-action/pull/406
 [#407]: https://github.com/ericcornelissen/svgo-action/pull/407
 [#410]: https://github.com/ericcornelissen/svgo-action/pull/410
+[#411]: https://github.com/ericcornelissen/svgo-action/pull/411
 [#413]: https://github.com/ericcornelissen/svgo-action/pull/413
+[#420]: https://github.com/ericcornelissen/svgo-action/pull/420
+[#424]: https://github.com/ericcornelissen/svgo-action/pull/424
+[#426]: https://github.com/ericcornelissen/svgo-action/pull/426
+[#427]: https://github.com/ericcornelissen/svgo-action/pull/427
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

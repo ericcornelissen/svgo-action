@@ -32,7 +32,7 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 1", () => {
-      const svgoVersion = 1;
+      const svgoVersion = { value: 1 };
 
       beforeEach(() => {
         parsers.NewYaml.mockClear();
@@ -61,7 +61,7 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 2", () => {
-      const svgoVersion = 2;
+      const svgoVersion = { value: 2 };
 
       beforeEach(() => {
         parsers.NewJavaScript.mockClear();

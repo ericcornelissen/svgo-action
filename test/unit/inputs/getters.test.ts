@@ -27,36 +27,30 @@ describe("inputs/getters.ts", () => {
       "foobar",
       "Hello world!",
     ])("can get input, single line ('%s')", (configuredValue) => {
-      when(inp.getInput)
+      when(inp.getMultilineInput)
         .calledWith(inputKey, expect.anything())
-        .mockReturnValue(configuredValue);
+        .mockReturnValue([configuredValue]);
 
-      const [result, err] = getIgnoreGlobs(inp, "foobar");
+      const [result, err] = getIgnoreGlobs(inp, []);
       expect(err).toBeNull();
-      expect(result).toEqual([configuredValue]);
+      expect(result.value).toEqual([configuredValue]);
     });
 
     test.each([
-      [
-        "foo\nbar",
-        ["foo", "bar"],
-      ],
-      [
-        "Hello\r\nworld!",
-        ["Hello", "world!"],
-      ],
-    ])("can get input, multi line (%#)", (configuredValues, expectedValues) => {
-      when(inp.getInput)
+      [["foo", "bar"]],
+      [["Hello", "world!"]],
+    ])("can get input, multi line (%#)", (configuredValues) => {
+      when(inp.getMultilineInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValue(configuredValues);
 
-      const [result, err] = getIgnoreGlobs(inp, "foobar");
+      const [result, err] = getIgnoreGlobs(inp, []);
       expect(err).toBeNull();
-      expect(result).toEqual(expectedValues);
+      expect(result.value).toEqual(configuredValues);
     });
 
     test("can't get input", () => {
-      const defaultValue = "";
+      const defaultValue = [];
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
@@ -64,7 +58,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getIgnoreGlobs(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result).toEqual([defaultValue]);
+      expect(result.value).toEqual(defaultValue);
     });
   });
 
@@ -85,7 +79,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getIsDryRun(inp, !configuredValue);
       expect(err).toBeNull();
-      expect(result).toEqual(configuredValue);
+      expect(result.value).toEqual(configuredValue);
     });
 
     test("can't get input", () => {
@@ -98,7 +92,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getIsDryRun(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid dry-run value");
-      expect(result).toEqual(true);
+      expect(result.value).toEqual(true);
     });
   });
 
@@ -119,7 +113,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoConfigPath(inp, "foo.bar");
       expect(err).toBeNull();
-      expect(result).toEqual(configuredValue);
+      expect(result.value).toEqual(configuredValue);
     });
 
     test("can't get input", () => {
@@ -131,7 +125,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoConfigPath(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result).toEqual(defaultValue);
+      expect(result.value).toEqual(defaultValue);
     });
   });
 
@@ -152,7 +146,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoVersion(inp, configuredValue === 1 ? 2 : 1);
       expect(err).toBeNull();
-      expect(result).toEqual(configuredValue);
+      expect(result.value).toEqual(configuredValue);
     });
 
     test.each([
@@ -169,7 +163,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("unsupported SVGO version");
-      expect(result).toEqual(defaultValue);
+      expect(result.value).toEqual(defaultValue);
     });
 
     test.each([
@@ -185,7 +179,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid SVGO version");
-      expect(result).toEqual(defaultValue);
+      expect(result.value).toEqual(defaultValue);
     });
 
     test("can't get input", () => {
@@ -197,7 +191,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result).toEqual(defaultValue);
+      expect(result.value).toEqual(defaultValue);
     });
   });
 });

@@ -16,7 +16,9 @@ describe("package svgo", () => {
 
   describe.each([1, 2])("::New (v%d)", (svgoVersion) => {
     const config = {
-      svgoVersion: svgoVersion as SupportedSvgoVersions,
+      svgoVersion: {
+        value: svgoVersion as SupportedSvgoVersions,
+      },
     };
 
     describe("::optimize", () => {

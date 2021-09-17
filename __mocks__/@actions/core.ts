@@ -7,12 +7,12 @@ const defaultInputs = {
 };
 
 function simulateGetInput(key: string) {
-  const inputObject = defaultInputs[key]; // eslint-disable-line security/detect-object-injection
-  if (inputObject === undefined) {
+  const inputValue = defaultInputs[key]; // eslint-disable-line security/detect-object-injection
+  if (inputValue === undefined) {
     throw new Error(`unknown input ${key}`);
   }
 
-  return inputObject.default;
+  return inputValue;
 }
 
 const debug = jest.fn()
@@ -25,6 +25,10 @@ const getBooleanInput = jest.fn()
 const getInput = jest.fn()
   .mockImplementation(simulateGetInput)
   .mockName("core.getInput");
+
+const getMultilineInput = jest.fn()
+  .mockImplementation((key) => [simulateGetInput(key)])
+  .mockName("core.getMultilineInput");
 
 const info = jest.fn()
   .mockName("core.info");
@@ -42,6 +46,7 @@ export {
   debug,
   getBooleanInput,
   getInput,
+  getMultilineInput,
   info,
   setFailed,
   setOutput,

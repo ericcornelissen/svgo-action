@@ -33,7 +33,7 @@ function New({ inp }: Params): [Config, error] {
   const [isDryRun, err1] = getIsDryRun(inp, DEFAULT_IS_DRY_RUN);
   const [svgoVersion, err3] = getSvgoVersion(inp, DEFAULT_SVGO_VERSION);
 
-  const defaultSvgoConfigPath = getDefaultSvgoConfigPath(svgoVersion);
+  const defaultSvgoConfigPath = getDefaultSvgoConfigPath(svgoVersion.value);
   const [svgoConfigPath, err2] = getSvgoConfigPath(inp, defaultSvgoConfigPath);
 
   return [

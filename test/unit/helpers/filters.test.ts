@@ -38,7 +38,9 @@ describe("helpers/filters.ts", () => {
 
     beforeEach(() => {
       config = {
-        ignoreGlobs: [],
+        ignoreGlobs: {
+          value: [],
+        },
       };
     });
 
@@ -48,7 +50,7 @@ describe("helpers/filters.ts", () => {
       });
 
       test("zero globs", async () => {
-        config.ignoreGlobs = [];
+        config.ignoreGlobs.value = [];
 
         const globFilter = jest.fn();
         filters.NewGlobFilter.mockReturnValue(globFilter);
@@ -59,7 +61,7 @@ describe("helpers/filters.ts", () => {
       });
 
       test("one glob", async () => {
-        config.ignoreGlobs = ["foobar/**"];
+        config.ignoreGlobs.value = ["foobar/**"];
 
         const globFilter = jest.fn();
         filters.NewGlobFilter.mockReturnValue(globFilter);
@@ -74,7 +76,7 @@ describe("helpers/filters.ts", () => {
       test("multiple globs", async () => {
         const glob1 = "foo/**";
         const glob2 = "bar/**";
-        config.ignoreGlobs = [glob1, glob2];
+        config.ignoreGlobs.value = [glob1, glob2];
 
         const globFilter1 = jest.fn();
         const globFilter2 = jest.fn();
