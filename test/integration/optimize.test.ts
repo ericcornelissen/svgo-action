@@ -39,7 +39,7 @@ describe("package optimize", () => {
     });
 
     test.each(testCases)("optimize files, %#", async (files) => {
-      const config = { isDryRun: false };
+      const config = { isDryRun: { value: false } };
 
       fs.listFiles.mockReturnValue(files);
       files.forEach((file, i) => {
@@ -60,7 +60,7 @@ describe("package optimize", () => {
     });
 
     test.each(testCases)("dry run enabled, %#", async (files) => {
-      const config = { isDryRun: true };
+      const config = { isDryRun: { value: true } };
 
       fs.listFiles.mockReturnValue(files);
 

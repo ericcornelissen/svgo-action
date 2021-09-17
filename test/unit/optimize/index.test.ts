@@ -35,7 +35,7 @@ describe("optimize/index.ts", () => {
     });
 
     test("optimize files", async () => {
-      const config = { isDryRun: false };
+      const config = { isDryRun: { value: false } };
 
       const [, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
@@ -46,7 +46,7 @@ describe("optimize/index.ts", () => {
     });
 
     test("dry run enabled", async () => {
-      const config = { isDryRun: true };
+      const config = { isDryRun: { value: true } };
 
       const [, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
@@ -57,7 +57,7 @@ describe("optimize/index.ts", () => {
     });
 
     describe.each([true, false])("outputs (dry mode: %p)", (isDryRun) => {
-      const config = { isDryRun };
+      const config = { isDryRun: { value: isDryRun } };
 
       const testCases = [
         [[]],

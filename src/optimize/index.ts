@@ -10,7 +10,9 @@ import { writeFiles } from "./write";
 interface Params {
   readonly fs: FileSystem;
   readonly config: {
-    readonly isDryRun: boolean;
+    readonly isDryRun: {
+      readonly value: boolean;
+    };
   };
   readonly optimizer: Optimizer;
 }
@@ -24,7 +26,7 @@ async function Files({
   const [optimizedFiles, optimizeError] = await optimizeAll(optimizer, files);
 
   let writeError: error = null;
-  if (!config.isDryRun) {
+  if (!config.isDryRun.value) {
     writeError = await writeFiles(fs, optimizedFiles);
   }
 

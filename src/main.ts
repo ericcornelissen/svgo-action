@@ -49,28 +49,18 @@ async function main({
     core.warning("SVGO configuration file not found");
   }
 
-  const [svgoConfig, err1dot2] = parseRawSvgoConfig({
-    rawConfig,
-    svgoVersion: svgoVersion.value,
-  });
+  const [svgoConfig, err1dot2] = parseRawSvgoConfig({ rawConfig, svgoVersion });
   if (err1dot2 !== null && err1dot1 === null) {
     return core.setFailed("Could not parse SVGO configuration");
   }
 
-  const [optimizer, err2] = svgo.New({
-    config: { svgoVersion: svgoVersion.value },
-    svgoConfig,
-  });
+  const [optimizer, err2] = svgo.New({ config, svgoConfig });
   if (err2 !== null) {
     core.debug(err2);
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [filters, err21] = await getFilters({
-    client,
-    config: { ignoreGlobs: config.ignoreGlobs.value },
-    github,
-  });
+  const [filters, err21] = await getFilters({ client, config, github });
   if (err21 !== null) {
     core.debug(err21);
     return core.setFailed("Could not initialize filters");
@@ -84,11 +74,7 @@ async function main({
     core.info("Dry mode enabled, no changes will be written");
   }
 
-  const [optimizeData, err4] = await optimize.Files({
-    config: { isDryRun: config.isDryRun.value },
-    fs,
-    optimizer,
-  });
+  const [optimizeData, err4] = await optimize.Files({ config, fs, optimizer });
   if (err4 !== null) {
     core.debug(err4);
     return core.setFailed("Failed to optimize all SVGs");
