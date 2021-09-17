@@ -69,8 +69,8 @@ async function main({
   const fs = fileSystems.New({ filters });
 
   core.info(`Running SVGO Action in '${event}' context`);
-  core.info(`Using SVGO major version ${config.svgoVersion}`);
-  if (config.isDryRun) {
+  core.info(`Using SVGO major version ${config.svgoVersion.value}`);
+  if (config.isDryRun.value) {
     core.info("Dry mode enabled, no changes will be written");
   }
 
