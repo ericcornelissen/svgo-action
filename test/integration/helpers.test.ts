@@ -74,7 +74,9 @@ describe("package helpers", () => {
 
     beforeEach(() => {
       config = {
-        ignoreGlobs: [],
+        ignoreGlobs:{
+          value: [],
+        },
       };
     });
 
@@ -118,7 +120,7 @@ describe("package helpers", () => {
       EVENT_WORKFLOW_DISPATCH,
     ])("filters out ignored files ('%s')", async (eventName) => {
       github.context.eventName = eventName;
-      config.ignoreGlobs = ["foo/*"];
+      config.ignoreGlobs.value = ["foo/*"];
 
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
@@ -164,7 +166,7 @@ describe("package helpers", () => {
 
   describe("::parseRawSvgoConfig", () => {
     describe("SVGO version 1", () => {
-      const svgoVersion = 1;
+      const svgoVersion = { value: 1 };
 
       test("valid configuration", () => {
         const rawConfig = "multipass: true";
@@ -183,7 +185,7 @@ describe("package helpers", () => {
     });
 
     describe("SVGO version 2", () => {
-      const svgoVersion = 2;
+      const svgoVersion = { value: 2 };
 
       test("valid configuration", () => {
         const rawConfig = "module.exports = { multipass: true };";

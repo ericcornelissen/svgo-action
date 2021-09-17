@@ -1,7 +1,7 @@
-const config = { };
+import { defaultConfig } from "./__common__";
 
 const New = jest.fn()
-  .mockReturnValue([config, null])
+  .mockReturnValue([defaultConfig, null])
   .mockName("configs.New");
 
 export default {

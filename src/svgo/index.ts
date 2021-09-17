@@ -6,7 +6,9 @@ import SVGOptimizerV2 from "./svgo-v2-wrapper";
 
 interface Params {
   readonly config: {
-    svgoVersion: SupportedSvgoVersions;
+    readonly svgoVersion: {
+      readonly value: SupportedSvgoVersions;
+    };
   };
   readonly svgoConfig?: unknown;
 }
@@ -18,7 +20,7 @@ function New({
   let svgOptimizer: SVGOptimizer = {} as SVGOptimizer;
   const err: error = null;
 
-  switch (config.svgoVersion) {
+  switch (config.svgoVersion.value) {
     case 1:
       svgOptimizer = new SVGOptimizerV1(svgoConfig);
       break;
