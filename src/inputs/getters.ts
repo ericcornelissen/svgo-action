@@ -84,11 +84,7 @@ function getBooleanInput(params: Params<boolean>): InputValue<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getStringInput(params: Params<string>): InputValue<string> {
-  return safeGetInput({ ...params, getInput: params.inp.getInput });
-}
-
-function getNumericInput(params: Params<number>): InputValue<number> {
+function getDecimalInput(params: Params<number>): InputValue<number> {
   return safeGetInput({
     ...params,
     getInput: (inputName: string, options: InputterOptions) => {
@@ -98,6 +94,10 @@ function getNumericInput(params: Params<number>): InputValue<number> {
       return result;
     },
   });
+}
+
+function getStringInput(params: Params<string>): InputValue<string> {
+  return safeGetInput({ ...params, getInput: params.inp.getInput });
 }
 
 function getIgnoreGlobs(
@@ -136,7 +136,7 @@ function getSvgoVersion(
   defaultValue: SupportedSvgoVersions,
 ): [SupportedSvgoVersions, error] {
   const inputName = INPUT_NAME_SVGO_VERSION;
-  const input = getNumericInput({ inp, inputName, defaultValue });
+  const input = getDecimalInput({ inp, inputName, defaultValue });
   if (!input.valid) {
     return [defaultValue, errors.New("invalid SVGO version value")];
   }
