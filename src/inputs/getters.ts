@@ -10,7 +10,7 @@ import {
 } from "../constants";
 import errors from "../errors";
 
-interface InputtedValue<T> extends InputValue<T> {
+interface InputInfo<T> extends InputValue<T> {
   readonly valid: boolean;
 }
 
@@ -63,7 +63,7 @@ function safeGetInput<T>({
   inputName,
   getInput,
   defaultValue,
-}: Params<T> & { getInput: GetInput<T> }): InputtedValue<T> {
+}: Params<T> & { getInput: GetInput<T> }): InputInfo<T> {
   const provided = isInputProvided({ inp, inputName });
   if (!provided) {
     return { provided, valid: true, value: defaultValue };
@@ -78,17 +78,15 @@ function safeGetInput<T>({
   return { provided, valid, value };
 }
 
-function getBooleanInput(params: Params<boolean>): InputtedValue<boolean> {
+function getBooleanInput(params: Params<boolean>): InputInfo<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getMultilineInput(params: Params<string[]>): InputtedValue<string[]> {
+function getMultilineInput(params: Params<string[]>): InputInfo<string[]> {
   return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
 }
 
-function getNumericInput<T extends number>(
-  params: Params<T>,
-): InputtedValue<T> {
+function getNumericInput<T extends number>(params: Params<T>): InputInfo<T> {
   return safeGetInput({
     ...params,
     getInput: (inputName: string, options: InputterOptions): T => {
@@ -100,7 +98,7 @@ function getNumericInput<T extends number>(
   });
 }
 
-function getStringInput(params: Params<string>): InputtedValue<string> {
+function getStringInput(params: Params<string>): InputInfo<string> {
   return safeGetInput({ ...params, getInput: params.inp.getInput });
 }
 
