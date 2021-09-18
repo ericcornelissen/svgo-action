@@ -27,6 +27,7 @@ async function main({
   if (err0 !== null) {
     core.warning(`Your SVGO Action configuration is incorrect: ${err0}`);
   }
+
   const context = github.context;
   const [event, ok0] = isEventSupported({ context });
   if (!ok0) {
@@ -42,27 +43,27 @@ async function main({
   const { svgoConfigPath, svgoVersion } = config;
 
   const configFs = fileSystems.New({ filters: [] });
-  const [rawConfig, err1dot1] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
+  const [rawConfig, err2] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
     path: svgoConfigPath.value,
   });
-  if (err1dot1 !== null) {
+  if (err2 !== null) {
     core.warning("SVGO configuration file not found");
   }
 
-  const [svgoConfig, err1dot2] = parseRawSvgoConfig({ rawConfig, svgoVersion });
-  if (err1dot2 !== null && err1dot1 === null) {
+  const [svgoConfig, err3] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+  if (err3 !== null && err2 === null) {
     return core.setFailed("Could not parse SVGO configuration");
   }
 
-  const [optimizer, err2] = svgo.New({ config, svgoConfig });
-  if (err2 !== null) {
-    core.debug(err2);
+  const [optimizer, err4] = svgo.New({ config, svgoConfig });
+  if (err4 !== null) {
+    core.debug(err4);
     return core.setFailed("Could not initialize SVGO");
   }
 
-  const [filters, err21] = await getFilters({ client, config, github });
-  if (err21 !== null) {
-    core.debug(err21);
+  const [filters, err5] = await getFilters({ client, config, github });
+  if (err5 !== null) {
+    core.debug(err5);
     return core.setFailed("Could not initialize filters");
   }
 
@@ -74,15 +75,15 @@ async function main({
     core.info("Dry mode enabled, no changes will be written");
   }
 
-  const [optimizeData, err4] = await optimize.Files({ config, fs, optimizer });
-  if (err4 !== null) {
-    core.debug(err4);
+  const [optimizeData, err6] = await optimize.Files({ config, fs, optimizer });
+  if (err6 !== null) {
+    core.debug(err6);
     return core.setFailed("Failed to optimize all SVGs");
   }
 
-  const err5 = setOutputValues({ context, data: optimizeData, out: core });
-  if (err5 !== null) {
-    core.debug(err5);
+  const err7 = setOutputValues({ context, data: optimizeData, out: core });
+  if (err7 !== null) {
+    core.debug(err7);
     return core.setFailed("Failed to set output values");
   }
 }
