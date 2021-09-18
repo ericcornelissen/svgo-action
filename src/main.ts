@@ -40,17 +40,15 @@ async function main({
     return core.setFailed("Could not get GitHub client");
   }
 
-  const { svgoConfigPath, svgoVersion } = config;
-
   const configFs = fileSystems.New({ filters: [] });
   const [rawConfig, err2] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
-    path: svgoConfigPath.value,
+    path: config.svgoConfigPath.value,
   });
   if (err2 !== null) {
     core.warning("SVGO configuration file not found");
   }
 
-  const [svgoConfig, err3] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+  const [svgoConfig, err3] = parseRawSvgoConfig({ config, rawConfig });
   if (err3 !== null && err2 === null) {
     return core.setFailed("Could not parse SVGO configuration");
   }
