@@ -4,7 +4,7 @@ import clients from "./clients";
 import fileSystems from "./file-systems";
 import inputs from "./inputs";
 import optimize from "./optimize";
-import { setOutputValues } from "./outputs";
+import outputs from "./outputs";
 import svgo from "./svgo";
 
 import {
@@ -79,7 +79,7 @@ async function main({
     return core.setFailed("Failed to optimize all SVGs");
   }
 
-  const err7 = setOutputValues({ context, data: optimizeData, out: core });
+  const err7 = outputs.Set({ context, data: optimizeData, out: core });
   if (err7 !== null) {
     core.debug(err7);
     return core.setFailed("Failed to set output values");

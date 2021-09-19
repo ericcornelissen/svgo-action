@@ -63,7 +63,7 @@ function getOutputNamesFor(event: string): [OutputName[], error] {
   }
 }
 
-function setOutputValues({ context, data, out }: Params): error {
+function Set({ context, data, out }: Params): error {
   const [names, err] = getOutputNamesFor(context.eventName);
   for (const name of names) {
     const fn = outputsMap.get(name) as DataToOutput;
@@ -74,6 +74,6 @@ function setOutputValues({ context, data, out }: Params): error {
   return err;
 }
 
-export {
-  setOutputValues,
+export default {
+  Set,
 };

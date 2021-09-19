@@ -6,9 +6,7 @@ import * as _core from "@actions/core";
 
 const core = mocked(_core);
 
-import {
-  setOutputValues,
-} from "../../src/outputs";
+import outputs from "../../src/outputs";
 
 describe("package outputs", () => {
   const EVENT_PULL_REQUEST = "pull_request";
@@ -31,7 +29,7 @@ describe("package outputs", () => {
   ])("known event ('%s')", (eventName) => {
     const context = { eventName };
 
-    const err = setOutputValues({ context, data, out: core });
+    const err = outputs.Set({ context, data, out: core });
     expect(err).toBeNull();
     expect(core.setOutput).toHaveBeenCalled();
   });
@@ -39,7 +37,7 @@ describe("package outputs", () => {
   test("unknown event", () => {
     const context = { eventName: "foobar" };
 
-    const err = setOutputValues({ context, data, out: core });
+    const err = outputs.Set({ context, data, out: core });
     expect(err).not.toBeNull();
   });
 });

@@ -20,7 +20,7 @@ import _fileSystems from "../../src/file-systems";
 import * as _helpers from "../../src/helpers";
 import _inputs from "../../src/inputs";
 import _optimize from "../../src/optimize";
-import * as _outputs from "../../src/outputs";
+import _outputs from "../../src/outputs";
 import _svgo from "../../src/svgo";
 
 const core = mocked(_core);
@@ -49,7 +49,7 @@ describe("main.ts", () => {
     helpers.parseRawSvgoConfig.mockClear();
     inputs.New.mockClear();
     optimize.Files.mockClear();
-    outputs.setOutputValues.mockClear();
+    outputs.Set.mockClear();
     svgo.New.mockClear();
   });
 
@@ -65,7 +65,7 @@ describe("main.ts", () => {
     expect(helpers.parseRawSvgoConfig).toHaveBeenCalledTimes(1);
     expect(inputs.New).toHaveBeenCalledTimes(1);
     expect(optimize.Files).toHaveBeenCalledTimes(1);
-    expect(outputs.setOutputValues).toHaveBeenCalledTimes(1);
+    expect(outputs.Set).toHaveBeenCalledTimes(1);
     expect(svgo.New).toHaveBeenCalledTimes(1);
 
     expect(core.warning).not.toHaveBeenCalled();
@@ -328,7 +328,7 @@ describe("main.ts", () => {
 
   test("outputs error", async () => {
     const err = errors.New("Output error");
-    outputs.setOutputValues.mockReturnValueOnce(err);
+    outputs.Set.mockReturnValueOnce(err);
 
     await main({ core, github });
 
