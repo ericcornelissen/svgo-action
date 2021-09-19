@@ -2,18 +2,22 @@ import type { error } from "../types";
 
 import parsers from "../parsers";
 
-interface Params {
-  readonly rawConfig: string;
+interface Config {
   readonly svgoVersion: {
     readonly value: number;
   };
 }
 
+interface Params {
+  readonly config: Config;
+  readonly rawConfig: string;
+}
+
 function parseRawSvgoConfig({
+  config,
   rawConfig,
-  svgoVersion,
 }: Params): [unknown, error] {
-  if (svgoVersion.value === 1) {
+  if (config.svgoVersion.value === 1) {
     const parseYaml = parsers.NewYaml();
     return parseYaml(rawConfig);
   } else {

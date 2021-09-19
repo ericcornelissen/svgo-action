@@ -32,7 +32,7 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 1", () => {
-      const svgoVersion = { value: 1 };
+      const config = { svgoVersion: { value: 1 } };
 
       beforeEach(() => {
         parsers.NewYaml.mockClear();
@@ -41,7 +41,7 @@ describe("helpers/svgo-config.ts", () => {
       test("parse success", () => {
         parsers.NewYaml.mockReturnValue(successParser);
 
-        const [result, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [result, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).toBeNull();
         expect(result).toEqual(parseOutput);
 
@@ -52,7 +52,7 @@ describe("helpers/svgo-config.ts", () => {
       test("parse error", () => {
         parsers.NewYaml.mockReturnValue(errorParser);
 
-        const [, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).not.toBeNull();
 
         expect(parsers.NewYaml).toHaveBeenCalledTimes(1);
@@ -61,7 +61,7 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 2", () => {
-      const svgoVersion = { value: 2 };
+      const config = { svgoVersion: { value: 2 } };
 
       beforeEach(() => {
         parsers.NewJavaScript.mockClear();
@@ -70,7 +70,7 @@ describe("helpers/svgo-config.ts", () => {
       test("parse success", () => {
         parsers.NewJavaScript.mockReturnValue(successParser);
 
-        const [result, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [result, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).toBeNull();
         expect(result).toEqual(parseOutput);
 
@@ -81,7 +81,7 @@ describe("helpers/svgo-config.ts", () => {
       test("parse error", () => {
         parsers.NewJavaScript.mockReturnValue(errorParser);
 
-        const [, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).not.toBeNull();
 
         expect(parsers.NewJavaScript).toHaveBeenCalledTimes(1);

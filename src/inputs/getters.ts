@@ -1,6 +1,6 @@
 import type { error, Inputter, InputterOptions } from "../types";
-import type { InputValue } from "./types";
 import type { SupportedSvgoVersions } from "../svgo";
+import type { InputValue } from "./types";
 
 import {
   INPUT_NAME_IGNORE,
@@ -82,11 +82,7 @@ function getBooleanInput(params: Params<boolean>): InputInfo<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getMultilineInput(params: Params<string[]>): InputInfo<string[]> {
-  return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
-}
-
-function getNumericInput<T extends number>(params: Params<T>): InputInfo<T> {
+function getDecimalInput<T extends number>(params: Params<T>): InputInfo<T> {
   return safeGetInput({
     ...params,
     getInput: (inputName: string, options: InputterOptions): T => {
@@ -96,6 +92,10 @@ function getNumericInput<T extends number>(params: Params<T>): InputInfo<T> {
       return result;
     },
   });
+}
+
+function getMultilineInput(params: Params<string[]>): InputInfo<string[]> {
+  return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
 }
 
 function getStringInput(params: Params<string>): InputInfo<string> {
@@ -138,7 +138,7 @@ function getSvgoVersion(
   defaultValue: SupportedSvgoVersions,
 ): [InputValue<SupportedSvgoVersions>, error] {
   const inputName = INPUT_NAME_SVGO_VERSION;
-  const input = getNumericInput({ inp, inputName, defaultValue });
+  const input = getDecimalInput({ inp, inputName, defaultValue });
   if (!input.valid) {
     return [input, errors.New("invalid SVGO version value")];
   }

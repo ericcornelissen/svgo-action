@@ -1,8 +1,6 @@
 import out from "../../__common__/outputter.mock";
 
-import {
-  setOutputValues,
-} from "../../../src/outputs";
+import outputs from "../../../src/outputs";
 
 describe.each([
   { optimizedCount: 1, svgCount: 4 },
@@ -41,7 +39,7 @@ describe.each([
     };
 
     test("did optimize", () => {
-      const err = setOutputValues({ context, data, out });
+      const err = outputs.Set({ context, data, out });
 
       expect(err).toBeNull();
       expect(out.setOutput).toHaveBeenCalledWith(
@@ -51,7 +49,7 @@ describe.each([
     });
 
     test("optimized count", () => {
-      const err = setOutputValues({ context, data, out });
+      const err = outputs.Set({ context, data, out });
 
       expect(err).toBeNull();
       expect(out.setOutput).toHaveBeenCalledWith(
@@ -61,7 +59,7 @@ describe.each([
     });
 
     test("svg count", () => {
-      const err = setOutputValues({ context, data, out });
+      const err = outputs.Set({ context, data, out });
 
       expect(err).toBeNull();
       expect(out.setOutput).toHaveBeenCalledWith(SVG_COUNT, `${svgCount}`);
@@ -74,7 +72,7 @@ describe.each([
     };
 
     test("did optimize", () => {
-      const err = setOutputValues({ context, data, out });
+      const err = outputs.Set({ context, data, out });
 
       expect(err).not.toBeNull();
       expect(err).toContain("unknown event");

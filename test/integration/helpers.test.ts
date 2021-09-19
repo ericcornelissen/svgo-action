@@ -166,39 +166,39 @@ describe("package helpers", () => {
 
   describe("::parseRawSvgoConfig", () => {
     describe("SVGO version 1", () => {
-      const svgoVersion = { value: 1 };
+      const config = { svgoVersion: { value: 1 } };
 
       test("valid configuration", () => {
         const rawConfig = "multipass: true";
 
-        const [config, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [svgoConfig, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).toBeNull();
-        expect(config).not.toBeNull();
+        expect(svgoConfig).not.toBeNull();
       });
 
       test("invalid configuration", () => {
         const rawConfig = "-\nthis isn't valid YAML";
 
-        const [, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).not.toBeNull();
       });
     });
 
     describe("SVGO version 2", () => {
-      const svgoVersion = { value: 2 };
+      const config = { svgoVersion: { value: 2 } };
 
       test("valid configuration", () => {
         const rawConfig = "module.exports = { multipass: true };";
 
-        const [config, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [svgoConfig, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).toBeNull();
-        expect(config).not.toBeNull();
+        expect(svgoConfig).not.toBeNull();
       });
 
       test("invalid configuration", () => {
         const rawConfig = "this isn't valid JavaScript";
 
-        const [, err] = parseRawSvgoConfig({ rawConfig, svgoVersion });
+        const [, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).not.toBeNull();
       });
     });

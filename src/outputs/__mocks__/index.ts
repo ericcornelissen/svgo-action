@@ -1,7 +1,7 @@
-const setOutputValues = jest.fn()
+const Set = jest.fn()
   .mockReturnValue(null)
-  .mockName("outputs.setOutputValues");
+  .mockName("outputs.Set");
 
-export {
-  setOutputValues,
+export default {
+  Set,
 };
