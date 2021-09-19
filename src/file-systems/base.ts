@@ -14,7 +14,9 @@ import errors from "../errors";
 interface Params {
   fs: {
     existsSync(path: string): boolean;
-    lstatSync(path: string): { isFile(): boolean };
+    lstatSync(path: string): {
+      isFile(): boolean;
+    };
     readdirSync(path: string): Iterable<string>;
     readFileSync(path: string): Buffer;
     writeFileSync(path: string, content: string): void;
