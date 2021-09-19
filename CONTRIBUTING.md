@@ -29,7 +29,7 @@ relevant sections of this document.
 
 ## Bug Reports
 
-If you have problems with _SVGO Action_ or think you've found a bug, please
+If you have problems with the _SVGO Action_ or think you've found a bug, please
 report it to the developers; we ask you to **always** open an issue describing
 the bug as soon as possible so that we, and others, are aware of the bug.
 
@@ -45,8 +45,8 @@ such as:
 
 - The exact version of SVGO Action you're using.
 - A description of the expected behaviour and the actual behaviour.
-- Error and/or warning messages.
-- A link to an action run where the bug occurs with [debug logging] enabled.
+- All error and warning messages.
+- A link to a workflow run where the bug occurs with [debug logging] enabled.
 
 Once you have a precise problem you can report it as a [Bug Report].
 
@@ -61,23 +61,23 @@ Once the feature you requested has been approved, you can start implementing it
 (if you want to do that). It is advised to indicate you're working on the
 feature so others don't start working on the same feature as you do. Also, don't
 start working on a feature which someone else is working on. Give everyone a
-change to make contributions.
+chance to make contributions.
 
 When you open a Pull Request that implements a new feature make sure to link to
 the relevant feature request and explain how you implemented the feature as
 clearly as possible.
 
 > :information_source: If you, for whatever reason, can no longer continue your
-> contribution please let us know. This gives others have an opportunity to work
-> on it. If we don't hear from you for an extended period of time we may decide
-> to allow others to work on the feature you've been assigned to.
+> contribution please let us know. This gives others an opportunity to work on
+> it. If we don't hear from you for an extended period of time we may decide to
+> allow others to work on the feature you've been assigned to.
 
 ## Corrections
 
-Corrections, be it fixing typos or refactoring code, are valuable contributions
-and a good place to start. If you want to improve the documentation in this way
-feel free to open a Pull Request with the changes you want to make directly, or
-[open an issue] first if you prefer.
+Corrections, be it fixing typos or refactoring code, are valuable contributions.
+If you want to improve the documentation in this way feel free to open a Pull
+Request with the changes you want to make directly, or [open an issue] first if
+you prefer.
 
 If you want to improve the code base make sure to follow the code style that
 is enforced through the [ESLint] configuration. If your changes can be enforced
