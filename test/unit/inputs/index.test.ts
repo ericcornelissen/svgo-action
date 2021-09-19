@@ -6,7 +6,7 @@ jest.mock("../../../src/errors");
 jest.mock("../../../src/inputs/getters");
 
 import * as _getters from "../../../src/inputs/getters";
-import configs from "../../../src/inputs/index";
+import inputs from "../../../src/inputs/index";
 import errors from "../../../src/errors";
 
 const getters = mocked(_getters);
@@ -16,7 +16,7 @@ describe("inputs/index.ts", () => {
     const provided = true;
 
     test("create config", () => {
-      const [result, err] = configs.New({ inp });
+      const [result, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
       expect(result).toBeDefined();
@@ -36,7 +36,7 @@ describe("inputs/index.ts", () => {
           null,
         ]);
 
-        const [result, err] = configs.New({ inp });
+        const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(result.ignoreGlobs.value).toEqual(configuredValues);
@@ -50,14 +50,14 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, []);
@@ -73,7 +73,7 @@ describe("inputs/index.ts", () => {
           null,
         ]);
 
-        const [result, err] = configs.New({ inp });
+        const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(result.isDryRun.value).toEqual(configuredValue);
@@ -87,14 +87,14 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(getters.getIsDryRun).toHaveBeenCalledWith(inp, false);
@@ -114,7 +114,7 @@ describe("inputs/index.ts", () => {
           null,
         ]);
 
-        const [result, err] = configs.New({ inp });
+        const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(result.svgoConfigPath.value).toEqual(configuredValue);
@@ -128,7 +128,7 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
@@ -140,7 +140,7 @@ describe("inputs/index.ts", () => {
           null,
         ]);
 
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(getters.getSvgoConfigPath).toHaveBeenCalledWith(
@@ -155,7 +155,7 @@ describe("inputs/index.ts", () => {
           null,
         ]);
 
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(getters.getSvgoConfigPath).toHaveBeenCalledWith(
@@ -174,7 +174,7 @@ describe("inputs/index.ts", () => {
           null,
         ]);
 
-        const [result, err] = configs.New({ inp });
+        const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(result.svgoVersion.value).toEqual(configuredValue);
@@ -188,14 +188,14 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = configs.New({ inp });
+        const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
         expect(getters.getSvgoVersion).toHaveBeenCalledWith(inp, 2);

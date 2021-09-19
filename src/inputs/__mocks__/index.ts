@@ -2,7 +2,7 @@ import { defaultConfig } from "./__common__";
 
 const New = jest.fn()
   .mockReturnValue([defaultConfig, null])
-  .mockName("configs.New");
+  .mockName("inputs.New");
 
 export default {
   New,
