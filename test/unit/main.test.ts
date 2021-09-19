@@ -191,7 +191,37 @@ describe("main.ts", () => {
   });
 
   describe("svgo configuration", () => {
-    test("read error only", async () => {
+    test("read error only, path not configured", async () => {
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign(baseConfig, {
+        svgoConfigPath: { provided: false },
+      });
+      inputs.New.mockReturnValueOnce([config, null]);
+
+      const err = errors.New("read file error");
+      fileSystems.New.mockReturnValueOnce({
+        listFiles: jest.fn(),
+        readFile: jest.fn()
+          .mockResolvedValueOnce(["", err])
+          .mockName("fs.readFile"),
+        writeFile: jest.fn(),
+      });
+
+      await main({ core, github });
+
+      expect(core.setFailed).not.toHaveBeenCalledWith();
+      expect(core.warning).not.toHaveBeenCalledWith(
+        expect.stringContaining("configuration file"),
+      );
+    });
+
+    test("read error only, path configured", async () => {
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign(baseConfig, {
+        svgoConfigPath: { provided: true },
+      });
+      inputs.New.mockReturnValueOnce([config, null]);
+
       const err = errors.New("read file error");
       fileSystems.New.mockReturnValueOnce({
         listFiles: jest.fn(),
