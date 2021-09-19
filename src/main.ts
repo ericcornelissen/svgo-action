@@ -45,7 +45,7 @@ async function main({
   const [rawConfig, err1dot1] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
     path: svgoConfigPath.value,
   });
-  if (err1dot1 !== null) {
+  if (err1dot1 !== null && svgoConfigPath.provided) {
     core.warning("SVGO configuration file not found");
   }
 
