@@ -3,7 +3,7 @@
 The _SVGO Action_ project welcomes contributions and corrections of all forms.
 This includes improvements to the documentation or code base, new tests, bug
 fixes, and implementations of new features. We recommend you [open an issue]
-before making any significant changes so you can be sure your work won't be
+before making any substantial changes so you can be sure your work won't be
 rejected. But for changes such as fixing a typo you can open a Pull Request
 directly.
 
@@ -20,6 +20,7 @@ relevant sections of this document.
   - [Mocking](#mocking)
   - [Unit Tests](#unit-tests)
   - [Integration Tests](#integration-tests)
+  - [End-to-End Tests](#end-to-end-tests)
   - [Mutation Testing](#mutation-testing)
 
 > :information_source: If you want to make a contribution to v1 of the Action,
@@ -29,7 +30,7 @@ relevant sections of this document.
 
 ## Bug Reports
 
-If you have problems with _SVGO Action_ or think you've found a bug, please
+If you have problems with the _SVGO Action_ or think you've found a bug, please
 report it to the developers; we ask you to **always** open an issue describing
 the bug as soon as possible so that we, and others, are aware of the bug.
 
@@ -45,8 +46,8 @@ such as:
 
 - The exact version of SVGO Action you're using.
 - A description of the expected behaviour and the actual behaviour.
-- Error and/or warning messages.
-- A link to an action run where the bug occurs with [debug logging] enabled.
+- All error and warning messages.
+- A link to a workflow run where the bug occurs with [debug logging] enabled.
 
 Once you have a precise problem you can report it as a [Bug Report].
 
@@ -61,23 +62,23 @@ Once the feature you requested has been approved, you can start implementing it
 (if you want to do that). It is advised to indicate you're working on the
 feature so others don't start working on the same feature as you do. Also, don't
 start working on a feature which someone else is working on. Give everyone a
-change to make contributions.
+chance to make contributions.
 
 When you open a Pull Request that implements a new feature make sure to link to
 the relevant feature request and explain how you implemented the feature as
 clearly as possible.
 
 > :information_source: If you, for whatever reason, can no longer continue your
-> contribution please let us know. This gives others have an opportunity to work
-> on it. If we don't hear from you for an extended period of time we may decide
-> to allow others to work on the feature you've been assigned to.
+> contribution please let us know. This gives others an opportunity to work on
+> it. If we don't hear from you for an extended period of time we may decide to
+> allow others to work on the feature you've been assigned to.
 
 ## Corrections
 
-Corrections, be it fixing typos or refactoring code, are valuable contributions
-and a good place to start. If you want to improve the documentation in this way
-feel free to open a Pull Request with the changes you want to make directly, or
-[open an issue] first if you prefer.
+Corrections, be it fixing typos or refactoring code, are valuable contributions.
+If you want to improve the documentation in this way feel free to open a Pull
+Request with the changes you want to make directly, or [open an issue] first if
+you prefer.
 
 If you want to improve the code base make sure to follow the code style that
 is enforced through the [ESLint] configuration. If your changes can be enforced
@@ -112,13 +113,14 @@ contributing to _SVGO Action_.
 
 ## Making Changes
 
-Before you start making changes, be sure to run `npm install`.
+Before you start making changes you should run `npm install`. This ensures your
+local development environment is setup and ready to go.
 
 When making changes it is important that 1) your changes are properly formatted
-and 2) your changes are properly tested if it is a code change. The former can
+and 2) your changes are properly tested (if it is a code change). The former can
 be achieved with the `npm run format` command. The latter requires you to add
 new test cases to the project, you can use `npm run test` to verify the new (and
-old) tests pass.
+old) tests pass. Read on to understand how testing is done in this project.
 
 ## Testing
 
@@ -138,8 +140,8 @@ run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test:unit`.
 | `test`, `coverage` | `integration` | Runs all and only integration tests   |
 | `test`             | `mutation`    | Runs mutation tests on the unit tests |
 
-Whenever you use the `coverage` variant of a script, a coverage report over the
-entire source code is generated. The report is available in HTML format at
+Whenever you use the `coverage` variant of a script, a coverage report will be
+generated. The report is available in HTML format at
 `_reports/coverage/lcov-report/index.html`.
 
 ### Mocking
@@ -154,8 +156,10 @@ module. In the case of a scoped node module, the mock file should be placed in a
 folders with the name of the scope. For example, the mock for `@actions/core`
 can be found at `__mocks__/@actions/core.ts`.
 
-Any mocks that are not tied to a file or node modules should be placed in the
-`test/__common__` folder and follow the naming convention `[FILENAME].mock.ts`.
+Any non-mock module inside a `__mocks__` folder should follow the naming
+convention `__[FILENAME]__.ts`. Any mock that is not tied to a file or node
+module should be placed in the `test/__common__` folder and follow the naming
+convention `[FILENAME].mock.ts`.
 
 ### Unit Tests
 
@@ -173,15 +177,24 @@ npm run coverage -- test/unit/[PATH TO FILE]
 
 All integrations tests go into the `test/integration` folder. An integration
 test suite aims to verify that different units work together correctly. As such,
-while an integration test should still focus on one thing, it is not necessary
-to mock anything. Exceptions being, e.g., file system operations.
+while an integration test should still focus on one thing, it is generally not
+necessary to mock anything (exceptions include file system operations and
+network communication).
+
+### End-to-End Tests
+
+The end-to-end tests can be found in the `test-e2e` job in the GitHub Actions
+workflow `push-checks.yml`. Due to the nature of these tests they cannot be run
+locally. It is generally not necessary for you to add any end-to-end tests when
+you contribute to this Action. The end-to-end tests' primary function is verify
+that the source code can be run as an Action.
 
 ### Mutation Testing
 
-We employ [Mutation Testing] to improve the quality of unit tests. We use the
-mutation testing framework [StrykerJS]. By default the mutation tests run on all
-the source code using all the unit tests. After running the mutation tests, the
-mutation report is available in HTML format at `_reports/mutation/index.html`.
+We make use of [Mutation Testing] to improve the quality of unit tests. We use
+the mutation testing framework [StrykerJS]. By default the mutation tests run on
+all the source code using all the unit tests. After running the mutation tests,
+a mutation report is available in HTML format at `_reports/mutation/index.html`.
 
 You can change the mutation test configuration (in `stryker.config.js`) to focus
 on a subset of the source code or unit tests (we ask that you don't commit such
@@ -196,8 +209,8 @@ change the Stryker configuration as follows.
     "!src/**/__mocks__/**/*.ts",
   ],
   commandRunner: {
--   command: "npm run test:unit -- --runInBand --bail",
-+   command: "npm run test -- --runInBand --bail test/unit/path/to/file.test.ts",
+-   command: "npm run test:unit -- --runInBand",
++   command: "npm run test -- --runInBand test/unit/path/to/file.test.ts",
   },
 ```
 
