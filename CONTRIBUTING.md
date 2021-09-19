@@ -20,6 +20,7 @@ relevant sections of this document.
   - [Mocking](#mocking)
   - [Unit Tests](#unit-tests)
   - [Integration Tests](#integration-tests)
+  - [End-to-End Tests](#end-to-end-tests)
   - [Mutation Testing](#mutation-testing)
 
 > :information_source: If you want to make a contribution to v1 of the Action,
@@ -179,6 +180,14 @@ test suite aims to verify that different units work together correctly. As such,
 while an integration test should still focus on one thing, it is generally not
 necessary to mock anything (exceptions include file system operations and
 network communication).
+
+### End-to-End Tests
+
+The end-to-end tests can be found in the `test-e2e` job in the GitHub Actions
+workflow `push-checks.yml`. Due to the nature of these tests they cannot be run
+locally. It is generally not necessary for you to add any end-to-end tests when
+you contribute to this Action. The end-to-end tests' primary function is verify
+that the source code can be run as an Action.
 
 ### Mutation Testing
 
