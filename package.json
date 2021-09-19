@@ -8,6 +8,7 @@
   "main": "lib/index.js",
   "scripts": {
     "build": "rollup -c",
+    "postbuild": "node script/postbuild.js",
     "clean": "run-p clean:reports clean:temp",
     "clean:reports": "rm -rf ./_reports",
     "clean:temp": "rm -rf ./.cache ./.temp",
