@@ -92,6 +92,11 @@ jobs:
   test-e2e:
     name: Test - end-to-end
     needs: [test]
+    strategy:
+      matrix:
+        type:
+          - 1
+          - 2
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -116,6 +121,7 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           dry-run: true
+          svgo-version: ${{ matrix.type }}
       # and outputs things
       - name: Check SVGO Action output
         run: |
