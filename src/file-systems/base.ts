@@ -31,33 +31,39 @@ const LIST_FILES_ALWAYS_IGNORE: string[] = [
   "node_modules",
 ];
 
-function newListFiles({ fs, path }: Params): ListFilesFn {
-  const projectRoot = path.resolve(".");
+function* iterateFolderRecursively(
+  folder: string,
+  params: Params,
+): Iterable<FileHandle> {
+  const { fs, path } = params;
+  for (const entry of fs.readdirSync(folder)) {
+    if (LIST_FILES_ALWAYS_IGNORE.includes(entry)) {
+      continue;
+    }
 
-  function* helper(fileOrFolder: string): Iterable<FileHandle> {
-    for (const entry of fs.readdirSync(fileOrFolder)) {
-      if (LIST_FILES_ALWAYS_IGNORE.includes(entry)) {
-        continue;
-      }
+    const entryPath = path.resolve(folder, entry);
+    if (!fs.existsSync(entryPath)) {
+      continue;
+    }
 
-      const entryPath = path.resolve(fileOrFolder, entry);
-      if (!fs.existsSync(entryPath)) {
-        continue;
-      }
-
-      const lstat = fs.lstatSync(entryPath);
-      if (lstat.isFile()) {
-        yield {
-          path: entryPath.replace(`${projectRoot}/`, ""),
-        };
-      } else {
-        yield* helper(entryPath);
-      }
+    const lstat = fs.lstatSync(entryPath);
+    if (lstat.isFile()) {
+      yield { path: entryPath };
+    } else {
+      yield* iterateFolderRecursively(entryPath, params);
     }
   }
+}
 
+function newListFiles(params: Params): ListFilesFn {
+  const { path } = params;
+  const projectRoot = path.resolve(".");
   return function*() {
-    yield* helper(projectRoot);
+    for (const entry of iterateFolderRecursively(projectRoot, params)) {
+      yield {
+        path: entry.path.replace(`${projectRoot}/`, ""),
+      };
+    }
   };
 }
 
