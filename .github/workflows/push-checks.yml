@@ -114,17 +114,22 @@ jobs:
         run: |
           mkdir ./../action
           mv ./lib ./action.yml ./../action
-      # Just verify that the Action can be invoked successfully ...
-      - name: Run SVGO Action
+      - name: Test run the SVGO Action
         id: svgo
         uses: ./../action
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          dry-run: true
           svgo-version: ${{ matrix.type }}
-      # and outputs things
       - name: Check SVGO Action output
         run: |
-          if ! [ "${{ steps.svgo.outputs.SVG_COUNT }}" = "0" ]; then
+          if ! [ "${{ steps.svgo.outputs.DID_OPTIMIZE }}" = "true" ]; then
             exit 1
+          fi
+
+          if ! [ "${{ steps.svgo.outputs.SVG_COUNT }}" = "2" ]; then
+            exit 2
+          fi
+
+          if ! [ "${{ steps.svgo.outputs.OPTIMIZED_COUNT }}" = "2" ]; then
+            exit 3
           fi
