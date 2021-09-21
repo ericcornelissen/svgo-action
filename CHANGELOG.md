@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Fix bug when the `dry-run` value is invalid. ([#439])
 - Remove "SVGO config file not found" warning if it's not configured. ([#432])
 
 ## [2.0.5] - 2021-09-17
@@ -315,5 +316,6 @@ Versioning].
 [#429]: https://github.com/ericcornelissen/svgo-action/pull/429
 [#430]: https://github.com/ericcornelissen/svgo-action/pull/430
 [#432]: https://github.com/ericcornelissen/svgo-action/pull/432
+[#439]: https://github.com/ericcornelissen/svgo-action/pull/439
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
