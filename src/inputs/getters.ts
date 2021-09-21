@@ -118,7 +118,10 @@ function getIsDryRun(
   const inputName = INPUT_NAME_DRY_RUN;
   const input = getBooleanInput({ inp, inputName, defaultValue });
   if (!input.valid) {
-    return [input, errors.New("invalid dry-run value")];
+    return [
+      { ...input, value: true },
+      errors.New("invalid dry-run value"),
+    ];
   }
 
   return [input, null];
