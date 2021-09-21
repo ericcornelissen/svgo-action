@@ -7,6 +7,10 @@ const defaultConfig = {
     provided: true,
     value: false,
   },
+  isStrictMode: {
+    provided: true,
+    value: false,
+  },
   svgoConfigPath: {
     provided: true,
     value: "svgo.config.js",
