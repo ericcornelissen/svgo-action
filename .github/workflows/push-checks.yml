@@ -114,7 +114,21 @@ jobs:
         run: |
           mkdir ./../action
           mv ./lib ./action.yml ./../action
-      - name: Test run the SVGO Action
+      - name: Get SVGs pre-action
+        id: original-svgs
+        run: |
+          export SVG=$(cat test/__fixtures__/not-optimized-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
+          echo "::set-output name=svg-one::$SVG"
+
+          export SVG=$(cat test/__fixtures__/not-optimized-2.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
+          echo "::set-output name=svg-two::$SVG"
+      - name: Run the SVGO Action
         id: svgo
         uses: ./../action
         with:
@@ -133,3 +147,15 @@ jobs:
           if ! [ "${{ steps.svgo.outputs.OPTIMIZED_COUNT }}" = "2" ]; then
             exit 3
           fi
+      - name: Check optimized SVGs
+        run: |
+          export SVG=$(cat test/__fixtures__/not-optimized-1.svg)
+          if [[ '${{ steps.original-svgs.outputs.svg-one }}' = $SVG ]]; then
+            exit 4
+          fi
+
+          export SVG=$(cat test/__fixtures__/not-optimized-2.svg)
+          if [[ '${{ steps.original-svgs.outputs.svg-two }}' = $SVG ]]; then
+            exit 5
+          fi
+
