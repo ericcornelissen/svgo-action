@@ -43,20 +43,30 @@ function includeInFolderIteration(entryPath: string, { fs }: Params): boolean {
   return true;
 }
 
-function* iterateFolderRecursively(
+function* listFolderEntries(
   folder: string,
   params: Params,
-): Iterable<FileHandle> {
+): Iterable<string> {
   const { fs, path } = params;
   for (const entry of fs.readdirSync(folder)) {
     const entryPath = path.resolve(folder, entry);
     if (includeInFolderIteration(entryPath, params)) {
-      const lstat = fs.lstatSync(entryPath);
-      if (lstat.isFile()) {
-        yield { path: entryPath };
-      } else {
-        yield* iterateFolderRecursively(entryPath, params);
-      }
+      yield entryPath;
+    }
+  }
+}
+
+function* iterateFolderRecursively(
+  folder: string,
+  params: Params,
+): Iterable<FileHandle> {
+  const { fs } = params;
+  for (const entryPath of listFolderEntries(folder, params)) {
+    const lstat = fs.lstatSync(entryPath);
+    if (lstat.isFile()) {
+      yield { path: entryPath };
+    } else {
+      yield* iterateFolderRecursively(entryPath, params);
     }
   }
 }
