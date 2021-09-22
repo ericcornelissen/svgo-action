@@ -130,6 +130,8 @@ jobs:
           echo "::set-output name=svg-two::$SVG"
       - name: Run the SVGO Action
         id: svgo
+        env:
+          SVGO_ACTION_E2E_TEST: true
         uses: ./../action
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
