@@ -18,8 +18,5 @@ max_line_length = unset
 [*.md]
 max_line_length = unset # Handled by markdownlint
 
-[test/fixtures/*.json]
-max_line_length = unset # Irrelevant for fixtures
-
 [lib/*]
 max_line_length = unset # Irrelevant for generated files
