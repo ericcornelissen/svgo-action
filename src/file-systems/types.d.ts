@@ -1,4 +1,6 @@
-import type { error, Context } from "../types";
+import type { error } from "../types";
+
+type FileFilter = (filepath: string) => boolean;
 
 interface FileHandle {
   readonly path: string;
@@ -17,7 +19,7 @@ type ReadFileFn = (file: FileHandle) => Promise<[string, error]>;
 type WriteFileFn = (file: FileHandle, content: string) => Promise<error>;
 
 export {
-  Context,
+  FileFilter,
   FileHandle,
   FileSystem,
   ListFilesFn,
