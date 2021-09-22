@@ -43,10 +43,7 @@ function includeInFolderIteration(entryPath: string, { fs }: Params): boolean {
   return true;
 }
 
-function* listFolderEntries(
-  folder: string,
-  params: Params,
-): Iterable<string> {
+function* listFolderEntries(folder: string, params: Params): Iterable<string> {
   const { fs, path } = params;
   for (const entry of fs.readdirSync(folder)) {
     const entryPath = path.resolve(folder, entry);
