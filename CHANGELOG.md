@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.0.6] - 2021-09-22
+
 - Fix bug when the `dry-run` value is invalid. ([#439])
 - Remove "SVGO config file not found" warning if it's not configured. ([#432])
 
