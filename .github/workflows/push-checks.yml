@@ -109,11 +109,6 @@ jobs:
         run: npm ci
       - name: Build SVGO Action
         run: npm run build
-      - name: Move SVGO Action
-        shell: bash
-        run: |
-          mkdir ./../action
-          mv ./lib ./action.yml ./../action
       - name: Get SVGs pre-action
         id: original-svgs
         run: |
@@ -132,7 +127,7 @@ jobs:
         id: svgo
         env:
           SVGO_ACTION_E2E_TEST: true
-        uses: ./../action
+        uses: ./
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           svgo-version: ${{ matrix.type }}
