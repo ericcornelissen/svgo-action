@@ -31,26 +31,32 @@ const LIST_FILES_ALWAYS_IGNORE: string[] = [
   "node_modules",
 ];
 
+function includeInFolderIteration(entryPath: string, { fs }: Params): boolean {
+  if (LIST_FILES_ALWAYS_IGNORE.some((file) => entryPath.endsWith(file))) {
+    return false;
+  }
+
+  if (!fs.existsSync(entryPath)) {
+    return false;
+  }
+
+  return true;
+}
+
 function* iterateFolderRecursively(
   folder: string,
   params: Params,
 ): Iterable<FileHandle> {
   const { fs, path } = params;
   for (const entry of fs.readdirSync(folder)) {
-    if (LIST_FILES_ALWAYS_IGNORE.includes(entry)) {
-      continue;
-    }
-
     const entryPath = path.resolve(folder, entry);
-    if (!fs.existsSync(entryPath)) {
-      continue;
-    }
-
-    const lstat = fs.lstatSync(entryPath);
-    if (lstat.isFile()) {
-      yield { path: entryPath };
-    } else {
-      yield* iterateFolderRecursively(entryPath, params);
+    if (includeInFolderIteration(entryPath, params)) {
+      const lstat = fs.lstatSync(entryPath);
+      if (lstat.isFile()) {
+        yield { path: entryPath };
+      } else {
+        yield* iterateFolderRecursively(entryPath, params);
+      }
     }
   }
 }
