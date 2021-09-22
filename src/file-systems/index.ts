@@ -1,4 +1,4 @@
-import type { FileHandle, FileSystem } from "./types";
+import type { FileFilter, FileHandle, FileSystem } from "./types";
 
 import * as fs from "fs";
 import * as path from "path";
@@ -9,8 +9,6 @@ import NewFilteredFileSystem from "./filtered";
 interface Params {
   readonly filters: FileFilter[];
 }
-
-type FileFilter = (filepath: string) => boolean;
 
 function New({ filters }: Params): FileSystem {
   const baseFs = NewBaseFileSystem({ fs, path });

@@ -2,6 +2,7 @@
 
 import { error } from "../types";
 import type {
+  FileFilter,
   FileHandle,
   FileSystem,
   ListFilesFn,
@@ -10,8 +11,6 @@ import type {
 } from "./types";
 
 import errors from "../errors";
-
-type FileFilter = (filepath: string) => boolean;
 
 interface Params {
   readonly fs: FileSystem;
