@@ -14,6 +14,14 @@ inputs:
   svgo-version:
     description: 'The (major) SVGO version to be used (`1` or `2`)'
 
+outputs:
+  DID_OPTIMIZE:
+    description: 'Boolean indicating if any SVGs were optimized'
+  OPTIMIZED_COUNT:
+    description: 'The number of SVGs that were optimized'
+  SVG_COUNT:
+    description: 'The number of SVGs that were detected '
+
 runs:
   using: 'node12'
   main: 'lib/index.js'
