@@ -5,6 +5,7 @@ This documentation describes all the inputs of the SVGO Action.
 - [Dry Run](#dry-run)
 - [Ignore](#ignore)
 - [Repository Token](#repository-token)
+- [Strict Mode](#strict-mode)
 - [SVGO Config](#svgo-config)
 - [SVGO Version](#svgo-version)
 
@@ -110,6 +111,30 @@ To set the `repo-token` you will typically want to use:
 - uses: ericcornelissen/svgo-action@v2
   with:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
+```
+
+---
+
+## Strict Mode
+
+| Name     | Default value |
+| -------- | ------------- |
+| `strict` | `false`       |
+
+The `strict` input can be used to enable _strict mode_. In strict mode, the
+Action will fail in the event of a non-critical error (instead of just in the
+event of a critical error).
+
+### Examples
+
+To enable strict mode:
+
+```yaml
+# .github/workflows/optimize.yml
+
+- uses: ericcornelissen/svgo-action@v2
+  with:
+    strict: true
 ```
 
 ---
