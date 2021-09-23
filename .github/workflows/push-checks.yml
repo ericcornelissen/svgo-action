@@ -90,13 +90,15 @@ jobs:
           file: ./_reports/coverage/lcov.info
           flags: ${{ matrix.type }}
   test-e2e:
-    name: Test - end-to-end
+    name: Test - end-to-end (SVGO ${{ matrix.svgo.version }})
     needs: [test]
     strategy:
       matrix:
-        type:
-          - 1
-          - 2
+        svgo:
+          - version: 1
+            config: test/__fixtures__/.svgo.yml
+          - version: 2
+            config: test/__fixtures__/svgo.config.js
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -143,7 +145,8 @@ jobs:
         uses: ./
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          svgo-version: ${{ matrix.type }}
+          svgo-config: ${{ matrix.svgo.config }}
+          svgo-version: ${{ matrix.svgo.version }}
           ignore: |
             test/__fixtures__/ignore/*
       - name: Check SVGO Action output
