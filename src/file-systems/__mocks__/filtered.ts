@@ -1,17 +1,7 @@
-const FilteredFileSystemMock = {
-  listFiles: jest.fn()
-    .mockReturnValue([])
-    .mockName("FilteredFileSystem.listFiles"),
-  readFile: jest.fn()
-    .mockReturnValue(["", null])
-    .mockName("FilteredFileSystem.readFile"),
-  writeFile: jest.fn()
-    .mockReturnValue(null)
-    .mockName("FilteredFileSystem.writeFile"),
-};
+import { fileSystemMock } from "./__common__";
 
 const NewFilteredFileSystemMock = jest.fn()
-  .mockReturnValue(FilteredFileSystemMock)
+  .mockReturnValue(fileSystemMock)
   .mockName("NewFilteredFileSystem");
 
 export default NewFilteredFileSystemMock;

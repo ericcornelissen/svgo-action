@@ -1,23 +1,7 @@
-const listFiles = jest.fn()
-  .mockReturnValue([])
-  .mockName("fs.listFiles");
-
-const readFile = jest.fn()
-  .mockResolvedValue(["", null])
-  .mockName("fs.readFile");
-
-const writeFile = jest.fn()
-  .mockResolvedValue(null)
-  .mockName("fs.writeFile");
-
-const fileSystem = {
-  listFiles,
-  readFile,
-  writeFile,
-};
+import { fileSystemMock } from "./__common__";
 
 const New = jest.fn()
-  .mockReturnValue(fileSystem)
+  .mockReturnValue(fileSystemMock)
   .mockName("file-systems.New");
 
 export default {

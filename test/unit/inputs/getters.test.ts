@@ -82,9 +82,7 @@ describe("inputs/getters.ts", () => {
       expect(result.value).toEqual(configuredValue);
     });
 
-    test("can't get input", () => {
-      const defaultValue = true;
-
+    test.each([true, false])("can't get input", (defaultValue) => {
       when(inp.getBooleanInput)
         .calledWith(inputKey, expect.anything())
         .mockImplementation(() => { throw new Error(""); });

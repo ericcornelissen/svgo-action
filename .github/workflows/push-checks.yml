@@ -73,7 +73,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .cache/jest
-          key: ${{ runner.os }}-jest-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
           restore-keys: |
             ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-
             ${{ runner.os }}-jest-${{ matrix.type }}-
