@@ -57,6 +57,7 @@ The following inputs are available when using the SVGO Action.
 | `dry-run`      | Prevent the Action from writing changes   | `false`            | [docs](./docs/inputs.md#dry-run)          |
 | `ignore`       | [glob]s of SVGs that should be ignored    | `""`               | [docs](./docs/inputs.md#ignore)           |
 | `repo-token`   | A GitHub token (`secrets.GITHUB_TOKEN`)   | `""`               | [docs](./docs/inputs.md#repository-token) |
+| `strict`       | Fail on non-critical errors               | `false`            | [docs](./docs/inputs.md#strict-mode)      |
 | `svgo-config`  | The path of the [SVGO] configuration file | `"svgo.config.js"` | [docs](./docs/inputs.md#svgo-config)      |
 | `svgo-version` | The (major) version of [SVGO] to use      | `2`                | [docs](./docs/inputs.md#svgo-version)     |
 
@@ -69,6 +70,7 @@ Workflow file. For example:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
     dry-run: true
     ignore: do/not/optimize/**/
+    strict: false
     svgo-config: path/to/svgo-config.js
     svgo-version: 2
 ```
