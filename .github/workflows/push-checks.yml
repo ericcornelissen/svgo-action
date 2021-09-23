@@ -96,9 +96,9 @@ jobs:
       matrix:
         svgo:
           - version: 1
-            config: test/__fixtures__/.svgo.yml
+            config: test/end-to-end/.svgo.yml
           - version: 2
-            config: test/__fixtures__/svgo.config.js
+            config: test/end-to-end/svgo.config.js
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -118,22 +118,22 @@ jobs:
         run: npm ci
       - name: Build SVGO Action
         run: npm run build
-      - name: Get SVGs pre-action
+      - name: Get the content of SVGs
         id: original-svgs
         run: |
-          export SVG=$(cat test/__fixtures__/not-optimized-1.svg)
+          export SVG=$(cat test/end-to-end/not-optimized-1.svg)
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
           echo "::set-output name=svg-one::$SVG"
 
-          export SVG=$(cat test/__fixtures__/not-optimized-2.svg)
+          export SVG=$(cat test/end-to-end/not-optimized-2.svg)
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
           echo "::set-output name=svg-two::$SVG"
 
-          export SVG=$(cat test/__fixtures__/ignore/ignored-1.svg)
+          export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
@@ -148,8 +148,8 @@ jobs:
           svgo-config: ${{ matrix.svgo.config }}
           svgo-version: ${{ matrix.svgo.version }}
           ignore: |
-            test/__fixtures__/ignore/*
-      - name: Check SVGO Action output
+            test/end-to-end/ignore/*
+      - name: Check the output value
         run: |
           if ! [ "${{ steps.svgo.outputs.DID_OPTIMIZE }}" = "true" ]; then
             exit 1
@@ -162,20 +162,20 @@ jobs:
           if ! [ "${{ steps.svgo.outputs.OPTIMIZED_COUNT }}" = "2" ]; then
             exit 3
           fi
-      - name: Check optimized SVGs
+      - name: Check the content of optimized SVGs
         run: |
-          export SVG=$(cat test/__fixtures__/not-optimized-1.svg)
+          export SVG=$(cat test/end-to-end/not-optimized-1.svg)
           if [[ '${{ steps.original-svgs.outputs.svg-one }}' = $SVG ]]; then
             exit 4
           fi
 
-          export SVG=$(cat test/__fixtures__/not-optimized-2.svg)
+          export SVG=$(cat test/end-to-end/not-optimized-2.svg)
           if [[ '${{ steps.original-svgs.outputs.svg-two }}' = $SVG ]]; then
             exit 5
           fi
-      - name: Check ignored SVGs
+      - name: Check the content of ignored SVGs
         run: |
-          export SVG=$(cat test/__fixtures__/ignore/ignored-1.svg)
+          export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           if ! [[ '${{ steps.original-svgs.outputs.ignored-svg-one }}' = $SVG ]]; then
             exit 6
           fi
