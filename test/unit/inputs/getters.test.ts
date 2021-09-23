@@ -123,7 +123,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getIsStrictMode(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid strict value");
-      expect(result.value).toEqual(defaultValue);
+      expect(result.value).toEqual(true);
     });
   });
 

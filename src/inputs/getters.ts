@@ -135,7 +135,10 @@ function getIsStrictMode(
   const inputName = INPUT_NAME_STRICT;
   const input = getBooleanInput({ inp, inputName, defaultValue });
   if (!input.valid) {
-    return [input, errors.New("invalid strict value")];
+    return [
+      { ...input, value: true },
+      errors.New("invalid strict value"),
+    ];
   }
 
   return [input, null];
