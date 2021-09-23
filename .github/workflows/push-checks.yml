@@ -133,6 +133,12 @@ jobs:
           SVG="${SVG//$'\r'/'%0D'}"
           echo "::set-output name=svg-two::$SVG"
 
+          export SVG=$(cat test/end-to-end/optimized-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
+          echo "::set-output name=optimized-svg-one::$SVG"
+
           export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
@@ -155,14 +161,14 @@ jobs:
             exit 1
           fi
 
-          if ! [ "${{ steps.svgo.outputs.SVG_COUNT }}" = "2" ]; then
+          if ! [ "${{ steps.svgo.outputs.SVG_COUNT }}" = "3" ]; then
             exit 2
           fi
 
           if ! [ "${{ steps.svgo.outputs.OPTIMIZED_COUNT }}" = "2" ]; then
             exit 3
           fi
-      - name: Check the content of optimized SVGs
+      - name: Check the content of newly optimized SVGs
         run: |
           export SVG=$(cat test/end-to-end/not-optimized-1.svg)
           if [[ '${{ steps.original-svgs.outputs.svg-one }}' = $SVG ]]; then
@@ -173,10 +179,16 @@ jobs:
           if [[ '${{ steps.original-svgs.outputs.svg-two }}' = $SVG ]]; then
             exit 5
           fi
+      - name: Check the content of already optimized SVGs
+        run: |
+          export SVG=$(cat test/end-to-end/optimized-1.svg)
+          if ! [[ '${{ steps.original-svgs.outputs.optimized-svg-one }}' = $SVG ]]; then
+            exit 6
+          fi
       - name: Check the content of ignored SVGs
         run: |
           export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           if ! [[ '${{ steps.original-svgs.outputs.ignored-svg-one }}' = $SVG ]]; then
-            exit 6
+            exit 7
           fi
 
