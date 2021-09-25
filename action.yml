@@ -39,6 +39,16 @@ inputs:
     default: 1
     required: false
 
+outputs:
+  DID_OPTIMIZE:
+    description: 'Boolean indicating if any SVGs were optimized'
+  OPTIMIZED_COUNT:
+    description: 'The number of SVGs that were optimized'
+  SKIPPED_COUNT:
+    description: 'The number of SVGs that were detected but not optimized'
+  SVG_COUNT:
+    description: 'The number of SVGs that were detected'
+
 runs:
   using: 'node12'
   main: 'lib/index.js'
