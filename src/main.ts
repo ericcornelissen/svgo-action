@@ -19,28 +19,42 @@ interface Params {
   readonly github: GitHub;
 }
 
+interface ActionManagement {
+  fail(msg: string): void;
+  strictFail(msg: string): void;
+}
+
+function createActionManagement(
+  core: Core,
+  strict: boolean,
+): ActionManagement {
+  return {
+    fail: core.setFailed,
+    strictFail: strict ? core.setFailed : core.warning,
+  };
+}
+
 async function main({
   core,
   github,
 }: Params): Promise<void> {
   const [config, err0] = inputs.New({ inp: core });
+
+  const action = createActionManagement(core, config.isStrictMode.value);
   if (err0 !== null) {
-    core.warning(`Your SVGO Action configuration is incorrect: ${err0}`);
-    if (config.isStrictMode.value) {
-      core.setFailed("SVGO Action input(s) invalid");
-    }
+    action.strictFail(`Your SVGO Action configuration is incorrect: ${err0}`);
   }
 
   const context = github.context;
   const [event, ok0] = isEventSupported({ context });
   if (!ok0) {
-    return core.setFailed(`Event not supported '${event}'`);
+    action.fail(`Event not supported '${event}'`);
   }
 
   const [client, err1] = clients.New({ github, inp: core });
   if (err1 !== null && isClientRequired(event)) {
     core.debug(err1);
-    return core.setFailed("Could not get GitHub client");
+    action.fail("Could not get GitHub client");
   }
 
   const configFs = fileSystems.New({ filters: [] });
@@ -48,27 +62,24 @@ async function main({
     path: config.svgoConfigPath.value,
   });
   if (err2 !== null && config.svgoConfigPath.provided) {
-    core.warning("SVGO configuration file not found");
-    if (config.isStrictMode.value) {
-      core.setFailed("SVGO configuration file not found");
-    }
+    action.strictFail("SVGO configuration file not found");
   }
 
   const [svgoConfig, err3] = parseRawSvgoConfig({ config, rawConfig });
   if (err3 !== null && err2 === null) {
-    return core.setFailed("Could not parse SVGO configuration");
+    action.fail("Could not parse SVGO configuration");
   }
 
   const [optimizer, err4] = svgo.New({ config, svgoConfig });
   if (err4 !== null) {
     core.debug(err4);
-    return core.setFailed("Could not initialize SVGO");
+    action.fail("Could not initialize SVGO");
   }
 
   const [filters, err5] = await getFilters({ client, config, github });
   if (err5 !== null) {
     core.debug(err5);
-    return core.setFailed("Could not initialize filters");
+    action.fail("Could not initialize filters");
   }
 
   const fs = fileSystems.New({ filters });
@@ -82,13 +93,13 @@ async function main({
   const [optimizeData, err6] = await optimize.Files({ config, fs, optimizer });
   if (err6 !== null) {
     core.debug(err6);
-    return core.setFailed("Failed to optimize all SVGs");
+    action.fail("Failed to optimize all SVGs");
   }
 
   const err7 = outputs.Set({ context, data: optimizeData, out: core });
   if (err7 !== null) {
     core.debug(err7);
-    return core.setFailed("Failed to set output values");
+    action.fail("Failed to set output values");
   }
 }
 

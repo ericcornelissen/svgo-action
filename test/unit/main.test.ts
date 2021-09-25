@@ -164,9 +164,9 @@ describe("main.ts", () => {
       await main({ core, github });
 
       expect(core.setFailed).toHaveBeenCalledWith(
-        "SVGO Action input(s) invalid",
+        expect.stringContaining(errMsg),
       );
-      expect(core.warning).toHaveBeenCalledWith(
+      expect(core.warning).not.toHaveBeenCalledWith(
         expect.stringContaining(errMsg),
       );
     });
@@ -291,8 +291,8 @@ describe("main.ts", () => {
       expect(core.setFailed).toHaveBeenCalledWith(
         "SVGO configuration file not found",
       );
-      expect(core.warning).toHaveBeenCalledWith(
-        expect.stringContaining("configuration file"),
+      expect(core.warning).not.toHaveBeenCalledWith(
+        "SVGO configuration file not found",
       );
     });
 
