@@ -5,6 +5,7 @@ import type { InputValue } from "./types";
 import {
   INPUT_NAME_IGNORE,
   INPUT_NAME_DRY_RUN,
+  INPUT_NAME_STRICT,
   INPUT_NAME_SVGO_CONFIG,
   INPUT_NAME_SVGO_VERSION,
 } from "../constants";
@@ -127,6 +128,22 @@ function getIsDryRun(
   return [input, null];
 }
 
+function getIsStrictMode(
+  inp: Inputter,
+  defaultValue: boolean,
+): [InputValue<boolean>, error] {
+  const inputName = INPUT_NAME_STRICT;
+  const input = getBooleanInput({ inp, inputName, defaultValue });
+  if (!input.valid) {
+    return [
+      { ...input, value: true },
+      errors.New("invalid strict value"),
+    ];
+  }
+
+  return [input, null];
+}
+
 function getSvgoConfigPath(
   inp: Inputter,
   defaultValue: string,
@@ -160,6 +177,7 @@ function getSvgoVersion(
 export {
   getIgnoreGlobs,
   getIsDryRun,
+  getIsStrictMode,
   getSvgoConfigPath,
   getSvgoVersion,
 };

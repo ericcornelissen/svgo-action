@@ -132,19 +132,44 @@ describe("main.ts", () => {
     });
   });
 
-  test("config error", async () => {
-    const [baseConfig] = inputs.New({ inp: core });
+  describe("config error", () => {
+    test("not strict mode", async () => {
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign(baseConfig, {
+        isStrictMode: { value: false },
+      });
 
-    const errMsg = "No configuration found";
-    const err = errors.New(errMsg);
-    inputs.New.mockReturnValueOnce([baseConfig, err]);
+      const errMsg = "No configuration found";
+      const err = errors.New(errMsg);
+      inputs.New.mockReturnValueOnce([config, err]);
 
-    await main({ core, github });
+      await main({ core, github });
 
-    expect(core.setFailed).not.toHaveBeenCalled();
-    expect(core.warning).toHaveBeenCalledWith(
-      expect.stringContaining(errMsg),
-    );
+      expect(core.setFailed).not.toHaveBeenCalled();
+      expect(core.warning).toHaveBeenCalledWith(
+        expect.stringContaining(errMsg),
+      );
+    });
+
+    test("in strict mode", async () => {
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign(baseConfig, {
+        isStrictMode: { value: true },
+      });
+
+      const errMsg = "No configuration found";
+      const err = errors.New(errMsg);
+      inputs.New.mockReturnValueOnce([config, err]);
+
+      await main({ core, github });
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        "SVGO Action input(s) invalid",
+      );
+      expect(core.warning).toHaveBeenCalledWith(
+        expect.stringContaining(errMsg),
+      );
+    });
   });
 
   test("event error", async () => {
@@ -191,10 +216,14 @@ describe("main.ts", () => {
   });
 
   describe("svgo configuration", () => {
-    test("read error only, path not configured", async () => {
+    test.each([
+      true,
+      false,
+    ])("read error only, path not configured, strict=%p", async (strict) => {
       const [baseConfig] = inputs.New({ inp: core });
       const config = Object.assign(baseConfig, {
         svgoConfigPath: { provided: false },
+        isStrictMode: { value: strict },
       });
       inputs.New.mockReturnValueOnce([config, null]);
 
@@ -215,10 +244,11 @@ describe("main.ts", () => {
       );
     });
 
-    test("read error only, path configured", async () => {
+    test("read error only, path configured, strict=false", async () => {
       const [baseConfig] = inputs.New({ inp: core });
       const config = Object.assign(baseConfig, {
         svgoConfigPath: { provided: true },
+        isStrictMode: { value: false },
       });
       inputs.New.mockReturnValueOnce([config, null]);
 
@@ -234,6 +264,33 @@ describe("main.ts", () => {
       await main({ core, github });
 
       expect(core.setFailed).not.toHaveBeenCalledWith();
+      expect(core.warning).toHaveBeenCalledWith(
+        expect.stringContaining("configuration file"),
+      );
+    });
+
+    test("read error only, path configured, strict=true", async () => {
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign(baseConfig, {
+        svgoConfigPath: { provided: true },
+        isStrictMode: { value: true },
+      });
+      inputs.New.mockReturnValueOnce([config, null]);
+
+      const err = errors.New("read file error");
+      fileSystems.New.mockReturnValueOnce({
+        listFiles: jest.fn(),
+        readFile: jest.fn()
+          .mockResolvedValueOnce(["", err])
+          .mockName("fs.readFile"),
+        writeFile: jest.fn(),
+      });
+
+      await main({ core, github });
+
+      expect(core.setFailed).toHaveBeenCalledWith(
+        "SVGO configuration file not found",
+      );
       expect(core.warning).toHaveBeenCalledWith(
         expect.stringContaining("configuration file"),
       );
@@ -259,7 +316,13 @@ describe("main.ts", () => {
       );
     });
 
-    test("read error & parse error", async () => {
+    test("read error & parse error (not strict)", async () => {
+      const [baseConfig] = inputs.New({ inp: core });
+      const config = Object.assign(baseConfig, {
+        isStrictMode: { value: false },
+      });
+      inputs.New.mockReturnValueOnce([config, null]);
+
       const parseErr = errors.New("parse file error");
       const readErr = errors.New("read file error");
 
