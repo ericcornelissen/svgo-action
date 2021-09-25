@@ -7,7 +7,11 @@ Versioning].
 
 ## [Unreleased]
 
-- Add a `strict` option. ([#436])
+- _No changes yet_
+
+## [2.1.0] - 2021-09-25
+
+- Add a strict mode. ([#436])
 - Add output definitions to the Action manifest. ([#445])
 - Update SVGO v2 to `v2.7.0`. ([#446])
 
@@ -58,6 +62,11 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.10] - 2021-09-25
+
+- Add output definitions to the Action manifest. ([#449])
+- Update SVGO v2 to `v2.7.0`. ([#448])
 
 ## [1.3.9] - 2021-09-17
 
@@ -326,5 +335,7 @@ Versioning].
 [#439]: https://github.com/ericcornelissen/svgo-action/pull/439
 [#445]: https://github.com/ericcornelissen/svgo-action/pull/445
 [#446]: https://github.com/ericcornelissen/svgo-action/pull/446
+[#448]: https://github.com/ericcornelissen/svgo-action/pull/448
+[#449]: https://github.com/ericcornelissen/svgo-action/pull/449
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
