@@ -101,6 +101,43 @@ describe("inputs/index.ts", () => {
       });
     });
 
+    describe("::isStrictMode", () => {
+      test("can get value", () => {
+        const configuredValue = false;
+
+        getters.getIsStrictMode.mockReturnValueOnce([
+          { provided, value: configuredValue },
+          null,
+        ]);
+
+        const [result, err] = inputs.New({ inp });
+
+        expect(err).toBeNull();
+        expect(result.isStrictMode.value).toEqual(configuredValue);
+      });
+
+      test("can't get value", () => {
+        const errorMsg = "couldn't get strict";
+
+        getters.getIsStrictMode.mockReturnValueOnce([
+          { provided, value: true },
+          errors.New(errorMsg),
+        ]);
+
+        const [, err] = inputs.New({ inp });
+
+        expect(err).not.toBeNull();
+        expect(err).toContain(errorMsg);
+      });
+
+      test("default value", () => {
+        const [, err] = inputs.New({ inp });
+
+        expect(err).toBeNull();
+        expect(getters.getIsStrictMode).toHaveBeenCalledWith(inp, false);
+      });
+    });
+
     describe("::svgoConfigPath", () => {
       beforeEach(() => {
         getters.getSvgoConfigPath.mockClear();

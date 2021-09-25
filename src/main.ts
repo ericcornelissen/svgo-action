@@ -26,6 +26,9 @@ async function main({
   const [config, err0] = inputs.New({ inp: core });
   if (err0 !== null) {
     core.warning(`Your SVGO Action configuration is incorrect: ${err0}`);
+    if (config.isStrictMode.value) {
+      core.setFailed("SVGO Action input(s) invalid");
+    }
   }
 
   const context = github.context;
@@ -46,6 +49,9 @@ async function main({
   });
   if (err2 !== null && config.svgoConfigPath.provided) {
     core.warning("SVGO configuration file not found");
+    if (config.isStrictMode.value) {
+      core.setFailed("SVGO configuration file not found");
+    }
   }
 
   const [svgoConfig, err3] = parseRawSvgoConfig({ config, rawConfig });

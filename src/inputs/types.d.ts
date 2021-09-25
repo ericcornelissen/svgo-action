@@ -3,6 +3,7 @@ import type { SupportedSvgoVersions } from "../svgo";
 interface Config {
   readonly ignoreGlobs: InputValue<string[]>;
   readonly isDryRun: InputValue<boolean>;
+  readonly isStrictMode: InputValue<boolean>;
   readonly svgoConfigPath: InputValue<string>;
   readonly svgoVersion: InputValue<SupportedSvgoVersions>;
 }

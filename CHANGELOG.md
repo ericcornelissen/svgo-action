@@ -7,6 +7,17 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.0] - 2021-09-25
+
+- Add a strict mode. ([#436])
+- Add output definitions to the Action manifest. ([#445])
+- Update SVGO v2 to `v2.7.0`. ([#446])
+
+## [2.0.6] - 2021-09-22
+
+- Fix bug when the `dry-run` value is invalid. ([#439])
 - Remove "SVGO config file not found" warning if it's not configured. ([#432])
 
 ## [2.0.5] - 2021-09-17
@@ -51,6 +62,11 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.10] - 2021-09-25
+
+- Add output definitions to the Action manifest. ([#449])
+- Update SVGO v2 to `v2.7.0`. ([#448])
 
 ## [1.3.9] - 2021-09-17
 
@@ -315,5 +331,11 @@ Versioning].
 [#429]: https://github.com/ericcornelissen/svgo-action/pull/429
 [#430]: https://github.com/ericcornelissen/svgo-action/pull/430
 [#432]: https://github.com/ericcornelissen/svgo-action/pull/432
+[#436]: https://github.com/ericcornelissen/svgo-action/pull/436
+[#439]: https://github.com/ericcornelissen/svgo-action/pull/439
+[#445]: https://github.com/ericcornelissen/svgo-action/pull/445
+[#446]: https://github.com/ericcornelissen/svgo-action/pull/446
+[#448]: https://github.com/ericcornelissen/svgo-action/pull/448
+[#449]: https://github.com/ericcornelissen/svgo-action/pull/449
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

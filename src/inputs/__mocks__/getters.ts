@@ -8,6 +8,10 @@ const getIsDryRun = jest.fn()
   .mockReturnValue([defaultConfig.isDryRun, null])
   .mockName("getters.getIsDryRun");
 
+const getIsStrictMode = jest.fn()
+  .mockReturnValue([defaultConfig.isStrictMode, null])
+  .mockName("getters.getIsStrictMode");
+
 const getSvgoConfigPath = jest.fn()
   .mockReturnValue([defaultConfig.svgoConfigPath, null])
   .mockName("getters.getSvgoConfigPath");
@@ -19,6 +23,7 @@ const getSvgoVersion = jest.fn()
 export {
   getIgnoreGlobs,
   getIsDryRun,
+  getIsStrictMode,
   getSvgoConfigPath,
   getSvgoVersion,
 };

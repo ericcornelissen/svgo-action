@@ -7,6 +7,7 @@ jest.mock("../../../src/errors");
 import {
   getIgnoreGlobs,
   getIsDryRun,
+  getIsStrictMode,
   getSvgoConfigPath,
   getSvgoVersion,
 } from "../../../src/inputs/getters";
@@ -82,9 +83,7 @@ describe("inputs/getters.ts", () => {
       expect(result.value).toEqual(configuredValue);
     });
 
-    test("can't get input", () => {
-      const defaultValue = true;
-
+    test.each([true, false])("can't get input", (defaultValue) => {
       when(inp.getBooleanInput)
         .calledWith(inputKey, expect.anything())
         .mockImplementation(() => { throw new Error(""); });
@@ -92,6 +91,38 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getIsDryRun(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid dry-run value");
+      expect(result.value).toEqual(true);
+    });
+  });
+
+  describe("::getIsStrictMode", () => {
+    const inputKey = "strict";
+
+    beforeEach(() => {
+      inp.getBooleanInput.mockClear();
+    });
+
+    test.each([
+      true,
+      false,
+    ])("can get input (`%p`)", (configuredValue) => {
+      when(inp.getBooleanInput)
+        .calledWith(inputKey, expect.anything())
+        .mockReturnValue(configuredValue);
+
+      const [result, err] = getIsStrictMode(inp, !configuredValue);
+      expect(err).toBeNull();
+      expect(result.value).toEqual(configuredValue);
+    });
+
+    test.each([true, false])("can't get input", (defaultValue) => {
+      when(inp.getBooleanInput)
+        .calledWith(inputKey, expect.anything())
+        .mockImplementation(() => { throw new Error(); });
+
+      const [result, err] = getIsStrictMode(inp, defaultValue);
+      expect(err).not.toBeNull();
+      expect(err).toContain("invalid strict value");
       expect(result.value).toEqual(true);
     });
   });

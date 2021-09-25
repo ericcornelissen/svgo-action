@@ -73,7 +73,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: .cache/jest
-          key: ${{ runner.os }}-jest-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
+          key: ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
           restore-keys: |
             ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-
             ${{ runner.os }}-jest-${{ matrix.type }}-
@@ -90,8 +90,15 @@ jobs:
           file: ./_reports/coverage/lcov.info
           flags: ${{ matrix.type }}
   test-e2e:
-    name: Test - end-to-end
+    name: Test - end-to-end (SVGO ${{ matrix.svgo.version }})
     needs: [test]
+    strategy:
+      matrix:
+        svgo:
+          - version: 1
+            config: test/end-to-end/.svgo.yml
+          - version: 2
+            config: test/end-to-end/svgo.config.js
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -100,25 +107,87 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
+      - name: Cache dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
       - name: Install dependencies
         run: npm ci
       - name: Build SVGO Action
         run: npm run build
-      - name: Move SVGO Action
-        shell: bash
+      - name: Get the content of SVGs
+        id: original-svgs
         run: |
-          mkdir ./../action
-          mv ./lib ./action.yml ./../action
-      # Just verify that the Action can be invoked successfully ...
-      - name: Run SVGO Action
+          export SVG=$(cat test/end-to-end/not-optimized-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
+          echo "::set-output name=svg-one::$SVG"
+
+          export SVG=$(cat test/end-to-end/not-optimized-2.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
+          echo "::set-output name=svg-two::$SVG"
+
+          export SVG=$(cat test/end-to-end/optimized-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
+          echo "::set-output name=optimized-svg-one::$SVG"
+
+          export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
+          echo "::set-output name=ignored-svg-one::$SVG"
+      - name: Run the SVGO Action
         id: svgo
-        uses: ./../action
+        env:
+          SVGO_ACTION_E2E_TEST: true
+        uses: ./
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          dry-run: true
-      # and outputs things
-      - name: Check SVGO Action output
+          svgo-config: ${{ matrix.svgo.config }}
+          svgo-version: ${{ matrix.svgo.version }}
+          ignore: |
+            test/end-to-end/ignore/*
+      - name: Check the output value
         run: |
-          if ! [ "${{ steps.svgo.outputs.SVG_COUNT }}" = "0" ]; then
+          if ! [ "${{ steps.svgo.outputs.DID_OPTIMIZE }}" = "true" ]; then
             exit 1
+          fi
+
+          if ! [ "${{ steps.svgo.outputs.SVG_COUNT }}" = "3" ]; then
+            exit 2
+          fi
+
+          if ! [ "${{ steps.svgo.outputs.OPTIMIZED_COUNT }}" = "2" ]; then
+            exit 3
+          fi
+      - name: Check the content of newly optimized SVGs
+        run: |
+          export SVG=$(cat test/end-to-end/not-optimized-1.svg)
+          if [[ '${{ steps.original-svgs.outputs.svg-one }}' = $SVG ]]; then
+            exit 4
+          fi
+
+          export SVG=$(cat test/end-to-end/not-optimized-2.svg)
+          if [[ '${{ steps.original-svgs.outputs.svg-two }}' = $SVG ]]; then
+            exit 5
+          fi
+      - name: Check the content of already optimized SVGs
+        run: |
+          export SVG=$(cat test/end-to-end/optimized-1.svg)
+          if ! [[ '${{ steps.original-svgs.outputs.optimized-svg-one }}' = $SVG ]]; then
+            exit 6
+          fi
+      - name: Check the content of ignored SVGs
+        run: |
+          export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
+          if ! [[ '${{ steps.original-svgs.outputs.ignored-svg-one }}' = $SVG ]]; then
+            exit 7
           fi

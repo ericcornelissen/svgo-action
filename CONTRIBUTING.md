@@ -184,10 +184,15 @@ network communication).
 ### End-to-End Tests
 
 The end-to-end tests can be found in the `test-e2e` job in the GitHub Actions
-workflow `push-checks.yml`. Due to the nature of these tests they cannot be run
-locally. It is generally not necessary for you to add any end-to-end tests when
-you contribute to this Action. The end-to-end tests' primary function is verify
-that the source code can be run as an Action.
+workflow `push-checks.yml`. The end-to-end test run on the files found in
+`test/end-to-end`. The end-to-end tests verify three things:
+
+1. That the source code (in `src/`, not `lib/`) can be run as an Action,
+1. That the Action outputs are correct, and
+1. That SVGs are modified on disk.
+
+Due to the nature of these tests they cannot be run locally. It is generally not
+necessary to add new end-to-end tests when you make a contribution.
 
 ### Mutation Testing
 
