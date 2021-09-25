@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Add a `strict` option. ([#436])
 - Add output definitions to the Action manifest. ([#445])
 
 ## [2.0.6] - 2021-09-22
@@ -320,6 +321,7 @@ Versioning].
 [#429]: https://github.com/ericcornelissen/svgo-action/pull/429
 [#430]: https://github.com/ericcornelissen/svgo-action/pull/430
 [#432]: https://github.com/ericcornelissen/svgo-action/pull/432
+[#436]: https://github.com/ericcornelissen/svgo-action/pull/436
 [#439]: https://github.com/ericcornelissen/svgo-action/pull/439
 [#445]: https://github.com/ericcornelissen/svgo-action/pull/445
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
