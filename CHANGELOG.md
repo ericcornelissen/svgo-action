@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.10] - 2021-09-25
+
 - Add output definitions to the Action manifest. ([#449])
 - Update SVGO v2 to `v2.7.0`. ([#448])
 
