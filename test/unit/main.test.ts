@@ -197,7 +197,7 @@ describe("main.ts", () => {
     expect(core.setFailed).not.toHaveBeenCalled();
   });
 
-  test("client error, client required (%s)", async () => {
+  test("client error, client required", async () => {
     helpers.isClientRequired.mockReturnValue(true);
 
     const [client] = clients.New({ github, inp: core });
@@ -211,8 +211,6 @@ describe("main.ts", () => {
     expect(core.setFailed).toHaveBeenCalledWith(
       expect.stringContaining("GitHub client"),
     );
-
-    expect(core.debug).toHaveBeenCalledWith(err);
   });
 
   describe("svgo configuration", () => {
@@ -366,8 +364,6 @@ describe("main.ts", () => {
     expect(core.setFailed).toHaveBeenCalledWith(
       expect.stringContaining("filters"),
     );
-
-    expect(core.debug).toHaveBeenCalledWith(err);
   });
 
   test("optimize error", async () => {
@@ -385,8 +381,6 @@ describe("main.ts", () => {
     expect(core.setFailed).toHaveBeenCalledWith(
       expect.stringContaining("optimize"),
     );
-
-    expect(core.debug).toHaveBeenCalledWith(err);
   });
 
   test("outputs error", async () => {
@@ -399,7 +393,5 @@ describe("main.ts", () => {
     expect(core.setFailed).toHaveBeenCalledWith(
       expect.stringContaining("output"),
     );
-
-    expect(core.debug).toHaveBeenCalledWith(err);
   });
 });

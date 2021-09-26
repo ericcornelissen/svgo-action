@@ -1,4 +1,5 @@
 import type { Core, GitHub } from "./types";
+import type { error } from "./types";
 
 import clients from "./clients";
 import fileSystems from "./file-systems";
@@ -20,8 +21,18 @@ interface Params {
 }
 
 interface ActionManagement {
-  fail(msg: string): void;
-  strictFail(msg: string): void;
+  failIf(condition: boolean | error, msg: string): void;
+  strictFailIf(condition: boolean | error, msg: string): void;
+}
+
+function runIf(condition: boolean | error, fn: () => void): void {
+  if (typeof condition === "boolean") {
+    if (condition) {
+      fn();
+    }
+  } else if (condition !== null) {
+    fn();
+  }
 }
 
 function createActionManagement(
@@ -29,8 +40,12 @@ function createActionManagement(
   strict: boolean,
 ): ActionManagement {
   return {
-    fail: core.setFailed,
-    strictFail: strict ? core.setFailed : core.warning,
+    failIf: (condition: boolean | error, msg: string) => {
+      runIf(condition, () => core.setFailed(msg));
+    },
+    strictFailIf: (condition: boolean | error, msg: string) => {
+      runIf(condition, () => strict ? core.setFailed(msg) : core.warning(msg));
+    },
   };
 }
 
@@ -41,46 +56,35 @@ async function main({
   const [config, err0] = inputs.New({ inp: core });
 
   const action = createActionManagement(core, config.isStrictMode.value);
-  if (err0 !== null) {
-    action.strictFail(`Your SVGO Action configuration is incorrect: ${err0}`);
-  }
+  action.strictFailIf(err0, `Invalid SVGO Action configuration: ${err0}`);
 
   const context = github.context;
   const [event, ok0] = isEventSupported({ context });
-  if (!ok0) {
-    action.fail(`Event not supported '${event}'`);
-  }
+  action.failIf(!ok0, `Event not supported '${event}'`);
 
   const [client, err1] = clients.New({ github, inp: core });
-  if (err1 !== null && isClientRequired(event)) {
-    core.debug(err1);
-    action.fail("Could not get GitHub client");
-  }
+  action.failIf(err1 && isClientRequired(event), "Could not get GitHub client");
 
   const configFs = fileSystems.New({ filters: [] });
   const [rawConfig, err2] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
     path: config.svgoConfigPath.value,
   });
-  if (err2 !== null && config.svgoConfigPath.provided) {
-    action.strictFail("SVGO configuration file not found");
-  }
+  action.strictFailIf(
+    err2 !== null && config.svgoConfigPath.provided,
+    "SVGO configuration file not found",
+  );
 
   const [svgoConfig, err3] = parseRawSvgoConfig({ config, rawConfig });
-  if (err3 !== null && err2 === null) {
-    action.fail("Could not parse SVGO configuration");
-  }
+  action.failIf(
+    err3 !== null && err2 === null,
+    "Could not parse SVGO configuration",
+  );
 
   const [optimizer, err4] = svgo.New({ config, svgoConfig });
-  if (err4 !== null) {
-    core.debug(err4);
-    action.fail("Could not initialize SVGO");
-  }
+  action.failIf(err4, "Could not initialize SVGO");
 
   const [filters, err5] = await getFilters({ client, config, github });
-  if (err5 !== null) {
-    core.debug(err5);
-    action.fail("Could not initialize filters");
-  }
+  action.failIf(err5, "Could not initialize filters");
 
   const fs = fileSystems.New({ filters });
 
@@ -91,16 +95,10 @@ async function main({
   }
 
   const [optimizeData, err6] = await optimize.Files({ config, fs, optimizer });
-  if (err6 !== null) {
-    core.debug(err6);
-    action.fail("Failed to optimize all SVGs");
-  }
+  action.failIf(err6, "Failed to optimize all SVGs");
 
   const err7 = outputs.Set({ context, data: optimizeData, out: core });
-  if (err7 !== null) {
-    core.debug(err7);
-    action.fail("Failed to set output values");
-  }
+  action.failIf(err7, "Failed to set output values");
 }
 
 export default main;
