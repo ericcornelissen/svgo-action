@@ -1,7 +1,7 @@
 import type { Core } from "../types";
 import type { ActionManager } from "./types";
 
-import { StandardActionManager } from "./action-manager";
+import StandardActionManager from "./action-manager";
 
 interface Config {
   readonly isStrictMode: {

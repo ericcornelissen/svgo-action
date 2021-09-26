@@ -24,6 +24,4 @@ class StandardActionManager implements ActionManager {
   }
 }
 
-export {
-  StandardActionManager,
-};
+export default StandardActionManager;

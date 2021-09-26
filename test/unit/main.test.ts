@@ -2,6 +2,7 @@ import { mocked } from "ts-jest/utils";
 
 jest.mock("@actions/core");
 jest.mock("@actions/github");
+jest.mock("../../src/action-management");
 jest.mock("../../src/clients");
 jest.mock("../../src/errors");
 jest.mock("../../src/file-systems");
@@ -14,6 +15,7 @@ jest.mock("../../src/svgo");
 import * as _core from "@actions/core";
 import * as _github from "@actions/github";
 
+import _actionManagement from "../../src/action-management";
 import _clients from "../../src/clients";
 import _errors from "../../src/errors";
 import _fileSystems from "../../src/file-systems";
@@ -25,6 +27,7 @@ import _svgo from "../../src/svgo";
 
 const core = mocked(_core);
 const github = mocked(_github);
+const actionManagement = mocked(_actionManagement);
 const clients = mocked(_clients);
 const inputs = mocked(_inputs);
 const errors = mocked(_errors);
@@ -37,11 +40,21 @@ const svgo = mocked(_svgo);
 import main from "../../src/main";
 
 describe("main.ts", () => {
+  let action;
+
+  beforeAll(() => {
+    const [config] = inputs.New({ inp: core });
+    action = actionManagement.New({ core, config });
+  });
+
   beforeEach(() => {
     core.info.mockClear();
-    core.setFailed.mockClear();
-    core.warning.mockClear();
 
+    const actionManagerMock = mocked(action);
+    actionManagerMock.failIf.mockClear();
+    actionManagerMock.strictFailIf.mockClear();
+
+    actionManagement.New.mockClear();
     clients.New.mockClear();
     fileSystems.New.mockClear();
     helpers.getFilters.mockClear();
@@ -58,6 +71,7 @@ describe("main.ts", () => {
 
     expect(core.setFailed).not.toHaveBeenCalled();
 
+    expect(actionManagement.New).toHaveBeenCalledTimes(1);
     expect(clients.New).toHaveBeenCalledTimes(1);
     expect(fileSystems.New).toHaveBeenCalledTimes(2);
     expect(helpers.getFilters).toHaveBeenCalledTimes(1);
@@ -78,7 +92,7 @@ describe("main.ts", () => {
       "repository_dispatch",
       "schedule",
       "workflow_dispatch",
-    ])("events ('%s')", async (eventName) => {
+    ])("the event ('%s')", async (eventName) => {
       helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
 
       await main({ core, github });
@@ -91,7 +105,7 @@ describe("main.ts", () => {
     test.each([
       1,
       2,
-    ])("SVGO (major) version (`%s`)", async (svgoVersion) => {
+    ])("the SVGO (major) version (`%s`)", async (svgoVersion) => {
       const value = svgoVersion as 1 | 2;
 
       const [baseConfig] = inputs.New({ inp: core });
@@ -132,215 +146,210 @@ describe("main.ts", () => {
     });
   });
 
-  describe("config error", () => {
-    test("not strict mode", async () => {
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign(baseConfig, {
-        isStrictMode: { value: false },
-      });
-
-      const errMsg = "No configuration found";
-      const err = errors.New(errMsg);
-      inputs.New.mockReturnValueOnce([config, err]);
-
-      await main({ core, github });
-
-      expect(core.setFailed).not.toHaveBeenCalled();
-      expect(core.warning).toHaveBeenCalledWith(
-        expect.stringContaining(errMsg),
-      );
+  test("config error", async () => {
+    const [baseConfig] = inputs.New({ inp: core });
+    const config = Object.assign(baseConfig, {
+      isStrictMode: { value: false },
     });
 
-    test("in strict mode", async () => {
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign(baseConfig, {
-        isStrictMode: { value: true },
-      });
+    const action = actionManagement.New({ core, config });
 
-      const errMsg = "No configuration found";
-      const err = errors.New(errMsg);
-      inputs.New.mockReturnValueOnce([config, err]);
+    const errMsg = "No configuration found";
+    const err = errors.New(errMsg);
+    inputs.New.mockReturnValueOnce([config, err]);
 
-      await main({ core, github });
+    await main({ core, github });
 
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining(errMsg),
-      );
-      expect(core.warning).not.toHaveBeenCalledWith(
-        expect.stringContaining(errMsg),
-      );
-    });
+    expect(action.strictFailIf).toHaveBeenCalledWith(
+      err,
+      expect.stringContaining(errMsg),
+    );
   });
 
   test("event error", async () => {
+    const [config] = inputs.New({ inp: core });
+    const action = actionManagement.New({ core, config });
+
     const eventName = "unknown";
     helpers.isEventSupported.mockReturnValueOnce([eventName, false]);
 
     await main({ core, github });
 
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
-    expect(core.setFailed).toHaveBeenCalledWith(
+    expect(action.failIf).toHaveBeenCalledWith(
+      true,
       expect.stringContaining(`'${eventName}'`),
     );
   });
 
-  test("client error, client not required", async () => {
-    helpers.isClientRequired.mockReturnValue(false);
+  describe("client", () => {
+    const failureMessage = "Could not get GitHub client";
 
-    const [client] = clients.New({ github, inp: core });
-
-    const err = errors.New("GitHub client error");
-    clients.New.mockReturnValueOnce([client, err]);
-
-    await main({ core, github });
-
-    expect(core.setFailed).not.toHaveBeenCalled();
-  });
-
-  test("client error, client required", async () => {
-    helpers.isClientRequired.mockReturnValue(true);
-
-    const [client] = clients.New({ github, inp: core });
-
-    const err = errors.New("GitHub client error");
-    clients.New.mockReturnValueOnce([client, err]);
-
-    await main({ core, github });
-
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
-    expect(core.setFailed).toHaveBeenCalledWith(
-      expect.stringContaining("GitHub client"),
-    );
-  });
-
-  describe("svgo configuration", () => {
     test.each([
       true,
       false,
-    ])("read error only, path not configured, strict=%p", async (strict) => {
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign(baseConfig, {
-        svgoConfigPath: { provided: false },
-        isStrictMode: { value: strict },
-      });
-      inputs.New.mockReturnValueOnce([config, null]);
+    ])("no client error (client required=%s)", async (clientRequired) => {
+      helpers.isClientRequired.mockReturnValue(clientRequired);
 
-      const err = errors.New("read file error");
-      fileSystems.New.mockReturnValueOnce({
-        listFiles: jest.fn(),
-        readFile: jest.fn()
-          .mockResolvedValueOnce(["", err])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn(),
-      });
+      const [client] = clients.New({ github, inp: core });
+      clients.New.mockReturnValueOnce([client, null]);
 
       await main({ core, github });
 
-      expect(core.setFailed).not.toHaveBeenCalledWith();
-      expect(core.warning).not.toHaveBeenCalledWith(
-        expect.stringContaining("configuration file"),
-      );
+      expect(action.failIf).toHaveBeenCalledWith(null, failureMessage);
     });
 
-    test("read error only, path configured, strict=false", async () => {
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign(baseConfig, {
-        svgoConfigPath: { provided: true },
-        isStrictMode: { value: false },
-      });
-      inputs.New.mockReturnValueOnce([config, null]);
+    test.each([
+      true,
+      false,
+    ])("client error (client required=%s)", async (clientRequired) => {
+      helpers.isClientRequired.mockReturnValue(clientRequired);
 
-      const err = errors.New("read file error");
-      fileSystems.New.mockReturnValueOnce({
-        listFiles: jest.fn(),
-        readFile: jest.fn()
-          .mockResolvedValueOnce(["", err])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn(),
-      });
+      const [client] = clients.New({ github, inp: core });
+
+      const err = errors.New("GitHub client error");
+      clients.New.mockReturnValueOnce([client, err]);
 
       await main({ core, github });
 
-      expect(core.setFailed).not.toHaveBeenCalledWith();
-      expect(core.warning).toHaveBeenCalledWith(
-        expect.stringContaining("configuration file"),
+      expect(action.failIf).toHaveBeenCalledWith(
+        clientRequired,
+        failureMessage,
       );
     });
+  });
 
-    test("read error only, path configured, strict=true", async () => {
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign(baseConfig, {
-        svgoConfigPath: { provided: true },
-        isStrictMode: { value: true },
+  describe("svgo configuration", () => {
+    describe("reading", () => {
+      const failureMessage = "SVGO configuration file not found";
+
+      test.each([
+        true,
+        false,
+      ])("no error (path configured=%s)", async (pathConfigured) => {
+        const [baseConfig] = inputs.New({ inp: core });
+        const config = Object.assign(baseConfig, {
+          svgoConfigPath: { provided: pathConfigured },
+        });
+
+        inputs.New.mockReturnValueOnce([config, null]);
+
+        await main({ core, github });
+
+        expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
-      inputs.New.mockReturnValueOnce([config, null]);
 
-      const err = errors.New("read file error");
-      fileSystems.New.mockReturnValueOnce({
-        listFiles: jest.fn(),
-        readFile: jest.fn()
-          .mockResolvedValueOnce(["", err])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn(),
+      test("with error, without path configured", async () => {
+        const [baseConfig] = inputs.New({ inp: core });
+        const config = Object.assign(baseConfig, {
+          svgoConfigPath: { provided: false },
+        });
+
+        inputs.New.mockReturnValueOnce([config, null]);
+
+        const err = errors.New("read file error");
+        fileSystems.New.mockReturnValueOnce({
+          listFiles: jest.fn(),
+          readFile: jest.fn()
+            .mockResolvedValueOnce(["", err])
+            .mockName("fs.readFile"),
+          writeFile: jest.fn(),
+        });
+
+        await main({ core, github });
+
+        expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
 
-      await main({ core, github });
+      test("with error, with path configured", async () => {
+        const [baseConfig] = inputs.New({ inp: core });
+        const config = Object.assign(baseConfig, {
+          svgoConfigPath: { provided: true },
+          isStrictMode: { value: false },
+        });
 
-      expect(core.setFailed).toHaveBeenCalledWith(
-        "SVGO configuration file not found",
-      );
-      expect(core.warning).not.toHaveBeenCalledWith(
-        "SVGO configuration file not found",
-      );
+        inputs.New.mockReturnValueOnce([config, null]);
+
+        const err = errors.New("read file error");
+        fileSystems.New.mockReturnValueOnce({
+          listFiles: jest.fn(),
+          readFile: jest.fn()
+            .mockResolvedValueOnce(["", err])
+            .mockName("fs.readFile"),
+          writeFile: jest.fn(),
+        });
+
+        await main({ core, github });
+
+        expect(action.strictFailIf).toHaveBeenCalledWith(true, failureMessage);
+      });
     });
 
-    test("parse error only", async () => {
-      const err = errors.New("parse file error");
+    describe("parsing", () => {
+      const failureMessage = "Could not parse SVGO configuration";
 
-      fileSystems.New.mockReturnValueOnce({
-        listFiles: jest.fn(),
-        readFile: jest.fn()
-          .mockResolvedValueOnce(["", null])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn(),
+      test.each([
+        null,
+        errors.New("read file error"),
+      ])("no error (read error=`%s`)", async (err) => {
+        fileSystems.New.mockReturnValueOnce({
+          listFiles: jest.fn(),
+          readFile: jest.fn()
+            .mockResolvedValueOnce(["", err])
+            .mockName("fs.readFile"),
+          writeFile: jest.fn(),
+        });
+        await main({ core, github });
+
+        expect(action.failIf).toHaveBeenCalledWith(false, failureMessage);
       });
-      helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
 
-      await main({ core, github });
+      test("with error but without read error", async () => {
+        const err = errors.New("parse file error");
 
-      expect(core.setFailed).toHaveBeenCalledTimes(1);
-      expect(core.setFailed).toHaveBeenCalledWith(
-        expect.stringContaining("SVGO configuration"),
-      );
-    });
+        fileSystems.New.mockReturnValueOnce({
+          listFiles: jest.fn(),
+          readFile: jest.fn()
+            .mockResolvedValueOnce(["", null])
+            .mockName("fs.readFile"),
+          writeFile: jest.fn(),
+        });
+        helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
 
-    test("read error & parse error (not strict)", async () => {
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign(baseConfig, {
-        isStrictMode: { value: false },
+        await main({ core, github });
+
+        expect(action.failIf).toHaveBeenCalledWith(true, failureMessage);
       });
-      inputs.New.mockReturnValueOnce([config, null]);
 
-      const parseErr = errors.New("parse file error");
-      const readErr = errors.New("read file error");
+      test("with error and read error", async () => {
+        const [baseConfig] = inputs.New({ inp: core });
+        const config = Object.assign(baseConfig, {
+          isStrictMode: { value: false },
+        });
 
-      fileSystems.New.mockReturnValueOnce({
-        listFiles: jest.fn(),
-        readFile: jest.fn()
-          .mockResolvedValueOnce(["", readErr])
-          .mockName("fs.readFile"),
-        writeFile: jest.fn(),
+        inputs.New.mockReturnValueOnce([config, null]);
+
+        const parseErr = errors.New("parse file error");
+        const readErr = errors.New("read file error");
+
+        fileSystems.New.mockReturnValueOnce({
+          listFiles: jest.fn(),
+          readFile: jest.fn()
+            .mockResolvedValueOnce(["", readErr])
+            .mockName("fs.readFile"),
+          writeFile: jest.fn(),
+        });
+        helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, parseErr]);
+
+        await main({ core, github });
+
+        expect(action.failIf).toHaveBeenCalledWith(false, failureMessage);
       });
-      helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, parseErr]);
-
-      await main({ core, github });
-
-      expect(core.setFailed).not.toHaveBeenCalled();
     });
   });
 
   test("svgo creation error", async () => {
     const [config] = inputs.New({ inp: core });
+    const action = actionManagement.New({ core, config });
     const [optimizer] = svgo.New({ config });
 
     const err = errors.New("SVGO error");
@@ -348,26 +357,30 @@ describe("main.ts", () => {
 
     await main({ core, github });
 
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
-    expect(core.setFailed).toHaveBeenCalledWith(
+    expect(action.failIf).toHaveBeenCalledWith(
+      err,
       expect.stringContaining("SVGO"),
     );
   });
 
   test("filters error (event: \"push\")", async () => {
+    const [config] = inputs.New({ inp: core });
+    const action = actionManagement.New({ core, config });
+
     const err = errors.New("create filter error");
     helpers.getFilters.mockResolvedValueOnce([[], err]);
 
     await main({ core, github });
 
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
-    expect(core.setFailed).toHaveBeenCalledWith(
+    expect(action.failIf).toHaveBeenCalledWith(
+      err,
       expect.stringContaining("filters"),
     );
   });
 
   test("optimize error", async () => {
     const [config] = inputs.New({ inp: core });
+    const action = actionManagement.New({ core, config });
     const fs = fileSystems.New({ filters: [] });
     const [optimizer] = svgo.New({ config });
     const [data] = await optimize.Files({ config, fs, optimizer });
@@ -377,20 +390,23 @@ describe("main.ts", () => {
 
     await main({ core, github });
 
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
-    expect(core.setFailed).toHaveBeenCalledWith(
+    expect(action.failIf).toHaveBeenCalledWith(
+      err,
       expect.stringContaining("optimize"),
     );
   });
 
   test("outputs error", async () => {
+    const [config] = inputs.New({ inp: core });
+    const action = actionManagement.New({ core, config });
+
     const err = errors.New("Output error");
     outputs.Set.mockReturnValueOnce(err);
 
     await main({ core, github });
 
-    expect(core.setFailed).toHaveBeenCalledTimes(1);
-    expect(core.setFailed).toHaveBeenCalledWith(
+    expect(action.failIf).toHaveBeenCalledWith(
+      err,
       expect.stringContaining("output"),
     );
   });
