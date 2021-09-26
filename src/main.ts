@@ -1,6 +1,6 @@
 import type { Core, GitHub } from "./types";
-import type { error } from "./types";
 
+import actionManagement from "./action-management";
 import clients from "./clients";
 import fileSystems from "./file-systems";
 import inputs from "./inputs";
@@ -20,42 +20,13 @@ interface Params {
   readonly github: GitHub;
 }
 
-interface ActionManagement {
-  failIf(condition: boolean | error, msg: string): void;
-  strictFailIf(condition: boolean | error, msg: string): void;
-}
-
-function runIf(condition: boolean | error, fn: () => void): void {
-  if (typeof condition === "boolean") {
-    if (condition) {
-      fn();
-    }
-  } else if (condition !== null) {
-    fn();
-  }
-}
-
-function createActionManagement(
-  core: Core,
-  strict: boolean,
-): ActionManagement {
-  return {
-    failIf: (condition: boolean | error, msg: string) => {
-      runIf(condition, () => core.setFailed(msg));
-    },
-    strictFailIf: (condition: boolean | error, msg: string) => {
-      runIf(condition, () => strict ? core.setFailed(msg) : core.warning(msg));
-    },
-  };
-}
-
 async function main({
   core,
   github,
 }: Params): Promise<void> {
   const [config, err0] = inputs.New({ inp: core });
 
-  const action = createActionManagement(core, config.isStrictMode.value);
+  const action = actionManagement.New({ core, config });
   action.strictFailIf(err0, `Invalid SVGO Action configuration: ${err0}`);
 
   const context = github.context;
