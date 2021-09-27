@@ -36,6 +36,7 @@ The following [inputs] are available in the `pull_request` context.
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -72,6 +73,7 @@ The following [inputs] are available in the `push` context.
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -106,6 +108,7 @@ The following [inputs] are available in the `schedule` context.
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :x:                | :x:                |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -142,6 +145,7 @@ The following [inputs] are available in the `repository_dispatch` and
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :x:                | :x:                |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
