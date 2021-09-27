@@ -77,7 +77,6 @@ The following [inputs] are available in the `push` context.
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
-
 ### Outputs
 
 The following [outputs] are available in the `push` context.
