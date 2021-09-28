@@ -50,14 +50,18 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).toBeNull();
         expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, []);
@@ -87,14 +91,18 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).toBeNull();
         expect(getters.getIsDryRun).toHaveBeenCalledWith(inp, false);
@@ -124,14 +132,18 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).toBeNull();
         expect(getters.getIsStrictMode).toHaveBeenCalledWith(inp, false);
@@ -165,7 +177,9 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
@@ -225,7 +239,9 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
