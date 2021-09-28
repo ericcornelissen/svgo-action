@@ -29,8 +29,7 @@ async function main({ core, github }: Params): Promise<void> {
     core.info("Dry mode enabled, no changes will be written");
   }
 
-  const context = github.context;
-  const [event, ok0] = isEventSupported({ context });
+  const [event, ok0] = isEventSupported(github);
   core.info(`Running SVGO Action in '${event}' context`);
   action.failIf(!ok0, `Event not supported '${event}'`);
 
@@ -63,7 +62,7 @@ async function main({ core, github }: Params): Promise<void> {
   const [optimizeData, err6] = await optimize.Files({ config, fs, optimizer });
   action.failIf(err6, "Failed to optimize SVGs");
 
-  const err7 = outputs.Set({ context, data: optimizeData, out: core });
+  const err7 = outputs.Set({ env: github, data: optimizeData, out: core });
   action.failIf(err7, "Failed to set output values");
 }
 
