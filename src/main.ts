@@ -20,17 +20,18 @@ interface Params {
   readonly github: GitHub;
 }
 
-async function main({
-  core,
-  github,
-}: Params): Promise<void> {
+async function main({ core, github }: Params): Promise<void> {
   const [config, err0] = inputs.New({ inp: core });
-
   const action = actionManagement.New({ core, config });
   action.strictFailIf(err0, `Invalid SVGO Action configuration: ${err0}`);
 
+  if (config.isDryRun.value) {
+    core.info("Dry mode enabled, no changes will be written");
+  }
+
   const context = github.context;
   const [event, ok0] = isEventSupported({ context });
+  core.info(`Running SVGO Action in '${event}' context`);
   action.failIf(!ok0, `Event not supported '${event}'`);
 
   const [client, err1] = clients.New({ github, inp: core });
@@ -52,21 +53,15 @@ async function main({
   );
 
   const [optimizer, err4] = svgo.New({ config, svgoConfig });
+  core.info(`Using SVGO major version ${config.svgoVersion.value}`);
   action.failIf(err4, "Could not initialize SVGO");
 
   const [filters, err5] = await getFilters({ client, config, github });
-  action.failIf(err5, "Could not initialize filters");
+  action.failIf(err5, "Could not initialize file filters");
 
   const fs = fileSystems.New({ filters });
-
-  core.info(`Running SVGO Action in '${event}' context`);
-  core.info(`Using SVGO major version ${config.svgoVersion.value}`);
-  if (config.isDryRun.value) {
-    core.info("Dry mode enabled, no changes will be written");
-  }
-
   const [optimizeData, err6] = await optimize.Files({ config, fs, optimizer });
-  action.failIf(err6, "Failed to optimize all SVGs");
+  action.failIf(err6, "Failed to optimize SVGs");
 
   const err7 = outputs.Set({ context, data: optimizeData, out: core });
   action.failIf(err7, "Failed to set output values");
