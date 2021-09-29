@@ -12,13 +12,17 @@ interface Context {
   readonly eventName: string;
 }
 
+interface Environment {
+  readonly context: Context;
+}
+
 interface OptimizedProjectStats {
   readonly optimizedCount: number;
   readonly svgCount: number;
 }
 
 interface Params {
-  readonly context: Context;
+  readonly env: Environment;
   readonly data: OptimizedProjectStats;
   readonly out: Outputter;
 }
@@ -63,8 +67,8 @@ function getOutputNamesFor(event: string): [OutputName[], error] {
   }
 }
 
-function Set({ context, data, out }: Params): error {
-  const [names, err] = getOutputNamesFor(context.eventName);
+function Set({ env, data, out }: Params): error {
+  const [names, err] = getOutputNamesFor(env.context.eventName);
   for (const name of names) {
     const fn = outputsMap.get(name) as DataToOutput;
     const value = fn(data);
