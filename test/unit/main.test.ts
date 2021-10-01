@@ -175,7 +175,7 @@ describe("main.ts", () => {
 
     await main({ core, github });
 
-    expect(action.failIf).toHaveBeenCalledWith(
+    expect(action.strictFailIf).toHaveBeenCalledWith(
       true,
       expect.stringContaining(`'${eventName}'`),
     );
