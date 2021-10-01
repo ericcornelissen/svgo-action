@@ -2,6 +2,6 @@ import { fileSystemMock } from "./__common__";
 
 const NewFilteredFileSystemMock = jest.fn()
   .mockReturnValue(fileSystemMock)
-  .mockName("NewFilteredFileSystem");
+  .mockName("file-systems.NewFilteredFileSystem");
 
 export default NewFilteredFileSystemMock;

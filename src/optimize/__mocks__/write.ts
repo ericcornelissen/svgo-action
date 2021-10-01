@@ -1,6 +1,6 @@
 const writeFiles = jest.fn()
   .mockResolvedValue(null)
-  .mockName("write.ts::writeFiles");
+  .mockName("optimize.writeFiles");
 
 export {
   writeFiles,

@@ -11,6 +11,6 @@ const Client = jest.fn()
         .mockName("Client.pulls.listFiles"),
     },
   })
-  .mockName("Client.[constructor]");
+  .mockName("clients.Client.[constructor]");
 
 export default Client;
