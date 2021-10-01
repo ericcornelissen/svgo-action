@@ -31,7 +31,7 @@ async function main({ core, github }: Params): Promise<void> {
 
   const [event, ok0] = isEventSupported(github);
   core.info(`Running SVGO Action in '${event}' context`);
-  action.failIf(!ok0, `Event not supported '${event}'`);
+  action.strictFailIf(!ok0, `Event not supported '${event}'`);
 
   const [client, err1] = clients.New({ github, inp: core });
   action.failIf(err1 && isClientRequired(event), "Could not get GitHub client");
