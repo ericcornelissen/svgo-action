@@ -15,6 +15,12 @@ to improve the documentation.
 
 ---
 
+> :warning: The Action will run on any event if [strict mode] is not enabled.
+> However, this is not officially supported so you may encounter unexpected
+> behaviour.
+
+---
+
 ## `on: pull_request`
 
 > Find out more in the GitHub Actions documentation on [`pull_request` events],
@@ -171,3 +177,4 @@ The following [outputs] are available in the `repository_dispatch` and
 [outputs]: ./outputs.md
 [path filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestpaths
 [svgs that are ignored]: ./inputs.md#ignore
+[strict mode]: ./inputs.md#strict-mode
