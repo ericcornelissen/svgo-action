@@ -5,8 +5,6 @@ import {
   DEFAULT_IGNORE_GLOBS,
   DEFAULT_IS_DRY_RUN,
   DEFAULT_IS_STRICT_MODE,
-  DEFAULT_SVGO_V1_CONFIG_PATH,
-  DEFAULT_SVGO_V2_CONFIG_PATH,
   DEFAULT_SVGO_VERSION,
 } from "../constants";
 import errors from "../errors";
@@ -17,17 +15,12 @@ import {
   getSvgoConfigPath,
   getSvgoVersion,
 } from "./getters";
+import {
+  getDefaultSvgoConfigPath,
+} from "./helpers";
 
 interface Params {
   readonly inp: Inputter;
-}
-
-function getDefaultSvgoConfigPath(svgoVersion: number): string {
-  if (svgoVersion === 1) {
-    return DEFAULT_SVGO_V1_CONFIG_PATH;
-  }
-
-  return DEFAULT_SVGO_V2_CONFIG_PATH;
 }
 
 function New({ inp }: Params): [Config, error] {
