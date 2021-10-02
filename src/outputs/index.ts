@@ -57,13 +57,12 @@ function getOutputNamesFor(event: string): [OutputName[], error] {
     case EVENT_REPOSITORY_DISPATCH:
     case EVENT_SCHEDULE:
     case EVENT_WORKFLOW_DISPATCH:
+    default:
       return [[
         OutputName.DID_OPTIMIZE,
         OutputName.OPTIMIZED_COUNT,
         OutputName.SVG_COUNT,
       ], null];
-    default:
-      return [[], `unknown event ${event}`];
   }
 }
 
