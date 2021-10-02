@@ -46,7 +46,7 @@ async function main({ core, github }: Params): Promise<void> {
   );
 
   const [svgoConfig, err3] = parseRawSvgoConfig({ config, rawConfig });
-  action.failIf(
+  action.strictFailIf(
     err3 !== null && err2 === null,
     "Could not parse SVGO configuration",
   );
