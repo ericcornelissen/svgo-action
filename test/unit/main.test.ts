@@ -300,7 +300,7 @@ describe("main.ts", () => {
         });
         await main({ core, github });
 
-        expect(action.failIf).toHaveBeenCalledWith(false, failureMessage);
+        expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
 
       test("with error but without read error", async () => {
@@ -317,7 +317,7 @@ describe("main.ts", () => {
 
         await main({ core, github });
 
-        expect(action.failIf).toHaveBeenCalledWith(true, failureMessage);
+        expect(action.strictFailIf).toHaveBeenCalledWith(true, failureMessage);
       });
 
       test("with error and read error", async () => {
@@ -342,7 +342,7 @@ describe("main.ts", () => {
 
         await main({ core, github });
 
-        expect(action.failIf).toHaveBeenCalledWith(false, failureMessage);
+        expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
     });
   });
