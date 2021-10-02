@@ -18,9 +18,9 @@ interface InputInfo<T> extends InputValue<T> {
 }
 
 interface Params<T> {
+  readonly defaultValue: T;
   readonly inp: Inputter;
   readonly inputName: string;
-  readonly defaultValue: T;
 }
 
 const INPUT_OPTIONS_REQUIRED = { required: true };

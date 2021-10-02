@@ -14,8 +14,8 @@ interface Config {
 }
 
 interface Params {
-  readonly fs: FileSystem;
   readonly config: Config;
+  readonly fs: FileSystem;
   readonly optimizer: Optimizer;
 }
 

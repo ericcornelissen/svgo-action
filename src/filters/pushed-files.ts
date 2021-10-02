@@ -5,12 +5,12 @@ import type { FilterFn } from "./types";
 import errors from "../errors";
 
 interface Commit {
-  id: string;
+  readonly id: string;
 }
 
 interface File {
-  readonly status: string;
   readonly filename: string;
+  readonly status: string;
 }
 
 interface Params {

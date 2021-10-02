@@ -22,8 +22,8 @@ interface OptimizedProjectStats {
 }
 
 interface Params {
-  readonly env: Environment;
   readonly data: OptimizedProjectStats;
+  readonly env: Environment;
   readonly out: Outputter;
 }
 

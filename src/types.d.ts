@@ -19,10 +19,10 @@ interface Context {
 
 // Type representing the relevant API of `@actions/core`.
 interface Core extends Inputter, Outputter {
+  debug(message: string): void;
   info(message: string): void;
   setFailed(message: string | Error): void;
   warning(message: string | Error): void;
-  debug(message: string): void;
 }
 
 // Type for errors.
@@ -30,8 +30,8 @@ type error = string | null;
 
 // Type representing the relevant API of `@actions/github`.
 interface GitHub {
-  getOctokit(token: string): Octokit;
   readonly context: Context;
+  getOctokit(token: string): Octokit;
 }
 
 // Type representing an object from which the Action inputs can be obtained.

@@ -12,7 +12,7 @@ import type {
 import errors from "../errors";
 
 interface Params {
-  fs: {
+  readonly fs: {
     existsSync(path: string): boolean;
     lstatSync(path: string): {
       isFile(): boolean;
@@ -21,7 +21,7 @@ interface Params {
     readFileSync(path: string): Buffer;
     writeFileSync(path: string, content: string): void;
   };
-  path: {
+  readonly path: {
     resolve(...paths: string[]): string;
   };
 }
