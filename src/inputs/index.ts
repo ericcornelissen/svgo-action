@@ -1,13 +1,13 @@
 import type { error, Inputter } from "../types";
 import type { Config } from "./types";
 
+import errors from "../errors";
 import {
   DEFAULT_IGNORE_GLOBS,
   DEFAULT_IS_DRY_RUN,
   DEFAULT_IS_STRICT_MODE,
   DEFAULT_SVGO_VERSION,
-} from "../constants";
-import errors from "../errors";
+} from "./constants";
 import {
   getIgnoreGlobs,
   getIsDryRun,

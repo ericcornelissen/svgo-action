@@ -2,14 +2,14 @@ import type { error, Inputter, InputterOptions } from "../types";
 import type { SupportedSvgoVersions } from "../svgo";
 import type { InputValue } from "./types";
 
+import errors from "../errors";
 import {
   INPUT_NAME_IGNORE,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_STRICT,
   INPUT_NAME_SVGO_CONFIG,
   INPUT_NAME_SVGO_VERSION,
-} from "../constants";
-import errors from "../errors";
+} from "./constants";
 
 type GetInput<T> = (name: string, options: InputterOptions) => T;
 

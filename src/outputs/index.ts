@@ -6,7 +6,7 @@ import {
   EVENT_REPOSITORY_DISPATCH,
   EVENT_SCHEDULE,
   EVENT_WORKFLOW_DISPATCH,
-} from "../constants";
+} from "./constants";
 
 interface Context {
   readonly eventName: string;

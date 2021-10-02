@@ -1,7 +1,7 @@
 import {
   DEFAULT_SVGO_V1_CONFIG_PATH,
   DEFAULT_SVGO_V2_CONFIG_PATH,
-} from "../constants";
+} from "./constants";
 
 function getDefaultSvgoConfigPath(svgoVersion: number): string {
   if (svgoVersion === 1) {
