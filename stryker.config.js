@@ -3,6 +3,7 @@ module.exports = {
   inPlace: false,
   mutate: [
     "src/**/*.ts",
+    "!src/index.ts",
     "!src/**/*.d.ts",
     "!src/**/__mocks__/**/*.ts",
   ],

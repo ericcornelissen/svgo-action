@@ -1,9 +1,7 @@
-const optimize = jest.fn()
-  .mockReturnValue({ data: "<svg></svg>" })
-  .mockName("SVGOptimizerV2.optimize");
+import { optimize } from "./__common__";
 
 const SVGOptimizer = jest.fn()
   .mockReturnValue({ optimize })
-  .mockName("SVGOptimizer");
+  .mockName("svgo.SVGOptimizerV2");
 
 export default SVGOptimizer;

@@ -4,12 +4,15 @@ import inp from "../../__common__/inputter.mock";
 
 jest.mock("../../../src/errors");
 jest.mock("../../../src/inputs/getters");
+jest.mock("../../../src/inputs/helpers");
 
 import * as _getters from "../../../src/inputs/getters";
+import * as _helpers from "../../../src/inputs/helpers";
 import inputs from "../../../src/inputs/index";
 import errors from "../../../src/errors";
 
 const getters = mocked(_getters);
+const helpers = mocked(_helpers);
 
 describe("inputs/index.ts", () => {
   describe("::New", () => {
@@ -25,9 +28,11 @@ describe("inputs/index.ts", () => {
       expect(getters.getIsDryRun).toHaveBeenCalledTimes(1);
       expect(getters.getSvgoConfigPath).toHaveBeenCalledTimes(1);
       expect(getters.getSvgoVersion).toHaveBeenCalledTimes(1);
+
+      expect(helpers.getDefaultSvgoConfigPath).toHaveBeenCalledTimes(1);
     });
 
-    describe("::ignoreGlob", () => {
+    describe("ignoreGlob", () => {
       test("can get value", () => {
         const configuredValues = ["foobar"];
 
@@ -50,21 +55,25 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).toBeNull();
         expect(getters.getIgnoreGlobs).toHaveBeenCalledWith(inp, []);
       });
     });
 
-    describe("::isDryRun", () => {
+    describe("isDryRun", () => {
       test("can get value", () => {
         const configuredValue = false;
 
@@ -87,21 +96,25 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).toBeNull();
         expect(getters.getIsDryRun).toHaveBeenCalledWith(inp, false);
       });
     });
 
-    describe("::isStrictMode", () => {
+    describe("isStrictMode", () => {
       test("can get value", () => {
         const configuredValue = false;
 
@@ -124,21 +137,25 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
       test("default value", () => {
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).toBeNull();
         expect(getters.getIsStrictMode).toHaveBeenCalledWith(inp, false);
       });
     });
 
-    describe("::svgoConfigPath", () => {
+    describe("svgoConfigPath", () => {
       beforeEach(() => {
         getters.getSvgoConfigPath.mockClear();
       });
@@ -165,44 +182,38 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);
       });
 
-      test("default value for svgo-version 1", () => {
+      test.each([
+        [1, ".svgo.yml"],
+        [2, "svgo.config.js"],
+      ])("default value", (svgoVersion, svgoConfigPath) => {
         getters.getSvgoVersion.mockReturnValueOnce([
-          { provided, value: 1 },
+          { provided, value: svgoVersion as 1 | 2 },
           null,
         ]);
+        helpers.getDefaultSvgoConfigPath.mockReturnValueOnce(svgoConfigPath);
 
         const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
-        expect(getters.getSvgoConfigPath).toHaveBeenCalledWith(
-          inp,
-          ".svgo.yml",
+        expect(helpers.getDefaultSvgoConfigPath).toHaveBeenCalledWith(
+          svgoVersion,
         );
-      });
-
-      test("default value for svgo-version 2", () => {
-        getters.getSvgoVersion.mockReturnValueOnce([
-          { provided, value: 2 },
-          null,
-        ]);
-
-        const [, err] = inputs.New({ inp });
-
-        expect(err).toBeNull();
         expect(getters.getSvgoConfigPath).toHaveBeenCalledWith(
           inp,
-          "svgo.config.js",
+          svgoConfigPath,
         );
       });
     });
 
-    describe("::svgoVersion", () => {
+    describe("svgoVersion", () => {
       test("can get value", () => {
         const configuredValue =  2;
 
@@ -225,7 +236,9 @@ describe("inputs/index.ts", () => {
           errors.New(errorMsg),
         ]);
 
-        const [, err] = inputs.New({ inp });
+        const [result, err] = inputs.New({ inp });
+
+        expect(result).toBeDefined();
 
         expect(err).not.toBeNull();
         expect(err).toContain(errorMsg);

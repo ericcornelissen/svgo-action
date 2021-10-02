@@ -7,10 +7,12 @@ const DEFAULT_SVGO_VERSION = 2;
 
 const INPUT_NAME_DRY_RUN = "dry-run";
 const INPUT_NAME_IGNORE = "ignore";
-const INPUT_NAME_REPO_TOKEN = "repo-token";
 const INPUT_NAME_STRICT = "strict";
 const INPUT_NAME_SVGO_CONFIG = "svgo-config";
 const INPUT_NAME_SVGO_VERSION = "svgo-version";
+
+const INPUT_OPTIONS_NOT_REQUIRED = { required: false };
+const INPUT_OPTIONS_REQUIRED = { required: true };
 
 export {
   DEFAULT_IGNORE_GLOBS,
@@ -21,8 +23,9 @@ export {
   DEFAULT_SVGO_VERSION,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_IGNORE,
-  INPUT_NAME_REPO_TOKEN,
   INPUT_NAME_STRICT,
   INPUT_NAME_SVGO_CONFIG,
   INPUT_NAME_SVGO_VERSION,
+  INPUT_OPTIONS_NOT_REQUIRED,
+  INPUT_OPTIONS_REQUIRED,
 };

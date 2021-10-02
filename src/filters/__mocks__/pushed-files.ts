@@ -1,5 +1,5 @@
 const NewPushedFilesFilter = jest.fn()
   .mockReturnValue([() => false, null])
-  .mockName("NewPushedFilesFilter");
+  .mockName("filters.NewPushedFilesFilter");
 
 export default NewPushedFilesFilter;

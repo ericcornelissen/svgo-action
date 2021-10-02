@@ -6,10 +6,14 @@ import {
   EVENT_REPOSITORY_DISPATCH,
   EVENT_SCHEDULE,
   EVENT_WORKFLOW_DISPATCH,
-} from "../constants";
+} from "./constants";
 
 interface Context {
   readonly eventName: string;
+}
+
+interface Environment {
+  readonly context: Context;
 }
 
 interface OptimizedProjectStats {
@@ -18,8 +22,8 @@ interface OptimizedProjectStats {
 }
 
 interface Params {
-  readonly context: Context;
   readonly data: OptimizedProjectStats;
+  readonly env: Environment;
   readonly out: Outputter;
 }
 
@@ -53,18 +57,17 @@ function getOutputNamesFor(event: string): [OutputName[], error] {
     case EVENT_REPOSITORY_DISPATCH:
     case EVENT_SCHEDULE:
     case EVENT_WORKFLOW_DISPATCH:
+    default:
       return [[
         OutputName.DID_OPTIMIZE,
         OutputName.OPTIMIZED_COUNT,
         OutputName.SVG_COUNT,
       ], null];
-    default:
-      return [[], `unknown event ${event}`];
   }
 }
 
-function Set({ context, data, out }: Params): error {
-  const [names, err] = getOutputNamesFor(context.eventName);
+function Set({ env, data, out }: Params): error {
+  const [names, err] = getOutputNamesFor(env.context.eventName);
   for (const name of names) {
     const fn = outputsMap.get(name) as DataToOutput;
     const value = fn(data);

@@ -1,5 +1,5 @@
 const NewPrFilesFilter = jest.fn()
   .mockReturnValue([() => false, null])
-  .mockName("NewPrFilesFilter");
+  .mockName("filters.NewPrFilesFilter");
 
 export default NewPrFilesFilter;

@@ -2,8 +2,8 @@ import type { error } from "../types";
 
 interface CommitsGetCommitParams {
   readonly owner: string;
-  readonly repo: string;
   readonly ref: string;
+  readonly repo: string;
 }
 
 interface CommitsGetCommitResponse {
@@ -34,10 +34,10 @@ interface GitHubClient {
 
 interface PullsListFilesParams {
   readonly owner: string;
-  readonly repo: string;
-  readonly pullNumber: number;
-  readonly perPage?: number;
   readonly page?: number;
+  readonly perPage?: number;
+  readonly pullNumber: number;
+  readonly repo: string;
 }
 
 type PullsListFilesResponse = GitFileInfo[];

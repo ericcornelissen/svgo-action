@@ -1,6 +1,6 @@
-import { Minimatch } from "minimatch";
+import type { FilterFn } from "./types";
 
-type FilterFn = (filepath: string) => boolean;
+import { Minimatch } from "minimatch";
 
 function NewGlobFilter(glob: string): FilterFn {
   const ignoreMatcher = new Minimatch(glob);

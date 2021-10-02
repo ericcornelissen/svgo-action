@@ -1,8 +1,8 @@
 import type { GitHubClient } from "../clients";
 import type { error, GitHub } from "../types";
 
-import { EVENT_PULL_REQUEST, EVENT_PUSH } from "../constants";
 import filters from "../filters";
+import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 
 interface Config {
   readonly ignoreGlobs: {
@@ -30,11 +30,11 @@ async function getFilters({
   ];
 
   let err: error = null;
-  if (event === EVENT_PULL_REQUEST && !process.env.SVGO_ACTION_E2E_TEST) {
+  if (event === EVENT_PULL_REQUEST) {
     const [f, err0] = await filters.NewPrFilesFilter({ client, context });
     result.push(f);
     err = err0;
-  } else if (event === EVENT_PUSH && !process.env.SVGO_ACTION_E2E_TEST) {
+  } else if (event === EVENT_PUSH) {
     const [f, err1] = await filters.NewPushedFilesFilter({ client, context });
     result.push(f);
     err = err1;

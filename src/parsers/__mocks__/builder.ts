@@ -1,9 +1,8 @@
-const parser = jest.fn()
-  .mockReturnValue([{ }, null]);
+import { parser } from "./__common__";
 
 const buildSafeParser = jest.fn()
   .mockReturnValue(parser)
-  .mockName("builders.ts::buildSafeParser");
+  .mockName("parsers.buildSafeParser");
 
 export {
   buildSafeParser,

@@ -34,12 +34,14 @@ describe.each([
     EVENT_SCHEDULE,
     EVENT_WORKFLOW_DISPATCH,
   ])("known event ('%s')", (eventName) => {
-    const context = {
-      eventName,
+    const env = {
+      context: {
+        eventName,
+      },
     };
 
     test("did optimize", () => {
-      const err = outputs.Set({ context, data, out });
+      const err = outputs.Set({ env, data, out });
 
       expect(err).toBeNull();
       expect(out.setOutput).toHaveBeenCalledWith(
@@ -49,7 +51,7 @@ describe.each([
     });
 
     test("optimized count", () => {
-      const err = outputs.Set({ context, data, out });
+      const err = outputs.Set({ env, data, out });
 
       expect(err).toBeNull();
       expect(out.setOutput).toHaveBeenCalledWith(
@@ -59,7 +61,7 @@ describe.each([
     });
 
     test("svg count", () => {
-      const err = outputs.Set({ context, data, out });
+      const err = outputs.Set({ env, data, out });
 
       expect(err).toBeNull();
       expect(out.setOutput).toHaveBeenCalledWith(SVG_COUNT, `${svgCount}`);
@@ -67,15 +69,37 @@ describe.each([
   });
 
   describe("unknown event", () => {
-    const context = {
-      eventName: "uNkNoWn EvEnT",
+    const env = {
+      context: {
+        eventName: "uNkNoWn EvEnT",
+      },
     };
 
     test("did optimize", () => {
-      const err = outputs.Set({ context, data, out });
+      const err = outputs.Set({ env, data, out });
 
-      expect(err).not.toBeNull();
-      expect(err).toContain("unknown event");
+      expect(err).toBeNull();
+      expect(out.setOutput).toHaveBeenCalledWith(
+        DID_OPTIMIZE,
+        `${didOptimize}`,
+      );
+    });
+
+    test("optimized count", () => {
+      const err = outputs.Set({ env, data, out });
+
+      expect(err).toBeNull();
+      expect(out.setOutput).toHaveBeenCalledWith(
+        OPTIMIZED_COUNT,
+        `${optimizedCount}`,
+      );
+    });
+
+    test("svg count", () => {
+      const err = outputs.Set({ env, data, out });
+
+      expect(err).toBeNull();
+      expect(out.setOutput).toHaveBeenCalledWith(SVG_COUNT, `${svgCount}`);
     });
   });
 });

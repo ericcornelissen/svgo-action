@@ -1,4 +1,4 @@
-const isNull = (msg) => msg !== null;
+const isNull = (msg: string) => msg !== null;
 
 const Combine = jest.fn()
   .mockImplementation((...msgs) => {

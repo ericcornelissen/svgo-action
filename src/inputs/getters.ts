@@ -2,29 +2,28 @@ import type { error, Inputter, InputterOptions } from "../types";
 import type { SupportedSvgoVersions } from "../svgo";
 import type { InputValue } from "./types";
 
+import errors from "../errors";
 import {
   INPUT_NAME_IGNORE,
   INPUT_NAME_DRY_RUN,
   INPUT_NAME_STRICT,
   INPUT_NAME_SVGO_CONFIG,
   INPUT_NAME_SVGO_VERSION,
-} from "../constants";
-import errors from "../errors";
+  INPUT_OPTIONS_NOT_REQUIRED,
+  INPUT_OPTIONS_REQUIRED,
+} from "./constants";
+
+type GetInput<T> = (name: string, options: InputterOptions) => T;
 
 interface InputInfo<T> extends InputValue<T> {
   readonly valid: boolean;
 }
 
 interface Params<T> {
+  readonly defaultValue: T;
   readonly inp: Inputter;
   readonly inputName: string;
-  readonly defaultValue: T;
 }
-
-type GetInput<T> = (name: string, options: InputterOptions) => T;
-
-const INPUT_OPTIONS_REQUIRED = { required: true };
-const INPUT_OPTIONS_NOT_REQUIRED = { required: false };
 
 function isInputProvided({
   inp,

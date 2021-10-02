@@ -1,10 +1,4 @@
-import { mocked } from "ts-jest/utils";
-
-jest.mock("@actions/core");
-
-import * as _core from "@actions/core";
-
-const core = mocked(_core);
+import out from "../__common__/outputter.mock";
 
 import outputs from "../../src/outputs";
 
@@ -27,17 +21,17 @@ describe("package outputs", () => {
     EVENT_SCHEDULE,
     EVENT_WORKFLOW_DISPATCH,
   ])("known event ('%s')", (eventName) => {
-    const context = { eventName };
+    const env = { context: { eventName } };
 
-    const err = outputs.Set({ context, data, out: core });
+    const err = outputs.Set({ env, data, out });
     expect(err).toBeNull();
-    expect(core.setOutput).toHaveBeenCalled();
+    expect(out.setOutput).toHaveBeenCalled();
   });
 
   test("unknown event", () => {
-    const context = { eventName: "foobar" };
+    const env = { context: { eventName: "foobar" } };
 
-    const err = outputs.Set({ context, data, out: core });
-    expect(err).not.toBeNull();
+    const err = outputs.Set({ env, data, out });
+    expect(err).toBeNull();
   });
 });

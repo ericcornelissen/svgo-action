@@ -15,6 +15,12 @@ to improve the documentation.
 
 ---
 
+> :warning: The Action will run on any event if [strict mode] is not enabled.
+> However, this is not officially supported so you may encounter unexpected
+> behaviour.
+
+---
+
 ## `on: pull_request`
 
 > Find out more in the GitHub Actions documentation on [`pull_request` events],
@@ -36,6 +42,7 @@ The following [inputs] are available in the `pull_request` context.
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -72,6 +79,7 @@ The following [inputs] are available in the `push` context.
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -106,6 +114,7 @@ The following [inputs] are available in the `schedule` context.
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :x:                | :x:                |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -142,6 +151,7 @@ The following [inputs] are available in the `repository_dispatch` and
 | `dry-run`      | :heavy_check_mark: | :x:                |
 | `ignore`       | :heavy_check_mark: | :x:                |
 | `repo-token`   | :x:                | :x:                |
+| `strict`       | :heavy_check_mark: | :x:                |
 | `svgo-config`  | :heavy_check_mark: | :x:                |
 | `svgo-version` | :heavy_check_mark: | :x:                |
 
@@ -167,3 +177,4 @@ The following [outputs] are available in the `repository_dispatch` and
 [outputs]: ./outputs.md
 [path filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestpaths
 [svgs that are ignored]: ./inputs.md#ignore
+[strict mode]: ./inputs.md#strict-mode
