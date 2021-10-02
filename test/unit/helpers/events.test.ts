@@ -23,7 +23,15 @@ describe("helpers/events.ts", () => {
       EVENT_REPOSITORY_DISPATCH,
       EVENT_SCHEDULE,
       EVENT_WORKFLOW_DISPATCH,
-    ])("events where client is not required (%s)", (eventName) => {
+    ])("known events where client is not required (%s)", (eventName) => {
+      const result = isClientRequired(eventName);
+      expect(result).toBe(false);
+    });
+
+    test.each([
+      "foobar",
+      "Hello world!",
+    ])("unknown events where client is not required (%s)", (eventName) => {
       const result = isClientRequired(eventName);
       expect(result).toBe(false);
     });

@@ -152,7 +152,7 @@ describe("file-systems/base.ts", () => {
       expect(result).toEqual("");
     });
 
-    test("read failure (file exists)", async () => {
+    test("read failure when file exists", async () => {
       fs.existsSync.mockReturnValueOnce(true);
       fs.readFileSync.mockImplementationOnce(() => { throw new Error(); });
 

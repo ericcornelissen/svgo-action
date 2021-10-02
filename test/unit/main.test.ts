@@ -66,7 +66,7 @@ describe("main.ts", () => {
     svgo.New.mockClear();
   });
 
-  test("call process (defaults)", async () => {
+  test("call process in successful run", async () => {
     await main({ core, github });
 
     expect(core.setFailed).not.toHaveBeenCalled();
@@ -146,7 +146,7 @@ describe("main.ts", () => {
     });
   });
 
-  test("config error", async () => {
+  test("inputs error", async () => {
     const [baseConfig] = inputs.New({ inp: core });
     const config = Object.assign(baseConfig, {
       isStrictMode: { value: false },
@@ -181,13 +181,13 @@ describe("main.ts", () => {
     );
   });
 
-  describe("client", () => {
+  describe("GitHub client", () => {
     const failureMessage = "Could not get GitHub client";
 
     test.each([
       true,
       false,
-    ])("no client error (client required=%s)", async (clientRequired) => {
+    ])("no error (client required=%s)", async (clientRequired) => {
       helpers.isClientRequired.mockReturnValue(clientRequired);
 
       const [client] = clients.New({ github, inp: core });
@@ -201,7 +201,7 @@ describe("main.ts", () => {
     test.each([
       true,
       false,
-    ])("client error (client required=%s)", async (clientRequired) => {
+    ])("an error (client required=%s)", async (clientRequired) => {
       helpers.isClientRequired.mockReturnValue(clientRequired);
 
       const [client] = clients.New({ github, inp: core });
@@ -218,7 +218,7 @@ describe("main.ts", () => {
     });
   });
 
-  describe("svgo configuration", () => {
+  describe("SVGO configuration", () => {
     describe("reading", () => {
       const failureMessage = "SVGO configuration file not found";
 
@@ -238,7 +238,7 @@ describe("main.ts", () => {
         expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
 
-      test("with error, without path configured", async () => {
+      test("an error, without path configured", async () => {
         const [baseConfig] = inputs.New({ inp: core });
         const config = Object.assign(baseConfig, {
           svgoConfigPath: { provided: false },
@@ -260,7 +260,7 @@ describe("main.ts", () => {
         expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
 
-      test("with error, with path configured", async () => {
+      test("an error, with path configured", async () => {
         const [baseConfig] = inputs.New({ inp: core });
         const config = Object.assign(baseConfig, {
           svgoConfigPath: { provided: true },
@@ -303,7 +303,7 @@ describe("main.ts", () => {
         expect(action.failIf).toHaveBeenCalledWith(false, failureMessage);
       });
 
-      test("with error but without read error", async () => {
+      test("an error but without read error", async () => {
         const err = errors.New("parse file error");
 
         fileSystems.New.mockReturnValueOnce({
@@ -320,7 +320,7 @@ describe("main.ts", () => {
         expect(action.failIf).toHaveBeenCalledWith(true, failureMessage);
       });
 
-      test("with error and read error", async () => {
+      test("an error and read error", async () => {
         const [baseConfig] = inputs.New({ inp: core });
         const config = Object.assign(baseConfig, {
           isStrictMode: { value: false },
@@ -347,7 +347,7 @@ describe("main.ts", () => {
     });
   });
 
-  test("svgo creation error", async () => {
+  test("svgo error", async () => {
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
     const [optimizer] = svgo.New({ config });
@@ -363,7 +363,7 @@ describe("main.ts", () => {
     );
   });
 
-  test("filters error (event: \"push\")", async () => {
+  test("filters error", async () => {
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
 

@@ -5,7 +5,7 @@ import {
 } from "../../../src/parsers/builder";
 
 describe("parsers/builder.ts", () => {
-  describe("buildSafeParser", () => {
+  describe("::buildSafeParser", () => {
     let parseFn;
 
     beforeAll(() => {

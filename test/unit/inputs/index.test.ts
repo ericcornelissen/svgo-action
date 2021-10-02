@@ -32,7 +32,7 @@ describe("inputs/index.ts", () => {
       expect(helpers.getDefaultSvgoConfigPath).toHaveBeenCalledTimes(1);
     });
 
-    describe("::ignoreGlob", () => {
+    describe("ignoreGlob", () => {
       test("can get value", () => {
         const configuredValues = ["foobar"];
 
@@ -73,7 +73,7 @@ describe("inputs/index.ts", () => {
       });
     });
 
-    describe("::isDryRun", () => {
+    describe("isDryRun", () => {
       test("can get value", () => {
         const configuredValue = false;
 
@@ -114,7 +114,7 @@ describe("inputs/index.ts", () => {
       });
     });
 
-    describe("::isStrictMode", () => {
+    describe("isStrictMode", () => {
       test("can get value", () => {
         const configuredValue = false;
 
@@ -155,7 +155,7 @@ describe("inputs/index.ts", () => {
       });
     });
 
-    describe("::svgoConfigPath", () => {
+    describe("svgoConfigPath", () => {
       beforeEach(() => {
         getters.getSvgoConfigPath.mockClear();
       });
@@ -213,7 +213,7 @@ describe("inputs/index.ts", () => {
       });
     });
 
-    describe("::svgoVersion", () => {
+    describe("svgoVersion", () => {
       test("can get value", () => {
         const configuredValue =  2;
 
