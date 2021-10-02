@@ -1,18 +1,24 @@
-name: Configuration Validation
+name: Config Validation
 on:
+  push:
+    paths:
+    - '.github/codecov.yml'
+    - '.github/renovate.json5'
   pull_request:
     paths:
     - '.github/codecov.yml'
     - '.github/renovate.json5'
+
+permissions: read-all
 
 jobs:
   codecov:
     name: Codecov
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Validate .github/codecov.yml
+      - name: Checkout Repository
+        uses: actions/checkout@v2.3.4
+      - name: Validate Codecov configuration
         run: |
           RESULT=$(curl -s -o /dev/null -w "%{http_code}" --data-binary @./.github/codecov.yml https://codecov.io/validate)
           if ! [[ $RESULT == "200" ]]; then
@@ -22,10 +28,10 @@ jobs:
     name: Renovate
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      - name: Use Node.js 12.x
-        uses: actions/setup-node@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2.3.4
+      - name: Install Node.js
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: 12.x
       - name: Install Renovate CLI
