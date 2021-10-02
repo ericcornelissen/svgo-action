@@ -39,7 +39,7 @@ describe("action-management/action-manager.ts", () => {
 
     test.each([
       ...testConditions,
-    ])("fails conditionally (cond=`%s`)", (condition) => {
+    ])("fails conditionally (condition=`%s`)", (condition) => {
       actionManager.failIf(condition, msg);
       expect(helpers.runIf).toHaveBeenCalledTimes(1);
       expect(helpers.runIf).toHaveBeenCalledWith(condition, expect.anything());
@@ -70,7 +70,7 @@ describe("action-management/action-manager.ts", () => {
 
     test.each([
       ...testConditions,
-    ])("fails/warns conditionally (cond=`%s`)", (condition) => {
+    ])("fails/warns conditionally (condition=`%s`)", (condition) => {
       actionManager.strictFailIf(condition, msg);
       expect(helpers.runIf).toHaveBeenCalledTimes(1);
       expect(helpers.runIf).toHaveBeenCalledWith(condition, expect.anything());

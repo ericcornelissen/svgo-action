@@ -10,9 +10,10 @@ import type {
 } from "./types";
 
 import errors from "../errors";
+import { LIST_FILES_ALWAYS_IGNORE } from "./constants";
 
 interface Params {
-  fs: {
+  readonly fs: {
     existsSync(path: string): boolean;
     lstatSync(path: string): {
       isFile(): boolean;
@@ -21,15 +22,10 @@ interface Params {
     readFileSync(path: string): Buffer;
     writeFileSync(path: string, content: string): void;
   };
-  path: {
+  readonly path: {
     resolve(...paths: string[]): string;
   };
 }
-
-const LIST_FILES_ALWAYS_IGNORE: string[] = [
-  ".git",
-  "node_modules",
-];
 
 function includeInFolderIteration(entryPath: string, { fs }: Params): boolean {
   if (LIST_FILES_ALWAYS_IGNORE.some((file) => entryPath.endsWith(file))) {

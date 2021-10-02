@@ -1,4 +1,5 @@
-const runIf = jest.fn().mockName("runIf");
+const runIf = jest.fn()
+  .mockName("action-management.runIf");
 
 export {
   runIf,

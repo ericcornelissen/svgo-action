@@ -7,7 +7,7 @@ import NewBaseFileSystem from "./base";
 import NewFilteredFileSystem from "./filtered";
 
 interface Params {
-  readonly filters: FileFilter[];
+  readonly filters: Iterable<FileFilter>;
 }
 
 function New({ filters }: Params): FileSystem {

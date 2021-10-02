@@ -40,7 +40,7 @@ describe("svgo/index.ts", () => {
       SVGOptimizerV2.mockClear();
     });
 
-    test("new SVGOptimizer for SVGO v1", () => {
+    test("version 1", () => {
       const config = v1Config;
 
       const [result, err] = svgo.New({ config, svgoConfig });
@@ -49,7 +49,7 @@ describe("svgo/index.ts", () => {
       expect(SVGOptimizerV1).toHaveBeenCalledWith(svgoConfig);
     });
 
-    test("new SVGOptimizer for SVGO v2", () => {
+    test("version 2", () => {
       const config = v2Config;
 
       const [result, err] = svgo.New({ config, svgoConfig });

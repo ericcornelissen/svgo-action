@@ -3,6 +3,6 @@ const StandardActionManager = jest.fn()
     failIf: jest.fn().mockName("StandardActionManager.failIf"),
     strictFailIf: jest.fn().mockName("StandardActionManager.strictFailIf"),
   })
-  .mockName("StandardActionManager.[constructor]");
+  .mockName("action-management.StandardActionManager.[constructor]");
 
 export default StandardActionManager;

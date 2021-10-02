@@ -1,8 +1,8 @@
 import type { error, GitHub, Inputter } from "../types";
 import type { GitHubClient } from "./types";
 
-import { INPUT_NAME_REPO_TOKEN } from "../constants";
 import errors from "../errors";
+import { INPUT_NAME_REPO_TOKEN } from "./constants";
 import Client from "./client";
 
 interface Params {

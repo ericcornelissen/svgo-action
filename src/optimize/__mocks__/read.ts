@@ -1,6 +1,6 @@
 const readFiles = jest.fn()
   .mockResolvedValue([[], null])
-  .mockName("read.ts::readFiles");
+  .mockName("optimize.readFiles");
 
 export {
   readFiles,
