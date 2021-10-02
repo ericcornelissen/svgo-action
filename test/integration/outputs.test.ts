@@ -32,6 +32,6 @@ describe("package outputs", () => {
     const env = { context: { eventName: "foobar" } };
 
     const err = outputs.Set({ env, data, out });
-    expect(err).not.toBeNull();
+    expect(err).toBeNull();
   });
 });
