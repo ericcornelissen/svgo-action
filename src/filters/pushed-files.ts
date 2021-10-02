@@ -3,6 +3,7 @@ import type { error } from "../types";
 import type { FilterFn } from "./types";
 
 import errors from "../errors";
+import { STATUS_REMOVED } from "./constants";
 
 interface Commit {
   readonly id: string;
@@ -31,8 +32,6 @@ interface Repo {
   readonly owner: string;
   readonly repo: string;
 }
-
-const STATUS_REMOVED = "removed";
 
 async function getPushedFiles({ client, commits, repo }: {
   client: GitHubClient,

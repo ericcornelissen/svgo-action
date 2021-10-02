@@ -3,6 +3,7 @@ import type { error } from "../types";
 import type { FilterFn } from "./types";
 
 import errors from "../errors";
+import { STATUS_REMOVED } from "./constants";
 
 interface File {
   readonly status: string;
@@ -29,8 +30,6 @@ interface Repo {
   readonly owner: string;
   readonly repo: string;
 }
-
-const STATUS_REMOVED = "removed";
 
 async function getPrFiles({ client, number, repo }: {
   client: GitHubClient,

@@ -9,6 +9,8 @@ import {
   INPUT_NAME_STRICT,
   INPUT_NAME_SVGO_CONFIG,
   INPUT_NAME_SVGO_VERSION,
+  INPUT_OPTIONS_NOT_REQUIRED,
+  INPUT_OPTIONS_REQUIRED,
 } from "./constants";
 
 type GetInput<T> = (name: string, options: InputterOptions) => T;
@@ -22,9 +24,6 @@ interface Params<T> {
   readonly inp: Inputter;
   readonly inputName: string;
 }
-
-const INPUT_OPTIONS_REQUIRED = { required: true };
-const INPUT_OPTIONS_NOT_REQUIRED = { required: false };
 
 function isInputProvided({
   inp,

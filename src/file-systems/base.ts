@@ -10,6 +10,7 @@ import type {
 } from "./types";
 
 import errors from "../errors";
+import { LIST_FILES_ALWAYS_IGNORE } from "./constants";
 
 interface Params {
   readonly fs: {
@@ -25,11 +26,6 @@ interface Params {
     resolve(...paths: string[]): string;
   };
 }
-
-const LIST_FILES_ALWAYS_IGNORE: string[] = [
-  ".git",
-  "node_modules",
-];
 
 function includeInFolderIteration(entryPath: string, { fs }: Params): boolean {
   if (LIST_FILES_ALWAYS_IGNORE.some((file) => entryPath.endsWith(file))) {
