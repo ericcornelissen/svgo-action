@@ -5,6 +5,8 @@ on:
     - '.github/codecov.yml'
     - '.github/renovate.json5'
 
+permissions: read-all
+
 jobs:
   codecov:
     name: Codecov

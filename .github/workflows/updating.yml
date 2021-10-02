@@ -3,10 +3,14 @@ on:
   push:
     branches: [main, main-v1]
 
+permissions: read-all
+
 jobs:
   lib:
     name: lib/index.js
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
