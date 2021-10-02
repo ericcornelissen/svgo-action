@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: 12.x
       - name: Cache Dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.6
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -32,13 +32,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: 12.x
       - name: Cache Dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.6
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -59,20 +59,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: 12.x
       - name: Cache Dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.6
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
       - name: Cache Jest
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.6
         with:
           path: .cache/jest
           key: ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
@@ -81,12 +81,12 @@ jobs:
             ${{ runner.os }}-jest-${{ matrix.type }}-
       - name: Install Dependencies
         run: npm ci
-      - name: Run ${{ matrix.type }} Tests
+      - name: Run Tests (${{ matrix.type }})
         run: npm run coverage:${{ matrix.type }}
         env:
           CI: true
       - name: Upload Code Coverage
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v2.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./_reports/coverage/lcov.info
@@ -104,13 +104,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
       - name: Install Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v2.4.1
         with:
           node-version: 12.x
       - name: Cache Dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v2.1.6
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
