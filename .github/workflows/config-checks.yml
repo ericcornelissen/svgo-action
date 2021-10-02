@@ -1,5 +1,9 @@
 name: Config Validation
 on:
+  push:
+    paths:
+    - '.github/codecov.yml'
+    - '.github/renovate.json5'
   pull_request:
     paths:
     - '.github/codecov.yml'
