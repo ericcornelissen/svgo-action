@@ -183,9 +183,12 @@ network communication).
 
 ### End-to-End Tests
 
-The end-to-end tests can be found in the `test-e2e` job in the GitHub Actions
-workflow `push-checks.yml`. The end-to-end test run on the files found in
-`test/end-to-end`. The end-to-end tests verify three things:
+The end-to-end tests are defined in the `test-e2e` job in the GitHub Actions
+workflow file `push-checks.yml`. The test operate with and on the fixtures found
+in `test/end-to-end`. During end-to-end testing, the Action is run as if it was
+triggered by a `schedule` event.
+
+The end-to-end tests verify three things:
 
 1. That the source code (in `src/`, not `lib/`) can be run as an Action,
 1. That the Action outputs are correct, and
