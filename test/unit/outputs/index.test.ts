@@ -78,8 +78,28 @@ describe.each([
     test("did optimize", () => {
       const err = outputs.Set({ env, data, out });
 
-      expect(err).not.toBeNull();
-      expect(err).toContain("unknown event");
+      expect(err).toBeNull();
+      expect(out.setOutput).toHaveBeenCalledWith(
+        DID_OPTIMIZE,
+        `${didOptimize}`,
+      );
+    });
+
+    test("optimized count", () => {
+      const err = outputs.Set({ env, data, out });
+
+      expect(err).toBeNull();
+      expect(out.setOutput).toHaveBeenCalledWith(
+        OPTIMIZED_COUNT,
+        `${optimizedCount}`,
+      );
+    });
+
+    test("svg count", () => {
+      const err = outputs.Set({ env, data, out });
+
+      expect(err).toBeNull();
+      expect(out.setOutput).toHaveBeenCalledWith(SVG_COUNT, `${svgCount}`);
     });
   });
 });

@@ -175,7 +175,7 @@ describe("main.ts", () => {
 
     await main({ core, github });
 
-    expect(action.failIf).toHaveBeenCalledWith(
+    expect(action.strictFailIf).toHaveBeenCalledWith(
       true,
       expect.stringContaining(`'${eventName}'`),
     );
@@ -300,7 +300,7 @@ describe("main.ts", () => {
         });
         await main({ core, github });
 
-        expect(action.failIf).toHaveBeenCalledWith(false, failureMessage);
+        expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
 
       test("an error but without read error", async () => {
@@ -317,7 +317,7 @@ describe("main.ts", () => {
 
         await main({ core, github });
 
-        expect(action.failIf).toHaveBeenCalledWith(true, failureMessage);
+        expect(action.strictFailIf).toHaveBeenCalledWith(true, failureMessage);
       });
 
       test("an error and read error", async () => {
@@ -342,7 +342,7 @@ describe("main.ts", () => {
 
         await main({ core, github });
 
-        expect(action.failIf).toHaveBeenCalledWith(false, failureMessage);
+        expect(action.strictFailIf).toHaveBeenCalledWith(false, failureMessage);
       });
     });
   });

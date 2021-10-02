@@ -7,7 +7,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Run on any event when not in strict mode. ([#454], [#459])
+- Run with invalid SVGO config file when not in strict mode. ([#457])
 
 ## [2.1.0] - 2021-09-25
 
@@ -337,5 +338,8 @@ Versioning].
 [#446]: https://github.com/ericcornelissen/svgo-action/pull/446
 [#448]: https://github.com/ericcornelissen/svgo-action/pull/448
 [#449]: https://github.com/ericcornelissen/svgo-action/pull/449
+[#454]: https://github.com/ericcornelissen/svgo-action/pull/454
+[#457]: https://github.com/ericcornelissen/svgo-action/pull/457
+[#459]: https://github.com/ericcornelissen/svgo-action/pull/459
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
