@@ -10,20 +10,20 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
-      - name: Cache dependencies
+      - name: Cache Dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
       - name: Build SVGO Action
         run: npm run build
@@ -31,22 +31,22 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
-      - name: Cache dependencies
+      - name: Cache Dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
-      - name: Lint source
+      - name: Lint Source Code
         run: npm run lint
   test:
     name: Test - ${{ matrix.type }}
@@ -58,13 +58,13 @@ jobs:
           - integration
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
-      - name: Cache dependencies
+      - name: Cache Dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
@@ -79,13 +79,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-
             ${{ runner.os }}-jest-${{ matrix.type }}-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
-      - name: Run tests
+      - name: Run ${{ matrix.type }} Tests
         run: npm run coverage:${{ matrix.type }}
         env:
           CI: true
-      - name: Upload coverage to Codecov
+      - name: Upload Code Coverage
         uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -103,20 +103,20 @@ jobs:
             config: test/end-to-end/svgo.config.js
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
-      - name: Cache dependencies
+      - name: Cache Dependencies
         uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
       - name: Build SVGO Action
         run: npm run build
@@ -146,7 +146,7 @@ jobs:
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
           echo "::set-output name=ignored-svg-one::$SVG"
-      - name: Run the SVGO Action
+      - name: Run SVGO Action
         id: svgo
         env:
           SVGO_ACTION_E2E_TEST: true

@@ -1,4 +1,4 @@
-name: Configuration Validation
+name: Config Validation
 on:
   pull_request:
     paths:
@@ -12,9 +12,9 @@ jobs:
     name: Codecov
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Validate .github/codecov.yml
+      - name: Validate Codecov configuration
         run: |
           RESULT=$(curl -s -o /dev/null -w "%{http_code}" --data-binary @./.github/codecov.yml https://codecov.io/validate)
           if ! [[ $RESULT == "200" ]]; then
@@ -24,9 +24,9 @@ jobs:
     name: Renovate
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
-      - name: Use Node.js 12.x
+      - name: Install Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 12.x

@@ -1,4 +1,4 @@
-name: Code analysis
+name: Code Analysis
 on:
   push:
     branches: [main, main-v1]
@@ -16,7 +16,7 @@ jobs:
     permissions:
       security-events: write
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v2
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v1
