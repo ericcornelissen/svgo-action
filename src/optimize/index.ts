@@ -7,13 +7,15 @@ import { optimizeAll } from "./optimize";
 import { readFiles } from "./read";
 import { writeFiles } from "./write";
 
+interface Config {
+  readonly isDryRun: {
+    readonly value: boolean;
+  };
+}
+
 interface Params {
   readonly fs: FileSystem;
-  readonly config: {
-    readonly isDryRun: {
-      readonly value: boolean;
-    };
-  };
+  readonly config: Config;
   readonly optimizer: Optimizer;
 }
 

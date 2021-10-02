@@ -4,12 +4,14 @@ import type { SupportedSvgoVersions, SVGOptimizer } from "./types";
 import SVGOptimizerV1 from "./svgo-v1-wrapper";
 import SVGOptimizerV2 from "./svgo-v2-wrapper";
 
-interface Params {
-  readonly config: {
-    readonly svgoVersion: {
-      readonly value: SupportedSvgoVersions;
-    };
+interface Config {
+  readonly svgoVersion: {
+    readonly value: SupportedSvgoVersions;
   };
+}
+
+interface Params {
+  readonly config: Config;
   readonly svgoConfig?: unknown;
 }
 

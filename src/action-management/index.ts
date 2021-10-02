@@ -10,8 +10,8 @@ interface Config {
 }
 
 interface Params {
-  readonly core: Core;
   readonly config: Config;
+  readonly core: Core;
 }
 
 function New({ core, config }: Params): ActionManager {

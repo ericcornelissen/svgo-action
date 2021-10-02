@@ -1,4 +1,4 @@
-type FilterFn = (filepath: string) => boolean;
+import type { FilterFn } from "./types";
 
 function NewSvgsFilter(): FilterFn {
   return function(filepath: string): boolean {

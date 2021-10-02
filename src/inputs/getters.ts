@@ -11,6 +11,8 @@ import {
 } from "../constants";
 import errors from "../errors";
 
+type GetInput<T> = (name: string, options: InputterOptions) => T;
+
 interface InputInfo<T> extends InputValue<T> {
   readonly valid: boolean;
 }
@@ -20,8 +22,6 @@ interface Params<T> {
   readonly inputName: string;
   readonly defaultValue: T;
 }
-
-type GetInput<T> = (name: string, options: InputterOptions) => T;
 
 const INPUT_OPTIONS_REQUIRED = { required: true };
 const INPUT_OPTIONS_NOT_REQUIRED = { required: false };

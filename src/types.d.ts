@@ -55,9 +55,9 @@ interface Outputter {
 }
 
 export {
-  error,
   Context,
   Core,
+  error,
   GitHub,
   Inputter,
   InputterOptions,

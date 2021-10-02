@@ -1,5 +1,6 @@
 import type { GitHubClient } from "../clients";
 import type { error } from "../types";
+import type { FilterFn } from "./types";
 
 import errors from "../errors";
 
@@ -13,12 +14,14 @@ interface Params {
   readonly context: PrContext;
 }
 
-interface PrContext {
-  readonly payload: {
-    readonly pull_request?: {
-      readonly number: number;
-    };
+interface Payload {
+  readonly pull_request?: {
+    readonly number: number;
   };
+}
+
+interface PrContext {
+  readonly payload: Payload;
   readonly repo: Repo;
 }
 
@@ -26,8 +29,6 @@ interface Repo {
   readonly owner: string;
   readonly repo: string;
 }
-
-type FilterFn = (filepath: string) => boolean;
 
 const STATUS_REMOVED = "removed";
 
