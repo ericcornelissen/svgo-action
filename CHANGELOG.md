@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.1] - 2021-10-03
+
 - Run on any event when not in strict mode. ([#454], [#459])
 - Run with invalid SVGO config file when not in strict mode. ([#457])
 
