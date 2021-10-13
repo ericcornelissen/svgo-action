@@ -32,7 +32,7 @@ describe("svgo/index.ts", () => {
     test("version 1", () => {
       const config = {
         svgoVersion: {
-          value: 1 as SupportedSvgoVersions,
+          value: "1" as SupportedSvgoVersions,
         },
       };
 
@@ -45,7 +45,7 @@ describe("svgo/index.ts", () => {
     test("version 2", () => {
       const config = {
         svgoVersion: {
-          value: 2 as SupportedSvgoVersions,
+          value: "2" as SupportedSvgoVersions,
         },
       };
 
@@ -92,5 +92,20 @@ describe("svgo/index.ts", () => {
         expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(svgoConfig);
       });
     });
+
+    test.each([
+      "foobar",
+      "Hello world!",
+    ])("unknown string ('%s')", (svgoVersionValue) => {
+      const config = {
+        svgoVersion: {
+          value: svgoVersionValue as SupportedSvgoVersions,
+        },
+      };
+
+      const [, err] = svgo.New({ config, svgoConfig });
+      expect(err).not.toBeNull();
+    });
+
   });
 });

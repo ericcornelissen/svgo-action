@@ -1,3 +1,4 @@
+import type { SupportedSvgoVersions } from "../../src/svgo";
 import type { Octokit } from "../../src/types";
 
 import { mocked } from "ts-jest/utils";
@@ -166,7 +167,7 @@ describe("package helpers", () => {
 
   describe("::parseRawSvgoConfig", () => {
     describe("SVGO version 1", () => {
-      const config = { svgoVersion: { value: 1 } };
+      const config = { svgoVersion: { value: "1" as SupportedSvgoVersions } };
 
       test("valid configuration", () => {
         const rawConfig = "multipass: true";
@@ -185,7 +186,7 @@ describe("package helpers", () => {
     });
 
     describe("SVGO version 2", () => {
-      const config = { svgoVersion: { value: 2 } };
+      const config = { svgoVersion: { value: "2" as SupportedSvgoVersions } };
 
       test("valid configuration", () => {
         const rawConfig = "module.exports = { multipass: true };";

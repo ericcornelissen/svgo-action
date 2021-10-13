@@ -168,14 +168,16 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
-      1,
-      2,
-    ])("can get input, valid (`%d`)", (configuredValue) => {
+      "1",
+      "2",
+      "project",
+    ])("can get input, valid (`%s`)", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValue(`${configuredValue}`);
 
-      const [result, err] = getSvgoVersion(inp, configuredValue === 1 ? 2 : 1);
+      const defaultValue = configuredValue === "1" ? "2" : "1";
+      const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
       expect(result.value).toEqual(configuredValue);
     });
@@ -185,7 +187,7 @@ describe("inputs/getters.ts", () => {
       "3",
       "42",
     ])("can get input, unsupported ('%s')", (configuredValue) => {
-      const defaultValue = 2;
+      const defaultValue = "2";
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
@@ -197,24 +199,8 @@ describe("inputs/getters.ts", () => {
       expect(result.value).toEqual(defaultValue);
     });
 
-    test.each([
-      "foobar",
-      "Hello world",
-    ])("can get input, invalid ('%s')", (configuredValue) => {
-      const defaultValue = 2;
-
-      when(inp.getInput)
-        .calledWith(inputKey, expect.anything())
-        .mockReturnValue(configuredValue);
-
-      const [result, err] = getSvgoVersion(inp, defaultValue);
-      expect(err).not.toBeNull();
-      expect(err).toContain("invalid SVGO version");
-      expect(result.value).toEqual(defaultValue);
-    });
-
     test("can't get input", () => {
-      const defaultValue = 2;
+      const defaultValue = "2";
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())

@@ -1,10 +1,11 @@
+import type { SupportedSvgoVersions } from "../svgo";
 import type { error } from "../types";
 
 import parsers from "../parsers";
 
 interface Config {
   readonly svgoVersion: {
-    readonly value: number;
+    readonly value: SupportedSvgoVersions;
   };
 }
 
@@ -17,7 +18,7 @@ function parseRawSvgoConfig({
   config,
   rawConfig,
 }: Params): [unknown, error] {
-  if (config.svgoVersion.value === 1) {
+  if (config.svgoVersion.value === "1") {
     const parseYaml = parsers.NewYaml();
     return parseYaml(rawConfig);
   } else {

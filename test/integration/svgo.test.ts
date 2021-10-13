@@ -14,7 +14,10 @@ describe("package svgo", () => {
     console.error = () => void 0; // eslint-disable-line no-console
   });
 
-  describe.each([1, 2])("::New (v%d)", (svgoVersion) => {
+  describe.each([
+    "1",
+    "2",
+  ])("::New (v%s)", (svgoVersion) => {
     const config = {
       svgoVersion: {
         value: svgoVersion as SupportedSvgoVersions,
@@ -54,7 +57,7 @@ describe("package svgo", () => {
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(validSvg);
-        expect(svgoVersion === 2 ? err1 : "").not.toBeNull();
+        expect(svgoVersion === "2" ? err1 : "").not.toBeNull();
       });
     });
   });

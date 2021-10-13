@@ -82,18 +82,6 @@ function getBooleanInput(params: Params<boolean>): InputInfo<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getDecimalInput<T extends number>(params: Params<T>): InputInfo<T> {
-  return safeGetInput({
-    ...params,
-    getInput: (inputName: string, options: InputterOptions): T => {
-      const resultStr = params.inp.getInput(inputName, options);
-      const result = parseInt(resultStr, 10) as T;
-      if (isNaN(result)) throw new TypeError();
-      return result;
-    },
-  });
-}
-
 function getMultilineInput(params: Params<string[]>): InputInfo<string[]> {
   return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
 }
@@ -157,20 +145,23 @@ function getSvgoVersion(
   defaultValue: SupportedSvgoVersions,
 ): [InputValue<SupportedSvgoVersions>, error] {
   const inputName = INPUT_NAME_SVGO_VERSION;
-  const input = getDecimalInput({ inp, inputName, defaultValue });
+  const input = getStringInput({ inp, inputName, defaultValue });
   if (!input.valid) {
-    return [input, errors.New("invalid SVGO version value")];
+    return [
+      input as InputValue<SupportedSvgoVersions>,
+      errors.New("invalid SVGO version value"),
+    ];
   }
 
   const svgoVersion = input.value;
-  if (svgoVersion !== 1 && svgoVersion !== 2) {
+  if (svgoVersion !== "1" && svgoVersion !== "2" && svgoVersion !== "project") {
     return [
       { ...input, value: defaultValue },
       errors.New(`unsupported SVGO version '${svgoVersion}'`),
     ];
   }
 
-  return [input, null];
+  return [input as InputValue<SupportedSvgoVersions>, null];
 }
 
 export {

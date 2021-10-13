@@ -13,7 +13,7 @@ describe("package inputs", () => {
   const DEFAULT_IGNORE = [];
   const DEFAULT_DRY_RUN = false;
   const DEFAULT_SVGO_CONFIG = "svgo.config.js";
-  const DEFAULT_SVGO_VERSION = 2;
+  const DEFAULT_SVGO_VERSION = "2";
 
   beforeEach(() => {
     inp.getBooleanInput.mockReset();
@@ -144,8 +144,8 @@ describe("package inputs", () => {
     });
 
     test.each([
-      1,
-      2,
+      "1",
+      "2",
     ])("configured to '%s' (valid)", async (value) => {
       doMockSvgoVersionInput(() => `${value}`);
 

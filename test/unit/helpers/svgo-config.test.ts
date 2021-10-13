@@ -1,3 +1,5 @@
+import type { SupportedSvgoVersions } from "../../../src/svgo";
+
 import { mocked } from "ts-jest/utils";
 
 jest.mock("../../../src/errors");
@@ -32,7 +34,7 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 1", () => {
-      const config = { svgoVersion: { value: 1 } };
+      const config = { svgoVersion: { value: "1" as SupportedSvgoVersions } };
 
       beforeEach(() => {
         parsers.NewYaml.mockClear();
@@ -61,7 +63,7 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 2", () => {
-      const config = { svgoVersion: { value: 2 } };
+      const config = { svgoVersion: { value: "2" as SupportedSvgoVersions } };
 
       beforeEach(() => {
         parsers.NewJavaScript.mockClear();
