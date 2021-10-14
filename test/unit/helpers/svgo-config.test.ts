@@ -34,7 +34,10 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 1", () => {
-      const config = { svgoVersion: { value: "1" as SupportedSvgoVersions } };
+      const config = {
+        svgoConfigPath: { value: ".svgo.yml" },
+        svgoVersion: { value: "1" as SupportedSvgoVersions },
+      };
 
       beforeEach(() => {
         parsers.NewYaml.mockClear();
@@ -63,7 +66,10 @@ describe("helpers/svgo-config.ts", () => {
     });
 
     describe("SVGO version 2", () => {
-      const config = { svgoVersion: { value: "2" as SupportedSvgoVersions } };
+      const config = {
+        svgoConfigPath: { value: "svgo.yml" },
+        svgoVersion: { value: "2" as SupportedSvgoVersions },
+      };
 
       beforeEach(() => {
         parsers.NewJavaScript.mockClear();
@@ -88,6 +94,93 @@ describe("helpers/svgo-config.ts", () => {
 
         expect(parsers.NewJavaScript).toHaveBeenCalledTimes(1);
         expect(errorParser).toHaveBeenCalledTimes(1);
+      });
+    });
+
+    describe("SVGO version 'project'", () => {
+      const baseConfig = {
+        svgoConfigPath: { value: "svgo.config.js" },
+        svgoVersion: { value: "project" as SupportedSvgoVersions },
+      };
+
+      describe("YAML configuration", () => {
+        const svgoConfigPaths: string[] = [
+          ".svgo.yml",
+          "svgo.yaml",
+        ];
+
+        beforeEach(() => {
+          parsers.NewYaml.mockClear();
+        });
+
+        test.each(svgoConfigPaths)("parse success (%s)", (svgoConfigPath) => {
+          const config = Object.assign({ }, baseConfig, {
+            svgoConfigPath: { value: svgoConfigPath },
+          });
+
+          parsers.NewYaml.mockReturnValue(successParser);
+
+          const [result, err] = parseRawSvgoConfig({ config, rawConfig });
+          expect(err).toBeNull();
+          expect(result).toEqual(parseOutput);
+
+          expect(parsers.NewYaml).toHaveBeenCalledTimes(1);
+          expect(successParser).toHaveBeenCalledTimes(1);
+        });
+
+        test.each(svgoConfigPaths)("parse error (%s)", (svgoConfigPath) => {
+          const config = Object.assign({ }, baseConfig, {
+            svgoConfigPath: { value: svgoConfigPath },
+          });
+
+          parsers.NewYaml.mockReturnValue(errorParser);
+
+          const [, err] = parseRawSvgoConfig({ config, rawConfig });
+          expect(err).not.toBeNull();
+
+          expect(parsers.NewYaml).toHaveBeenCalledTimes(1);
+          expect(errorParser).toHaveBeenCalledTimes(1);
+        });
+      });
+
+      describe("JavaScript configuration", () => {
+        const svgoConfigPaths: string[] = [
+          "svgo.config.js",
+          "svgo-config.js",
+        ];
+
+        beforeEach(() => {
+          parsers.NewJavaScript.mockClear();
+        });
+
+        test.each(svgoConfigPaths)("parse success (%s)", (svgoConfigPath) => {
+          const config = Object.assign({ }, baseConfig, {
+            svgoConfigPath: { value: svgoConfigPath },
+          });
+
+          parsers.NewJavaScript.mockReturnValue(successParser);
+
+          const [result, err] = parseRawSvgoConfig({ config, rawConfig });
+          expect(err).toBeNull();
+          expect(result).toEqual(parseOutput);
+
+          expect(parsers.NewJavaScript).toHaveBeenCalledTimes(1);
+          expect(successParser).toHaveBeenCalledTimes(1);
+        });
+
+        test.each(svgoConfigPaths)("parse error (%s)", (svgoConfigPath) => {
+          const config = Object.assign({ }, baseConfig, {
+            svgoConfigPath: { value: svgoConfigPath },
+          });
+
+          parsers.NewJavaScript.mockReturnValue(errorParser);
+
+          const [, err] = parseRawSvgoConfig({ config, rawConfig });
+          expect(err).not.toBeNull();
+
+          expect(parsers.NewJavaScript).toHaveBeenCalledTimes(1);
+          expect(errorParser).toHaveBeenCalledTimes(1);
+        });
       });
     });
   });
