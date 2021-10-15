@@ -4,17 +4,17 @@ import { mocked } from "ts-jest/utils";
 
 jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/project");
-jest.mock("../../../src/svgo/svgo-v1-wrapper");
-jest.mock("../../../src/svgo/svgo-v2-wrapper");
+jest.mock("../../../src/svgo/v1");
+jest.mock("../../../src/svgo/v2");
 
 import errors from "../../../src/errors";
-import * as project from "../../../src/svgo/project";
-import * as svgoV1Wrapper from "../../../src/svgo/svgo-v1-wrapper";
-import * as svgoV2Wrapper from "../../../src/svgo/svgo-v2-wrapper";
+import _project from "../../../src/svgo/project";
+import _svgoV1 from "../../../src/svgo/v1";
+import _svgoV2 from "../../../src/svgo/v2";
 
-const createSvgoOptimizerForProject = mocked(project.default);
-const SVGOptimizerV1 = mocked(svgoV1Wrapper.default);
-const SVGOptimizerV2 = mocked(svgoV2Wrapper.default);
+const createSvgoOptimizerForProject = mocked(_project);
+const svgoV1 = mocked(_svgoV1);
+const svgoV2 = mocked(_svgoV2);
 
 import svgo from "../../../src/svgo/index";
 
@@ -25,8 +25,8 @@ describe("svgo/index.ts", () => {
     };
 
     beforeEach(() => {
-      SVGOptimizerV1.mockClear();
-      SVGOptimizerV2.mockClear();
+      svgoV1.New.mockClear();
+      svgoV2.New.mockClear();
     });
 
     test("version 1", () => {
@@ -39,7 +39,7 @@ describe("svgo/index.ts", () => {
       const [result, err] = svgo.New({ config, svgoConfig });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(SVGOptimizerV1).toHaveBeenCalledWith(svgoConfig);
+      expect(svgoV1.New).toHaveBeenCalledWith(svgoConfig);
     });
 
     test("version 2", () => {
@@ -52,7 +52,7 @@ describe("svgo/index.ts", () => {
       const [result, err] = svgo.New({ config, svgoConfig });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
-      expect(SVGOptimizerV2).toHaveBeenCalledWith(svgoConfig);
+      expect(svgoV2.New).toHaveBeenCalledWith(svgoConfig);
     });
 
     describe("project", () => {

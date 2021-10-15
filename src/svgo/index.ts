@@ -3,8 +3,8 @@ import type { SupportedSvgoVersions, SVGOptimizer } from "./types";
 
 import errors from "../errors";
 import createSvgoOptimizerForProject from "./project";
-import SVGOptimizerV1 from "./svgo-v1-wrapper";
-import SVGOptimizerV2 from "./svgo-v2-wrapper";
+import svgoV1 from "./v1";
+import svgoV2 from "./v2";
 
 interface Config {
   readonly svgoVersion: {
@@ -29,10 +29,10 @@ function New({
       [svgOptimizer, err] = createSvgoOptimizerForProject(svgoConfig);
       break;
     case "1":
-      svgOptimizer = new SVGOptimizerV1(svgoConfig);
+      [svgOptimizer, err] = svgoV1.New(svgoConfig);
       break;
     case "2":
-      svgOptimizer = new SVGOptimizerV2(svgoConfig);
+      [svgOptimizer, err] = svgoV2.New(svgoConfig);
       break;
     default:
       err = errors.New(`unknown value '${config.svgoVersion.value}'`);

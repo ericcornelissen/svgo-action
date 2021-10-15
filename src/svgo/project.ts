@@ -3,9 +3,9 @@ import type { SVGOptimizer } from "./types";
 
 import importCwd from "import-cwd";
 
-import SVGOptimizerV2 from "./svgo-v2-wrapper";
-import SVGOptimizerV1 from "./svgo-v1-wrapper";
 import errors from "../errors";
+import svgoV1 from "./v1";
+import svgoV2 from "./v2";
 
 function isSvgoV2(importedSvgo: unknown): boolean {
   return Object.prototype.hasOwnProperty.call(importedSvgo, "optimize");
@@ -24,9 +24,9 @@ function createSvgoOptimizerForProject(
 
   // TODO: replace built-in SVGOptimizer instances with package-local one
   if (isSvgoV2(svgo)) {
-    return [new SVGOptimizerV2(options), null];
+    return svgoV2.New(options);
   } else {
-    return [new SVGOptimizerV1(options), null];
+    return svgoV1.New(options);
   }
 }
 

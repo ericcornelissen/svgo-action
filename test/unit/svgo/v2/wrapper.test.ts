@@ -1,15 +1,15 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import { invalidSvg, optimizedSvg, validSvg } from "./common";
+import { invalidSvg, optimizedSvg, validSvg } from "../common";
 
 jest.mock("svgo-v2");
-jest.mock("../../../src/errors");
+jest.mock("../../../../src/errors");
 
 import svgo from "svgo-v2";
 
-import SVGOptimizer from "../../../src/svgo/svgo-v2-wrapper";
+import SvgoV2Wrapper from "../../../../src/svgo/v2/wrapper";
 
-describe("svgo/svgo-v2-wrapper.ts", () => {
+describe("svgo/v2/wrapper.ts", () => {
   describe("::optimize", () => {
     beforeEach(() => {
       svgo.optimize.mockClear();
@@ -22,7 +22,7 @@ describe("svgo/svgo-v2-wrapper.ts", () => {
         .calledWith(validSvg, expect.anything())
         .mockReturnValue({ data: optimizedSvg });
 
-      const svgOptimizer = new SVGOptimizer();
+      const svgOptimizer = new SvgoV2Wrapper(svgo);
 
       const [result, err] = await svgOptimizer.optimize(validSvg);
       expect(err).toBeNull();
@@ -34,7 +34,7 @@ describe("svgo/svgo-v2-wrapper.ts", () => {
         .calledWith(invalidSvg, expect.anything())
         .mockReturnValueOnce({ data: "" });
 
-      const svgOptimizer = new SVGOptimizer();
+      const svgOptimizer = new SvgoV2Wrapper(svgo);
 
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
@@ -51,7 +51,7 @@ describe("svgo/svgo-v2-wrapper.ts", () => {
           throw new Error(errorMsg);
         });
 
-      const svgOptimizer = new SVGOptimizer();
+      const svgOptimizer = new SvgoV2Wrapper(svgo);
 
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
