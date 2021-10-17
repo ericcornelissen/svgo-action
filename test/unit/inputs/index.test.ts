@@ -85,7 +85,7 @@ describe("inputs/index.ts", () => {
         const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.isDryRun.value).toEqual(configuredValue);
+        expect(result.isDryRun.value).toBe(configuredValue);
       });
 
       test("can't get value", () => {
@@ -126,7 +126,7 @@ describe("inputs/index.ts", () => {
         const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.isStrictMode.value).toEqual(configuredValue);
+        expect(result.isStrictMode.value).toBe(configuredValue);
       });
 
       test("can't get value", () => {
@@ -171,7 +171,7 @@ describe("inputs/index.ts", () => {
         const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.svgoConfigPath.value).toEqual(configuredValue);
+        expect(result.svgoConfigPath.value).toBe(configuredValue);
       });
 
       test("can't get value", () => {
@@ -225,7 +225,7 @@ describe("inputs/index.ts", () => {
         const [result, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
-        expect(result.svgoVersion.value).toEqual(configuredValue);
+        expect(result.svgoVersion.value).toBe(configuredValue);
       });
 
       test("can't get value", () => {
