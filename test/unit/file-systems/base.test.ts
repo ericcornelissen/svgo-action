@@ -149,7 +149,7 @@ describe("file-systems/base.ts", () => {
       const [result, err] = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
       expect(err).toContain("file not found");
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
 
     test("read failure when file exists", async () => {
@@ -159,7 +159,7 @@ describe("file-systems/base.ts", () => {
       const [result, err]  = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
       expect(err).toContain("cannot read file");
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
   });
 

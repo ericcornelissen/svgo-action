@@ -108,7 +108,7 @@ describe("file-systems/filtered.ts", () => {
 
       const [result, err] = await fileSystem.readFile(file);
       expect(err).toBeNull();
-      expect(result).toEqual(content);
+      expect(result).toBe(content);
     });
 
     test.each([
@@ -126,7 +126,7 @@ describe("file-systems/filtered.ts", () => {
       const [result, err] = await fileSystem.readFile(file);
       expect(err).not.toBeNull();
       expect(err).toContain("no access");
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
 
     test("read error", async () => {

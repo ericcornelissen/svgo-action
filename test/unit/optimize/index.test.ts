@@ -76,7 +76,7 @@ describe("optimize/index.ts", () => {
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).toBeNull();
-        expect(stats.svgCount).toEqual(files.length);
+        expect(stats.svgCount).toBe(files.length);
       });
 
       test.each(testCases)("optimized count, %#", async (files) => {
@@ -84,7 +84,7 @@ describe("optimize/index.ts", () => {
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).toBeNull();
-        expect(stats.optimizedCount).toEqual(files.length);
+        expect(stats.optimizedCount).toBe(files.length);
       });
 
       test.each(testCases)("read error, %#", async (files) => {
@@ -93,7 +93,7 @@ describe("optimize/index.ts", () => {
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).not.toBeNull();
-        expect(stats.optimizedCount).toEqual(files.length);
+        expect(stats.optimizedCount).toBe(files.length);
       });
 
       test.each(testCases)("optimize error, %#", async (files) => {
@@ -102,7 +102,7 @@ describe("optimize/index.ts", () => {
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).not.toBeNull();
-        expect(stats.optimizedCount).toEqual(files.length);
+        expect(stats.optimizedCount).toBe(files.length);
       });
 
       test("write error", async () => {
