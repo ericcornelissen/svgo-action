@@ -9,6 +9,7 @@ import outputs from "./outputs";
 import svgo from "./svgo";
 
 import {
+  deprecationWarnings,
   getFilters,
   isClientRequired,
   isEventSupported,
@@ -53,6 +54,7 @@ async function main({ core, github }: Params): Promise<void> {
 
   const [optimizer, err4] = svgo.New({ config, svgoConfig });
   core.info(`Using SVGO major version ${config.svgoVersion.value}`);
+  deprecationWarnings({ config, core });
   action.failIf(err4, "Could not initialize SVGO");
 
   const [filters, err5] = await getFilters({ client, config, github });

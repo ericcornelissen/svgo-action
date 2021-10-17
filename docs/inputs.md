@@ -196,8 +196,9 @@ If `svgo-version` is `2` you must have a JavaScript-based SVGO config file. If
 change the SVGO config file used by the Action using the [SVGO
 Config](#svgo-config) input.
 
-> :information_source: If you plan to set this to `1`, we recommend upgrading to
-> SVGO v2 instead. For more information see the [SVGO v2 release notes].
+> :warning: SVGO v1 has been deprecated, we strongly recommend upgrading to
+> SVGO v2. For more information see the [SVGO v2 release notes]. Support for
+> SVGO v1 **will** be dropped in the next major release of this Action.
 
 ### Examples
 

@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add deprecation warning annotation when using SVGO v1. ([#466])
 
 ## [2.1.1] - 2021-10-03
 
@@ -345,5 +345,6 @@ Versioning].
 [#454]: https://github.com/ericcornelissen/svgo-action/pull/454
 [#457]: https://github.com/ericcornelissen/svgo-action/pull/457
 [#459]: https://github.com/ericcornelissen/svgo-action/pull/459
+[#466]: https://github.com/ericcornelissen/svgo-action/pull/466
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
