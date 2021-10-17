@@ -57,6 +57,7 @@ describe("main.ts", () => {
     actionManagement.New.mockClear();
     clients.New.mockClear();
     fileSystems.New.mockClear();
+    helpers.deprecationWarnings.mockClear();
     helpers.getFilters.mockClear();
     helpers.isEventSupported.mockClear();
     helpers.parseRawSvgoConfig.mockClear();
@@ -74,6 +75,7 @@ describe("main.ts", () => {
     expect(actionManagement.New).toHaveBeenCalledTimes(1);
     expect(clients.New).toHaveBeenCalledTimes(1);
     expect(fileSystems.New).toHaveBeenCalledTimes(2);
+    expect(helpers.deprecationWarnings).toHaveBeenCalledTimes(1);
     expect(helpers.getFilters).toHaveBeenCalledTimes(1);
     expect(helpers.isEventSupported).toHaveBeenCalledTimes(1);
     expect(helpers.parseRawSvgoConfig).toHaveBeenCalledTimes(1);
