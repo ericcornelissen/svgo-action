@@ -106,6 +106,5 @@ describe("svgo/index.ts", () => {
       const [, err] = svgo.New({ config, svgoConfig });
       expect(err).not.toBeNull();
     });
-
   });
 });

@@ -6,6 +6,11 @@ const New = jest.fn()
   .mockReturnValue([optimizer, null])
   .mockName("svgo.v2.New");
 
+const NewFrom = jest.fn()
+  .mockReturnValue([optimizer, null])
+  .mockName("svgo.v2.NewFrom");
+
 export default {
   New,
+  NewFrom,
 };

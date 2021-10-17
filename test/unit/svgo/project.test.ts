@@ -35,8 +35,10 @@ describe("svgo/project.ts", () => {
     test("unsuccessful import", () => {
       importCwdSilent.mockReturnValue(undefined);
 
-      const [, err] = createSvgoOptimizerForProject();
+      const [result, err] = createSvgoOptimizerForProject();
       expect(err).not.toBeNull();
+      expect(err).toEqual("package-local SVGO not found");
+      expect(result).toBeNull();
     });
 
     describe("successful import", () => {
@@ -47,7 +49,7 @@ describe("svgo/project.ts", () => {
         expect(err).toBeNull();
         expect(result).not.toBeNull();
 
-        expect(svgoV1.New).toHaveBeenCalledWith(svgoConfig);
+        expect(svgoV1.NewFrom).toHaveBeenCalledWith(svgoV1Export, svgoConfig);
       });
 
       test("with config, SVGO v2", () => {
@@ -57,7 +59,7 @@ describe("svgo/project.ts", () => {
         expect(err).toBeNull();
         expect(result).not.toBeNull();
 
-        expect(svgoV2.New).toHaveBeenCalledWith(svgoConfig);
+        expect(svgoV2.NewFrom).toHaveBeenCalledWith(svgoV2Export, svgoConfig);
       });
 
       test("without config, SVGO v1", () => {
@@ -67,7 +69,7 @@ describe("svgo/project.ts", () => {
         expect(err).toBeNull();
         expect(result).not.toBeNull();
 
-        expect(svgoV1.New).toHaveBeenCalledWith({ });
+        expect(svgoV1.NewFrom).toHaveBeenCalledWith(svgoV1Export, { });
       });
 
       test("without config, SVGO v2", () => {
@@ -77,7 +79,7 @@ describe("svgo/project.ts", () => {
         expect(err).toBeNull();
         expect(result).not.toBeNull();
 
-        expect(svgoV2.New).toHaveBeenCalledWith({ });
+        expect(svgoV2.NewFrom).toHaveBeenCalledWith(svgoV2Export, { });
       });
     });
   });

@@ -22,11 +22,10 @@ function createSvgoOptimizerForProject(
     ];
   }
 
-  // TODO: replace built-in SVGOptimizer instances with package-local one
   if (isSvgoV2(svgo)) {
-    return svgoV2.New(options);
+    return svgoV2.NewFrom(svgo, options);
   } else {
-    return svgoV1.New(options);
+    return svgoV1.NewFrom(svgo, options);
   }
 }
 
