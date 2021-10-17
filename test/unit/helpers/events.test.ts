@@ -49,7 +49,7 @@ describe("helpers/events.ts", () => {
 
       const [result, ok] = isEventSupported({ context });
       expect(ok).toBe(true);
-      expect(result).toEqual(eventName);
+      expect(result).toBe(eventName);
     });
 
     test.each([
@@ -60,7 +60,7 @@ describe("helpers/events.ts", () => {
 
       const [result, ok] = isEventSupported({ context });
       expect(ok).toBe(false);
-      expect(result).toEqual(eventName);
+      expect(result).toBe(eventName);
     });
   });
 });

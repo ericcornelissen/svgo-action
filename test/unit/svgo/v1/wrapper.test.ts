@@ -48,7 +48,7 @@ describe("svgo/v1/wrapper.ts", () => {
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
       expect(err).toContain(errorMsg);
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
   });
 });

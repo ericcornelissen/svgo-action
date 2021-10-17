@@ -39,7 +39,7 @@ describe("svgo/v2/wrapper.ts", () => {
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid");
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
 
     test("optimization error", async () => {
@@ -56,7 +56,7 @@ describe("svgo/v2/wrapper.ts", () => {
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
       expect(err).toContain(errorMsg);
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
   });
 });

@@ -80,7 +80,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getIsDryRun(inp, !configuredValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
     });
 
     test.each([true, false])("can't get input", (defaultValue) => {
@@ -91,7 +91,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getIsDryRun(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid dry-run value");
-      expect(result.value).toEqual(true);
+      expect(result.value).toBe(true);
     });
   });
 
@@ -112,7 +112,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getIsStrictMode(inp, !configuredValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
     });
 
     test.each([true, false])("can't get input", (defaultValue) => {
@@ -123,7 +123,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getIsStrictMode(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid strict value");
-      expect(result.value).toEqual(true);
+      expect(result.value).toBe(true);
     });
   });
 
@@ -144,7 +144,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoConfigPath(inp, "foo.bar");
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
     });
 
     test("can't get input", () => {
@@ -156,7 +156,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoConfigPath(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(defaultValue);
+      expect(result.value).toBe(defaultValue);
     });
   });
 
@@ -179,7 +179,7 @@ describe("inputs/getters.ts", () => {
       const defaultValue = configuredValue === "1" ? "2" : "1";
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
     });
 
     test.each([
@@ -196,7 +196,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("unsupported SVGO version");
-      expect(result.value).toEqual(defaultValue);
+      expect(result.value).toBe(defaultValue);
     });
 
     test("can't get input", () => {
@@ -208,7 +208,7 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(defaultValue);
+      expect(result.value).toBe(defaultValue);
     });
   });
 });

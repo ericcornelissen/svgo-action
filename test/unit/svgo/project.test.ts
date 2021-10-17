@@ -37,7 +37,7 @@ describe("svgo/project.ts", () => {
 
       const [result, err] = createSvgoOptimizerForProject();
       expect(err).not.toBeNull();
-      expect(err).toEqual("package-local SVGO not found");
+      expect(err).toBe("package-local SVGO not found");
       expect(result).toBeNull();
     });
 

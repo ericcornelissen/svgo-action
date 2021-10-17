@@ -51,8 +51,8 @@ describe("package optimize", () => {
       const [stats, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
 
-      expect(stats.svgCount).toEqual(files.length);
-      expect(stats.optimizedCount).toEqual(files.length);
+      expect(stats.svgCount).toBe(files.length);
+      expect(stats.optimizedCount).toBe(files.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(files.length);
       expect(fs.readFile).toHaveBeenCalledTimes(files.length);
@@ -67,8 +67,8 @@ describe("package optimize", () => {
       const [stats, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
 
-      expect(stats.svgCount).toEqual(files.length);
-      expect(stats.optimizedCount).toEqual(files.length);
+      expect(stats.svgCount).toBe(files.length);
+      expect(stats.optimizedCount).toBe(files.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(files.length);
       expect(fs.readFile).toHaveBeenCalledTimes(files.length);
