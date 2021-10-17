@@ -96,6 +96,11 @@ export default async function main(): Promise<void> {
     config,
   );
   const svgo: SVGOptimizer = new SVGOptimizer(config.svgoVersion, svgoOptions);
+  if (config.svgoVersion === 1) {
+    core.warning(
+      "This SVGO version is no longer supported. Upgrade to v2.x.x or higher",
+    );
+  }
 
   run(client, config, svgo);
 }
