@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.11] - 2021-10-18
+
 - Add deprecation warning annotation when using SVGO v1. ([#469])
 
 ## [1.3.10] - 2021-09-25
@@ -170,7 +174,7 @@ Versioning].
 
 ## [0.1.2] - 2020-02-24
 
-- Add `dry-run` option for the action.  ([#77])
+- Add `dry-run` option for the action. ([#77])
 - Specify `required` for action inputs. ([#78])
 - Add informative logging. ([#81])
 
