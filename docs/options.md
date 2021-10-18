@@ -375,15 +375,11 @@ svgo-options: my-svgo-options.yml
 
 The _SVGO Version_ option allows you to specify the major version of [SVGO] that
 you want to use. This can be either `1` for the latest v1.x.x release or `2` for
-the latest v2.x.x release.
+the latest v2.x.x release. You need to change this option based on the format of
+the configuration file for SVGO that you're using.
 
-You need to change this option based on the format of the configuration file for
-SVGO that you're using. We recommend updating your configuration file and
-setting this option to `2` as soon as possible. For more information see [the
-release notes of SVGO v2](https://github.com/svg/svgo/releases/tag/v2.0.0).
-
-If you're not using a configuration file it is recommended to set this option to
-`2`.
+> :warning: SVGO v1 has been deprecated, we strongly recommend upgrading to SVGO
+> v2. For more information see the [SVGO v2 release notes].
 
 ### Examples
 
@@ -407,6 +403,7 @@ svgo-options: svgo.config.js
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
+[svgo v2 release notes]: https://github.com/svg/svgo/releases/tag/v2.0.0
 [the templating documentation]: /docs/templating.md
 [yaml]: https://yaml.org/
 [yaml multiline strings]: https://yaml-multiline.info/
