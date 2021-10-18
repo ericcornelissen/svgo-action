@@ -32,6 +32,13 @@ describe("svgo/project.ts", () => {
       svgoV2.New.mockClear();
     });
 
+    test("tries to import 'svgo'", () => {
+      importCwdSilent.mockReturnValue(undefined);
+
+      createSvgoOptimizerForProject();
+      expect(importCwdSilent).toHaveBeenCalledWith("svgo");
+    });
+
     test("unsuccessful import", () => {
       importCwdSilent.mockReturnValue(undefined);
 

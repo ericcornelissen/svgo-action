@@ -1,4 +1,3 @@
-import type { SupportedSvgoVersions } from "../../src/svgo";
 import type { Octokit } from "../../src/types";
 
 import { mocked } from "ts-jest/utils";
@@ -166,10 +165,9 @@ describe("package helpers", () => {
   });
 
   describe("::parseRawSvgoConfig", () => {
-    describe("SVGO version 1", () => {
+    describe("YAML configuration file", () => {
       const config = {
         svgoConfigPath: { value: ".svgo.yml" },
-        svgoVersion: { value: "1" as SupportedSvgoVersions },
       };
 
       test("valid configuration", () => {
@@ -188,10 +186,9 @@ describe("package helpers", () => {
       });
     });
 
-    describe("SVGO version 2", () => {
+    describe("JavaScript configuration", () => {
       const config = {
         svgoConfigPath: { value: "svgo.config.js" },
-        svgoVersion: { value: "2" as SupportedSvgoVersions },
       };
 
       test("valid configuration", () => {
