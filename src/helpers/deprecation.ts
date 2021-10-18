@@ -16,7 +16,7 @@ function deprecationWarnings({
   config,
   core,
 }: Params): void {
-  if (config.svgoVersion.value === 1) {
+  if (config.svgoVersion.value === "1") {
     core.warning("This SVGO version is no longer supported. Upgrade to v2.x.x or higher");
   }
 }

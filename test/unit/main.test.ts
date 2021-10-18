@@ -103,23 +103,6 @@ describe("main.ts", () => {
         expect.stringContaining(`'${eventName}'`),
       );
     });
-
-    test.each([
-      1,
-      2,
-    ])("the SVGO (major) version (`%s`)", async (svgoVersion) => {
-      const value = svgoVersion as 1 | 2;
-
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign({ }, baseConfig, { svgoVersion: { value } });
-      inputs.New.mockReturnValueOnce([config, null]);
-
-      await main({ core, github });
-
-      expect(core.info).toHaveBeenCalledWith(
-        expect.stringContaining(`version ${svgoVersion}`),
-      );
-    });
   });
 
   describe("Dry mode", () => {

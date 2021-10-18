@@ -18,7 +18,8 @@ describe("helpers/deprecation.ts", () => {
   });
 
   test.each([
-    2,
+    "2",
+    "project",
   ])("not deprecated version (%s)", (svgoVersion) => {
     const config = {
       svgoVersion: {
@@ -31,7 +32,7 @@ describe("helpers/deprecation.ts", () => {
   });
 
   test.each([
-    1,
+    "1",
   ])("deprecated version (%s)", (svgoVersion) => {
     const config = {
       svgoVersion: {

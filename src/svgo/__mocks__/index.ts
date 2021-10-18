@@ -1,6 +1,4 @@
-import { optimize } from "./__common__";
-
-const optimizer = { optimize };
+import { optimizer } from "./__common__";
 
 const New = jest.fn()
   .mockReturnValue([optimizer, null])

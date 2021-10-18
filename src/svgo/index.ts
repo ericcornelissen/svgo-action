@@ -1,8 +1,10 @@
 import type { error } from "../types";
 import type { SupportedSvgoVersions, SVGOptimizer } from "./types";
 
-import SVGOptimizerV1 from "./svgo-v1-wrapper";
-import SVGOptimizerV2 from "./svgo-v2-wrapper";
+import errors from "../errors";
+import createSvgoOptimizerForProject from "./project";
+import svgoV1 from "./v1";
+import svgoV2 from "./v2";
 
 interface Config {
   readonly svgoVersion: {
@@ -20,15 +22,20 @@ function New({
   svgoConfig,
 }: Params): [SVGOptimizer, error] {
   let svgOptimizer: SVGOptimizer = {} as SVGOptimizer;
-  const err: error = null;
+  let err: error = null;
 
   switch (config.svgoVersion.value) {
-    case 1:
-      svgOptimizer = new SVGOptimizerV1(svgoConfig);
+    case "project":
+      [svgOptimizer, err] = createSvgoOptimizerForProject(svgoConfig);
       break;
-    case 2:
+    case "1":
+      [svgOptimizer, err] = svgoV1.New(svgoConfig);
+      break;
+    case "2":
+      [svgOptimizer, err] = svgoV2.New(svgoConfig);
+      break;
     default:
-      svgOptimizer = new SVGOptimizerV2(svgoConfig);
+      err = errors.New(`unknown value '${config.svgoVersion.value}'`);
       break;
   }
 

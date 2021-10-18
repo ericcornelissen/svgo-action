@@ -59,7 +59,7 @@ The following inputs are available when using the SVGO Action.
 | `repo-token`   | A GitHub token (`secrets.GITHUB_TOKEN`)   | `""`               | [docs](./docs/inputs.md#repository-token) |
 | `strict`       | Fail on non-critical errors               | `false`            | [docs](./docs/inputs.md#strict-mode)      |
 | `svgo-config`  | The path of the [SVGO] configuration file | `"svgo.config.js"` | [docs](./docs/inputs.md#svgo-config)      |
-| `svgo-version` | The (major) version of [SVGO] to use      | `2`                | [docs](./docs/inputs.md#svgo-version)     |
+| `svgo-version` | The version of [SVGO] to use              | `2`                | [docs](./docs/inputs.md#svgo-version)     |
 
 To configure the Action you simply set a value for any of the above in the
 Workflow file. For example:

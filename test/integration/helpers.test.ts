@@ -165,8 +165,10 @@ describe("package helpers", () => {
   });
 
   describe("::parseRawSvgoConfig", () => {
-    describe("SVGO version 1", () => {
-      const config = { svgoVersion: { value: 1 } };
+    describe("YAML configuration file", () => {
+      const config = {
+        svgoConfigPath: { value: ".svgo.yml" },
+      };
 
       test("valid configuration", () => {
         const rawConfig = "multipass: true";
@@ -184,8 +186,10 @@ describe("package helpers", () => {
       });
     });
 
-    describe("SVGO version 2", () => {
-      const config = { svgoVersion: { value: 2 } };
+    describe("JavaScript configuration", () => {
+      const config = {
+        svgoConfigPath: { value: "svgo.config.js" },
+      };
 
       test("valid configuration", () => {
         const rawConfig = "module.exports = { multipass: true };";

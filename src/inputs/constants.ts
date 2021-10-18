@@ -3,7 +3,7 @@ const DEFAULT_IS_DRY_RUN = false;
 const DEFAULT_IS_STRICT_MODE = false;
 const DEFAULT_SVGO_V1_CONFIG_PATH = ".svgo.yml";
 const DEFAULT_SVGO_V2_CONFIG_PATH = "svgo.config.js";
-const DEFAULT_SVGO_VERSION = 2;
+const DEFAULT_SVGO_VERSION = "2";
 
 const INPUT_NAME_DRY_RUN = "dry-run";
 const INPUT_NAME_IGNORE = "ignore";

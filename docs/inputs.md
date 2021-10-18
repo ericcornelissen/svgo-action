@@ -187,20 +187,28 @@ To use an SVGO config file in a folder:
 | -------------- | ------------- |
 | `svgo-version` | `2`           |
 
-The `svgo-version` input allows you to specify the major version of [SVGO] that
-you want to use. This can be either `1` for the latest v1.x.x release or `2` for
-the latest v2.x.x release.
-
-If `svgo-version` is `2` you must have a JavaScript-based SVGO config file. If
-`svgo-version` is `1` you must have a [YAML]-based SVGO config file. You can
-change the SVGO config file used by the Action using the [SVGO
-Config](#svgo-config) input.
+The `svgo-version` input allows you to specify the version of [SVGO] that you
+want to use. This can be either `1` for the latest v1 release, `2` for the
+latest v2 release, or the string `"project"` for the version of SVGO installed
+for your project.
 
 > :warning: SVGO v1 has been deprecated, we strongly recommend upgrading to
 > SVGO v2. For more information see the [SVGO v2 release notes]. Support for
 > SVGO v1 **will** be dropped in the next major release of this Action.
 
 ### Examples
+
+To use the SVGO version used by your project:
+
+```yaml
+# .github/workflows/optimize.yml
+
+- name: Install dependencies, including SVGO
+  run: npm ci
+- uses: ericcornelissen/svgo-action@v2
+  with:
+    svgo-version: project
+```
 
 To change the SVGO major version to v1.x.x (note that the default `svgo-config`
 will be `".svgo.yml"`):
