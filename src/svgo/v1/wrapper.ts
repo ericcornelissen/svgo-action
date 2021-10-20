@@ -8,7 +8,7 @@ import errors from "../../errors";
 class SvgoV1Wrapper {
   private svgo: svgo;
 
-  constructor(svgo: svgo, options: SVGOptions = { }) {
+  constructor(svgo: svgo, options: SVGOptions) {
     this.svgo = new svgo(options);
   }
 

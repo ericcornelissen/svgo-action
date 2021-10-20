@@ -9,7 +9,7 @@ class SVGOptimizer {
   private options: SVGOptions;
   private svgo: svgo;
 
-  constructor(svgo: svgo, options: SVGOptions = { }) {
+  constructor(svgo: svgo, options: SVGOptions) {
     this.svgo = svgo;
     this.options = options;
   }

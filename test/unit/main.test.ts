@@ -333,9 +333,10 @@ describe("main.ts", () => {
   });
 
   test("svgo error", async () => {
+    const svgoConfig = { };
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
-    const [optimizer] = svgo.New({ config });
+    const [optimizer] = svgo.New({ config, svgoConfig });
 
     const err = errors.New("SVGO error");
     svgo.New.mockReturnValueOnce([optimizer, err]);
@@ -364,10 +365,11 @@ describe("main.ts", () => {
   });
 
   test("optimize error", async () => {
+    const svgoConfig = { };
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
     const fs = fileSystems.New({ filters: [] });
-    const [optimizer] = svgo.New({ config });
+    const [optimizer] = svgo.New({ config, svgoConfig });
     const [data] = await optimize.Files({ config, fs, optimizer });
 
     const err = errors.New("Optimization error");

@@ -14,14 +14,14 @@ interface Config {
 
 interface Params {
   readonly config: Config;
-  readonly svgoConfig?: unknown;
+  readonly svgoConfig: unknown;
 }
 
 function New({
   config,
   svgoConfig,
 }: Params): [SVGOptimizer, error] {
-  let svgOptimizer: SVGOptimizer = {} as SVGOptimizer;
+  let svgOptimizer = {} as SVGOptimizer;
   let err: error = null;
 
   switch (config.svgoVersion.value) {

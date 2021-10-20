@@ -25,6 +25,8 @@ describe("package svgo", () => {
   });
 
   describe("::New", () => {
+    const svgoConfig = { };
+
     describe.each([
       ["1", undefined],
       ["2", undefined],
@@ -45,7 +47,7 @@ describe("package svgo", () => {
       });
 
       test("valid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config });
+        const [svgo, err0] = SVGO.New({ config, svgoConfig });
         expect(err0).toBeNull();
 
         const [result, err1] = await svgo.optimize(validSvg);
@@ -54,7 +56,7 @@ describe("package svgo", () => {
       });
 
       test("invalid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config });
+        const [svgo, err0] = SVGO.New({ config, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(invalidSvg);
