@@ -18,13 +18,6 @@ describe("svgo/v1/index.ts", () => {
       SvgoV1Wrapper.mockClear();
     });
 
-    test("create instance successfully without configuration", async () => {
-      const [result, err] = svgoV1.New();
-      expect(err).toBeNull();
-      expect(result).not.toBeNull();
-      expect(SvgoV1Wrapper).toHaveBeenCalledWith(svgo, { });
-    });
-
     test("create instance successfully with configuration", async () => {
       const options = { foo: "bar" };
 
@@ -40,13 +33,6 @@ describe("svgo/v1/index.ts", () => {
 
     beforeEach(() => {
       SvgoV1Wrapper.mockClear();
-    });
-
-    test("create instance successfully without configuration", async () => {
-      const [result, err] = svgoV1.NewFrom(importedSvgo);
-      expect(err).toBeNull();
-      expect(result).not.toBeNull();
-      expect(SvgoV1Wrapper).toHaveBeenCalledWith(importedSvgo, { });
     });
 
     test("create instance successfully with configuration", async () => {

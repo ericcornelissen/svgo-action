@@ -11,6 +11,8 @@ import SvgoV2Wrapper from "../../../../src/svgo/v2/wrapper";
 
 describe("svgo/v2/wrapper.ts", () => {
   describe("::optimize", () => {
+    const options = { foo: "bar" };
+
     beforeEach(() => {
       svgo.optimize.mockClear();
 
@@ -22,7 +24,7 @@ describe("svgo/v2/wrapper.ts", () => {
         .calledWith(validSvg, expect.anything())
         .mockReturnValue({ data: optimizedSvg });
 
-      const svgOptimizer = new SvgoV2Wrapper(svgo);
+      const svgOptimizer = new SvgoV2Wrapper(svgo, options);
 
       const [result, err] = await svgOptimizer.optimize(validSvg);
       expect(err).toBeNull();
@@ -34,7 +36,7 @@ describe("svgo/v2/wrapper.ts", () => {
         .calledWith(invalidSvg, expect.anything())
         .mockReturnValueOnce({ data: "" });
 
-      const svgOptimizer = new SvgoV2Wrapper(svgo);
+      const svgOptimizer = new SvgoV2Wrapper(svgo, options);
 
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
@@ -51,7 +53,7 @@ describe("svgo/v2/wrapper.ts", () => {
           throw new Error(errorMsg);
         });
 
-      const svgOptimizer = new SvgoV2Wrapper(svgo);
+      const svgOptimizer = new SvgoV2Wrapper(svgo, options);
 
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();

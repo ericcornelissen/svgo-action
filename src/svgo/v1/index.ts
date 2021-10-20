@@ -6,13 +6,13 @@ import svgo from "svgo-v1";
 
 import SvgoV1Wrapper from "./wrapper";
 
-function New(options: SVGOptions = { }): [SVGOptimizer, error] {
+function New(options: SVGOptions): [SVGOptimizer, error] {
   return NewFrom(svgo, options);
 }
 
 function NewFrom(
   importedSvgo: svgo,
-  options: SVGOptions = { },
+  options: SVGOptions,
 ): [SVGOptimizer, error] {
   return [new SvgoV1Wrapper(importedSvgo, options), null];
 }
