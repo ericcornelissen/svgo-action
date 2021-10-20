@@ -220,7 +220,6 @@ jobs:
       #   run: npm ci
     - name: Optimize SVGs
       uses: ericcornelissen/svgo-action@v2
-      id: svgo
       with:
         svgo-version: project
 ```
