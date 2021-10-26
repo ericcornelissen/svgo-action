@@ -18,5 +18,6 @@ max_line_length = unset
 [*.md]
 max_line_length = unset # Handled by markdownlint
 
-[lib/*]
-max_line_length = unset # Irrelevant for generated files
+[lib/*.js] # Disable rules for generated files
+max_line_length = unset
+insert_final_newline = false

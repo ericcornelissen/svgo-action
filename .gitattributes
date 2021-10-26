@@ -2,4 +2,5 @@
 
 # don't diff machine generated files
 lib/index.js -diff
+lib/setup.js -diff
 package-lock.json -diff

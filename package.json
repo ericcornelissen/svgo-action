@@ -13,7 +13,7 @@
     "build:main": "ncc build src/index.ts -m -o lib",
     "clean": "run-p clean:reports clean:temp",
     "clean:reports": "rm -rf ./_reports",
-    "clean:temp": "rm -rf ./.cache ./.temp",
+    "clean:temp": "rm -rf ./.cache ./.temp ./lib/.temp",
     "coverage": "npm run test -- --coverage",
     "coverage:unit": "npm run test:unit -- --coverage",
     "coverage:integration": "npm run test:integration -- --coverage",
