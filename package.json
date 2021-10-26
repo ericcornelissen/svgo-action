@@ -8,7 +8,9 @@
   "main": "lib/index.js",
   "scripts": {
     "prebuild": "node script/prebuild.js",
-    "build": "ncc build src/index.ts -m -o lib",
+    "build": "run-s build:setup build:main",
+    "build:setup": "ncc build src/setup.ts -m -o lib/.temp && mv lib/.temp/index.js lib/setup.js",
+    "build:main": "ncc build src/index.ts -m -o lib",
     "clean": "run-p clean:reports clean:temp",
     "clean:reports": "rm -rf ./_reports",
     "clean:temp": "rm -rf ./.cache ./.temp",
