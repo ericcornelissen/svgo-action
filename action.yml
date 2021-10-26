@@ -26,6 +26,7 @@ outputs:
 
 runs:
   using: 'node12'
+  pre: 'lib/setup.js'
   main: 'lib/index.js'
 
 branding:
