@@ -92,6 +92,16 @@ module.exports = {
     }],
   },
   overrides: [
+    { // Source code only
+      files: ["src/**/*.ts"],
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+      rules: {
+        "@typescript-eslint/consistent-type-exports": ["error"],
+        "@typescript-eslint/consistent-type-imports": ["error"],
+      },
+    },
     { // Configuration files
       files: ["*.js"],
       globals: {
