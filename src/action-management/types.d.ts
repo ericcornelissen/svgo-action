@@ -7,7 +7,7 @@ interface ActionManager {
 
 type Condition = boolean | error;
 
-export {
+export type {
   ActionManager,
   Condition,
 };
