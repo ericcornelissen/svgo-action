@@ -1,6 +1,6 @@
 import type { error } from "../types";
 
-type SupportedSvgoVersions = "1" | "2" | "project";
+type SupportedSvgoVersions = string;
 
 interface SVGOptimizer {
   optimize(svg: string): Promise<[string, error]>;

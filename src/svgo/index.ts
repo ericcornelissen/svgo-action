@@ -1,7 +1,7 @@
 import type { error } from "../types";
 import type { SupportedSvgoVersions, SVGOptimizer } from "./types";
 
-import errors from "../errors";
+import createSvgoForVersion from "./custom";
 import createSvgoOptimizerForProject from "./project";
 import svgoV1 from "./v1";
 import svgoV2 from "./v2";
@@ -35,7 +35,7 @@ function New({
       [svgOptimizer, err] = svgoV2.New(svgoConfig);
       break;
     default:
-      err = errors.New(`unknown value '${config.svgoVersion.value}'`);
+      [svgOptimizer, err] = createSvgoForVersion(svgoConfig);
       break;
   }
 
