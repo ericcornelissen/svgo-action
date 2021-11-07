@@ -146,6 +146,9 @@ describe("package inputs", () => {
     test.each([
       "1",
       "2",
+      "project",
+      "1.2.3",
+      "v1.2.3",
     ])("configured to '%s' (valid)", async (value) => {
       doMockSvgoVersionInput(() => `${value}`);
 
@@ -153,19 +156,6 @@ describe("package inputs", () => {
 
       expect(err).toBeNull();
       expect(config.svgoVersion.value).toBe(value);
-    });
-
-    test.each([
-      "42",
-      "3.14",
-      "Hello world!",
-    ])("configured to '%s' (invalid)", async (value) => {
-      doMockSvgoVersionInput(() => value);
-
-      const [config, err] = inputs.New({ inp });
-
-      expect(err).not.toBeNull();
-      expect(config.svgoVersion.value).toBe(DEFAULT_SVGO_VERSION);
     });
   });
 });

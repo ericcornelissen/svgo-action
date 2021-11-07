@@ -146,15 +146,6 @@ function getSvgoVersion(
 ): [InputValue<SupportedSvgoVersions>, error] {
   const inputName = INPUT_NAME_SVGO_VERSION;
   const input = getStringInput({ inp, inputName, defaultValue });
-
-  const svgoVersion = input.value;
-  if (svgoVersion !== "1" && svgoVersion !== "2" && svgoVersion !== "project") {
-    return [
-      { ...input, value: defaultValue },
-      errors.New(`unsupported SVGO version '${svgoVersion}'`),
-    ];
-  }
-
   return [input as InputValue<SupportedSvgoVersions>, null];
 }
 

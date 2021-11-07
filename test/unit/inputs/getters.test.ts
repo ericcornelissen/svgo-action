@@ -290,33 +290,17 @@ describe("inputs/getters.ts", () => {
       "1",
       "2",
       "project",
-    ])("can get input, valid ('%s')", (configuredValue) => {
+      "1.2.3",
+      "v1.2.3",
+    ])("get input value, valid value ('%s')", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValue(`${configuredValue}`);
 
-      const defaultValue = configuredValue === "1" ? "2" : "1";
+      const defaultValue = configuredValue === "2" ? "1" : "2";
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
       expect(result.value).toBe(configuredValue);
-    });
-
-    test.each([
-      "0",
-      "3",
-      "42",
-    ])("can get input, unsupported ('%s')", (configuredValue) => {
-      const defaultValue = "2";
-
-      when(inp.getInput)
-        .calledWith(inputKey, expect.anything())
-        .mockReturnValue(configuredValue);
-
-      const [result, err] = getSvgoVersion(inp, defaultValue);
-      expect(err).not.toBeNull();
-      expect(err).toContain("unsupported SVGO version");
-      expect(result.value).toBe(defaultValue);
-      expect(result.provided).toBe(true);
     });
 
     test("input provided but invalid", () => {
