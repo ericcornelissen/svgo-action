@@ -18,7 +18,7 @@ interface Core {
 
 interface Params {
   readonly config: Config;
-  readonly core: Core,
+  readonly core: Core;
   readonly svgoConfig: unknown;
 }
 
@@ -31,18 +31,18 @@ function New({
   let err: error = null;
 
   switch (config.svgoVersion.value) {
-    case "project":
-      [svgOptimizer, err] = createSvgoOptimizerForProject(svgoConfig);
-      break;
-    case "1":
-      [svgOptimizer, err] = svgoV1.New(svgoConfig);
-      break;
-    case "2":
-      [svgOptimizer, err] = svgoV2.New(svgoConfig);
-      break;
-    default:
-      [svgOptimizer, err] = createSvgoForVersion(core, svgoConfig);
-      break;
+  case "project":
+    [svgOptimizer, err] = createSvgoOptimizerForProject(svgoConfig);
+    break;
+  case "1":
+    [svgOptimizer, err] = svgoV1.New(svgoConfig);
+    break;
+  case "2":
+    [svgOptimizer, err] = svgoV2.New(svgoConfig);
+    break;
+  default:
+    [svgOptimizer, err] = createSvgoForVersion(core, svgoConfig);
+    break;
   }
 
   return [svgOptimizer, err];

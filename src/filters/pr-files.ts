@@ -32,9 +32,9 @@ interface Repo {
 }
 
 async function getPrFiles({ client, number, repo }: {
-  client: GitHubClient,
-  number: number,
-  repo: Repo,
+  client: GitHubClient;
+  number: number;
+  repo: Repo;
 }): Promise<[File[], error]> {
   const perPage = 100;
 
