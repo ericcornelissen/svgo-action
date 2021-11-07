@@ -178,7 +178,7 @@ describe("package helpers", () => {
         },
       };
 
-        const [eventName, ok] = isEventSupported(params);
+      const [eventName, ok] = isEventSupported(params);
       expect(eventName).not.toBeNull();
       expect(ok).not.toBeNull();
     });

@@ -5,7 +5,7 @@ const NewJavaScript = jest.fn()
   .mockName("parsers.NewJavaScript");
 
 const NewYaml = jest.fn()
-.mockReturnValue(parser)
+  .mockReturnValue(parser)
   .mockName("parsers.NewYaml");
 
 export default {

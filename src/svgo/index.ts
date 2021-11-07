@@ -25,18 +25,18 @@ function New({
   let err: error = null;
 
   switch (config.svgoVersion.value) {
-    case "project":
-      [svgOptimizer, err] = createSvgoOptimizerForProject(svgoConfig);
-      break;
-    case "1":
-      [svgOptimizer, err] = svgoV1.New(svgoConfig);
-      break;
-    case "2":
-      [svgOptimizer, err] = svgoV2.New(svgoConfig);
-      break;
-    default:
-      err = errors.New(`unknown value '${config.svgoVersion.value}'`);
-      break;
+  case "project":
+    [svgOptimizer, err] = createSvgoOptimizerForProject(svgoConfig);
+    break;
+  case "1":
+    [svgOptimizer, err] = svgoV1.New(svgoConfig);
+    break;
+  case "2":
+    [svgOptimizer, err] = svgoV2.New(svgoConfig);
+    break;
+  default:
+    err = errors.New(`unknown value '${config.svgoVersion.value}'`);
+    break;
   }
 
   return [svgOptimizer, err];
