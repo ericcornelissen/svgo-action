@@ -1,17 +1,20 @@
 import { mocked } from "ts-jest/utils";
 
+jest.mock("@actions/core");
 jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/custom");
 jest.mock("../../../src/svgo/project");
 jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
 
+import * as _core from "@actions/core";
 import errors from "../../../src/errors";
 import _custom from "../../../src/svgo/custom";
 import _project from "../../../src/svgo/project";
 import _svgoV1 from "../../../src/svgo/v1";
 import _svgoV2 from "../../../src/svgo/v2";
 
+const core = mocked(_core);
 const createSvgoForVersion = mocked(_custom);
 const createSvgoOptimizerForProject = mocked(_project);
 const svgoV1 = mocked(_svgoV1);
@@ -37,7 +40,7 @@ describe("svgo/index.ts", () => {
         },
       };
 
-      const [result, err] = svgo.New({ config, svgoConfig });
+      const [result, err] = svgo.New({ config, core, svgoConfig });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
       expect(svgoV1.New).toHaveBeenCalledWith(svgoConfig);
@@ -50,7 +53,7 @@ describe("svgo/index.ts", () => {
         },
       };
 
-      const [result, err] = svgo.New({ config, svgoConfig });
+      const [result, err] = svgo.New({ config, core, svgoConfig });
       expect(err).toBeNull();
       expect(result).not.toBeNull();
       expect(svgoV2.New).toHaveBeenCalledWith(svgoConfig);
@@ -68,25 +71,31 @@ describe("svgo/index.ts", () => {
       });
 
       test("no error", () => {
-        const [svgOptimizer] = createSvgoForVersion({ });
+        const [svgOptimizer] = createSvgoForVersion(core, { });
         createSvgoForVersion.mockReturnValueOnce([svgOptimizer, null]);
 
-        const [result, err] = svgo.New({ config, svgoConfig });
+        const [result, err] = svgo.New({ config, core, svgoConfig });
         expect(err).toBeNull();
         expect(result).not.toBeNull();
-        expect(createSvgoForVersion).toHaveBeenCalledWith(svgoConfig);
+        expect(createSvgoForVersion).toHaveBeenCalledWith(
+          core,
+          svgoConfig,
+        );
       });
 
       test("an error", () => {
-        const [svgOptimizer] = createSvgoForVersion({ });
+        const [svgOptimizer] = createSvgoForVersion(core, { });
         createSvgoForVersion.mockReturnValueOnce([
           svgOptimizer,
           errors.New("failed to import the project's svgo"),
         ]);
 
-        const [, err] = svgo.New({ config, svgoConfig });
+        const [, err] = svgo.New({ config, core, svgoConfig });
         expect(err).not.toBeNull();
-        expect(createSvgoForVersion).toHaveBeenCalledWith(svgoConfig);
+        expect(createSvgoForVersion).toHaveBeenCalledWith(
+          core,
+          svgoConfig,
+        );
       });
     });
 
@@ -105,7 +114,7 @@ describe("svgo/index.ts", () => {
         const [svgOptimizer] = createSvgoOptimizerForProject({ });
         createSvgoOptimizerForProject.mockReturnValueOnce([svgOptimizer, null]);
 
-        const [result, err] = svgo.New({ config, svgoConfig });
+        const [result, err] = svgo.New({ config, core, svgoConfig });
         expect(err).toBeNull();
         expect(result).not.toBeNull();
         expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(svgoConfig);
@@ -118,7 +127,7 @@ describe("svgo/index.ts", () => {
           errors.New("failed to import the project's svgo"),
         ]);
 
-        const [, err] = svgo.New({ config, svgoConfig });
+        const [, err] = svgo.New({ config, core, svgoConfig });
         expect(err).not.toBeNull();
         expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(svgoConfig);
       });

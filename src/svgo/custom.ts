@@ -1,18 +1,22 @@
 import type { error } from "../types";
 import type { SVGOptimizer } from "./types";
 
-import * as core from "@actions/core";
 import importFrom from "import-from";
 
 import errors from "../errors";
 import svgoV1 from "./v1";
 import svgoV2 from "./v2";
 
+interface Core {
+  getState(key: string): string;
+}
+
 function isSvgoV2(importedSvgo: unknown): boolean {
   return Object.prototype.hasOwnProperty.call(importedSvgo, "optimize");
 }
 
 function createSvgoForVersion(
+  core: Core,
   options: unknown = { },
 ): [SVGOptimizer, error] {
   const installPath = core.getState("NODE_MODULES");

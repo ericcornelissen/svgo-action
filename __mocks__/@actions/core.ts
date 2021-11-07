@@ -3,7 +3,7 @@ const defaultInputs = {
   "dry-run": false,
   "ignore": "",
   "svgo-config": "svgo.config.js",
-  "svgo-version": 2,
+  "svgo-version": "2",
 };
 
 function simulateGetInput(key: string) {
@@ -30,6 +30,9 @@ const getMultilineInput = jest.fn()
   .mockImplementation((key) => [simulateGetInput(key)])
   .mockName("core.getMultilineInput");
 
+const getState = jest.fn()
+  .mockName("core.getState");
+
 const info = jest.fn()
   .mockName("core.info");
 
@@ -47,6 +50,7 @@ export {
   getBooleanInput,
   getInput,
   getMultilineInput,
+  getState,
   info,
   setFailed,
   setOutput,

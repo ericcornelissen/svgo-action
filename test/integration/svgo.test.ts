@@ -1,18 +1,22 @@
-import type { SupportedSvgoVersions } from "../../src/svgo";
-
 import { mocked } from "ts-jest/utils";
 
 jest.dontMock("js-yaml"); // used by svgo-v1
 jest.dontMock("svgo-v1");
 jest.dontMock("svgo-v2");
 
+jest.mock("@actions/core");
 jest.mock("import-cwd");
+jest.mock("import-from");
 
+import * as _core from "@actions/core";
 import importCwd from "import-cwd";
+import importFrom from "import-from";
 import svgoV1 from "svgo-v1";
 import svgoV2 from "svgo-v2";
 
+const core = mocked(_core);
 const importCwdSilent = mocked(importCwd.silent);
+const importFromSilent = mocked(importFrom.silent);
 
 import SVGO from "../../src/svgo";
 
@@ -32,10 +36,12 @@ describe("package svgo", () => {
       ["2", undefined],
       ["project", svgoV1],
       ["project", svgoV2],
+      ["1.0.0", svgoV1],
+      ["2.0.0", svgoV2],
     ])("::optimize (%s, %s)", (svgoVersion, svgoImport) => {
       const config = {
         svgoVersion: {
-          value: svgoVersion as SupportedSvgoVersions,
+          value: svgoVersion,
         },
       };
 
@@ -44,10 +50,11 @@ describe("package svgo", () => {
 
       beforeEach(() => {
         importCwdSilent.mockReturnValue(svgoImport);
+        importFromSilent.mockReturnValue(svgoImport);
       });
 
       test("valid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, core, svgoConfig });
         expect(err0).toBeNull();
 
         const [result, err1] = await svgo.optimize(validSvg);
@@ -56,7 +63,7 @@ describe("package svgo", () => {
       });
 
       test("invalid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, core, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(invalidSvg);
@@ -71,7 +78,7 @@ describe("package svgo", () => {
           ],
         };
 
-        const [svgo, err0] = SVGO.New({ config, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, core, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(validSvg);
@@ -82,27 +89,28 @@ describe("package svgo", () => {
     describe("initialization fails", () => {
       const svgoConfig = { };
 
-      test("invalid svgo-version", () => {
+      test("custom-installed SVGO missing", () => {
+        importFromSilent.mockReturnValueOnce(undefined);
+
         const config = {
           svgoVersion: {
-            value: "foobar" as SupportedSvgoVersions,
+            value: "v2.1.0",
           },
         };
 
-        const [, err] = SVGO.New({ config, svgoConfig });
+        const [, err] = SVGO.New({ config, core, svgoConfig });
         expect(err).not.toBeNull();
       });
-
       test("project-level SVGO missing", () => {
         importCwdSilent.mockReturnValueOnce(undefined);
 
         const config = {
           svgoVersion: {
-            value: "project" as SupportedSvgoVersions,
+            value: "project",
           },
         };
 
-        const [, err] = SVGO.New({ config, svgoConfig });
+        const [, err] = SVGO.New({ config, core, svgoConfig });
         expect(err).not.toBeNull();
       });
     });

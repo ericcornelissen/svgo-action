@@ -12,13 +12,19 @@ interface Config {
   };
 }
 
+interface Core {
+  getState(key: string): string;
+}
+
 interface Params {
   readonly config: Config;
+  readonly core: Core,
   readonly svgoConfig: unknown;
 }
 
 function New({
   config,
+  core,
   svgoConfig,
 }: Params): [SVGOptimizer, error] {
   let svgOptimizer = {} as SVGOptimizer;
@@ -35,7 +41,7 @@ function New({
       [svgOptimizer, err] = svgoV2.New(svgoConfig);
       break;
     default:
-      [svgOptimizer, err] = createSvgoForVersion(svgoConfig);
+      [svgOptimizer, err] = createSvgoForVersion(core, svgoConfig);
       break;
   }
 

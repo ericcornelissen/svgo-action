@@ -52,7 +52,7 @@ async function main({ core, github }: Params): Promise<void> {
     "Could not parse SVGO configuration",
   );
 
-  const [optimizer, err4] = svgo.New({ config, svgoConfig });
+  const [optimizer, err4] = svgo.New({ config, core, svgoConfig });
   deprecationWarnings({ config, core });
   action.failIf(err4, "Could not initialize SVGO");
 

@@ -18,6 +18,7 @@ interface Context {
 
 interface Core extends Inputter, Outputter {
   debug(message: string): void;
+  getState(key: string): string;
   info(message: string): void;
   setFailed(message: string | Error): void;
   warning(message: string | Error): void;
