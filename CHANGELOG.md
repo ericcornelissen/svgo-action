@@ -9,6 +9,10 @@ Versioning].
 
 - _No changes yet_
 
+## [2.1.3] - 2021-11-02
+
+- Update SVGO v2 to `v2.8.0`. ([#481])
+
 ## [2.1.2] - 2021-10-18
 
 - Add deprecation warning annotation when using SVGO v1. ([#466])
@@ -72,6 +76,10 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.12] - 2021-11-02
+
+- Update SVGO v2 to `v2.8.0`. ([#480])
 
 ## [1.3.11] - 2021-10-18
 
@@ -357,5 +365,7 @@ Versioning].
 [#464]: https://github.com/ericcornelissen/svgo-action/pull/464
 [#466]: https://github.com/ericcornelissen/svgo-action/pull/466
 [#469]: https://github.com/ericcornelissen/svgo-action/pull/469
+[#480]: https://github.com/ericcornelissen/svgo-action/pull/480
+[#481]: https://github.com/ericcornelissen/svgo-action/pull/481
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

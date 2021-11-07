@@ -46,7 +46,7 @@ interface Outputter {
   setOutput(name: string, value: string): void;
 }
 
-export {
+export type {
   Context,
   Core,
   error,
