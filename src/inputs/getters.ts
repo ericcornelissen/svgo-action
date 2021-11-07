@@ -45,7 +45,7 @@ function isInputValid({
   getInput,
   inputName,
 }: {
-  getInput: (inputName: string, options: { required: boolean }) => void;
+  getInput: (inputName: string, options: { required: boolean; }) => void;
   inputName: string;
 }): boolean {
   let valid = true;
@@ -63,7 +63,7 @@ function safeGetInput<T>({
   inputName,
   getInput,
   defaultValue,
-}: Params<T> & { getInput: GetInput<T> }): InputInfo<T> {
+}: Params<T> & { getInput: GetInput<T>; }): InputInfo<T> {
   const provided = isInputProvided({ inp, inputName });
   if (!provided) {
     return { provided, valid: true, value: defaultValue };

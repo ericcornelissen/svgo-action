@@ -52,17 +52,17 @@ const outputsMap: Map<OutputName, DataToOutput> = new Map([
 
 function getOutputNamesFor(event: string): [OutputName[], error] {
   switch (event) {
-    case EVENT_PULL_REQUEST:
-    case EVENT_PUSH:
-    case EVENT_REPOSITORY_DISPATCH:
-    case EVENT_SCHEDULE:
-    case EVENT_WORKFLOW_DISPATCH:
-    default:
-      return [[
-        OutputName.DID_OPTIMIZE,
-        OutputName.OPTIMIZED_COUNT,
-        OutputName.SVG_COUNT,
-      ], null];
+  case EVENT_PULL_REQUEST:
+  case EVENT_PUSH:
+  case EVENT_REPOSITORY_DISPATCH:
+  case EVENT_SCHEDULE:
+  case EVENT_WORKFLOW_DISPATCH:
+  default:
+    return [[
+      OutputName.DID_OPTIMIZE,
+      OutputName.OPTIMIZED_COUNT,
+      OutputName.SVG_COUNT,
+    ], null];
   }
 }
 

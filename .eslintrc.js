@@ -46,6 +46,7 @@ module.exports = {
       exports: "always-multiline",
       functions: "always-multiline",
     }],
+    "indent": ["error", 2],
     "max-len": ["error", {
       code: 80,
       comments: 80,
@@ -100,6 +101,17 @@ module.exports = {
       rules: {
         "@typescript-eslint/consistent-type-exports": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
+        "@typescript-eslint/member-delimiter-style": ["error", {
+          multiline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          singleline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          multilineDetection: "brackets",
+        }],
       },
     },
     { // Configuration files

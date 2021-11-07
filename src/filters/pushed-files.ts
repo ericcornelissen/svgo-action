@@ -34,9 +34,9 @@ interface Repo {
 }
 
 async function getPushedFiles({ client, commits, repo }: {
-  client: GitHubClient,
-  commits: Commit[],
-  repo: Repo,
+  client: GitHubClient;
+  commits: Commit[];
+  repo: Repo;
 }): Promise<[File[], error]> {
   const allFiles: File[] = [];
   let err: error = null;

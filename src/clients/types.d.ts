@@ -24,12 +24,12 @@ interface GitHubClient {
     listFiles(
       params: CommitsListFilesParams,
     ): Promise<[CommitsListFilesResponse, error]>;
-  }
+  };
   readonly pulls: {
     listFiles(
       params: PullsListFilesParams,
-    ): Promise<[PullsListFilesResponse, error]>
-  }
+    ): Promise<[PullsListFilesResponse, error]>;
+  };
 }
 
 interface PullsListFilesParams {
