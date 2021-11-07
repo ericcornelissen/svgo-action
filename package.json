@@ -53,6 +53,7 @@
     "@actions/github": "5.0.0",
     "@actions/io": "1.1.1",
     "import-cwd": "3.0.0",
+    "import-from": "4.0.0",
     "js-yaml": "4.1.0",
     "minimatch": "3.0.4",
     "node-eval": "2.0.0",
