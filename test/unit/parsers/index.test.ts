@@ -8,10 +8,9 @@ import * as yaml from "js-yaml";
 import nodeEval from "node-eval";
 
 import * as builder from "../../../src/parsers/builder";
+import parsers from "../../../src/parsers/index";
 
 const buildSafeParser = mocked(builder.buildSafeParser, true);
-
-import parsers from "../../../src/parsers/index";
 
 describe("parsers/index.js", () => {
   beforeEach(() => {

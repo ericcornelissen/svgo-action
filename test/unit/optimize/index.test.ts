@@ -1,7 +1,5 @@
 import { mocked } from "ts-jest/utils";
 
-import optimizer from "../../__common__/optimizer.mock";
-
 jest.mock("../../../src/errors");
 jest.mock("../../../src/file-systems");
 jest.mock("../../../src/optimize/optimize");
@@ -10,15 +8,15 @@ jest.mock("../../../src/optimize/write");
 
 import errors from "../../../src/errors";
 import fileSystems from "../../../src/file-systems";
+import optimize from "../../../src/optimize/index";
 import * as _optimize from "../../../src/optimize/optimize";
 import * as _read from "../../../src/optimize/read";
 import * as _write from "../../../src/optimize/write";
+import optimizer from "../../__common__/optimizer.mock";
 
 const optimizeAll = mocked(_optimize.optimizeAll);
 const readFiles = mocked(_read.readFiles);
 const writeFiles = mocked(_write.writeFiles);
-
-import optimize from "../../../src/optimize/index";
 
 describe("optimize/index.ts", () => {
   describe("::Files", () => {

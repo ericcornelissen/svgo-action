@@ -4,11 +4,10 @@ jest.mock("../../../src/errors");
 jest.mock("../../../src/parsers");
 
 import errors from "../../../src/errors";
-import _parsers from "../../../src/parsers";
-
 import {
   parseRawSvgoConfig,
 } from "../../../src/helpers/svgo-config";
+import _parsers from "../../../src/parsers";
 
 const parsers = mocked(_parsers);
 

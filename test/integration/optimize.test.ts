@@ -1,11 +1,10 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import optimizer from "../__common__/optimizer.mock";
-
 jest.mock("../../src/file-systems");
 
 import fileSystems from "../../src/file-systems";
 import optimize from "../../src/optimize";
+import optimizer from "../__common__/optimizer.mock";
 
 describe("package optimize", () => {
   describe("::Files", () => {

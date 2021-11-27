@@ -3,11 +3,6 @@ import type { Core, GitHub } from "./types";
 import actionManagement from "./action-management";
 import clients from "./clients";
 import fileSystems from "./file-systems";
-import inputs from "./inputs";
-import optimize from "./optimize";
-import outputs from "./outputs";
-import svgo from "./svgo";
-
 import {
   deprecationWarnings,
   getFilters,
@@ -15,6 +10,10 @@ import {
   isEventSupported,
   parseRawSvgoConfig,
 } from "./helpers";
+import inputs from "./inputs";
+import optimize from "./optimize";
+import outputs from "./outputs";
+import svgo from "./svgo";
 
 interface Params {
   readonly core: Core;

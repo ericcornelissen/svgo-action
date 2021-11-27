@@ -1,6 +1,7 @@
 import type { Dirent, Stats } from "fs";
 
 import { when, resetAllWhenMocks } from "jest-when";
+
 import { mocked } from "ts-jest/utils";
 
 jest.mock("fs");
@@ -10,10 +11,10 @@ jest.mock("../../../src/errors");
 import * as _fs from "fs";
 import * as _path from "path";
 
+import NewBaseFileSystem from "../../../src/file-systems/base";
+
 const fs = mocked(_fs);
 const path = mocked(_path);
-
-import NewBaseFileSystem from "../../../src/file-systems/base";
 
 describe("file-systems/base.ts", () => {
   let fileSystem;

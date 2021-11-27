@@ -1,6 +1,5 @@
-import out from "../../__common__/outputter.mock";
-
 import outputs from "../../../src/outputs";
+import out from "../../__common__/outputter.mock";
 
 describe.each([
   { optimizedCount: 1, svgCount: 4 },

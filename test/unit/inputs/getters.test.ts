@@ -1,7 +1,5 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../../__common__/inputter.mock";
-
 jest.mock("../../../src/errors");
 
 import {
@@ -11,6 +9,7 @@ import {
   getSvgoConfigPath,
   getSvgoVersion,
 } from "../../../src/inputs/getters";
+import inp from "../../__common__/inputter.mock";
 
 describe("inputs/getters.ts", () => {
   const INPUT_OPTIONS_NOT_REQUIRED = { required: false };

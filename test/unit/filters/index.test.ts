@@ -1,7 +1,5 @@
 import { mocked } from "ts-jest/utils";
 
-import inp from "../../__common__/inputter.mock";
-
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/filters/pr-files");
@@ -11,15 +9,15 @@ jest.mock("../../../src/filters/svgs");
 import * as github from "@actions/github";
 
 import clients from "../../../src/clients/index";
+import filters from "../../../src/filters/index";
 import _NewPrFilesFilter from "../../../src/filters/pr-files";
 import _NewPushedFilesFilter from "../../../src/filters/pushed-files";
 import _NewSvgsFilter from "../../../src/filters/svgs";
+import inp from "../../__common__/inputter.mock";
 
 const NewPrFilesFilter = mocked(_NewPrFilesFilter);
 const NewPushedFilesFilter = mocked(_NewPushedFilesFilter);
 const NewSvgsFilter = mocked(_NewSvgsFilter);
-
-import filters from "../../../src/filters/index";
 
 describe("filters/index.ts", () => {
   let client;

@@ -3,8 +3,6 @@ import type { Octokit } from "../../src/types";
 
 import { mocked } from "ts-jest/utils";
 
-import inp from "../__common__/inputter.mock";
-
 jest.dontMock("js-yaml");
 jest.dontMock("minimatch");
 jest.dontMock("node-eval");
@@ -25,6 +23,7 @@ import {
   isEventSupported,
   parseRawSvgoConfig,
 } from "../../src/helpers";
+import inp from "../__common__/inputter.mock";
 
 describe("package helpers", () => {
   const EVENT_PULL_REQUEST = "pull_request";

@@ -5,7 +5,6 @@ import { when, resetAllWhenMocks } from "jest-when";
 jest.mock("../../../src/errors");
 
 import errors from "../../../src/errors";
-
 import { optimizeAll } from "../../../src/optimize/optimize";
 
 describe("optimize/optimize.ts", () => {
