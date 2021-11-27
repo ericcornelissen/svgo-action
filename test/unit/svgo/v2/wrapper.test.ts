@@ -1,13 +1,12 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import { invalidSvg, optimizedSvg, validSvg } from "../common";
-
 jest.mock("svgo-v2");
 jest.mock("../../../../src/errors");
 
-import svgo from "svgo-v2";
+import svgo from "svgo-v2"; // eslint-disable-line import/default
 
 import SvgoV2Wrapper from "../../../../src/svgo/v2/wrapper";
+import { invalidSvg, optimizedSvg, validSvg } from "../common";
 
 describe("svgo/v2/wrapper.ts", () => {
   describe("::optimize", () => {

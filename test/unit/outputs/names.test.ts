@@ -5,7 +5,6 @@ import {
   EVENT_SCHEDULE,
   EVENT_WORKFLOW_DISPATCH,
 } from "../../../src/constants/events";
-
 import {
   getOutputNamesFor,
   OutputName,

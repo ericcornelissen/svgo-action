@@ -6,11 +6,10 @@ jest.mock("../../../../src/svgo/v1/wrapper");
 
 import svgo from "svgo-v1";
 
+import svgoV1 from "../../../../src/svgo/v1/index";
 import _SvgoV1Wrapper from "../../../../src/svgo/v1/wrapper";
 
 const SvgoV1Wrapper = mocked(_SvgoV1Wrapper);
-
-import svgoV1 from "../../../../src/svgo/v1/index";
 
 describe("svgo/v1/index.ts", () => {
   describe("::New", () => {

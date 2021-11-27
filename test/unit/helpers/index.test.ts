@@ -13,11 +13,10 @@ import {
 import {
   getFilters,
 } from "../../../src/helpers/filters";
+import * as helpers from "../../../src/helpers/index";
 import {
   parseRawSvgoConfig,
 } from "../../../src/helpers/svgo-config";
-
-import * as helpers from "../../../src/helpers/index";
 
 describe("helpers/index.ts", () => {
   test("::deprecationWarnings", () => {

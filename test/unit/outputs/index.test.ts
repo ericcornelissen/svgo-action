@@ -2,21 +2,19 @@ import type { OutputName } from "../../../src/outputs/names";
 
 import { mocked } from "ts-jest/utils";
 
-import out from "../../__common__/outputter.mock";
-
 jest.mock("../../../src/outputs/names");
 jest.mock("../../../src/outputs/values");
 jest.mock("../../../src/outputs/write");
 
+import outputs from "../../../src/outputs/index";
 import * as _names from "../../../src/outputs/names";
 import * as _values from "../../../src/outputs/values";
 import * as _write from "../../../src/outputs/write";
+import out from "../../__common__/outputter.mock";
 
 const getOutputNamesFor = mocked(_names.getOutputNamesFor);
 const getValuesForOutputs = mocked(_values.getValuesForOutputs);
 const writeOutputs = mocked(_write.writeOutputs);
-
-import outputs from "../../../src/outputs/index";
 
 describe("outputs/index.js", () => {
   const data = {

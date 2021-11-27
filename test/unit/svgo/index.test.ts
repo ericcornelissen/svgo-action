@@ -8,6 +8,7 @@ jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
 
 import errors from "../../../src/errors";
+import svgo from "../../../src/svgo/index";
 import _project from "../../../src/svgo/project";
 import _svgoV1 from "../../../src/svgo/v1";
 import _svgoV2 from "../../../src/svgo/v2";
@@ -15,8 +16,6 @@ import _svgoV2 from "../../../src/svgo/v2";
 const createSvgoOptimizerForProject = mocked(_project);
 const svgoV1 = mocked(_svgoV1);
 const svgoV2 = mocked(_svgoV2);
-
-import svgo from "../../../src/svgo/index";
 
 describe("svgo/index.ts", () => {
   describe("::New", () => {

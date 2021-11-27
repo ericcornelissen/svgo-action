@@ -1,17 +1,16 @@
 import { mocked } from "ts-jest/utils";
 
-import inp from "../__common__/inputter.mock";
-
 jest.dontMock("minimatch");
 
 jest.mock("@actions/github");
 
 import * as _github from "@actions/github";
 
-const github = mocked(_github);
-
 import clients from "../../src/clients";
 import filters from "../../src/filters";
+import inp from "../__common__/inputter.mock";
+
+const github = mocked(_github);
 
 describe("package filters", () => {
   describe("::NewGlobFilter", () => {

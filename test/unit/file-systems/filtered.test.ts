@@ -3,7 +3,6 @@ import { when, resetAllWhenMocks } from "jest-when";
 jest.mock("../../../src/errors");
 
 import errors from "../../../src/errors";
-
 import NewFilteredFileSystem from "../../../src/file-systems/filtered";
 
 describe("file-systems/filtered.ts", () => {

@@ -1,7 +1,6 @@
-import type svgo from "svgo-v1";
-
 import type { error } from "../../types";
 import type { SVGOptions } from "./types";
+import type svgo from "svgo-v1";
 
 import errors from "../../errors";
 

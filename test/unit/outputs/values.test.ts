@@ -1,5 +1,4 @@
 import { OutputName } from "../../../src/outputs/names";
-
 import {
   getValuesForOutputs,
 } from "../../../src/outputs/values";

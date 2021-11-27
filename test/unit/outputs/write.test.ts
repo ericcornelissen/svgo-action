@@ -1,10 +1,9 @@
 import type { OutputName } from "../../../src/outputs/names";
 
-import out from "../../__common__/outputter.mock";
-
 import {
   writeOutputs,
 } from "../../../src/outputs/write";
+import out from "../../__common__/outputter.mock";
 
 describe("outputs/write.js", () => {
   beforeEach(() => {
