@@ -21,6 +21,7 @@ import _errors from "../../src/errors";
 import _fileSystems from "../../src/file-systems";
 import * as _helpers from "../../src/helpers";
 import _inputs from "../../src/inputs";
+import main from "../../src/main";
 import _optimize from "../../src/optimize";
 import _outputs from "../../src/outputs";
 import _svgo from "../../src/svgo";
@@ -36,8 +37,6 @@ const helpers = mocked(_helpers);
 const optimize = mocked(_optimize);
 const outputs = mocked(_outputs);
 const svgo = mocked(_svgo);
-
-import main from "../../src/main";
 
 describe("main.ts", () => {
   let action;

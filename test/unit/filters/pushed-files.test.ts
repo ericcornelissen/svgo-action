@@ -1,5 +1,3 @@
-import inp from "../../__common__/inputter.mock";
-
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/errors");
@@ -8,8 +6,8 @@ import * as github from "@actions/github";
 
 import clients from "../../../src/clients";
 import errors from "../../../src/errors";
-
 import New from "../../../src/filters/pushed-files";
+import inp from "../../__common__/inputter.mock";
 
 describe("filters/pushed-files.ts", () => {
   describe("::New", () => {

@@ -10,11 +10,11 @@ jest.mock("import-cwd");
 
 import importCwd from "import-cwd";
 import svgoV1 from "svgo-v1";
-import svgoV2 from "svgo-v2";
-
-const importCwdSilent = mocked(importCwd.silent);
+import svgoV2 from "svgo-v2"; // eslint-disable-line import/default
 
 import SVGO from "../../src/svgo";
+
+const importCwdSilent = mocked(importCwd.silent);
 
 describe("package svgo", () => {
   const consoleErrorBackup = console.error; // eslint-disable-line no-console

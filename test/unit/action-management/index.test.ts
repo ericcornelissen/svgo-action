@@ -6,11 +6,10 @@ jest.mock("../../../src/action-management/action-manager");
 import * as _core from "@actions/core";
 
 import _ActionManager from "../../../src/action-management/action-manager";
+import actionManagement from "../../../src/action-management/index";
 
 const ActionManager = mocked(_ActionManager);
 const core = mocked(_core);
-
-import actionManagement from "../../../src/action-management/index";
 
 describe("action-management/index.ts", () => {
   describe("::New", () => {

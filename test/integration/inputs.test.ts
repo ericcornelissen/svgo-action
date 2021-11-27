@@ -1,8 +1,7 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../__common__/inputter.mock";
-
 import inputs from "../../src/inputs";
+import inp from "../__common__/inputter.mock";
 
 describe("package inputs", () => {
   const DRY_RUN = "dry-run";

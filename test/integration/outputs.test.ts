@@ -1,6 +1,5 @@
-import out from "../__common__/outputter.mock";
-
 import outputs from "../../src/outputs";
+import out from "../__common__/outputter.mock";
 
 describe("package outputs", () => {
   const EVENT_PULL_REQUEST = "pull_request";

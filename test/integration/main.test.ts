@@ -6,9 +6,10 @@ jest.mock("@actions/core");
 jest.mock("@actions/github");
 jest.mock("fs");
 
+import * as _fs from "fs";
+
 import * as _core from "@actions/core";
 import * as _github from "@actions/github";
-import * as _fs from "fs";
 
 const core = mocked(_core);
 const fs = mocked(_fs);

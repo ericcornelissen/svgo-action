@@ -7,14 +7,13 @@ jest.mock("../../../src/svgo/v2");
 
 import importCwd from "import-cwd";
 
+import createSvgoOptimizerForProject from "../../../src/svgo/project";
 import _svgoV1 from "../../../src/svgo/v1";
 import _svgoV2 from "../../../src/svgo/v2";
 
 const importCwdSilent = mocked(importCwd.silent);
 const svgoV1 = mocked(_svgoV1);
 const svgoV2 = mocked(_svgoV2);
-
-import createSvgoOptimizerForProject from "../../../src/svgo/project";
 
 describe("svgo/project.ts", () => {
   describe("::New", () => {
