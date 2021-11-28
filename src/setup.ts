@@ -9,7 +9,7 @@ import * as io from "@actions/io";
 import errors from "./errors";
 import inputs from "./inputs";
 
-const versionExpr = /v?[0-9]+\.[0-9]+\.[0-9]+/;
+const versionExpr = /^v?[0-9]+\.[0-9]+\.[0-9]+$/;
 
 const NPM_INSTALL_FLAGS = [
   "--no-save",
