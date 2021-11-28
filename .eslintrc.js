@@ -3,6 +3,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: [
     "@typescript-eslint",
+    "import",
     "jest",
     "mocha",
     "security",
@@ -11,6 +12,8 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
     "plugin:jest/recommended",
     "plugin:security/recommended",
   ],
@@ -68,6 +71,40 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-unused-vars": ["error", {
       argsIgnorePattern: "_+",
+    }],
+
+    // eslint-plugin-import
+    // https://github.com/import-js/eslint-plugin-import#rules
+    "import/order": ["error", {
+      groups: [
+        "type",
+        "builtin",
+        "external",
+        "internal",
+        ["parent", "sibling"],
+        "index",
+        "object",
+      ],
+
+      "newlines-between": "always",
+      "alphabetize": {
+        order: "asc",
+        caseInsensitive: true,
+      },
+      warnOnUnassignedImports: true,
+      "pathGroups": [
+        {
+          "pattern": "jest-when",
+          "group": "builtin",
+          "position": "before",
+        },
+        {
+          "pattern": "ts-jest/utils",
+          "group": "builtin",
+          "position": "before",
+        },
+      ],
+      "pathGroupsExcludedImportTypes": ["ts-jest/utils"],
     }],
 
     // eslint-plugin-jest

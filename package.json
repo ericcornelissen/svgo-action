@@ -75,6 +75,7 @@
     "@vercel/ncc": "0.30.0",
     "editorconfig-checker": "4.0.2",
     "eslint": "8.1.0",
+    "eslint-plugin-import": "2.25.3",
     "eslint-plugin-jest": "25.2.2",
     "eslint-plugin-mocha": "9.0.0",
     "eslint-plugin-security": "1.4.0",

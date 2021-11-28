@@ -12,13 +12,13 @@ import * as _core from "@actions/core";
 import importCwd from "import-cwd";
 import importFrom from "import-from";
 import svgoV1 from "svgo-v1";
-import svgoV2 from "svgo-v2";
+import svgoV2 from "svgo-v2"; // eslint-disable-line import/default
+
+import SVGO from "../../src/svgo";
 
 const core = mocked(_core);
 const importCwdSilent = mocked(importCwd.silent);
 const importFromSilent = mocked(importFrom.silent);
-
-import SVGO from "../../src/svgo";
 
 describe("package svgo", () => {
   const consoleErrorBackup = console.error; // eslint-disable-line no-console
@@ -101,6 +101,7 @@ describe("package svgo", () => {
         const [, err] = SVGO.New({ config, core, svgoConfig });
         expect(err).not.toBeNull();
       });
+
       test("project-level SVGO missing", () => {
         importCwdSilent.mockReturnValueOnce(undefined);
 

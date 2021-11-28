@@ -1,12 +1,13 @@
 import type { error } from "./types";
 
+import * as path from "path";
+
 import * as core from "@actions/core";
 import * as exec from "@actions/exec";
 import * as io from "@actions/io";
-import * as path from "path";
 
-import inputs from "./inputs";
 import errors from "./errors";
+import inputs from "./inputs";
 
 const versionExpr = /v?[0-9]+\.[0-9]+\.[0-9]+/;
 

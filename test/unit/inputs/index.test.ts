@@ -2,16 +2,15 @@ import type { SupportedSvgoVersions } from "../../../src/svgo";
 
 import { mocked } from "ts-jest/utils";
 
-import inp from "../../__common__/inputter.mock";
-
 jest.mock("../../../src/errors");
 jest.mock("../../../src/inputs/getters");
 jest.mock("../../../src/inputs/helpers");
 
+import errors from "../../../src/errors";
 import * as _getters from "../../../src/inputs/getters";
 import * as _helpers from "../../../src/inputs/helpers";
 import inputs from "../../../src/inputs/index";
-import errors from "../../../src/errors";
+import inp from "../../__common__/inputter.mock";
 
 const getters = mocked(_getters);
 const helpers = mocked(_helpers);

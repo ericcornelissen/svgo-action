@@ -1,105 +1,89 @@
+import type { OutputName } from "../../../src/outputs/names";
+
+import { mocked } from "ts-jest/utils";
+
+jest.mock("../../../src/errors");
+jest.mock("../../../src/outputs/names");
+jest.mock("../../../src/outputs/values");
+jest.mock("../../../src/outputs/write");
+
+import errors from "../../../src/errors";
+import outputs from "../../../src/outputs/index";
+import * as _names from "../../../src/outputs/names";
+import * as _values from "../../../src/outputs/values";
+import * as _write from "../../../src/outputs/write";
 import out from "../../__common__/outputter.mock";
 
-import outputs from "../../../src/outputs";
+const getOutputNamesFor = mocked(_names.getOutputNamesFor);
+const getValuesForOutputs = mocked(_values.getValuesForOutputs);
+const writeOutputs = mocked(_write.writeOutputs);
 
-describe.each([
-  { optimizedCount: 1, svgCount: 4 },
-  { optimizedCount: 7, svgCount: 18 },
-  { optimizedCount: 0, svgCount: 3 },
-])("Outputs", ({ optimizedCount, svgCount }) => {
-  const didOptimize = optimizedCount > 0;
+describe("outputs/index.js", () => {
   const data = {
-    optimizedCount,
-    svgCount,
+    optimizedCount: 3,
+    svgCount: 14,
+  };
+  const env = {
+    context: {
+      eventName: "push",
+    },
   };
 
-  const DID_OPTIMIZE = "DID_OPTIMIZE";
-  const OPTIMIZED_COUNT = "OPTIMIZED_COUNT";
-  const SVG_COUNT = "SVG_COUNT";
-
-  const EVENT_PULL_REQUEST = "pull_request";
-  const EVENT_PUSH = "push";
-  const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
-  const EVENT_SCHEDULE = "schedule";
-  const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
-
   beforeEach(() => {
-    out.setOutput.mockReset();
+    getOutputNamesFor.mockClear();
+    getValuesForOutputs.mockClear();
+    writeOutputs.mockClear();
   });
 
-  describe.each([
-    EVENT_PULL_REQUEST,
-    EVENT_PUSH,
-    EVENT_REPOSITORY_DISPATCH,
-    EVENT_SCHEDULE,
-    EVENT_WORKFLOW_DISPATCH,
-  ])("known event ('%s')", (eventName) => {
-    const env = {
-      context: {
-        eventName,
-      },
-    };
+  test("gets the output names for the event", () => {
+    outputs.Set({ env, data, out });
 
-    test("did optimize", () => {
-      const err = outputs.Set({ env, data, out });
-
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(
-        DID_OPTIMIZE,
-        `${didOptimize}`,
-      );
-    });
-
-    test("optimized count", () => {
-      const err = outputs.Set({ env, data, out });
-
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(
-        OPTIMIZED_COUNT,
-        `${optimizedCount}`,
-      );
-    });
-
-    test("svg count", () => {
-      const err = outputs.Set({ env, data, out });
-
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(SVG_COUNT, `${svgCount}`);
-    });
+    expect(getOutputNamesFor).toHaveBeenCalledTimes(1);
+    expect(getOutputNamesFor).toHaveBeenCalledWith(env.context.eventName);
   });
 
-  describe("unknown event", () => {
-    const env = {
-      context: {
-        eventName: "uNkNoWn EvEnT",
-      },
-    };
+  test("gets the values for the provided output names", () => {
+    const names: OutputName[] = [
+      "foo",
+      "bar",
+    ] as unknown as OutputName[];
 
-    test("did optimize", () => {
-      const err = outputs.Set({ env, data, out });
+    getOutputNamesFor.mockReturnValueOnce([
+      names,
+      null,
+    ]);
 
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(
-        DID_OPTIMIZE,
-        `${didOptimize}`,
-      );
-    });
+    outputs.Set({ env, data, out });
 
-    test("optimized count", () => {
-      const err = outputs.Set({ env, data, out });
+    expect(getValuesForOutputs).toHaveBeenCalledTimes(1);
+    expect(getValuesForOutputs).toHaveBeenCalledWith(names, data);
+  });
 
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(
-        OPTIMIZED_COUNT,
-        `${optimizedCount}`,
-      );
-    });
+  test("writes the provided values using the outputter", () => {
+    const nameToValue: Map<OutputName, string> = new Map();
 
-    test("svg count", () => {
-      const err = outputs.Set({ env, data, out });
+    getValuesForOutputs.mockReturnValueOnce(nameToValue);
 
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(SVG_COUNT, `${svgCount}`);
-    });
+    outputs.Set({ env, data, out });
+
+    expect(writeOutputs).toHaveBeenCalledTimes(1);
+    expect(writeOutputs).toHaveBeenCalledWith(out, nameToValue);
+  });
+
+  test("no error", () => {
+    getOutputNamesFor.mockReturnValueOnce([[], null]);
+
+    const err = outputs.Set({ env, data, out });
+    expect(err).toBeNull();
+  });
+
+  test("get output names errors", () => {
+    getOutputNamesFor.mockReturnValueOnce([
+      [],
+      errors.New("no names found"),
+    ]);
+
+    const err = outputs.Set({ env, data, out });
+    expect(err).not.toBeNull();
   });
 });

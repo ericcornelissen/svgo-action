@@ -9,6 +9,7 @@ jest.mock("../../../src/svgo/v2");
 import * as _core from "@actions/core";
 import importFrom from "import-from";
 
+import createSvgoForVersion from "../../../src/svgo/custom";
 import _svgoV1 from "../../../src/svgo/v1";
 import _svgoV2 from "../../../src/svgo/v2";
 
@@ -17,7 +18,6 @@ const importFromSilent = mocked(importFrom.silent);
 const svgoV1 = mocked(_svgoV1);
 const svgoV2 = mocked(_svgoV2);
 
-import createSvgoForVersion from "../../../src/svgo/custom";
 
 describe("svgo/custom.ts", () => {
   describe("::New", () => {

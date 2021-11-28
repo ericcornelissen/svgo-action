@@ -4,11 +4,10 @@ jest.mock("@actions/core");
 
 import * as _core from "@actions/core";
 
+import actionManagement from "../../src/action-management";
 import errors from "../../src/errors";
 
 const core = mocked(_core);
-
-import actionManagement from "../../src/action-management";
 
 describe("package action-management", () => {
   describe.each([
