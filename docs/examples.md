@@ -214,10 +214,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Install SVGO
-      run: npm install svgo@2.3.1 --no-save
-      # Or, if your repository is a Node project with SVGO as a dependency:
-      #   run: npm ci
+    # If SVGO is a (dep)dependency of your project you can just install your
+    # dependencies as usual. If SVGO is not yet a dependency of your project, we
+    # recommend you run `npm install --save-dev svgo@v2` and commit your project
+    # manifests (e.g. package.json and package-lock.json) first.
+    - name: Install dependencies
+      run: npm ci
     - name: Optimize SVGs
       uses: ericcornelissen/svgo-action@v2
       with:
