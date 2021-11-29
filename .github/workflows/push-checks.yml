@@ -202,6 +202,7 @@ jobs:
     name: Test - mutation
     needs: [test]
     runs-on: ubuntu-latest
+    if: ${{ github.ref_name == 'main' }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2.3.5
