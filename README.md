@@ -99,6 +99,20 @@ on:
     - "**.svg"
 ```
 
+#### Token Permissions
+
+The minimum required [permissions] needed to run this Action are:
+
+```yml
+permissions:
+  contents: read
+  # Uncomment the next line if you're using the Action on Pull Requests
+  #   pull-requests: read
+
+# Or use `read-all` to allow reading in all scopes (recommended for open source)
+permissions: read-all
+```
+
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Amain
 [ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/main?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
@@ -112,6 +126,7 @@ on:
 
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
+[permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
 [the examples]: ./docs/examples.md
 [what the action does for each `on` event]: ./docs/events.md

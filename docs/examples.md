@@ -31,6 +31,10 @@ on:
   push:
     branches: [main]
 
+# The minimum required permissions
+permissions:
+  contents: write
+
 jobs:
   svgs:
     name: SVGs
@@ -73,6 +77,11 @@ name: Optimize
 on:
   pull_request:
     branches: [main]
+
+# The minimum required permissions
+permissions:
+  contents: write
+  pull-request: write
 
 jobs:
   svgs:
@@ -119,6 +128,10 @@ on:
   # Schedule the workflow for once a week on Monday.
   # For more information, see: https://crontab.guru/
   - cron:  '0 0 * * 1'
+
+# The minimum required permissions
+permissions:
+  contents: write
 
 jobs:
   svgs:
@@ -172,6 +185,10 @@ on: [workflow_dispatch]
 # NOTE: "optimize.yml" in the URL has to be updated if the workflow file is not
 # called "optimize.yml".
 
+# The minimum required permissions
+permissions:
+  contents: write
+
 jobs:
   svgs:
     name: SVGs
@@ -206,6 +223,10 @@ on:
   # will still work.
   schedule:
   - cron:  '0 0 * * 1'
+
+# The minimum required permissions
+permissions:
+  contents: read
 
 jobs:
   svgs:
