@@ -198,3 +198,34 @@ jobs:
           if ! [[ '${{ steps.original-svgs.outputs.ignored-svg-one }}' = $SVG ]]; then
             exit 7
           fi
+  test-mutation:
+    name: Test - mutation
+    needs: [test]
+    runs-on: ubuntu-latest
+    if: ${{ github.ref_name == 'main' }}
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2.3.5
+      - name: Install Node.js
+        uses: actions/setup-node@v2.4.1
+        with:
+          node-version: 12.x
+      - name: Cache Dependencies
+        uses: actions/cache@v2.1.6
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run Mutation Tests
+        run: npm run test:mutation
+        env:
+          CI: true
+      - name: Upload mutation report as artifact
+        uses: actions/upload-artifact@v2.2.4
+        with:
+          name: mutation-report-${{ github.sha }}
+          path: |
+            _reports/mutation
