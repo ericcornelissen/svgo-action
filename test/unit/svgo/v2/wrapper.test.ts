@@ -1,16 +1,17 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import { invalidSvg, optimizedSvg, validSvg } from "./common";
-
 jest.mock("svgo-v2");
-jest.mock("../../../src/errors");
+jest.mock("../../../../src/errors");
 
-import svgo from "svgo-v2";
+import svgo from "svgo-v2"; // eslint-disable-line import/default
 
-import SVGOptimizer from "../../../src/svgo/svgo-v2-wrapper";
+import SvgoV2Wrapper from "../../../../src/svgo/v2/wrapper";
+import { invalidSvg, optimizedSvg, validSvg } from "../common";
 
-describe("svgo/svgo-v2-wrapper.ts", () => {
+describe("svgo/v2/wrapper.ts", () => {
   describe("::optimize", () => {
+    const options = { foo: "bar" };
+
     beforeEach(() => {
       svgo.optimize.mockClear();
 
@@ -22,7 +23,7 @@ describe("svgo/svgo-v2-wrapper.ts", () => {
         .calledWith(validSvg, expect.anything())
         .mockReturnValue({ data: optimizedSvg });
 
-      const svgOptimizer = new SVGOptimizer();
+      const svgOptimizer = new SvgoV2Wrapper(svgo, options);
 
       const [result, err] = await svgOptimizer.optimize(validSvg);
       expect(err).toBeNull();
@@ -34,12 +35,12 @@ describe("svgo/svgo-v2-wrapper.ts", () => {
         .calledWith(invalidSvg, expect.anything())
         .mockReturnValueOnce({ data: "" });
 
-      const svgOptimizer = new SVGOptimizer();
+      const svgOptimizer = new SvgoV2Wrapper(svgo, options);
 
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid");
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
 
     test("optimization error", async () => {
@@ -51,12 +52,12 @@ describe("svgo/svgo-v2-wrapper.ts", () => {
           throw new Error(errorMsg);
         });
 
-      const svgOptimizer = new SVGOptimizer();
+      const svgOptimizer = new SvgoV2Wrapper(svgo, options);
 
       const [result, err] = await svgOptimizer.optimize(invalidSvg);
       expect(err).not.toBeNull();
       expect(err).toContain(errorMsg);
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
   });
 });

@@ -83,7 +83,7 @@ describe("package file-systems", () => {
 
       const [content, err] = await fileSystem.readFile(fileHandle);
       expect(err).toBeNull();
-      expect(content).toEqual(fileContent);
+      expect(content).toBe(fileContent);
     });
 
     test("read failure", async () => {

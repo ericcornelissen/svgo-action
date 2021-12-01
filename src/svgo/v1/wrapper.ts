@@ -1,15 +1,13 @@
-import type { error } from "../types";
+import type { error } from "../../types";
+import type { SVGOptions } from "./types";
+import type svgo from "svgo-v1";
 
-import svgo from "svgo-v1";
+import errors from "../../errors";
 
-import errors from "../errors";
-
-type SVGOptions = svgo.Options;
-
-class SVGOptimizer {
+class SvgoV1Wrapper {
   private svgo: svgo;
 
-  constructor(options: SVGOptions = { }) {
+  constructor(svgo: svgo, options: SVGOptions) {
     this.svgo = new svgo(options);
   }
 
@@ -28,4 +26,4 @@ class SVGOptimizer {
   }
 }
 
-export default SVGOptimizer;
+export default SvgoV1Wrapper;

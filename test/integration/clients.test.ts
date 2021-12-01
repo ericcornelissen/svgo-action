@@ -1,12 +1,11 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../__common__/inputter.mock";
-
 jest.mock("@actions/github");
 
 import * as github from "@actions/github";
 
 import clients from "../../src/clients";
+import inp from "../__common__/inputter.mock";
 
 describe("package clients", () => {
   function doMockGetInputRepoToken(fn: () => string): void {

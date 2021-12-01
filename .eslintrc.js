@@ -3,6 +3,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: [
     "@typescript-eslint",
+    "import",
     "jest",
     "mocha",
     "security",
@@ -11,6 +12,8 @@ module.exports = {
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
     "plugin:jest/recommended",
     "plugin:security/recommended",
   ],
@@ -46,6 +49,7 @@ module.exports = {
       exports: "always-multiline",
       functions: "always-multiline",
     }],
+    "indent": ["error", 2],
     "max-len": ["error", {
       code: 80,
       comments: 80,
@@ -69,6 +73,40 @@ module.exports = {
       argsIgnorePattern: "_+",
     }],
 
+    // eslint-plugin-import
+    // https://github.com/import-js/eslint-plugin-import#rules
+    "import/order": ["error", {
+      groups: [
+        "type",
+        "builtin",
+        "external",
+        "internal",
+        ["parent", "sibling"],
+        "index",
+        "object",
+      ],
+
+      "newlines-between": "always",
+      "alphabetize": {
+        order: "asc",
+        caseInsensitive: true,
+      },
+      warnOnUnassignedImports: true,
+      "pathGroups": [
+        {
+          "pattern": "jest-when",
+          "group": "builtin",
+          "position": "before",
+        },
+        {
+          "pattern": "ts-jest/utils",
+          "group": "builtin",
+          "position": "before",
+        },
+      ],
+      "pathGroupsExcludedImportTypes": ["ts-jest/utils"],
+    }],
+
     // eslint-plugin-jest
     // https://github.com/jest-community/eslint-plugin-jest#readme
     "jest/consistent-test-it": ["error", {
@@ -78,9 +116,7 @@ module.exports = {
     "jest/no-alias-methods": ["error"],
     "jest/no-duplicate-hooks": "off",
     "jest/no-if": ["error"],
-    "jest/no-truthy-falsy": ["error"],
-    "jest/prefer-to-be-null": ["error"],
-    "jest/prefer-to-be-undefined": ["error"],
+    "jest/prefer-to-be": ["error"],
     "jest/prefer-to-contain": ["error"],
     "jest/prefer-to-have-length": ["error"],
     "jest/prefer-todo": ["error"],
@@ -94,6 +130,27 @@ module.exports = {
     }],
   },
   overrides: [
+    { // Source code only
+      files: ["src/**/*.ts"],
+      parserOptions: {
+        project: "./tsconfig.json",
+      },
+      rules: {
+        "@typescript-eslint/consistent-type-exports": ["error"],
+        "@typescript-eslint/consistent-type-imports": ["error"],
+        "@typescript-eslint/member-delimiter-style": ["error", {
+          multiline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          singleline: {
+            delimiter: "semi",
+            requireLast: true,
+          },
+          multilineDetection: "brackets",
+        }],
+      },
+    },
     { // Configuration files
       files: ["*.js"],
       globals: {

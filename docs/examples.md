@@ -7,6 +7,7 @@ SVGO Action.
 - [Optimize Pull Requests with Comments](#optimize-pull-requests-with-comments)
 - [Scheduled Optimization Commits](#scheduled-optimization-commits)
 - [Optimize SVGs on Demand](#optimize-svgs-on-demand)
+- [Using Any SVGO Version](#using-any-svgo-version)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
 to improve the documentation.
@@ -188,9 +189,45 @@ jobs:
         commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
 ```
 
+---
+
+## Using Any SVGO Version
+
+This example uses [actions/checkout] and [npm] to optimize SVGs in the project
+using a specific version of SVGO. You can combine this example with one of the
+other examples in this document to get the optimized SVGs back in your project.
+
+```yaml
+# .github/workflows/optimize.yml
+
+name: Optimize
+on:
+  # You can replace "schedule" with any other event you need and this example
+  # will still work.
+  schedule:
+  - cron:  '0 0 * * 1'
+
+jobs:
+  svgs:
+    name: SVGs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install SVGO
+      run: npm install svgo@2.3.1 --no-save
+      # Or, if your repository is a Node project with SVGO as a dependency:
+      #   run: npm ci
+    - name: Optimize SVGs
+      uses: ericcornelissen/svgo-action@v2
+      with:
+        svgo-version: project
+```
+
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [what the action outputs]: ./outputs.md
 
 [actions/checkout]: https://github.com/marketplace/actions/checkout
+[npm]: https://www.npmjs.com/
 [stefanzweifel/git-auto-commit-action]: https://github.com/marketplace/actions/git-auto-commit
 [thollander/actions-comment-pull-request]: https://github.com/marketplace/actions/comment-pull-request

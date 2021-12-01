@@ -14,7 +14,7 @@ describe("errors.ts", () => {
     test("one true error", async () => {
       const result = errors.Combine(err0);
       expect(result).not.toBeNull();
-      expect(result).toEqual(`${err0}`);
+      expect(result).toBe(`${err0}`);
     });
 
     test("one null error", async () => {
@@ -31,7 +31,7 @@ describe("errors.ts", () => {
 
       const result = errors.Combine(...errs);
       expect(result).not.toBeNull();
-      expect(result).toEqual(expected);
+      expect(result).toBe(expected);
     });
 
     test("multiple null errors", async () => {
@@ -48,7 +48,7 @@ describe("errors.ts", () => {
     ])("multiple errors, %#", async (errs, expected) => {
       const result = errors.Combine(...errs);
       expect(result).not.toBeNull();
-      expect(result).toEqual(expected);
+      expect(result).toBe(expected);
     });
   });
 
@@ -58,7 +58,7 @@ describe("errors.ts", () => {
 
       const result = errors.New(msg);
       expect(result).not.toBeNull();
-      expect(result).toEqual(msg);
+      expect(result).toBe(msg);
     });
   });
 });

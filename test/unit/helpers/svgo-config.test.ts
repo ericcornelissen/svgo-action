@@ -4,11 +4,10 @@ jest.mock("../../../src/errors");
 jest.mock("../../../src/parsers");
 
 import errors from "../../../src/errors";
-import _parsers from "../../../src/parsers";
-
 import {
   parseRawSvgoConfig,
 } from "../../../src/helpers/svgo-config";
+import _parsers from "../../../src/parsers";
 
 const parsers = mocked(_parsers);
 
@@ -18,6 +17,10 @@ describe("helpers/svgo-config.ts", () => {
 
     const parseOutput = { foo: "bar" };
     const parseError = errors.New("parsing error");
+
+    const baseConfig = {
+      svgoConfigPath: { value: "some-file.txt" },
+    };
 
     const successParser = jest.fn()
       .mockReturnValue([parseOutput, null])
@@ -31,14 +34,21 @@ describe("helpers/svgo-config.ts", () => {
       errorParser.mockClear();
     });
 
-    describe("SVGO version 1", () => {
-      const config = { svgoVersion: { value: 1 } };
+    describe("YAML configuration", () => {
+      const svgoConfigPaths: string[] = [
+        ".svgo.yml",
+        "svgo.yaml",
+      ];
 
       beforeEach(() => {
         parsers.NewYaml.mockClear();
       });
 
-      test("parse success", () => {
+      test.each(svgoConfigPaths)("parse success (%s)", (svgoConfigPath) => {
+        const config = Object.assign({ }, baseConfig, {
+          svgoConfigPath: { value: svgoConfigPath },
+        });
+
         parsers.NewYaml.mockReturnValue(successParser);
 
         const [result, err] = parseRawSvgoConfig({ config, rawConfig });
@@ -49,7 +59,11 @@ describe("helpers/svgo-config.ts", () => {
         expect(successParser).toHaveBeenCalledTimes(1);
       });
 
-      test("parse error", () => {
+      test.each(svgoConfigPaths)("parse error (%s)", (svgoConfigPath) => {
+        const config = Object.assign({ }, baseConfig, {
+          svgoConfigPath: { value: svgoConfigPath },
+        });
+
         parsers.NewYaml.mockReturnValue(errorParser);
 
         const [, err] = parseRawSvgoConfig({ config, rawConfig });
@@ -60,14 +74,21 @@ describe("helpers/svgo-config.ts", () => {
       });
     });
 
-    describe("SVGO version 2", () => {
-      const config = { svgoVersion: { value: 2 } };
+    describe("JavaScript configuration", () => {
+      const svgoConfigPaths: string[] = [
+        "svgo.config.js",
+        "svgo-config.js",
+      ];
 
       beforeEach(() => {
         parsers.NewJavaScript.mockClear();
       });
 
-      test("parse success", () => {
+      test.each(svgoConfigPaths)("parse success (%s)", (svgoConfigPath) => {
+        const config = Object.assign({ }, baseConfig, {
+          svgoConfigPath: { value: svgoConfigPath },
+        });
+
         parsers.NewJavaScript.mockReturnValue(successParser);
 
         const [result, err] = parseRawSvgoConfig({ config, rawConfig });
@@ -78,7 +99,11 @@ describe("helpers/svgo-config.ts", () => {
         expect(successParser).toHaveBeenCalledTimes(1);
       });
 
-      test("parse error", () => {
+      test.each(svgoConfigPaths)("parse error (%s)", (svgoConfigPath) => {
+        const config = Object.assign({ }, baseConfig, {
+          svgoConfigPath: { value: svgoConfigPath },
+        });
+
         parsers.NewJavaScript.mockReturnValue(errorParser);
 
         const [, err] = parseRawSvgoConfig({ config, rawConfig });

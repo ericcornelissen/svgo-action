@@ -7,6 +7,19 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.3] - 2021-11-02
+
+- Update SVGO v2 to `v2.8.0`. ([#481])
+
+## [2.1.2] - 2021-10-18
+
+- Add deprecation warning annotation when using SVGO v1. ([#466])
+- Support using project-specific SVGO. ([#464])
+
+## [2.1.1] - 2021-10-03
+
 - Run on any event when not in strict mode. ([#454], [#459])
 - Run with invalid SVGO config file when not in strict mode. ([#457])
 
@@ -63,6 +76,14 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.12] - 2021-11-02
+
+- Update SVGO v2 to `v2.8.0`. ([#480])
+
+## [1.3.11] - 2021-10-18
+
+- Add deprecation warning annotation when using SVGO v1. ([#469])
 
 ## [1.3.10] - 2021-09-25
 
@@ -341,5 +362,10 @@ Versioning].
 [#454]: https://github.com/ericcornelissen/svgo-action/pull/454
 [#457]: https://github.com/ericcornelissen/svgo-action/pull/457
 [#459]: https://github.com/ericcornelissen/svgo-action/pull/459
+[#464]: https://github.com/ericcornelissen/svgo-action/pull/464
+[#466]: https://github.com/ericcornelissen/svgo-action/pull/466
+[#469]: https://github.com/ericcornelissen/svgo-action/pull/469
+[#480]: https://github.com/ericcornelissen/svgo-action/pull/480
+[#481]: https://github.com/ericcornelissen/svgo-action/pull/481
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

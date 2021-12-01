@@ -1,7 +1,5 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../../__common__/inputter.mock";
-
 jest.mock("../../../src/errors");
 
 import {
@@ -11,8 +9,12 @@ import {
   getSvgoConfigPath,
   getSvgoVersion,
 } from "../../../src/inputs/getters";
+import inp from "../../__common__/inputter.mock";
 
 describe("inputs/getters.ts", () => {
+  const INPUT_OPTIONS_NOT_REQUIRED = { required: false };
+  const INPUT_OPTIONS_REQUIRED = { required: true };
+
   beforeEach(() => {
     resetAllWhenMocks();
   });
@@ -35,6 +37,7 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getIgnoreGlobs(inp, []);
       expect(err).toBeNull();
       expect(result.value).toEqual([configuredValue]);
+      expect(result.provided).toBe(true);
     });
 
     test.each([
@@ -48,18 +51,45 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getIgnoreGlobs(inp, []);
       expect(err).toBeNull();
       expect(result.value).toEqual(configuredValues);
+      expect(result.provided).toBe(true);
     });
 
-    test("can't get input", () => {
+    test("input provided but invalid", () => {
+      const defaultValue = [];
+
+      when(inp.getMultilineInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_NOT_REQUIRED),
+        )
+        .mockImplementation(() => { throw new Error(""); });
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockReturnValue("invalid");
+
+      const [result, err] = getIgnoreGlobs(inp, defaultValue);
+      expect(err).toBeNull();
+      expect(result.value).toEqual(defaultValue);
+      expect(result.provided).toBe(true);
+    });
+
+    test("input not provided", () => {
       const defaultValue = [];
 
       when(inp.getInput)
-        .calledWith(inputKey, expect.anything())
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
         .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getIgnoreGlobs(inp, defaultValue);
       expect(err).toBeNull();
       expect(result.value).toEqual(defaultValue);
+      expect(result.provided).toBe(false);
     });
   });
 
@@ -80,18 +110,49 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getIsDryRun(inp, !configuredValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
+      expect(result.provided).toBe(true);
     });
 
-    test.each([true, false])("can't get input", (defaultValue) => {
+    test.each([
+      true,
+      false,
+    ])("input provided but invalid", (defaultValue) => {
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockReturnValue("invalid");
       when(inp.getBooleanInput)
-        .calledWith(inputKey, expect.anything())
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_NOT_REQUIRED),
+        )
         .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getIsDryRun(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid dry-run value");
-      expect(result.value).toEqual(true);
+      expect(result.value).toBe(true);
+      expect(result.provided).toBe(true);
+    });
+
+    test.each([
+      true,
+      false,
+    ])("input not provided", (defaultValue) => {
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockImplementation(() => { throw new Error(""); });
+
+      const [result, err] = getIsDryRun(inp, defaultValue);
+      expect(err).toBeNull();
+      expect(result.value).toBe(defaultValue);
+      expect(result.provided).toBe(false);
     });
   });
 
@@ -112,18 +173,48 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getIsStrictMode(inp, !configuredValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
+      expect(result.provided).toBe(true);
     });
 
-    test.each([true, false])("can't get input", (defaultValue) => {
+    test.each([
+      true,
+      false,
+    ])("input provided but invalid", (defaultValue) => {
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockReturnValue("invalid");
       when(inp.getBooleanInput)
-        .calledWith(inputKey, expect.anything())
-        .mockImplementation(() => { throw new Error(); });
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_NOT_REQUIRED),
+        )
+        .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getIsStrictMode(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("invalid strict value");
-      expect(result.value).toEqual(true);
+      expect(result.value).toBe(true);
+    });
+
+    test.each([
+      true,
+      false,
+    ])("input not provided", (defaultValue) => {
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockImplementation(() => { throw new Error(""); });
+
+      const [result, err] = getIsStrictMode(inp, defaultValue);
+      expect(err).toBeNull();
+      expect(result.value).toBe(defaultValue);
+      expect(result.provided).toBe(false);
     });
   });
 
@@ -144,19 +235,46 @@ describe("inputs/getters.ts", () => {
 
       const [result, err] = getSvgoConfigPath(inp, "foo.bar");
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
+      expect(result.provided).toBe(true);
     });
 
-    test("can't get input", () => {
+    test("input provided but invalid", () => {
       const defaultValue = "svgo.config.js";
 
       when(inp.getInput)
-        .calledWith(inputKey, expect.anything())
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockReturnValue("invalid");
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_NOT_REQUIRED),
+        )
         .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getSvgoConfigPath(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(defaultValue);
+      expect(result.value).toBe(defaultValue);
+      expect(result.provided).toBe(true);
+    });
+
+    test("input not provided", () => {
+      const defaultValue = "svgo.config.js";
+
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockImplementation(() => { throw new Error(""); });
+
+      const [result, err] = getSvgoConfigPath(inp, defaultValue);
+      expect(err).toBeNull();
+      expect(result.value).toBe(defaultValue);
+      expect(result.provided).toBe(false);
     });
   });
 
@@ -168,16 +286,18 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
-      1,
-      2,
-    ])("can get input, valid (`%d`)", (configuredValue) => {
+      "1",
+      "2",
+      "project",
+    ])("can get input, valid ('%s')", (configuredValue) => {
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValue(`${configuredValue}`);
 
-      const [result, err] = getSvgoVersion(inp, configuredValue === 1 ? 2 : 1);
+      const defaultValue = configuredValue === "1" ? "2" : "1";
+      const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(configuredValue);
+      expect(result.value).toBe(configuredValue);
     });
 
     test.each([
@@ -185,7 +305,7 @@ describe("inputs/getters.ts", () => {
       "3",
       "42",
     ])("can get input, unsupported ('%s')", (configuredValue) => {
-      const defaultValue = 2;
+      const defaultValue = "2";
 
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
@@ -194,35 +314,46 @@ describe("inputs/getters.ts", () => {
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).not.toBeNull();
       expect(err).toContain("unsupported SVGO version");
-      expect(result.value).toEqual(defaultValue);
+      expect(result.value).toBe(defaultValue);
+      expect(result.provided).toBe(true);
     });
 
-    test.each([
-      "foobar",
-      "Hello world",
-    ])("can get input, invalid ('%s')", (configuredValue) => {
-      const defaultValue = 2;
+    test("input provided but invalid", () => {
+      const defaultValue = "2";
 
       when(inp.getInput)
-        .calledWith(inputKey, expect.anything())
-        .mockReturnValue(configuredValue);
-
-      const [result, err] = getSvgoVersion(inp, defaultValue);
-      expect(err).not.toBeNull();
-      expect(err).toContain("invalid SVGO version");
-      expect(result.value).toEqual(defaultValue);
-    });
-
-    test("can't get input", () => {
-      const defaultValue = 2;
-
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockReturnValue("invalid");
       when(inp.getInput)
-        .calledWith(inputKey, expect.anything())
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_NOT_REQUIRED),
+        )
         .mockImplementation(() => { throw new Error(""); });
 
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
-      expect(result.value).toEqual(defaultValue);
+      expect(result.value).toBe(defaultValue);
+      expect(result.provided).toBe(true);
+    });
+
+    test("input not provided", () => {
+      const defaultValue = "2";
+
+      when(inp.getInput)
+        .calledWith(
+          inputKey,
+          expect.objectContaining(INPUT_OPTIONS_REQUIRED),
+        )
+        .mockImplementation(() => { throw new Error(""); });
+
+      const [result, err] = getSvgoVersion(inp, defaultValue);
+      expect(err).toBeNull();
+      expect(result.value).toBe(defaultValue);
+      expect(result.provided).toBe(false);
     });
   });
 });

@@ -1,8 +1,7 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import inp from "../__common__/inputter.mock";
-
 import inputs from "../../src/inputs";
+import inp from "../__common__/inputter.mock";
 
 describe("package inputs", () => {
   const DRY_RUN = "dry-run";
@@ -13,7 +12,7 @@ describe("package inputs", () => {
   const DEFAULT_IGNORE = [];
   const DEFAULT_DRY_RUN = false;
   const DEFAULT_SVGO_CONFIG = "svgo.config.js";
-  const DEFAULT_SVGO_VERSION = 2;
+  const DEFAULT_SVGO_VERSION = "2";
 
   beforeEach(() => {
     inp.getBooleanInput.mockReset();
@@ -85,7 +84,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.isDryRun.value).toEqual(DEFAULT_DRY_RUN);
+      expect(config.isDryRun.value).toBe(DEFAULT_DRY_RUN);
     });
 
     test.each([true, false])("configured to `%p`", async (value) => {
@@ -94,7 +93,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.isDryRun.value).toEqual(value);
+      expect(config.isDryRun.value).toBe(value);
     });
   });
 
@@ -111,7 +110,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoConfigPath.value).toEqual("svgo.config.js");
+      expect(config.svgoConfigPath.value).toBe("svgo.config.js");
     });
 
     test.each([
@@ -123,7 +122,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoConfigPath.value).toEqual(value);
+      expect(config.svgoConfigPath.value).toBe(value);
     });
   });
 
@@ -140,19 +139,19 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoVersion.value).toEqual(DEFAULT_SVGO_VERSION);
+      expect(config.svgoVersion.value).toBe(DEFAULT_SVGO_VERSION);
     });
 
     test.each([
-      1,
-      2,
+      "1",
+      "2",
     ])("configured to '%s' (valid)", async (value) => {
       doMockSvgoVersionInput(() => `${value}`);
 
       const [config, err] = inputs.New({ inp });
 
       expect(err).toBeNull();
-      expect(config.svgoVersion.value).toEqual(value);
+      expect(config.svgoVersion.value).toBe(value);
     });
 
     test.each([
@@ -165,7 +164,7 @@ describe("package inputs", () => {
       const [config, err] = inputs.New({ inp });
 
       expect(err).not.toBeNull();
-      expect(config.svgoVersion.value).toEqual(DEFAULT_SVGO_VERSION);
+      expect(config.svgoVersion.value).toBe(DEFAULT_SVGO_VERSION);
     });
   });
 });

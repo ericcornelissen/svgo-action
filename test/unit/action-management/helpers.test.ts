@@ -1,10 +1,9 @@
 jest.mock("../../../src/errors");
 
-import errors from "../../../src/errors";
-
 import {
   runIf,
 } from "../../../src/action-management/helpers";
+import errors from "../../../src/errors";
 
 describe("action-management/helpers.ts", () => {
   describe("::runIf", () => {

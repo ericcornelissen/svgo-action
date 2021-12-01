@@ -1,6 +1,7 @@
 import type { Dirent, Stats } from "fs";
 
 import { when, resetAllWhenMocks } from "jest-when";
+
 import { mocked } from "ts-jest/utils";
 
 jest.mock("fs");
@@ -10,10 +11,10 @@ jest.mock("../../../src/errors");
 import * as _fs from "fs";
 import * as _path from "path";
 
+import NewBaseFileSystem from "../../../src/file-systems/base";
+
 const fs = mocked(_fs);
 const path = mocked(_path);
-
-import NewBaseFileSystem from "../../../src/file-systems/base";
 
 describe("file-systems/base.ts", () => {
   let fileSystem;
@@ -149,7 +150,7 @@ describe("file-systems/base.ts", () => {
       const [result, err] = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
       expect(err).toContain("file not found");
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
 
     test("read failure when file exists", async () => {
@@ -159,7 +160,7 @@ describe("file-systems/base.ts", () => {
       const [result, err]  = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
       expect(err).toContain("cannot read file");
-      expect(result).toEqual("");
+      expect(result).toBe("");
     });
   });
 

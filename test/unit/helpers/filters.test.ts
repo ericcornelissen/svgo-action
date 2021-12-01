@@ -1,7 +1,5 @@
 import { mocked } from "ts-jest/utils";
 
-import inp from "../../__common__/inputter.mock";
-
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/errors");
@@ -9,13 +7,13 @@ jest.mock("../../../src/filters");
 
 import * as github from "@actions/github";
 
-import errors from "../../../src/errors";
 import clients from "../../../src/clients";
+import errors from "../../../src/errors";
 import _filters from "../../../src/filters";
-
 import {
   getFilters,
 } from "../../../src/helpers/filters";
+import inp from "../../__common__/inputter.mock";
 
 const filters = mocked(_filters);
 

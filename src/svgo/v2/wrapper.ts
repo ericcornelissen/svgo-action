@@ -1,15 +1,15 @@
-import type { error } from "../types";
+import type { error } from "../../types";
+import type { SVGOptions } from "./types";
+import type svgo from "svgo-v2"; // eslint-disable-line import/default
 
-import svgo from "svgo-v2";
-
-import errors from "../errors";
-
-type SVGOptions = svgo.Options;
+import errors from "../../errors";
 
 class SVGOptimizer {
   private options: SVGOptions;
+  private svgo: svgo;
 
-  constructor(options: SVGOptions = { }) {
+  constructor(svgo: svgo, options: SVGOptions) {
+    this.svgo = svgo;
     this.options = options;
   }
 
@@ -18,7 +18,7 @@ class SVGOptimizer {
     let err: error = null;
 
     try {
-      const { data } = svgo.optimize(originalSvg, this.options);
+      const { data } = this.svgo.optimize(originalSvg, this.options);
       optimizedSvg = data;
 
       if (data === "") {

@@ -21,6 +21,7 @@ import _errors from "../../src/errors";
 import _fileSystems from "../../src/file-systems";
 import * as _helpers from "../../src/helpers";
 import _inputs from "../../src/inputs";
+import main from "../../src/main";
 import _optimize from "../../src/optimize";
 import _outputs from "../../src/outputs";
 import _svgo from "../../src/svgo";
@@ -36,8 +37,6 @@ const helpers = mocked(_helpers);
 const optimize = mocked(_optimize);
 const outputs = mocked(_outputs);
 const svgo = mocked(_svgo);
-
-import main from "../../src/main";
 
 describe("main.ts", () => {
   let action;
@@ -57,6 +56,7 @@ describe("main.ts", () => {
     actionManagement.New.mockClear();
     clients.New.mockClear();
     fileSystems.New.mockClear();
+    helpers.deprecationWarnings.mockClear();
     helpers.getFilters.mockClear();
     helpers.isEventSupported.mockClear();
     helpers.parseRawSvgoConfig.mockClear();
@@ -74,6 +74,7 @@ describe("main.ts", () => {
     expect(actionManagement.New).toHaveBeenCalledTimes(1);
     expect(clients.New).toHaveBeenCalledTimes(1);
     expect(fileSystems.New).toHaveBeenCalledTimes(2);
+    expect(helpers.deprecationWarnings).toHaveBeenCalledTimes(1);
     expect(helpers.getFilters).toHaveBeenCalledTimes(1);
     expect(helpers.isEventSupported).toHaveBeenCalledTimes(1);
     expect(helpers.parseRawSvgoConfig).toHaveBeenCalledTimes(1);
@@ -99,23 +100,6 @@ describe("main.ts", () => {
 
       expect(core.info).toHaveBeenCalledWith(
         expect.stringContaining(`'${eventName}'`),
-      );
-    });
-
-    test.each([
-      1,
-      2,
-    ])("the SVGO (major) version (`%s`)", async (svgoVersion) => {
-      const value = svgoVersion as 1 | 2;
-
-      const [baseConfig] = inputs.New({ inp: core });
-      const config = Object.assign({ }, baseConfig, { svgoVersion: { value } });
-      inputs.New.mockReturnValueOnce([config, null]);
-
-      await main({ core, github });
-
-      expect(core.info).toHaveBeenCalledWith(
-        expect.stringContaining(`version ${svgoVersion}`),
       );
     });
   });
@@ -348,9 +332,10 @@ describe("main.ts", () => {
   });
 
   test("svgo error", async () => {
+    const svgoConfig = { };
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
-    const [optimizer] = svgo.New({ config });
+    const [optimizer] = svgo.New({ config, svgoConfig });
 
     const err = errors.New("SVGO error");
     svgo.New.mockReturnValueOnce([optimizer, err]);
@@ -379,10 +364,11 @@ describe("main.ts", () => {
   });
 
   test("optimize error", async () => {
+    const svgoConfig = { };
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
     const fs = fileSystems.New({ filters: [] });
-    const [optimizer] = svgo.New({ config });
+    const [optimizer] = svgo.New({ config, svgoConfig });
     const [data] = await optimize.Files({ config, fs, optimizer });
 
     const err = errors.New("Optimization error");

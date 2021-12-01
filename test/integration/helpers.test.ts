@@ -1,26 +1,29 @@
+import type { SupportedSvgoVersions } from "../../src/svgo";
 import type { Octokit } from "../../src/types";
 
 import { mocked } from "ts-jest/utils";
-
-import inp from "../__common__/inputter.mock";
 
 jest.dontMock("js-yaml");
 jest.dontMock("minimatch");
 jest.dontMock("node-eval");
 
+jest.mock("@actions/core");
 jest.mock("@actions/github");
 
+import * as core from "@actions/core";
 import * as _github from "@actions/github";
 
 const github = mocked(_github);
 
 import clients from "../../src/clients";
 import {
+  deprecationWarnings,
   getFilters,
   isClientRequired,
   isEventSupported,
   parseRawSvgoConfig,
 } from "../../src/helpers";
+import inp from "../__common__/inputter.mock";
 
 describe("package helpers", () => {
   const EVENT_PULL_REQUEST = "pull_request";
@@ -28,6 +31,22 @@ describe("package helpers", () => {
   const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
   const EVENT_SCHEDULE = "schedule";
   const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
+
+  describe("::deprecationWarnings", () => {
+    test.each([
+      "1",
+      "2",
+      "project",
+    ])("does not fail (%s)", (svgoVersion) => {
+      const config = {
+        svgoVersion: {
+          value: svgoVersion as SupportedSvgoVersions,
+        },
+      };
+
+      expect(() => deprecationWarnings({ config, core })).not.toThrow();
+    });
+  });
 
   describe("::getFilters", () => {
     let client;
@@ -158,15 +177,17 @@ describe("package helpers", () => {
         },
       };
 
-        const [eventName, ok] = isEventSupported(params);
+      const [eventName, ok] = isEventSupported(params);
       expect(eventName).not.toBeNull();
       expect(ok).not.toBeNull();
     });
   });
 
   describe("::parseRawSvgoConfig", () => {
-    describe("SVGO version 1", () => {
-      const config = { svgoVersion: { value: 1 } };
+    describe("YAML configuration file", () => {
+      const config = {
+        svgoConfigPath: { value: ".svgo.yml" },
+      };
 
       test("valid configuration", () => {
         const rawConfig = "multipass: true";
@@ -184,8 +205,10 @@ describe("package helpers", () => {
       });
     });
 
-    describe("SVGO version 2", () => {
-      const config = { svgoVersion: { value: 2 } };
+    describe("JavaScript configuration", () => {
+      const config = {
+        svgoConfigPath: { value: "svgo.config.js" },
+      };
 
       test("valid configuration", () => {
         const rawConfig = "module.exports = { multipass: true };";

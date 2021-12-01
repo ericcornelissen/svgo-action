@@ -1,11 +1,10 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import optimizer from "../__common__/optimizer.mock";
-
 jest.mock("../../src/file-systems");
 
 import fileSystems from "../../src/file-systems";
 import optimize from "../../src/optimize";
+import optimizer from "../__common__/optimizer.mock";
 
 describe("package optimize", () => {
   describe("::Files", () => {
@@ -51,8 +50,8 @@ describe("package optimize", () => {
       const [stats, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
 
-      expect(stats.svgCount).toEqual(files.length);
-      expect(stats.optimizedCount).toEqual(files.length);
+      expect(stats.svgCount).toBe(files.length);
+      expect(stats.optimizedCount).toBe(files.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(files.length);
       expect(fs.readFile).toHaveBeenCalledTimes(files.length);
@@ -67,8 +66,8 @@ describe("package optimize", () => {
       const [stats, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
 
-      expect(stats.svgCount).toEqual(files.length);
-      expect(stats.optimizedCount).toEqual(files.length);
+      expect(stats.svgCount).toBe(files.length);
+      expect(stats.optimizedCount).toBe(files.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(files.length);
       expect(fs.readFile).toHaveBeenCalledTimes(files.length);

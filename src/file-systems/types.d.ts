@@ -18,7 +18,7 @@ type ReadFileFn = (file: FileHandle) => Promise<[string, error]>;
 
 type WriteFileFn = (file: FileHandle, content: string) => Promise<error>;
 
-export {
+export type {
   FileFilter,
   FileHandle,
   FileSystem,

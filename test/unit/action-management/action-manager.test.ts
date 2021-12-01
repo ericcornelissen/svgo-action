@@ -6,14 +6,12 @@ jest.mock("../../../src/errors");
 
 import * as _core from "@actions/core";
 
+import StandardActionManager from "../../../src/action-management/action-manager"; // eslint-disable-line max-len
 import * as _helpers from "../../../src/action-management/helpers";
+import errors from "../../../src/errors";
 
 const core = mocked(_core);
 const helpers = mocked(_helpers);
-
-import errors from "../../../src/errors";
-
-import StandardActionManager from "../../../src/action-management/action-manager"; // eslint-disable-line max-len
 
 describe("action-management/action-manager.ts", () => {
   const testConditions = [

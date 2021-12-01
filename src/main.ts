@@ -3,17 +3,17 @@ import type { Core, GitHub } from "./types";
 import actionManagement from "./action-management";
 import clients from "./clients";
 import fileSystems from "./file-systems";
-import inputs from "./inputs";
-import optimize from "./optimize";
-import outputs from "./outputs";
-import svgo from "./svgo";
-
 import {
+  deprecationWarnings,
   getFilters,
   isClientRequired,
   isEventSupported,
   parseRawSvgoConfig,
 } from "./helpers";
+import inputs from "./inputs";
+import optimize from "./optimize";
+import outputs from "./outputs";
+import svgo from "./svgo";
 
 interface Params {
   readonly core: Core;
@@ -52,7 +52,7 @@ async function main({ core, github }: Params): Promise<void> {
   );
 
   const [optimizer, err4] = svgo.New({ config, svgoConfig });
-  core.info(`Using SVGO major version ${config.svgoVersion.value}`);
+  deprecationWarnings({ config, core });
   action.failIf(err4, "Could not initialize SVGO");
 
   const [filters, err5] = await getFilters({ client, config, github });

@@ -10,11 +10,10 @@ import * as path from "path";
 
 import _NewBaseFileSystem from "../../../src/file-systems/base";
 import _NewFilteredFileSystem from "../../../src/file-systems/filtered";
+import fileSystems from "../../../src/file-systems/index";
 
 const NewBaseFileSystem = mocked(_NewBaseFileSystem);
 const NewFilteredFileSystem = mocked(_NewFilteredFileSystem);
-
-import fileSystems from "../../../src/file-systems/index";
 
 describe("file-systems/index.ts", () => {
   beforeEach(() => {
