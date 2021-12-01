@@ -7,7 +7,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Specify permissions in documentation. ([#486])
+- Improve clarity of example workflows in documentation. ([#486])
 
 ## [2.1.3] - 2021-11-02
 
@@ -367,5 +368,6 @@ Versioning].
 [#469]: https://github.com/ericcornelissen/svgo-action/pull/469
 [#480]: https://github.com/ericcornelissen/svgo-action/pull/480
 [#481]: https://github.com/ericcornelissen/svgo-action/pull/481
+[#486]: https://github.com/ericcornelissen/svgo-action/pull/486
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
