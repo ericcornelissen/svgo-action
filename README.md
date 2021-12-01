@@ -20,14 +20,14 @@ various complete workflows. You can also check [what the Action does for each
 ```yaml
 name: Optimize
 on:
-# Disable the next line if you don't want the Action to run on PRs.
+# Comment the next line if you *don't* want the Action to run on Pull Requests.
   pull_request:
-# Enable the next line if you want the Action to run on pushes.
+# Uncomment the next line if you want the Action to run on pushes.
 #   push:
-# Enable the next 2 lines if you want the Action to run on a schedule.
+# Uncomment the next 2 lines if you want the Action to run on a schedule.
 #   schedule:
 #   - cron:  '0 * * * 1'  # See https://crontab.guru/
-# Enable one of the next 2 lines if you want to manually trigger the Action.
+# Uncomment one of the next 2 lines if you want to manually trigger the Action.
 #   repository_dispatch:
 #   workflow_dispatch:
 
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # Enable the next 2 lines to select a branch for schedule or dispatch runs.
+    # Uncomment the next 2 lines to select a branch for on schedule or dispatch.
     #   with:
     #     ref: main
     - uses: ericcornelissen/svgo-action@v2
