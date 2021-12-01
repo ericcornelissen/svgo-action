@@ -31,6 +31,10 @@ on:
   push:
     branches: [main]
 
+# The minimum required permissions
+permissions:
+  contents: write
+
 jobs:
   svgs:
     name: SVGs
@@ -73,6 +77,11 @@ name: Optimize
 on:
   pull_request:
     branches: [main]
+
+# The minimum required permissions
+permissions:
+  contents: write
+  pull-request: write
 
 jobs:
   svgs:
@@ -119,6 +128,10 @@ on:
   # Schedule the workflow for once a week on Monday.
   # For more information, see: https://crontab.guru/
   - cron:  '0 0 * * 1'
+
+# The minimum required permissions
+permissions:
+  contents: write
 
 jobs:
   svgs:
@@ -172,6 +185,10 @@ on: [workflow_dispatch]
 # NOTE: "optimize.yml" in the URL has to be updated if the workflow file is not
 # called "optimize.yml".
 
+# The minimum required permissions
+permissions:
+  contents: write
+
 jobs:
   svgs:
     name: SVGs
@@ -207,6 +224,10 @@ on:
   schedule:
   - cron:  '0 0 * * 1'
 
+# The minimum required permissions
+permissions:
+  contents: read
+
 jobs:
   svgs:
     name: SVGs
@@ -214,10 +235,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Install SVGO
-      run: npm install svgo@2.3.1 --no-save
-      # Or, if your repository is a Node project with SVGO as a dependency:
-      #   run: npm ci
+    # If SVGO is a (dev)dependency of your project you can just install your
+    # dependencies as usual. If SVGO is not yet a dependency of your project, we
+    # recommend you run `npm install --save-dev svgo@v2` and commit your project
+    # manifests (e.g. package.json and package-lock.json) first.
+    - name: Install dependencies
+      run: npm ci
     - name: Optimize SVGs
       uses: ericcornelissen/svgo-action@v2
       with:
