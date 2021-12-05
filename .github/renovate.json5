@@ -11,11 +11,6 @@
 
   packageRules: [
     {
-      // Configure automerge: exclude semver major changes
-      matchUpdateTypes: ["minor", "patch", "pin", "digest"],
-      automerge: true,
-    },
-    {
       // Configure @vercel/ncc: don't upgrade beyond v0.30.0
       // See: https://github.com/ericcornelissen/svgo-action/issues/425
       matchPackageNames: ["@vercel/ncc"],
@@ -45,10 +40,6 @@
     // This schedule should be the same as the general schedule!
     schedule: "on the first day of the month",
   },
-
-  // Enable automerging of Renovate Pull Requests
-  automerge: true,
-  automergeType: "pr",
 
   // Schedule PRs to be created once every two weeks
   schedule: "on the first day of the month",
