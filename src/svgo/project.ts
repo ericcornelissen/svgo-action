@@ -4,6 +4,7 @@ import type { SVGOptimizer } from "./types";
 import importCwd from "import-cwd";
 
 import errors from "../errors";
+import StubSVGOptimizer from "./stub";
 import svgoV1 from "./v1";
 import svgoV2 from "./v2";
 
@@ -17,7 +18,7 @@ function createSvgoOptimizerForProject(
   const svgo = importCwd.silent("svgo");
   if (svgo === undefined) {
     return [
-      null as unknown as SVGOptimizer,
+      StubSVGOptimizer,
       errors.New("package-local SVGO not found"),
     ];
   }

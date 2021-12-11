@@ -4,6 +4,7 @@ import { mocked } from "ts-jest/utils";
 
 jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/project");
+jest.mock("../../../src/svgo/stub");
 jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
 

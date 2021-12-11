@@ -2,6 +2,7 @@ import { mocked } from "ts-jest/utils";
 
 jest.mock("import-cwd");
 jest.mock("../../../src/errors");
+jest.mock("../../../src/svgo/stub");
 jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
 
@@ -42,9 +43,9 @@ describe("svgo/project.ts", () => {
       importCwdSilent.mockReturnValue(undefined);
 
       const [result, err] = createSvgoOptimizerForProject();
+      expect(result).not.toBeNull();
       expect(err).not.toBeNull();
       expect(err).toBe("package-local SVGO not found");
-      expect(result).toBeNull();
     });
 
     describe("successful import", () => {
