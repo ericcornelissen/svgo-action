@@ -1,5 +1,7 @@
+const valuesMap = new Map();
+
 const getValuesForOutputs = jest.fn()
-  .mockReturnValue(new Map())
+  .mockReturnValue(valuesMap)
   .mockName("outputs.getValuesForOutputs");
 
 export {

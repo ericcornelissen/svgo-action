@@ -1,5 +1,5 @@
-import type { Outputter } from "../types";
 import type { OutputName } from "./names";
+import type { Outputter } from "./types";
 
 function writeOutputs(
   out: Outputter,

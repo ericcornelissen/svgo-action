@@ -1,3 +1,4 @@
+import type { Outputter } from "./outputs";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
 interface Context {
@@ -42,10 +43,6 @@ interface InputterOptions {
 
 type Octokit = InstanceType<typeof _GitHub>;
 
-interface Outputter {
-  setOutput(name: string, value: string): void;
-}
-
 export type {
   Context,
   Core,
@@ -54,5 +51,4 @@ export type {
   Inputter,
   InputterOptions,
   Octokit,
-  Outputter,
 };
