@@ -1,5 +1,4 @@
-import type { error } from "../types";
-import type { ParseFn, SafeParseFn } from "./types";
+import type { error, ParseFn, SafeParseFn } from "./types";
 
 import errors from "../errors";
 
