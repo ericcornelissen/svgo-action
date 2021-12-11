@@ -1,5 +1,4 @@
-import type { error } from "../types";
-import type { SVGOptimizer } from "./types";
+import type { error, SVGOptimizer } from "./types";
 
 import importCwd from "import-cwd";
 

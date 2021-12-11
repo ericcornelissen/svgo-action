@@ -1,6 +1,4 @@
-import type { error } from "../../types";
-import type { SVGOptimizer } from "../types";
-import type { SVGOptions } from "./types";
+import type { error, SVGOptimizer, SVGOptions } from "./types";
 
 import svgo from "svgo-v1";
 

@@ -7,6 +7,7 @@ interface SVGOptimizer {
 }
 
 export type {
+  error,
   SupportedSvgoVersions,
   SVGOptimizer,
 };
