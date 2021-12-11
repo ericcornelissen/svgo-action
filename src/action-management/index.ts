@@ -1,5 +1,4 @@
-import type { Core } from "../types";
-import type { ActionManager } from "./types";
+import type { ActionManager, Core } from "./types";
 
 import StandardActionManager from "./action-manager";
 
