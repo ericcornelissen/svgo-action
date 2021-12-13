@@ -224,7 +224,7 @@ jobs:
         env:
           CI: true
       - name: Upload mutation report as artifact
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v2.3.0
         with:
           name: mutation-report-${{ github.sha }}
           path: |
