@@ -15,7 +15,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
+          node-version: 12
       - name: Cache Dependencies
         uses: actions/cache@v2.1.7
         with:
@@ -36,7 +36,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
+          node-version-file: .nvmrc
       - name: Cache Dependencies
         uses: actions/cache@v2.1.7
         with:
@@ -63,7 +63,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
+          node-version: 12
       - name: Cache Dependencies
         uses: actions/cache@v2.1.7
         with:
@@ -110,7 +110,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
+          node-version: 12
       - name: Cache Dependencies
         uses: actions/cache@v2.1.7
         with:
@@ -209,7 +209,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
+          node-version-file: .nvmrc
       - name: Cache Dependencies
         uses: actions/cache@v2.1.7
         with:
