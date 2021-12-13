@@ -17,14 +17,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
+          cache: npm
           node-version-file: .nvmrc
-      - name: Cache Dependencies
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       - name: Install Dependencies
         run: npm ci
       - name: Build lib/index.js
