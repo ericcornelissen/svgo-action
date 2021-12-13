@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("js-yaml");
 jest.mock("node-eval");
 jest.mock("../../../src/parsers/builder");
@@ -10,7 +8,7 @@ import nodeEval from "node-eval";
 import * as builder from "../../../src/parsers/builder";
 import parsers from "../../../src/parsers/index";
 
-const buildSafeParser = mocked(builder.buildSafeParser, true);
+const buildSafeParser = builder.buildSafeParser as jest.MockedFunction<typeof builder.buildSafeParser>; // eslint-disable-line max-len
 
 describe("parsers/index.js", () => {
   beforeEach(() => {

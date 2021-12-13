@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("fs");
 jest.mock("path");
 jest.mock("../../../src/file-systems/base");
@@ -8,17 +6,17 @@ jest.mock("../../../src/file-systems/filtered");
 import * as fs from "fs";
 import * as path from "path";
 
-import _NewBaseFileSystem from "../../../src/file-systems/base";
-import _NewFilteredFileSystem from "../../../src/file-systems/filtered";
+import NewBaseFileSystem from "../../../src/file-systems/base";
+import NewFilteredFileSystem from "../../../src/file-systems/filtered";
 import fileSystems from "../../../src/file-systems/index";
 
-const NewBaseFileSystem = mocked(_NewBaseFileSystem);
-const NewFilteredFileSystem = mocked(_NewFilteredFileSystem);
+const NewBaseFileSystemMock = NewBaseFileSystem as jest.MockedFunction<typeof NewBaseFileSystem>; // eslint-disable-line max-len
+const NewFilteredFileSystemMock = NewFilteredFileSystem as jest.MockedFunction<typeof NewFilteredFileSystem>; // eslint-disable-line max-len
 
 describe("file-systems/index.ts", () => {
   beforeEach(() => {
-    NewBaseFileSystem.mockClear();
-    NewFilteredFileSystem.mockClear();
+    NewBaseFileSystemMock.mockClear();
+    NewFilteredFileSystemMock.mockClear();
   });
 
   describe("::New", () => {

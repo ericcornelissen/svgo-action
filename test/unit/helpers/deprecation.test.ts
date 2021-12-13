@@ -1,12 +1,8 @@
 import type { SupportedSvgoVersions } from "../../../src/svgo";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/core");
 
-import * as _core from "@actions/core";
-
-const core = mocked(_core);
+import * as core from "@actions/core";
 
 import {
   deprecationWarnings,
@@ -14,7 +10,9 @@ import {
 
 describe("helpers/deprecation.ts", () => {
   beforeEach(() => {
-    core.warning.mockClear();
+    const coreWarning = core.warning as jest.MockedFunction<typeof core.warning>; // eslint-disable-line max-len
+
+    coreWarning.mockClear();
   });
 
   test.each([

@@ -1,14 +1,12 @@
 import type { IMinimatch } from "minimatch";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("minimatch");
 
 import * as minimatch from "minimatch";
 
 import New from "../../../src/filters/glob";
 
-const Minimatch = mocked(minimatch.Minimatch);
+const Minimatch = minimatch.Minimatch as jest.MockedClass<typeof minimatch.Minimatch>; // eslint-disable-line max-len
 
 describe("filters/glob.ts", () => {
   describe("::New", () => {

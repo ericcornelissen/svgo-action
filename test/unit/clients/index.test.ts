@@ -1,15 +1,11 @@
 import { when, resetAllWhenMocks } from "jest-when";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("../../../src/clients/client");
 jest.mock("../../../src/errors");
 
-import _Client from "../../../src/clients/client";
+import Client from "../../../src/clients/client";
 import clients from "../../../src/clients/index";
 import inp from "../../__common__/inputter.mock";
-
-const Client = mocked(_Client);
 
 describe("clients/index.ts", () => {
   let github, getOctokit;

@@ -1,7 +1,5 @@
 import type { OutputName } from "../../../src/outputs/names";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("../../../src/errors");
 jest.mock("../../../src/outputs/names");
 jest.mock("../../../src/outputs/values");
@@ -9,14 +7,14 @@ jest.mock("../../../src/outputs/write");
 
 import errors from "../../../src/errors";
 import outputs from "../../../src/outputs/index";
-import * as _names from "../../../src/outputs/names";
-import * as _values from "../../../src/outputs/values";
-import * as _write from "../../../src/outputs/write";
+import * as names from "../../../src/outputs/names";
+import * as values from "../../../src/outputs/values";
+import * as write from "../../../src/outputs/write";
 import out from "../../__common__/outputter.mock";
 
-const getOutputNamesFor = mocked(_names.getOutputNamesFor);
-const getValuesForOutputs = mocked(_values.getValuesForOutputs);
-const writeOutputs = mocked(_write.writeOutputs);
+const getOutputNamesFor = names.getOutputNamesFor as jest.MockedFunction<typeof names.getOutputNamesFor>; // eslint-disable-line max-len
+const getValuesForOutputs = values.getValuesForOutputs as jest.MockedFunction<typeof values.getValuesForOutputs>; // eslint-disable-line max-len
+const writeOutputs = write.writeOutputs as jest.MockedFunction<typeof write.writeOutputs>; // eslint-disable-line max-len
 
 describe("outputs/index.js", () => {
   const data = {
