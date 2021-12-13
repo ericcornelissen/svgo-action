@@ -1,9 +1,8 @@
-import type { SupportedSvgoVersions } from "../svgo";
 import type { Core } from "../types";
 
 interface Config {
   readonly svgoVersion: {
-    readonly value: SupportedSvgoVersions;
+    readonly value: string;
   };
 }
 
