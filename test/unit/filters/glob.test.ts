@@ -2,23 +2,23 @@ import type { IMinimatch } from "minimatch";
 
 jest.mock("minimatch");
 
-import * as minimatch from "minimatch";
+import { Minimatch } from "minimatch";
 
 import New from "../../../src/filters/glob";
 
-const Minimatch = minimatch.Minimatch as jest.MockedClass<typeof minimatch.Minimatch>; // eslint-disable-line max-len
+const MinimatchMock = Minimatch as jest.MockedClass<typeof Minimatch>;
 
 describe("filters/glob.ts", () => {
   describe("::New", () => {
     beforeEach(() => {
-      Minimatch.mockClear();
+      MinimatchMock.mockClear();
     });
 
     test("a file matching the glob", () => {
       const query = "foo/bar.svg";
 
       const match = jest.fn().mockReturnValue(true);
-      Minimatch.mockReturnValueOnce({ match } as unknown as IMinimatch);
+      MinimatchMock.mockReturnValueOnce({ match } as unknown as IMinimatch);
 
       const  filter = New("foo/*");
 
@@ -31,7 +31,7 @@ describe("filters/glob.ts", () => {
       const query = "foobar.svg";
 
       const match = jest.fn().mockReturnValue(false);
-      Minimatch.mockReturnValueOnce({ match } as unknown as IMinimatch);
+      MinimatchMock.mockReturnValueOnce({ match } as unknown as IMinimatch);
 
       const  filter = New("foo/*");
 

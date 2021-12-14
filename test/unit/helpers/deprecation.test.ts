@@ -8,10 +8,10 @@ import {
   deprecationWarnings,
 } from "../../../src/helpers/deprecation";
 
+const coreWarning = core.warning as jest.MockedFunction<typeof core.warning>;
+
 describe("helpers/deprecation.ts", () => {
   beforeEach(() => {
-    const coreWarning = core.warning as jest.MockedFunction<typeof core.warning>; // eslint-disable-line max-len
-
     coreWarning.mockClear();
   });
 
