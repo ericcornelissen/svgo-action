@@ -1,19 +1,18 @@
 import type { Dirent } from "fs";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/core");
 jest.mock("@actions/github");
 jest.mock("fs");
 
-import * as _fs from "fs";
+import * as fs from "fs";
 
-import * as _core from "@actions/core";
-import * as _github from "@actions/github";
+import * as core from "@actions/core";
+import * as github from "@actions/github";
 
-const core = mocked(_core);
-const fs = mocked(_fs);
-const github = mocked(_github);
+const coreSetOutput = core.setOutput as jest.MockedFunction<typeof core.setOutput>; // eslint-disable-line max-len
+const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>; // eslint-disable-line max-len
+const fsReaddirSync = fs.readdirSync as jest.MockedFunction<typeof fs.readdirSync>; // eslint-disable-line max-len
+const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>; // eslint-disable-line max-len
 
 import main from "../../src/main";
 
@@ -27,9 +26,9 @@ describe("main", () => {
   ];
 
   beforeEach(() => {
-    core.setOutput.mockClear();
+    coreSetOutput.mockClear();
 
-    fs.readFileSync.mockClear();
+    fsReadFileSync.mockClear();
   });
 
   test.each(ALL_EVENTS)("reads SVGs ('%s')", async (eventName) => {
@@ -38,8 +37,8 @@ describe("main", () => {
     const file1 = "file1.svg" as unknown as Dirent;
     const file2 = "file2.svg" as unknown as Dirent;
 
-    fs.readdirSync.mockReturnValue([file1, file2]);
-    fs.existsSync.mockReturnValue(true);
+    fsReaddirSync.mockReturnValue([file1, file2]);
+    fsExistsSync.mockReturnValue(true);
 
     await main({ core, github });
 

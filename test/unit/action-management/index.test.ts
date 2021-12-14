@@ -1,20 +1,17 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/core");
 jest.mock("../../../src/action-management/action-manager");
 
-import * as _core from "@actions/core";
+import * as core from "@actions/core";
 
-import _ActionManager from "../../../src/action-management/action-manager";
+import ActionManager from "../../../src/action-management/action-manager";
 import actionManagement from "../../../src/action-management/index";
 
-const ActionManager = mocked(_ActionManager);
-const core = mocked(_core);
+const ActionManagerMock = ActionManager as jest.MockedClass<typeof ActionManager>; // eslint-disable-line max-len
 
 describe("action-management/index.ts", () => {
   describe("::New", () => {
     beforeEach(() => {
-      ActionManager.mockClear();
+      ActionManagerMock.mockClear();
     });
 
     test.each([true, false])("strict=%s", (strict) => {

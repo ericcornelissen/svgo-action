@@ -1,13 +1,12 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/core");
 
-import * as _core from "@actions/core";
+import * as core from "@actions/core";
 
 import actionManagement from "../../src/action-management";
 import errors from "../../src/errors";
 
-const core = mocked(_core);
+const coreSetFailed = core.setFailed as jest.MockedFunction<typeof core.setFailed>; // eslint-disable-line max-len
+const coreWarning = core.warning as jest.MockedFunction<typeof core.warning>;
 
 describe("package action-management", () => {
   describe.each([
@@ -22,13 +21,11 @@ describe("package action-management", () => {
 
     beforeEach(() => {
       action = actionManagement.New({ core, config });
-
-      core.setFailed.mockClear();
     });
 
     describe("::failIf", () => {
       beforeEach(() => {
-        core.setFailed.mockClear();
+        coreSetFailed.mockClear();
       });
 
       test("condition is `true`", async () => {
@@ -62,8 +59,8 @@ describe("package action-management", () => {
       const callbackFn = strict ? core.setFailed : core.warning;
 
       beforeEach(() => {
-        core.setFailed.mockClear();
-        core.warning.mockClear();
+        coreSetFailed.mockClear();
+        coreWarning.mockClear();
       });
 
       test("condition is `true`", async () => {

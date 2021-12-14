@@ -1,7 +1,5 @@
 import type { SupportedSvgoVersions } from "../../../src/svgo";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/project");
 jest.mock("../../../src/svgo/stub");
@@ -10,13 +8,13 @@ jest.mock("../../../src/svgo/v2");
 
 import errors from "../../../src/errors";
 import svgo from "../../../src/svgo/index";
-import _project from "../../../src/svgo/project";
-import _svgoV1 from "../../../src/svgo/v1";
-import _svgoV2 from "../../../src/svgo/v2";
+import _createSvgoOptimizerForProject from "../../../src/svgo/project";
+import svgoV1 from "../../../src/svgo/v1";
+import svgoV2 from "../../../src/svgo/v2";
 
-const createSvgoOptimizerForProject = mocked(_project);
-const svgoV1 = mocked(_svgoV1);
-const svgoV2 = mocked(_svgoV2);
+const createSvgoOptimizerForProject = _createSvgoOptimizerForProject as jest.MockedFunction<typeof _createSvgoOptimizerForProject>; // eslint-disable-line max-len
+const svgoV1New = svgoV1.New as jest.MockedFunction<typeof svgoV1.New>;
+const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
 
 describe("svgo/index.ts", () => {
   describe("::New", () => {
@@ -25,8 +23,8 @@ describe("svgo/index.ts", () => {
     };
 
     beforeEach(() => {
-      svgoV1.New.mockClear();
-      svgoV2.New.mockClear();
+      svgoV1New.mockClear();
+      svgoV2New.mockClear();
     });
 
     test("version 1", () => {

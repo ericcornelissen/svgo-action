@@ -98,13 +98,8 @@ module.exports = {
           "group": "builtin",
           "position": "before",
         },
-        {
-          "pattern": "ts-jest/utils",
-          "group": "builtin",
-          "position": "before",
-        },
       ],
-      "pathGroupsExcludedImportTypes": ["ts-jest/utils"],
+      "pathGroupsExcludedImportTypes": [],
     }],
 
     // eslint-plugin-jest
