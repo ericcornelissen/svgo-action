@@ -1,4 +1,5 @@
-import type { error } from "../types";
+import type { error, GitHub } from "../types";
+import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
 interface CommitsGetCommitParams {
   readonly owner: string;
@@ -32,6 +33,12 @@ interface GitHubClient {
   };
 }
 
+interface Inputter {
+  getInput(name: string, options: { required: boolean; }): string;
+}
+
+type Octokit = InstanceType<typeof _GitHub>;
+
 interface PullsListFilesParams {
   readonly owner: string;
   readonly page?: number;
@@ -47,8 +54,12 @@ export type {
   CommitsGetCommitResponse,
   CommitsListFilesParams,
   CommitsListFilesResponse,
+  error,
   GitFileInfo,
+  GitHub,
   GitHubClient,
+  Inputter,
+  Octokit,
   PullsListFilesParams,
   PullsListFilesResponse,
 };

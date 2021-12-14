@@ -1,11 +1,12 @@
-import type { error, Octokit } from "../types";
 import type {
   CommitsGetCommitParams,
   CommitsGetCommitResponse,
   CommitsListFilesParams,
   CommitsListFilesResponse,
+  error,
   GitFileInfo,
   GitHubClient,
+  Octokit,
   PullsListFilesParams,
   PullsListFilesResponse,
 } from "./types";
