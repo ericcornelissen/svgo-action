@@ -3,6 +3,7 @@ import { when, resetAllWhenMocks } from "jest-when";
 import { mocked } from "ts-jest/utils";
 
 jest.mock("../../../src/clients/client");
+jest.mock("../../../src/clients/stub");
 jest.mock("../../../src/errors");
 
 import _Client from "../../../src/clients/client";
