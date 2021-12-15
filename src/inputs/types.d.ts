@@ -1,4 +1,5 @@
 import type { SupportedSvgoVersions } from "../svgo";
+import type { error } from "../types";
 
 interface Config {
   readonly ignoreGlobs: InputValue<string[]>;
@@ -8,6 +9,16 @@ interface Config {
   readonly svgoVersion: InputValue<SupportedSvgoVersions>;
 }
 
+interface Inputter {
+  getBooleanInput(name: string, options: InputterOptions): boolean;
+  getInput(name: string, options: InputterOptions): string;
+  getMultilineInput(name: string, options: InputterOptions): string[];
+}
+
+interface InputterOptions {
+  readonly required?: boolean;
+}
+
 interface InputValue<T> {
   readonly provided: boolean;
   readonly value: T;
@@ -15,5 +26,8 @@ interface InputValue<T> {
 
 export type {
   Config,
+  error,
+  Inputter,
+  InputterOptions,
   InputValue,
 };

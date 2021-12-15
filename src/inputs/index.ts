@@ -1,5 +1,4 @@
-import type { error, Inputter } from "../types";
-import type { Config } from "./types";
+import type { Config, error, Inputter } from "./types";
 
 import errors from "../errors";
 import {
