@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("svgo-v1");
 jest.mock("../../../../src/errors");
 jest.mock("../../../../src/svgo/v1/wrapper");
@@ -7,16 +5,16 @@ jest.mock("../../../../src/svgo/v1/wrapper");
 import svgo from "svgo-v1";
 
 import svgoV1 from "../../../../src/svgo/v1/index";
-import _SvgoV1Wrapper from "../../../../src/svgo/v1/wrapper";
+import SvgoV1Wrapper from "../../../../src/svgo/v1/wrapper";
 
-const SvgoV1Wrapper = mocked(_SvgoV1Wrapper);
+const SvgoV1WrapperMock = SvgoV1Wrapper as jest.MockedClass<typeof SvgoV1Wrapper>; // eslint-disable-line max-len
 
 describe("svgo/v1/index.ts", () => {
-  describe("::New", () => {
-    beforeEach(() => {
-      SvgoV1Wrapper.mockClear();
-    });
+  beforeEach(() => {
+    SvgoV1WrapperMock.mockClear();
+  });
 
+  describe("::New", () => {
     test("create instance successfully with configuration", async () => {
       const options = { foo: "bar" };
 
@@ -29,10 +27,6 @@ describe("svgo/v1/index.ts", () => {
 
   describe("::NewFrom", () => {
     const importedSvgo = { hello: "world" };
-
-    beforeEach(() => {
-      SvgoV1Wrapper.mockClear();
-    });
 
     test("create instance successfully with configuration", async () => {
       const options = { foo: "bar" };

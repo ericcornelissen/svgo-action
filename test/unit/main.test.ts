@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/core");
 jest.mock("@actions/github");
 jest.mock("../../src/action-management");
@@ -12,31 +10,33 @@ jest.mock("../../src/optimize");
 jest.mock("../../src/outputs");
 jest.mock("../../src/svgo");
 
-import * as _core from "@actions/core";
-import * as _github from "@actions/github";
+import * as core from "@actions/core";
+import * as github from "@actions/github";
 
-import _actionManagement from "../../src/action-management";
-import _clients from "../../src/clients";
-import _errors from "../../src/errors";
-import _fileSystems from "../../src/file-systems";
-import * as _helpers from "../../src/helpers";
-import _inputs from "../../src/inputs";
+import actionManagement from "../../src/action-management";
+import clients from "../../src/clients";
+import errors from "../../src/errors";
+import fileSystems from "../../src/file-systems";
+import * as helpers from "../../src/helpers";
+import inputs from "../../src/inputs";
 import main from "../../src/main";
-import _optimize from "../../src/optimize";
-import _outputs from "../../src/outputs";
-import _svgo from "../../src/svgo";
+import optimize from "../../src/optimize";
+import outputs from "../../src/outputs";
+import svgo from "../../src/svgo";
 
-const core = mocked(_core);
-const github = mocked(_github);
-const actionManagement = mocked(_actionManagement);
-const clients = mocked(_clients);
-const inputs = mocked(_inputs);
-const errors = mocked(_errors);
-const fileSystems = mocked(_fileSystems);
-const helpers = mocked(_helpers);
-const optimize = mocked(_optimize);
-const outputs = mocked(_outputs);
-const svgo = mocked(_svgo);
+const actionManagementNew = actionManagement.New as jest.MockedFunction<typeof actionManagement.New>; // eslint-disable-line max-len
+const clientsNew = clients.New as jest.MockedFunction<typeof clients.New>;
+const coreInfo = core.info as jest.MockedFunction<typeof core.info>;
+const fileSystemsNew = fileSystems.New as jest.MockedFunction<typeof fileSystems.New>; // eslint-disable-line max-len
+const helpersDeprecationWarnings = helpers.deprecationWarnings as jest.MockedFunction<typeof helpers.deprecationWarnings>; // eslint-disable-line max-len
+const helpersIsClientRequired = helpers.isClientRequired as jest.MockedFunction<typeof helpers.isClientRequired>; // eslint-disable-line max-len
+const helpersIsEventSupported = helpers.isEventSupported as jest.MockedFunction<typeof helpers.isEventSupported>; // eslint-disable-line max-len
+const helpersGetFilters = helpers.getFilters as jest.MockedFunction<typeof helpers.getFilters>; // eslint-disable-line max-len
+const helpersParseRawSvgoConfig = helpers.parseRawSvgoConfig as jest.MockedFunction<typeof helpers.parseRawSvgoConfig>; // eslint-disable-line max-len
+const inputsNew = inputs.New as jest.MockedFunction<typeof inputs.New>;
+const optimizeFiles = optimize.Files as jest.MockedFunction<typeof optimize.Files>; // eslint-disable-line max-len
+const outputsSet = outputs.Set as jest.MockedFunction<typeof outputs.Set>;
+const svgoNew = svgo.New as jest.MockedFunction<typeof svgo.New>;
 
 describe("main.ts", () => {
   let action;
@@ -47,23 +47,23 @@ describe("main.ts", () => {
   });
 
   beforeEach(() => {
-    core.info.mockClear();
+    const actionManagerFailIf = action.failIf as jest.MockedFunction<typeof action.failIf>; // eslint-disable-line max-len
+    const actionManagerStrictFailIf = action.strictFailIf as jest.MockedFunction<typeof action.strictFailIf>; // eslint-disable-line max-len
+    actionManagerFailIf.mockClear();
+    actionManagerStrictFailIf.mockClear();
 
-    const actionManagerMock = mocked(action);
-    actionManagerMock.failIf.mockClear();
-    actionManagerMock.strictFailIf.mockClear();
-
-    actionManagement.New.mockClear();
-    clients.New.mockClear();
-    fileSystems.New.mockClear();
-    helpers.deprecationWarnings.mockClear();
-    helpers.getFilters.mockClear();
-    helpers.isEventSupported.mockClear();
-    helpers.parseRawSvgoConfig.mockClear();
-    inputs.New.mockClear();
-    optimize.Files.mockClear();
-    outputs.Set.mockClear();
-    svgo.New.mockClear();
+    actionManagementNew.mockClear();
+    coreInfo.mockClear();
+    clientsNew.mockClear();
+    fileSystemsNew.mockClear();
+    helpersDeprecationWarnings.mockClear();
+    helpersGetFilters.mockClear();
+    helpersIsEventSupported.mockClear();
+    helpersParseRawSvgoConfig.mockClear();
+    inputsNew.mockClear();
+    optimizeFiles.mockClear();
+    outputsSet.mockClear();
+    svgoNew.mockClear();
   });
 
   test("call process in successful run", async () => {
@@ -94,7 +94,7 @@ describe("main.ts", () => {
       "schedule",
       "workflow_dispatch",
     ])("the event ('%s')", async (eventName) => {
-      helpers.isEventSupported.mockReturnValueOnce([eventName, true]);
+      helpersIsEventSupported.mockReturnValueOnce([eventName, true]);
 
       await main({ core, github });
 
@@ -110,7 +110,7 @@ describe("main.ts", () => {
     function doMockDryMode(value: boolean): void {
       const [baseConfig] = inputs.New({ inp: core });
       const config = Object.assign(baseConfig, { isDryRun: { value } });
-      inputs.New.mockReturnValueOnce([config, null]);
+      inputsNew.mockReturnValueOnce([config, null]);
     }
 
     test("enabled", async () => {
@@ -140,7 +140,7 @@ describe("main.ts", () => {
 
     const errMsg = "No configuration found";
     const err = errors.New(errMsg);
-    inputs.New.mockReturnValueOnce([config, err]);
+    inputsNew.mockReturnValueOnce([config, err]);
 
     await main({ core, github });
 
@@ -155,7 +155,7 @@ describe("main.ts", () => {
     const action = actionManagement.New({ core, config });
 
     const eventName = "unknown";
-    helpers.isEventSupported.mockReturnValueOnce([eventName, false]);
+    helpersIsEventSupported.mockReturnValueOnce([eventName, false]);
 
     await main({ core, github });
 
@@ -172,10 +172,10 @@ describe("main.ts", () => {
       true,
       false,
     ])("no error (client required=%s)", async (clientRequired) => {
-      helpers.isClientRequired.mockReturnValue(clientRequired);
+      helpersIsClientRequired.mockReturnValue(clientRequired);
 
       const [client] = clients.New({ github, inp: core });
-      clients.New.mockReturnValueOnce([client, null]);
+      clientsNew.mockReturnValueOnce([client, null]);
 
       await main({ core, github });
 
@@ -186,12 +186,12 @@ describe("main.ts", () => {
       true,
       false,
     ])("an error (client required=%s)", async (clientRequired) => {
-      helpers.isClientRequired.mockReturnValue(clientRequired);
+      helpersIsClientRequired.mockReturnValue(clientRequired);
 
       const [client] = clients.New({ github, inp: core });
 
       const err = errors.New("GitHub client error");
-      clients.New.mockReturnValueOnce([client, err]);
+      clientsNew.mockReturnValueOnce([client, err]);
 
       await main({ core, github });
 
@@ -215,7 +215,7 @@ describe("main.ts", () => {
           svgoConfigPath: { provided: pathConfigured },
         });
 
-        inputs.New.mockReturnValueOnce([config, null]);
+        inputsNew.mockReturnValueOnce([config, null]);
 
         await main({ core, github });
 
@@ -228,10 +228,10 @@ describe("main.ts", () => {
           svgoConfigPath: { provided: false },
         });
 
-        inputs.New.mockReturnValueOnce([config, null]);
+        inputsNew.mockReturnValueOnce([config, null]);
 
         const err = errors.New("read file error");
-        fileSystems.New.mockReturnValueOnce({
+        fileSystemsNew.mockReturnValueOnce({
           listFiles: jest.fn(),
           readFile: jest.fn()
             .mockResolvedValueOnce(["", err])
@@ -251,10 +251,10 @@ describe("main.ts", () => {
           isStrictMode: { value: false },
         });
 
-        inputs.New.mockReturnValueOnce([config, null]);
+        inputsNew.mockReturnValueOnce([config, null]);
 
         const err = errors.New("read file error");
-        fileSystems.New.mockReturnValueOnce({
+        fileSystemsNew.mockReturnValueOnce({
           listFiles: jest.fn(),
           readFile: jest.fn()
             .mockResolvedValueOnce(["", err])
@@ -275,7 +275,7 @@ describe("main.ts", () => {
         null,
         errors.New("read file error"),
       ])("no error (read error=`%s`)", async (err) => {
-        fileSystems.New.mockReturnValueOnce({
+        fileSystemsNew.mockReturnValueOnce({
           listFiles: jest.fn(),
           readFile: jest.fn()
             .mockResolvedValueOnce(["", err])
@@ -290,14 +290,14 @@ describe("main.ts", () => {
       test("an error but without read error", async () => {
         const err = errors.New("parse file error");
 
-        fileSystems.New.mockReturnValueOnce({
+        fileSystemsNew.mockReturnValueOnce({
           listFiles: jest.fn(),
           readFile: jest.fn()
             .mockResolvedValueOnce(["", null])
             .mockName("fs.readFile"),
           writeFile: jest.fn(),
         });
-        helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
+        helpersParseRawSvgoConfig.mockReturnValueOnce([{ }, err]);
 
         await main({ core, github });
 
@@ -310,19 +310,19 @@ describe("main.ts", () => {
           isStrictMode: { value: false },
         });
 
-        inputs.New.mockReturnValueOnce([config, null]);
+        inputsNew.mockReturnValueOnce([config, null]);
 
         const parseErr = errors.New("parse file error");
         const readErr = errors.New("read file error");
 
-        fileSystems.New.mockReturnValueOnce({
+        fileSystemsNew.mockReturnValueOnce({
           listFiles: jest.fn(),
           readFile: jest.fn()
             .mockResolvedValueOnce(["", readErr])
             .mockName("fs.readFile"),
           writeFile: jest.fn(),
         });
-        helpers.parseRawSvgoConfig.mockReturnValueOnce([{ }, parseErr]);
+        helpersParseRawSvgoConfig.mockReturnValueOnce([{ }, parseErr]);
 
         await main({ core, github });
 
@@ -338,7 +338,7 @@ describe("main.ts", () => {
     const [optimizer] = svgo.New({ config, svgoConfig });
 
     const err = errors.New("SVGO error");
-    svgo.New.mockReturnValueOnce([optimizer, err]);
+    svgoNew.mockReturnValueOnce([optimizer, err]);
 
     await main({ core, github });
 
@@ -353,7 +353,7 @@ describe("main.ts", () => {
     const action = actionManagement.New({ core, config });
 
     const err = errors.New("create filter error");
-    helpers.getFilters.mockResolvedValueOnce([[], err]);
+    helpersGetFilters.mockResolvedValueOnce([[], err]);
 
     await main({ core, github });
 
@@ -372,7 +372,7 @@ describe("main.ts", () => {
     const [data] = await optimize.Files({ config, fs, optimizer });
 
     const err = errors.New("Optimization error");
-    optimize.Files.mockResolvedValueOnce([data, err]);
+    optimizeFiles.mockResolvedValueOnce([data, err]);
 
     await main({ core, github });
 
@@ -387,7 +387,7 @@ describe("main.ts", () => {
     const action = actionManagement.New({ core, config });
 
     const err = errors.New("Output error");
-    outputs.Set.mockReturnValueOnce(err);
+    outputsSet.mockReturnValueOnce(err);
 
     await main({ core, github });
 
