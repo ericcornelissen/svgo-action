@@ -1,5 +1,9 @@
-import type { error } from "../types";
-import type { Optimizer, OptimizedFileHandle, ReadFileHandle } from "./types";
+import type {
+  error,
+  OptimizedFileHandle,
+  Optimizer,
+  ReadFileHandle,
+} from "./types";
 
 import errors from "../errors";
 

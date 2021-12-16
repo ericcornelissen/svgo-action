@@ -1,17 +1,31 @@
-import type { FileHandle } from "../file-systems";
 import type { error } from "../types";
+
+interface FileHandle {
+  readonly path: string;
+}
+
+interface FileReader {
+  listFiles(): Iterable<FileHandle>;
+  readFile(file: FileHandle): Promise<[string, error]>;
+}
+
+interface FileSystem extends FileReader, FileWriter { }
+
+interface FileWriter {
+  writeFile(file: FileHandle, content: string): Promise<error>;
+}
 
 interface OptimizeProjectData {
   readonly optimizedCount: number;
   readonly svgCount: number;
 }
 
-interface Optimizer {
-  optimize(s: string): Promise<[string, error]>;
-}
-
 interface OptimizedFileHandle extends ReadFileHandle {
   readonly optimizedContent: string;
+}
+
+interface Optimizer {
+  optimize(s: string): Promise<[string, error]>;
 }
 
 interface ReadFileHandle extends FileHandle {
@@ -19,8 +33,13 @@ interface ReadFileHandle extends FileHandle {
 }
 
 export type {
+  error,
+  FileHandle,
+  FileReader,
+  FileWriter,
+  FileSystem,
   OptimizeProjectData,
-  Optimizer,
   OptimizedFileHandle,
+  Optimizer,
   ReadFileHandle,
 };
