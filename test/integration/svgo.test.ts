@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.dontMock("js-yaml"); // used by svgo-v1
 jest.dontMock("svgo-v1");
 jest.dontMock("svgo-v2");
@@ -8,7 +6,7 @@ jest.mock("@actions/core");
 jest.mock("import-cwd");
 jest.mock("import-from");
 
-import * as _core from "@actions/core";
+import * as core from "@actions/core";
 import importCwd from "import-cwd";
 import importFrom from "import-from";
 import svgoV1 from "svgo-v1";
@@ -16,9 +14,8 @@ import svgoV2 from "svgo-v2"; // eslint-disable-line import/default
 
 import SVGO from "../../src/svgo";
 
-const core = mocked(_core);
-const importCwdSilent = mocked(importCwd.silent);
-const importFromSilent = mocked(importFrom.silent);
+const importCwdSilent = importCwd.silent as jest.MockedFunction<typeof importCwd.silent>; // eslint-disable-line max-len
+const importFromSilent = importFrom.silent as jest.MockedFunction<typeof importFrom.silent>; // eslint-disable-line max-len
 
 describe("package svgo", () => {
   const consoleErrorBackup = console.error; // eslint-disable-line no-console

@@ -1,23 +1,20 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/core");
 jest.mock("import-from");
 jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
 
-import * as _core from "@actions/core";
+import * as core from "@actions/core";
 import importFrom from "import-from";
 
 import createSvgoForVersion from "../../../src/svgo/custom";
-import _svgoV1 from "../../../src/svgo/v1";
-import _svgoV2 from "../../../src/svgo/v2";
+import svgoV1 from "../../../src/svgo/v1";
+import svgoV2 from "../../../src/svgo/v2";
 
-const core = mocked(_core);
-const importFromSilent = mocked(importFrom.silent);
-const svgoV1 = mocked(_svgoV1);
-const svgoV2 = mocked(_svgoV2);
-
+const coreGetState = core.getState as jest.MockedFunction<typeof core.getState>;
+const importFromSilent = importFrom.silent as jest.MockedFunction<typeof importFrom.silent>; // eslint-disable-line max-len
+const svgoV1New = svgoV1.New as jest.MockedFunction<typeof svgoV1.New>;
+const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
 
 describe("svgo/custom.ts", () => {
   describe("::New", () => {
@@ -31,14 +28,14 @@ describe("svgo/custom.ts", () => {
     beforeEach(() => {
       importFromSilent.mockReset();
 
-      svgoV1.New.mockClear();
-      svgoV2.New.mockClear();
+      svgoV1New.mockClear();
+      svgoV2New.mockClear();
     });
 
     test("tries to import 'svgo'", () => {
       const path = "foobar";
 
-      core.getState.mockReturnValue(path);
+      coreGetState.mockReturnValue(path);
       importFromSilent.mockReturnValue(undefined);
 
       createSvgoForVersion(core);

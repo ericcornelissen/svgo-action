@@ -13,18 +13,12 @@ jobs:
       contents: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2.3.5
+        uses: actions/checkout@v2.4.0
       - name: Install Node.js
-        uses: actions/setup-node@v2.4.1
+        uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
-      - name: Cache Dependencies
-        uses: actions/cache@v2.1.6
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: npm
+          node-version-file: .nvmrc
       - name: Install Dependencies
         run: npm ci
       - name: Build lib/index.js

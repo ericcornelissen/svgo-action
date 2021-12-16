@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/filters/pr-files");
@@ -10,14 +8,14 @@ import * as github from "@actions/github";
 
 import clients from "../../../src/clients/index";
 import filters from "../../../src/filters/index";
-import _NewPrFilesFilter from "../../../src/filters/pr-files";
-import _NewPushedFilesFilter from "../../../src/filters/pushed-files";
-import _NewSvgsFilter from "../../../src/filters/svgs";
+import NewPrFilesFilter from "../../../src/filters/pr-files";
+import NewPushedFilesFilter from "../../../src/filters/pushed-files";
+import NewSvgsFilter from "../../../src/filters/svgs";
 import inp from "../../__common__/inputter.mock";
 
-const NewPrFilesFilter = mocked(_NewPrFilesFilter);
-const NewPushedFilesFilter = mocked(_NewPushedFilesFilter);
-const NewSvgsFilter = mocked(_NewSvgsFilter);
+const NewPrFilesFilterMock = NewPrFilesFilter as jest.MockedFunction<typeof NewPrFilesFilter>; // eslint-disable-line max-len
+const NewPushedFilesFilterMock = NewPushedFilesFilter as jest.MockedFunction<typeof NewPushedFilesFilter>; // eslint-disable-line max-len
+const NewSvgsFilterMock = NewSvgsFilter as jest.MockedFunction<typeof NewSvgsFilter>; // eslint-disable-line max-len
 
 describe("filters/index.ts", () => {
   let client;
@@ -40,9 +38,9 @@ describe("filters/index.ts", () => {
   });
 
   beforeEach(() => {
-    NewPrFilesFilter.mockClear();
-    NewPushedFilesFilter.mockClear();
-    NewSvgsFilter.mockClear();
+    NewPrFilesFilterMock.mockClear();
+    NewPushedFilesFilterMock.mockClear();
+    NewSvgsFilterMock.mockClear();
   });
 
   test("create Pull Request files filter", async () => {

@@ -1,14 +1,16 @@
 import type { Dirent, Stats } from "fs";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("fs");
 
-import * as _fs from "fs";
+import * as fs from "fs";
 
 import fileSystems from "../../src/file-systems";
 
-const fs = mocked(_fs);
+const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
+const fsLstatSync = fs.lstatSync as jest.MockedFunction<typeof fs.lstatSync>;
+const fsReaddirSync = fs.readdirSync as jest.MockedFunction<typeof fs.readdirSync>; // eslint-disable-line max-len
+const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>; // eslint-disable-line max-len
+const fsWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>; // eslint-disable-line max-len
 
 describe("package file-systems", () => {
   const NO_FILTERS = [];
@@ -28,13 +30,13 @@ describe("package file-systems", () => {
       const folder1file1 = "folder1/file1" as unknown as Dirent;
       const file1 = "file1" as unknown as Dirent;
 
-      fs.readdirSync.mockReturnValueOnce([folder1, file1]);
-      fs.readdirSync.mockReturnValueOnce([folder1file1]);
-      fs.existsSync.mockReturnValue(true);
+      fsReaddirSync.mockReturnValueOnce([folder1, file1]);
+      fsReaddirSync.mockReturnValueOnce([folder1file1]);
+      fsExistsSync.mockReturnValue(true);
 
-      fs.lstatSync.mockReturnValueOnce(lstatDir);
-      fs.lstatSync.mockReturnValueOnce(lstatFile);
-      fs.lstatSync.mockReturnValueOnce(lstatFile);
+      fsLstatSync.mockReturnValueOnce(lstatDir);
+      fsLstatSync.mockReturnValueOnce(lstatFile);
+      fsLstatSync.mockReturnValueOnce(lstatFile);
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -49,13 +51,13 @@ describe("package file-systems", () => {
       const folder1file1 = "folder1/file1" as unknown as Dirent;
       const file1 = "file1" as unknown as Dirent;
 
-      fs.readdirSync.mockReturnValueOnce([folder1, file1]);
-      fs.readdirSync.mockReturnValueOnce([folder1file1]);
-      fs.existsSync.mockReturnValue(true);
+      fsReaddirSync.mockReturnValueOnce([folder1, file1]);
+      fsReaddirSync.mockReturnValueOnce([folder1file1]);
+      fsExistsSync.mockReturnValue(true);
 
-      fs.lstatSync.mockReturnValueOnce(lstatDir);
-      fs.lstatSync.mockReturnValueOnce(lstatFile);
-      fs.lstatSync.mockReturnValueOnce(lstatFile);
+      fsLstatSync.mockReturnValueOnce(lstatDir);
+      fsLstatSync.mockReturnValueOnce(lstatFile);
+      fsLstatSync.mockReturnValueOnce(lstatFile);
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -68,16 +70,16 @@ describe("package file-systems", () => {
     const fileHandle = { path: "foo.bar" };
 
     beforeEach(() => {
-      fs.existsSync.mockClear();
-      fs.readFileSync.mockClear();
+      fsExistsSync.mockClear();
+      fsReadFileSync.mockClear();
     });
 
     test("success", async () => {
       const filters = NO_FILTERS;
       const fileContent = "Hello world!";
 
-      fs.existsSync.mockReturnValueOnce(true);
-      fs.readFileSync.mockReturnValueOnce(fileContent);
+      fsExistsSync.mockReturnValueOnce(true);
+      fsReadFileSync.mockReturnValueOnce(fileContent);
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -89,8 +91,8 @@ describe("package file-systems", () => {
     test("read failure", async () => {
       const filters = NO_FILTERS;
 
-      fs.existsSync.mockReturnValueOnce(true);
-      fs.readFileSync.mockImplementationOnce(() => { throw new Error(); });
+      fsExistsSync.mockReturnValueOnce(true);
+      fsReadFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -101,7 +103,7 @@ describe("package file-systems", () => {
     test("file does not exists", async () => {
       const filters = NO_FILTERS;
 
-      fs.existsSync.mockReturnValueOnce(false);
+      fsExistsSync.mockReturnValueOnce(false);
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -112,7 +114,7 @@ describe("package file-systems", () => {
     test("file is filtered out", async () => {
       const filters = [() => false];
 
-      fs.existsSync.mockReturnValueOnce(true);
+      fsExistsSync.mockReturnValueOnce(true);
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -126,7 +128,7 @@ describe("package file-systems", () => {
     const fileContent = "Hello world!";
 
     beforeEach(() => {
-      fs.writeFileSync.mockClear();
+      fsWriteFileSync.mockClear();
     });
 
     test("success", async () => {
@@ -141,7 +143,7 @@ describe("package file-systems", () => {
     test("write failure", async () => {
       const filters = NO_FILTERS;
 
-      fs.writeFileSync.mockImplementationOnce(() => { throw new Error(); });
+      fsWriteFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -152,7 +154,7 @@ describe("package file-systems", () => {
     test("file is filtered out", async () => {
       const filters = [() => false];
 
-      fs.existsSync.mockReturnValueOnce(true);
+      fsExistsSync.mockReturnValueOnce(true);
 
       const fileSystem = fileSystems.New({ filters });
 
