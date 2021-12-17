@@ -1,4 +1,5 @@
-import type { error, SupportedSvgoVersions, SVGOptimizer } from "./types";
+import type { error } from "../errors";
+import type { SupportedSvgoVersions, SVGOptimizer } from "./types";
 
 import errors from "../errors";
 import createSvgoOptimizerForProject from "./project";

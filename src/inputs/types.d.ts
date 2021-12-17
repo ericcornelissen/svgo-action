@@ -1,5 +1,4 @@
 import type { SupportedSvgoVersions } from "../svgo";
-import type { error } from "../types";
 
 interface Config {
   readonly ignoreGlobs: InputValue<string[]>;
@@ -26,7 +25,6 @@ interface InputValue<T> {
 
 export type {
   Config,
-  error,
   Inputter,
   InputterOptions,
   InputValue,

@@ -1,4 +1,5 @@
-import type { error, GitHub } from "../types";
+import type { error } from "../errors";
+import type { GitHub } from "../types";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
 interface CommitsGetCommitParams {
@@ -54,7 +55,6 @@ export type {
   CommitsGetCommitResponse,
   CommitsListFilesParams,
   CommitsListFilesResponse,
-  error,
   GitFileInfo,
   GitHub,
   GitHubClient,

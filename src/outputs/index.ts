@@ -1,4 +1,5 @@
-import type { error, OptimizedProjectStats, Outputter } from "./types";
+import type { error } from "../errors";
+import type { OptimizedProjectStats, Outputter } from "./types";
 
 import { getOutputNamesFor } from "./names";
 import { getValuesForOutputs } from "./values";

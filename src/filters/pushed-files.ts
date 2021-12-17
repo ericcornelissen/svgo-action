@@ -1,4 +1,5 @@
-import type { error, FilterFn } from "./types";
+import type { error } from "../errors";
+import type { FilterFn } from "./types";
 
 import errors from "../errors";
 import { STATUS_REMOVED } from "./constants";

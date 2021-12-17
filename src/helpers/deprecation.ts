@@ -1,4 +1,6 @@
-import type { Core } from "../types";
+interface Core {
+  warning(msg: string): void;
+}
 
 interface Config {
   readonly svgoVersion: {

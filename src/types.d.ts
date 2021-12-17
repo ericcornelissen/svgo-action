@@ -1,4 +1,3 @@
-import type { error } from "./errors";
 import type { Outputter } from "./outputs";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
@@ -45,7 +44,6 @@ type Octokit = InstanceType<typeof _GitHub>;
 export type {
   Context,
   Core,
-  error,
   GitHub,
   Inputter,
   InputterOptions,

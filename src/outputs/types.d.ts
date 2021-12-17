@@ -1,5 +1,3 @@
-import type { error, Outputter } from "../types";
-
 interface OptimizedProjectStats {
   readonly optimizedCount: number;
   readonly svgCount: number;
@@ -10,7 +8,6 @@ interface Outputter {
 }
 
 export type {
-  error,
   OptimizedProjectStats,
   Outputter,
 };

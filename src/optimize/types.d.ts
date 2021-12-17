@@ -1,4 +1,4 @@
-import type { error } from "../types";
+import type { error } from "../errors";
 
 interface FileHandle {
   readonly path: string;
@@ -33,7 +33,6 @@ interface ReadFileHandle extends FileHandle {
 }
 
 export type {
-  error,
   FileHandle,
   FileReader,
   FileWriter,

@@ -1,5 +1,5 @@
+import type { error } from "../errors";
 import type {
-  error,
   OptimizedFileHandle,
   Optimizer,
   ReadFileHandle,

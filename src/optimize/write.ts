@@ -1,6 +1,7 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import type { error, FileHandle, FileWriter } from "./types";
+import type { error } from "../errors";
+import type { FileHandle, FileWriter } from "./types";
 
 import errors from "../errors";
 

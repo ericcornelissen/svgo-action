@@ -1,9 +1,9 @@
+import type { error } from "../errors";
 import type {
   CommitsGetCommitParams,
   CommitsGetCommitResponse,
   CommitsListFilesParams,
   CommitsListFilesResponse,
-  error,
   GitFileInfo,
   GitHubClient,
   Octokit,

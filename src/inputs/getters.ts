@@ -1,5 +1,6 @@
+import type { error } from "../errors";
 import type { SupportedSvgoVersions } from "../svgo";
-import type { error, Inputter, InputterOptions, InputValue } from "./types";
+import type { Inputter, InputterOptions, InputValue } from "./types";
 
 import errors from "../errors";
 import {
