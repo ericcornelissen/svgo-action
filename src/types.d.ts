@@ -1,3 +1,4 @@
+import type { Inputter } from "./inputs";
 import type { Outputter } from "./outputs";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
@@ -29,23 +30,11 @@ interface GitHub {
   getOctokit(token: string): Octokit;
 }
 
-interface Inputter {
-  getBooleanInput(name: string, options: InputterOptions): boolean;
-  getInput(name: string, options: InputterOptions): string;
-  getMultilineInput(name: string, options: InputterOptions): string[];
-}
-
-interface InputterOptions {
-  readonly required?: boolean;
-}
-
 type Octokit = InstanceType<typeof _GitHub>;
 
 export type {
   Context,
   Core,
   GitHub,
-  Inputter,
-  InputterOptions,
   Octokit,
 };
