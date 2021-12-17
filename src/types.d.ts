@@ -1,3 +1,4 @@
+import type { error } from "./errors";
 import type { Outputter } from "./outputs";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
@@ -23,8 +24,6 @@ interface Core extends Inputter, Outputter {
   setFailed(message: string | Error): void;
   warning(message: string | Error): void;
 }
-
-type error = string | null;
 
 interface GitHub {
   readonly context: Context;
