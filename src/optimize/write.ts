@@ -11,7 +11,7 @@ interface File extends FileHandle {
 
 async function writeFiles(
   fs: FileWriter,
-  files: File[],
+  files: Iterable<File>,
 ): Promise<error> {
   const promises: Promise<error>[] = [];
   for (const file of files) {

@@ -6,7 +6,7 @@ const enum OutputName {
   SVG_COUNT = "SVG_COUNT",
 }
 
-function getOutputNamesFor(event: string): [OutputName[], error] {
+function getOutputNamesFor(event: string): [Iterable<OutputName>, error] {
   switch (event) {
   default:
     return [[

@@ -109,7 +109,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((filter) => filter(fileSvg));
+      const result = Array.from(filters).every((filter) => filter(fileSvg));
       expect(result).toBe(true);
     });
 
@@ -125,7 +125,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((f) => f(fileNotSvg));
+      const result = Array.from(filters).every((f) => f(fileNotSvg));
       expect(result).toBe(false);
     });
 
@@ -142,7 +142,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((f) => f(fileSvgInFolderFoo));
+      const result = Array.from(filters).every((f) => f(fileSvgInFolderFoo));
       expect(result).toBe(false);
     });
 
@@ -155,7 +155,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((filter) => filter(svgNotInContext));
+      const result = Array.from(filters).every((f) => f(svgNotInContext));
       expect(result).toBe(false);
     });
   });

@@ -22,6 +22,10 @@ interface Params {
   readonly optimizer: Optimizer;
 }
 
+function size<T>(collection: Iterable<T>): number {
+  return Array.from(collection).length;
+}
+
 async function Files({
   config,
   fs,
@@ -37,8 +41,8 @@ async function Files({
 
   return [
     {
-      optimizedCount: optimizedFiles.length,
-      svgCount: files.length,
+      optimizedCount: size(optimizedFiles),
+      svgCount: size(files),
     },
     errors.Combine(readError, optimizeError, writeError),
   ];

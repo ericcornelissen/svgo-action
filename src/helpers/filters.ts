@@ -6,7 +6,7 @@ import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 
 interface Config {
   readonly ignoreGlobs: {
-    readonly value: string[];
+    readonly value: Iterable<string>;
   };
 }
 
@@ -22,12 +22,12 @@ async function getFilters({
   client,
   config,
   github,
-}: Params): Promise<[Filter[], error]> {
+}: Params): Promise<[Iterable<Filter>, error]> {
   const context = github.context;
   const event = context.eventName;
 
   const result = [
-    ...config.ignoreGlobs.value.map(filters.NewGlobFilter),
+    ...Array.from(config.ignoreGlobs.value).map(filters.NewGlobFilter),
     filters.NewSvgsFilter(),
   ];
 

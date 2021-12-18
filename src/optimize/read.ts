@@ -13,7 +13,9 @@ async function readFile(
   return [{ ...file, content }, err];
 }
 
-async function readFiles(fs: FileReader): Promise<[ReadFileHandle[], error]> {
+async function readFiles(
+  fs: FileReader,
+): Promise<[Iterable<ReadFileHandle>, error]> {
   const promises: Promise<[ReadFileHandle, error]>[] = [];
   for (const file of fs.listFiles()) {
     const promise = readFile(fs, file);
