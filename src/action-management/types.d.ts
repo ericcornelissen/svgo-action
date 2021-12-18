@@ -1,4 +1,4 @@
-import type { error } from "../types";
+import type { error } from "../errors";
 
 interface ActionManager {
   failIf(condition: Condition, msg: string): void;
@@ -7,7 +7,13 @@ interface ActionManager {
 
 type Condition = boolean | error;
 
+interface Core {
+  setFailed(msg: string): void;
+  warning(msg: string): void;
+}
+
 export type {
   ActionManager,
   Condition,
+  Core,
 };

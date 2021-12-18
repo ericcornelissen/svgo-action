@@ -1,16 +1,12 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import type { FileHandle } from "../file-systems";
-import type { error } from "../types";
+import type { error } from "../errors";
+import type { FileHandle, FileWriter } from "./types";
 
 import errors from "../errors";
 
 interface File extends FileHandle {
   readonly optimizedContent: string;
-}
-
-interface FileWriter {
-  writeFile(file: FileHandle, content: string): Promise<error>;
 }
 
 async function writeFiles(

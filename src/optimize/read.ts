@@ -1,15 +1,9 @@
 /* eslint-disable security/detect-non-literal-fs-filename */
 
-import type { FileHandle } from "../file-systems";
-import type { error } from "../types";
-import type { ReadFileHandle } from "./types";
+import type { error } from "../errors";
+import type { FileHandle, FileReader, ReadFileHandle } from "./types";
 
 import errors from "../errors";
-
-interface FileReader {
-  listFiles(): Iterable<FileHandle>;
-  readFile(file: FileHandle): Promise<[string, error]>;
-}
 
 async function readFile(
   fs: FileReader,
