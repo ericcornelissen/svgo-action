@@ -1,5 +1,7 @@
+const parsedObject = { };
+
 const parser = jest.fn()
-  .mockReturnValue([{ }, null]);
+  .mockReturnValue([parsedObject, null]);
 
 export {
   parser,
