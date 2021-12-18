@@ -1,5 +1,7 @@
+import { filter } from "./__common__";
+
 const NewSvgsFilter = jest.fn()
-  .mockReturnValue([() => false, null])
+  .mockReturnValue([filter, null])
   .mockName("filters.NewSvgsFilter");
 
 export default NewSvgsFilter;

@@ -1,7 +1,13 @@
+const failIf = jest.fn()
+  .mockName("action-management.StandardActionManager.failIf");
+
+const strictFailIf = jest.fn()
+  .mockName("action-management.StandardActionManager.strictFailIf");
+
 const StandardActionManager = jest.fn()
   .mockReturnValue({
-    failIf: jest.fn().mockName("StandardActionManager.failIf"),
-    strictFailIf: jest.fn().mockName("StandardActionManager.strictFailIf"),
+    failIf,
+    strictFailIf,
   })
   .mockName("action-management.StandardActionManager.[constructor]");
 

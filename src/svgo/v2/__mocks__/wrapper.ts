@@ -1,9 +1,9 @@
 /* eslint-disable jest/no-mocks-import */
 
-import { optimize } from "../../__mocks__/__common__";
+import { optimizer } from "../../__mocks__/__common__";
 
 const SvgoV2Wrapper = jest.fn()
-  .mockReturnValue({ optimize })
+  .mockReturnValue(optimizer)
   .mockName("svgo.v2.SvgoV2Wrapper");
 
 export default SvgoV2Wrapper;

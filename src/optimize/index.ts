@@ -1,6 +1,9 @@
-import type { FileSystem } from "../file-systems";
-import type { error } from "../types";
-import type { OptimizeProjectData, Optimizer } from "./types";
+import type { error } from "../errors";
+import type {
+  FileSystem,
+  OptimizeProjectData,
+  Optimizer,
+} from "./types";
 
 import errors from "../errors";
 import { optimizeAll } from "./optimize";

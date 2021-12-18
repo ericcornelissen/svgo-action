@@ -1,5 +1,4 @@
-import type { Core } from "../types";
-import type { ActionManager, Condition } from "./types";
+import type { ActionManager, Condition, Core } from "./types";
 
 import { runIf } from "./helpers";
 

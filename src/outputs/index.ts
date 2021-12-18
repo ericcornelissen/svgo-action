@@ -1,5 +1,5 @@
-import type { error, Outputter } from "../types";
-import type { OptimizedProjectStats } from "./types";
+import type { error } from "../errors";
+import type { OptimizedProjectStats, Outputter } from "./types";
 
 import { getOutputNamesFor } from "./names";
 import { getValuesForOutputs } from "./values";
@@ -20,7 +20,7 @@ interface Params {
 }
 
 function Set({ env, data, out }: Params): error {
-  const { eventName } = env.context;
+  const eventName = env.context.eventName;
 
   const [names, err] = getOutputNamesFor(eventName);
   const outputNameToValue = getValuesForOutputs(names, data);
@@ -31,4 +31,8 @@ function Set({ env, data, out }: Params): error {
 
 export default {
   Set,
+};
+
+export type {
+  Outputter,
 };

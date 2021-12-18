@@ -32,11 +32,8 @@ function isClientRequired(eventName: string): boolean {
 }
 
 function isEventSupported(params: Params): [string, boolean] {
-  const { context } = params;
-
-  const eventName = context.eventName;
+  const eventName = params.context.eventName;
   const ok = SUPPORTED_EVENTS.includes(eventName);
-
   return [eventName, ok];
 }
 

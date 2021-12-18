@@ -1,6 +1,6 @@
+import type { error } from "../errors";
 import type { SupportedSvgoVersions } from "../svgo";
-import type { error, Inputter, InputterOptions } from "../types";
-import type { InputValue } from "./types";
+import type { Inputter, InputterOptions, InputValue } from "./types";
 
 import errors from "../errors";
 import {
@@ -155,7 +155,10 @@ function getSvgoVersion(
     ];
   }
 
-  return [input as InputValue<SupportedSvgoVersions>, null];
+  return [
+    input as InputValue<SupportedSvgoVersions>,
+    null,
+  ];
 }
 
 export {

@@ -1,5 +1,7 @@
+const filters = [];
+
 const getFilters = jest.fn()
-  .mockResolvedValue([[], null])
+  .mockResolvedValue([filters, null])
   .mockName("helpers.getFilters");
 
 export {

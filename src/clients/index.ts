@@ -1,5 +1,5 @@
-import type { error, GitHub, Inputter } from "../types";
-import type { GitHubClient } from "./types";
+import type { error } from "../errors";
+import type { GitHub, GitHubClient, Inputter } from "./types";
 
 import errors from "../errors";
 import Client from "./client";
