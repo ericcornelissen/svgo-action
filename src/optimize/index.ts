@@ -6,6 +6,7 @@ import type {
 } from "./types";
 
 import errors from "../errors";
+import { len } from "../utils";
 import { optimizeAll } from "./optimize";
 import { readFiles } from "./read";
 import { writeFiles } from "./write";
@@ -20,10 +21,6 @@ interface Params {
   readonly config: Config;
   readonly fs: FileSystem;
   readonly optimizer: Optimizer;
-}
-
-function size<T>(collection: Iterable<T>): number {
-  return Array.from(collection).length;
 }
 
 async function Files({
@@ -41,8 +38,8 @@ async function Files({
 
   return [
     {
-      optimizedCount: size(optimizedFiles),
-      svgCount: size(files),
+      optimizedCount: len(optimizedFiles),
+      svgCount: len(files),
     },
     errors.Combine(readError, optimizeError, writeError),
   ];

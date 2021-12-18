@@ -60,7 +60,7 @@ class CommitsClient {
   public async listFiles(
     params: CommitsListFilesParams,
   ): Promise<[CommitsListFilesResponse, error]> {
-    let result: GitFileInfo[] = [];
+    let result: Iterable<GitFileInfo> = [];
 
     const [commit, err] = await this.getCommit(params);
     if (err === null) {

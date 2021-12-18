@@ -1,7 +1,7 @@
 import type { SupportedSvgoVersions } from "../svgo";
 
 interface Config {
-  readonly ignoreGlobs: InputValue<string[]>;
+  readonly ignoreGlobs: InputValue<Iterable<string>>;
   readonly isDryRun: InputValue<boolean>;
   readonly isStrictMode: InputValue<boolean>;
   readonly svgoConfigPath: InputValue<string>;
@@ -11,7 +11,7 @@ interface Config {
 interface Inputter {
   getBooleanInput(name: string, options: InputterOptions): boolean;
   getInput(name: string, options: InputterOptions): string;
-  getMultilineInput(name: string, options: InputterOptions): string[];
+  getMultilineInput(name: string, options: InputterOptions): Iterable<string>;
 }
 
 interface InputterOptions {

@@ -5,9 +5,9 @@ import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 interface Context {
   readonly eventName: string;
   readonly payload: {
-    readonly commits?: {
+    readonly commits?: Iterable<{
       readonly id: string;
-    }[];
+    }>;
     readonly pull_request?: {
       readonly number: number;
     };
