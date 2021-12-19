@@ -82,7 +82,9 @@ function getBooleanInput(params: Params<boolean>): InputInfo<boolean> {
   return safeGetInput({ ...params, getInput: params.inp.getBooleanInput });
 }
 
-function getMultilineInput(params: Params<string[]>): InputInfo<string[]> {
+function getMultilineInput(
+  params: Params<Iterable<string>>,
+): InputInfo<Iterable<string>> {
   return safeGetInput({ ...params, getInput: params.inp.getMultilineInput });
 }
 
@@ -92,8 +94,8 @@ function getStringInput(params: Params<string>): InputInfo<string> {
 
 function getIgnoreGlobs(
   inp: Inputter,
-  defaultValue: string[],
-): [InputValue<string[]>, error] {
+  defaultValue: Iterable<string>,
+): [InputValue<Iterable<string>>, error] {
   const inputName = INPUT_NAME_IGNORE;
   const input = getMultilineInput({ inp, inputName, defaultValue });
   return [input, null];

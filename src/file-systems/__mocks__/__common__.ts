@@ -1,6 +1,8 @@
+const files = [];
+
 const fileSystemMock = {
   listFiles: jest.fn()
-    .mockReturnValue([])
+    .mockReturnValue(files)
     .mockName("file-systems.FileSystem.listFiles"),
   readFile: jest.fn()
     .mockReturnValue(["", null])

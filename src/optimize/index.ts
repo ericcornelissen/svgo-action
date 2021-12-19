@@ -6,6 +6,7 @@ import type {
 } from "./types";
 
 import errors from "../errors";
+import { len } from "../utils";
 import { optimizeAll } from "./optimize";
 import { readFiles } from "./read";
 import { writeFiles } from "./write";
@@ -37,8 +38,8 @@ async function Files({
 
   return [
     {
-      optimizedCount: optimizedFiles.length,
-      svgCount: files.length,
+      optimizedCount: len(optimizedFiles),
+      svgCount: len(files),
     },
     errors.Combine(readError, optimizeError, writeError),
   ];

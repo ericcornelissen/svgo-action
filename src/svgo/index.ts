@@ -3,6 +3,7 @@ import type { SupportedSvgoVersions, SVGOptimizer } from "./types";
 
 import errors from "../errors";
 import createSvgoOptimizerForProject from "./project";
+import StubSVGOptimizer from "./stub";
 import svgoV1 from "./v1";
 import svgoV2 from "./v2";
 
@@ -23,7 +24,7 @@ function New({
 }: Params): [SVGOptimizer, error] {
   const svgoVersion = config.svgoVersion.value;
 
-  let svgOptimizer = {} as SVGOptimizer;
+  let svgOptimizer: SVGOptimizer = StubSVGOptimizer;
   let err: error = null;
 
   switch (svgoVersion) {

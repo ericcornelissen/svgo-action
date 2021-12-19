@@ -17,8 +17,8 @@ async function optimizeFile(
 
 async function optimizeAll(
   optimizer: Optimizer,
-  files: ReadFileHandle[],
-): Promise<[OptimizedFileHandle[], error]> {
+  files: Iterable<ReadFileHandle>,
+): Promise<[Iterable<OptimizedFileHandle>, error]> {
   const promises: Promise<[OptimizedFileHandle, error]>[] = [];
   for (const file of files) {
     const promise = optimizeFile(optimizer, file);

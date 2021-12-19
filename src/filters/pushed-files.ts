@@ -6,7 +6,7 @@ import { STATUS_REMOVED } from "./constants";
 
 interface Client {
   readonly commits: {
-    listFiles(options: ListFilesOptions): Promise<[File[], error]>;
+    listFiles(options: ListFilesOptions): Promise<[Iterable<File>, error]>;
   };
 }
 
@@ -29,7 +29,7 @@ interface Params {
 }
 
 interface Payload {
-  readonly commits?: Commit[];
+  readonly commits?: Iterable<Commit>;
 }
 
 interface PushContext {
@@ -44,7 +44,7 @@ interface Repo {
 
 async function getPushedFiles({ client, commits, repo }: {
   client: Client;
-  commits: Commit[];
+  commits: Iterable<Commit>;
   repo: Repo;
 }): Promise<[File[], error]> {
   const allFiles: File[] = [];

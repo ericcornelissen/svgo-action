@@ -2,11 +2,12 @@ import type { error } from "../errors";
 import type { FilterFn } from "./types";
 
 import errors from "../errors";
+import { len } from "../utils";
 import { STATUS_REMOVED } from "./constants";
 
 interface Client {
   readonly pulls: {
-    listFiles(options: ListFilesOptions): Promise<[File[], error]>;
+    listFiles(options: ListFilesOptions): Promise<[Iterable<File>, error]>;
   };
 }
 
@@ -68,7 +69,7 @@ async function getPrFiles({ client, number, repo }: {
 
     allFiles.push(...files);
 
-    if (files.length < perPage) {
+    if (len(files) < perPage) {
       break;
     }
   }

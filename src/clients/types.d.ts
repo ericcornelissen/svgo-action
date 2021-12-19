@@ -9,12 +9,12 @@ interface CommitsGetCommitParams {
 }
 
 interface CommitsGetCommitResponse {
-  readonly files: GitFileInfo[];
+  readonly files: Iterable<GitFileInfo>;
 }
 
 type CommitsListFilesParams = CommitsGetCommitParams;
 
-type CommitsListFilesResponse = GitFileInfo[];
+type CommitsListFilesResponse = Iterable<GitFileInfo>;
 
 interface GitFileInfo {
   readonly filename: string;
@@ -48,7 +48,7 @@ interface PullsListFilesParams {
   readonly repo: string;
 }
 
-type PullsListFilesResponse = GitFileInfo[];
+type PullsListFilesResponse = Iterable<GitFileInfo>;
 
 export type {
   CommitsGetCommitParams,
