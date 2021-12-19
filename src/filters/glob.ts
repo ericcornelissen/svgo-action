@@ -4,7 +4,7 @@ import { Minimatch } from "minimatch";
 
 function NewGlobFilter(glob: string): FilterFn {
   const ignoreMatcher = new Minimatch(glob);
-  return function(filepath: string): boolean {
+  return (filepath: string): boolean => {
     return !ignoreMatcher.match(filepath);
   };
 }

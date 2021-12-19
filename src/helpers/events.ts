@@ -14,29 +14,26 @@ interface Params {
   readonly context: Context;
 }
 
-const CLIENT_REQUIRED_EVENTS: string[] = [
+const CLIENT_REQUIRED_EVENTS: Set<string> = new Set([
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
-];
+]);
 
-const SUPPORTED_EVENTS: string[] = [
+const SUPPORTED_EVENTS: Set<string> = new Set([
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
   EVENT_REPOSITORY_DISPATCH,
   EVENT_SCHEDULE,
   EVENT_WORKFLOW_DISPATCH,
-];
+]);
 
 function isClientRequired(eventName: string): boolean {
-  return CLIENT_REQUIRED_EVENTS.includes(eventName);
+  return CLIENT_REQUIRED_EVENTS.has(eventName);
 }
 
 function isEventSupported(params: Params): [string, boolean] {
-  const { context } = params;
-
-  const eventName = context.eventName;
-  const ok = SUPPORTED_EVENTS.includes(eventName);
-
+  const eventName = params.context.eventName;
+  const ok = SUPPORTED_EVENTS.has(eventName);
   return [eventName, ok];
 }
 

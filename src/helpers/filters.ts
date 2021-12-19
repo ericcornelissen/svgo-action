@@ -1,14 +1,16 @@
-import type { GitHubClient } from "../clients";
-import type { error, GitHub } from "../types";
+import type { error } from "../errors";
+import type { GitHub, GitHubClient } from "./types";
 
 import filters from "../filters";
 import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
 
 interface Config {
   readonly ignoreGlobs: {
-    readonly value: string[];
+    readonly value: Iterable<string>;
   };
 }
+
+type Filter = (s: string) => boolean;
 
 interface Params {
   readonly client: GitHubClient;
@@ -20,12 +22,12 @@ async function getFilters({
   client,
   config,
   github,
-}: Params): Promise<[((s: string) => boolean)[], error]> {
-  const { context } = github;
+}: Params): Promise<[Iterable<Filter>, error]> {
+  const context = github.context;
   const event = context.eventName;
 
   const result = [
-    ...config.ignoreGlobs.value.map(filters.NewGlobFilter),
+    ...Array.from(config.ignoreGlobs.value).map(filters.NewGlobFilter),
     filters.NewSvgsFilter(),
   ];
 

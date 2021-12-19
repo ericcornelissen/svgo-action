@@ -3,6 +3,11 @@ interface OptimizedProjectStats {
   readonly svgCount: number;
 }
 
+interface Outputter {
+  setOutput(name: string, value: string): void;
+}
+
 export type {
   OptimizedProjectStats,
+  Outputter,
 };

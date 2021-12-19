@@ -1,14 +1,16 @@
+const files = [];
+
 const Client = jest.fn()
   .mockReturnValue({
     commits: {
       listFiles: jest.fn()
-        .mockReturnValue([[], null])
-        .mockName("Client.commits.listFiles"),
+        .mockReturnValue([files, null])
+        .mockName("clients.Client.commits.listFiles"),
     },
     pulls: {
       listFiles: jest.fn()
-        .mockReturnValue([[], null])
-        .mockName("Client.pulls.listFiles"),
+        .mockReturnValue([files, null])
+        .mockName("clients.Client.pulls.listFiles"),
     },
   })
   .mockName("clients.Client.[constructor]");

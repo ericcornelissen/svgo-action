@@ -1,5 +1,7 @@
+const svgoConfig = { };
+
 const parseRawSvgoConfig = jest.fn()
-  .mockReturnValue([{ }, null])
+  .mockReturnValue([svgoConfig, null])
   .mockName("helpers.parseRawSvgoConfig");
 
 export {

@@ -1,5 +1,5 @@
-import type { error, Inputter } from "../types";
-import type { Config } from "./types";
+import type { error } from "../errors";
+import type { Config, Inputter } from "./types";
 
 import errors from "../errors";
 import {
@@ -50,4 +50,5 @@ export default {
 
 export type {
   Config,
+  Inputter,
 };

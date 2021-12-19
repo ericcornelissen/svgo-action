@@ -1,9 +1,10 @@
-import type { error, GitHub, Inputter } from "../types";
-import type { GitHubClient } from "./types";
+import type { error } from "../errors";
+import type { GitHub, GitHubClient, Inputter } from "./types";
 
 import errors from "../errors";
 import Client from "./client";
 import { INPUT_NAME_REPO_TOKEN } from "./constants";
+import StubClient from "./stub";
 
 interface Params {
   readonly github: GitHub;
@@ -11,7 +12,7 @@ interface Params {
 }
 
 function New({ github, inp }: Params): [GitHubClient, error] {
-  let client: GitHubClient = { } as GitHubClient;
+  let client: GitHubClient = StubClient;
   let err: error = null;
 
   try {

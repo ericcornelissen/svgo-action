@@ -1,4 +1,4 @@
-import type { error } from "../types";
+import type { error } from "../errors";
 
 type SupportedSvgoVersions = string;
 

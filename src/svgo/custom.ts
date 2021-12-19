@@ -1,4 +1,4 @@
-import type { error } from "../types";
+import type { error } from "../errors";
 import type { SVGOptimizer } from "./types";
 
 import importFrom from "import-from";

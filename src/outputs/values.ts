@@ -20,7 +20,7 @@ const outputsMap: Map<OutputName, DataToOutput> = new Map([
 ]);
 
 function getValuesForOutputs(
-  names: OutputName[],
+  names: Iterable<OutputName>,
   data: OptimizedProjectStats,
 ): Map<OutputName, string> {
   const result = new Map();
