@@ -39,7 +39,7 @@ class CommitsClient {
   private async getCommit(
     params: CommitsGetCommitParams,
   ): Promise<[CommitsGetCommitResponse, error]> {
-    let result: CommitsGetCommitResponse = { } as CommitsGetCommitResponse;
+    let result: CommitsGetCommitResponse = { files: [] };
     let err: error = null;
 
     try {
