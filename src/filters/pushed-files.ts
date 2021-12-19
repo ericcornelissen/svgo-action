@@ -1,9 +1,14 @@
-import type { GitHubClient } from "../clients";
-import type { error } from "../types";
+import type { error } from "../errors";
 import type { FilterFn } from "./types";
 
 import errors from "../errors";
 import { STATUS_REMOVED } from "./constants";
+
+interface Client {
+  readonly commits: {
+    listFiles(options: ListFilesOptions): Promise<[Iterable<File>, error]>;
+  };
+}
 
 interface Commit {
   readonly id: string;
@@ -14,13 +19,17 @@ interface File {
   readonly status: string;
 }
 
+type ListFilesOptions = {
+  ref: string;
+} & Repo;
+
 interface Params {
-  readonly client: GitHubClient;
+  readonly client: Client;
   readonly context: PushContext;
 }
 
 interface Payload {
-  readonly commits?: Commit[];
+  readonly commits?: Iterable<Commit>;
 }
 
 interface PushContext {
@@ -34,8 +43,8 @@ interface Repo {
 }
 
 async function getPushedFiles({ client, commits, repo }: {
-  client: GitHubClient;
-  commits: Commit[];
+  client: Client;
+  commits: Iterable<Commit>;
   repo: Repo;
 }): Promise<[File[], error]> {
   const allFiles: File[] = [];

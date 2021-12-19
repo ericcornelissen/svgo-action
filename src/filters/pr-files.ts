@@ -1,17 +1,29 @@
-import type { GitHubClient } from "../clients";
-import type { error } from "../types";
+import type { error } from "../errors";
 import type { FilterFn } from "./types";
 
 import errors from "../errors";
+import { len } from "../utils";
 import { STATUS_REMOVED } from "./constants";
+
+interface Client {
+  readonly pulls: {
+    listFiles(options: ListFilesOptions): Promise<[Iterable<File>, error]>;
+  };
+}
 
 interface File {
   readonly status: string;
   readonly filename: string;
 }
 
+type ListFilesOptions = {
+  pullNumber: number;
+  page: number;
+  perPage: number;
+} & Repo;
+
 interface Params {
-  readonly client: GitHubClient;
+  readonly client: Client;
   readonly context: PrContext;
 }
 
@@ -32,7 +44,7 @@ interface Repo {
 }
 
 async function getPrFiles({ client, number, repo }: {
-  client: GitHubClient;
+  client: Client;
   number: number;
   repo: Repo;
 }): Promise<[File[], error]> {
@@ -57,7 +69,7 @@ async function getPrFiles({ client, number, repo }: {
 
     allFiles.push(...files);
 
-    if (files.length < perPage) {
+    if (len(files) < perPage) {
       break;
     }
   }
@@ -72,12 +84,18 @@ async function NewPrFilesFilter({
   const repo = context.repo;
   const number = context.payload.pull_request?.number;
   if (number === undefined) {
-    return [() => false, errors.New("missing Pull Request number")];
+    return [
+      () => false,
+      errors.New("missing Pull Request number"),
+    ];
   }
 
   const [pullRequestFiles, err] = await getPrFiles({ client, number, repo });
   if (err !== null) {
-    return [() => false, err];
+    return [
+      () => false,
+      err,
+    ];
   }
 
   const allowedFiles = pullRequestFiles

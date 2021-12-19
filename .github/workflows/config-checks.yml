@@ -33,7 +33,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
+          node-version-file: .nvmrc
       - name: Install Renovate CLI
         run: npm install -g renovate
       - name: Validate Renovate Configuration

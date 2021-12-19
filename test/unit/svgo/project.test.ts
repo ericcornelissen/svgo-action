@@ -1,19 +1,18 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("import-cwd");
 jest.mock("../../../src/errors");
+jest.mock("../../../src/svgo/stub");
 jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
 
 import importCwd from "import-cwd";
 
 import createSvgoOptimizerForProject from "../../../src/svgo/project";
-import _svgoV1 from "../../../src/svgo/v1";
-import _svgoV2 from "../../../src/svgo/v2";
+import svgoV1 from "../../../src/svgo/v1";
+import svgoV2 from "../../../src/svgo/v2";
 
-const importCwdSilent = mocked(importCwd.silent);
-const svgoV1 = mocked(_svgoV1);
-const svgoV2 = mocked(_svgoV2);
+const importCwdSilent = importCwd.silent as jest.MockedFunction<typeof importCwd.silent>; // eslint-disable-line max-len
+const svgoV1New = svgoV1.New as jest.MockedFunction<typeof svgoV1.New>;
+const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
 
 describe("svgo/project.ts", () => {
   describe("::New", () => {
@@ -27,8 +26,8 @@ describe("svgo/project.ts", () => {
     beforeEach(() => {
       importCwdSilent.mockReset();
 
-      svgoV1.New.mockClear();
-      svgoV2.New.mockClear();
+      svgoV1New.mockClear();
+      svgoV2New.mockClear();
     });
 
     test("tries to import 'svgo'", () => {
@@ -42,9 +41,9 @@ describe("svgo/project.ts", () => {
       importCwdSilent.mockReturnValue(undefined);
 
       const [result, err] = createSvgoOptimizerForProject();
+      expect(result).not.toBeNull();
       expect(err).not.toBeNull();
       expect(err).toBe("package-local SVGO not found");
-      expect(result).toBeNull();
     });
 
     describe("successful import", () => {

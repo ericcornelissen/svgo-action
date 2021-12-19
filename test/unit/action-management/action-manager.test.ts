@@ -1,17 +1,15 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/core");
 jest.mock("../../../src/action-management/helpers");
 jest.mock("../../../src/errors");
 
-import * as _core from "@actions/core";
+import * as core from "@actions/core";
 
 import StandardActionManager from "../../../src/action-management/action-manager"; // eslint-disable-line max-len
-import * as _helpers from "../../../src/action-management/helpers";
+import * as helpers from "../../../src/action-management/helpers";
 import errors from "../../../src/errors";
 
-const core = mocked(_core);
-const helpers = mocked(_helpers);
+const coreSetFailed = core.setFailed as jest.MockedFunction<typeof core.setFailed>; // eslint-disable-line max-len
+const helpersRunIf = helpers.runIf as jest.MockedFunction<typeof helpers.runIf>;
 
 describe("action-management/action-manager.ts", () => {
   const testConditions = [
@@ -31,8 +29,8 @@ describe("action-management/action-manager.ts", () => {
     });
 
     beforeEach(() => {
-      helpers.runIf.mockClear();
-      core.setFailed.mockClear();
+      coreSetFailed.mockClear();
+      helpersRunIf.mockClear();
     });
 
     test.each([
@@ -44,7 +42,7 @@ describe("action-management/action-manager.ts", () => {
     });
 
     test("calls the correct function", () => {
-      helpers.runIf.mockImplementationOnce((_, fn) => fn());
+      helpersRunIf.mockImplementationOnce((_, fn) => fn());
 
       actionManager.failIf(false, msg);
       expect(core.setFailed).toHaveBeenCalledTimes(1);
@@ -62,8 +60,8 @@ describe("action-management/action-manager.ts", () => {
     });
 
     beforeEach(() => {
-      helpers.runIf.mockClear();
-      core.setFailed.mockClear();
+      coreSetFailed.mockClear();
+      helpersRunIf.mockClear();
     });
 
     test.each([
@@ -77,7 +75,7 @@ describe("action-management/action-manager.ts", () => {
     test("calls the correct function", () => {
       const callbackFn = strict ? core.setFailed : core.warning; // eslint-disable-line jest/no-if
 
-      helpers.runIf.mockImplementationOnce((_, fn) => fn());
+      helpersRunIf.mockImplementationOnce((_, fn) => fn());
 
       actionManager.strictFailIf(false, msg);
       expect(callbackFn).toHaveBeenCalledTimes(1);

@@ -1,4 +1,4 @@
-import type { error } from "./types";
+type error = string | null;
 
 function isNotNullError(err: error): boolean {
   return err !== null;
@@ -17,4 +17,8 @@ function New(msg: string | null): error {
 export default {
   Combine,
   New,
+};
+
+export type {
+  error,
 };

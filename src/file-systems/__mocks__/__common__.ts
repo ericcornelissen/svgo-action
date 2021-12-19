@@ -1,13 +1,15 @@
+const files = [];
+
 const fileSystemMock = {
   listFiles: jest.fn()
-    .mockReturnValue([])
-    .mockName("FileSystem.listFiles"),
+    .mockReturnValue(files)
+    .mockName("file-systems.FileSystem.listFiles"),
   readFile: jest.fn()
     .mockReturnValue(["", null])
-    .mockName("FileSystem.readFile"),
+    .mockName("file-systems.FileSystem.readFile"),
   writeFile: jest.fn()
     .mockReturnValue(null)
-    .mockName("FileSystem.writeFile"),
+    .mockName("file-systems.FileSystem.writeFile"),
 };
 
 export {

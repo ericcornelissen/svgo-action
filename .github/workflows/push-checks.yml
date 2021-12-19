@@ -15,14 +15,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
-      - name: Cache Dependencies
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: npm
+          node-version: 12
       - name: Install Dependencies
         run: npm ci
       - name: Build SVGO Action
@@ -36,14 +30,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
-      - name: Cache Dependencies
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: npm
+          node-version-file: .nvmrc
       - name: Install Dependencies
         run: npm ci
       - name: Lint Source Code
@@ -63,14 +51,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
-      - name: Cache Dependencies
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: npm
+          node-version: 12
       - name: Cache Jest
         uses: actions/cache@v2.1.7
         with:
@@ -110,14 +92,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
-      - name: Cache Dependencies
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: npm
+          node-version: 12
       - name: Install Dependencies
         run: npm ci
       - name: Install Package-local SVGO
@@ -209,14 +185,8 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v2.5.0
         with:
-          node-version: 12.x
-      - name: Cache Dependencies
-        uses: actions/cache@v2.1.7
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: npm
+          node-version-file: .nvmrc
       - name: Install Dependencies
         run: npm ci
       - name: Run Mutation Tests
@@ -224,7 +194,7 @@ jobs:
         env:
           CI: true
       - name: Upload mutation report as artifact
-        uses: actions/upload-artifact@v2.2.4
+        uses: actions/upload-artifact@v2.3.0
         with:
           name: mutation-report-${{ github.sha }}
           path: |

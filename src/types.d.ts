@@ -1,11 +1,13 @@
+import type { Inputter } from "./inputs";
+import type { Outputter } from "./outputs";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
 interface Context {
   readonly eventName: string;
   readonly payload: {
-    readonly commits?: {
+    readonly commits?: Iterable<{
       readonly id: string;
-    }[];
+    }>;
     readonly pull_request?: {
       readonly number: number;
     };
@@ -23,36 +25,16 @@ interface Core extends Inputter, Outputter {
   warning(message: string | Error): void;
 }
 
-type error = string | null;
-
 interface GitHub {
   readonly context: Context;
   getOctokit(token: string): Octokit;
 }
 
-interface Inputter {
-  getBooleanInput(name: string, options: InputterOptions): boolean;
-  getInput(name: string, options: InputterOptions): string;
-  getMultilineInput(name: string, options: InputterOptions): string[];
-}
-
-interface InputterOptions {
-  readonly required?: boolean;
-}
-
 type Octokit = InstanceType<typeof _GitHub>;
-
-interface Outputter {
-  setOutput(name: string, value: string): void;
-}
 
 export type {
   Context,
   Core,
-  error,
   GitHub,
-  Inputter,
-  InputterOptions,
   Octokit,
-  Outputter,
 };

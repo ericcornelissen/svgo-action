@@ -1,5 +1,7 @@
+const fileHandles = [];
+
 const readFiles = jest.fn()
-  .mockResolvedValue([[], null])
+  .mockResolvedValue([fileHandles, null])
   .mockName("optimize.readFiles");
 
 export {

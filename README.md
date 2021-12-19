@@ -20,14 +20,14 @@ various complete workflows. You can also check [what the Action does for each
 ```yaml
 name: Optimize
 on:
-# Disable the next line if you don't want the Action to run on PRs.
+# Comment the next line if you *don't* want the Action to run on Pull Requests.
   pull_request:
-# Enable the next line if you want the Action to run on pushes.
+# Uncomment the next line if you want the Action to run on pushes.
 #   push:
-# Enable the next 2 lines if you want the Action to run on a schedule.
+# Uncomment the next 2 lines if you want the Action to run on a schedule.
 #   schedule:
 #   - cron:  '0 * * * 1'  # See https://crontab.guru/
-# Enable one of the next 2 lines if you want to manually trigger the Action.
+# Uncomment one of the next 2 lines if you want to manually trigger the Action.
 #   repository_dispatch:
 #   workflow_dispatch:
 
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    # Enable the next 2 lines to select a branch for schedule or dispatch runs.
+    # Uncomment the next 2 lines to select a branch for on schedule or dispatch.
     #   with:
     #     ref: main
     - uses: ericcornelissen/svgo-action@v2
@@ -86,8 +86,8 @@ triggered only when SVGs change. Update the value of `pull_request` and/or
 `push` as follows:
 
 > :warning: This will cause the entire Workflow to be run only when an SVG
-> changes. Steps that should run for every push or Pull Request must be
-> specified in a separate Workflow file.
+> changes. Jobs that should run for every push or Pull Request must be specified
+> in a separate Workflow file.
 
 ```yaml
 on:
@@ -97,6 +97,20 @@ on:
   push:
     paths:
     - "**.svg"
+```
+
+#### Token Permissions
+
+The minimum required [permissions] needed to run this Action are:
+
+```yml
+permissions:
+  contents: read
+  # Uncomment the next line if you're using the Action on Pull Requests
+  #   pull-requests: read
+
+# Or use `read-all` to allow reading in all scopes (recommended for open source)
+permissions: read-all
 ```
 
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Amain
@@ -112,6 +126,7 @@ on:
 
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
+[permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
 [the examples]: ./docs/examples.md
 [what the action does for each `on` event]: ./docs/events.md

@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/errors");
@@ -9,13 +7,16 @@ import * as github from "@actions/github";
 
 import clients from "../../../src/clients";
 import errors from "../../../src/errors";
-import _filters from "../../../src/filters";
+import filters from "../../../src/filters";
 import {
   getFilters,
 } from "../../../src/helpers/filters";
 import inp from "../../__common__/inputter.mock";
 
-const filters = mocked(_filters);
+const filtersNewGlobFilter = filters.NewGlobFilter as jest.MockedFunction<typeof filters.NewGlobFilter>; // eslint-disable-line max-len
+const filtersNewSvgsFilter = filters.NewSvgsFilter as jest.MockedFunction<typeof filters.NewSvgsFilter>; // eslint-disable-line max-len
+const filtersNewPrFilesFilter = filters.NewPrFilesFilter as jest.MockedFunction<typeof filters.NewPrFilesFilter>; // eslint-disable-line max-len
+const filtersNewPushedFilesFilter = filters.NewPushedFilesFilter as jest.MockedFunction<typeof filters.NewPushedFilesFilter>; // eslint-disable-line max-len
 
 describe("helpers/filters.ts", () => {
   describe("::getFilters", () => {
@@ -28,10 +29,10 @@ describe("helpers/filters.ts", () => {
     });
 
     beforeEach(() => {
-      filters.NewGlobFilter.mockClear();
-      filters.NewSvgsFilter.mockClear();
-      filters.NewPrFilesFilter.mockClear();
-      filters.NewPushedFilesFilter.mockClear();
+      filtersNewGlobFilter.mockClear();
+      filtersNewSvgsFilter.mockClear();
+      filtersNewPrFilesFilter.mockClear();
+      filtersNewPushedFilesFilter.mockClear();
     });
 
     beforeEach(() => {
@@ -51,7 +52,7 @@ describe("helpers/filters.ts", () => {
         config.ignoreGlobs.value = [];
 
         const globFilter = jest.fn();
-        filters.NewGlobFilter.mockReturnValue(globFilter);
+        filtersNewGlobFilter.mockReturnValue(globFilter);
 
         const [, err] = await getFilters({ client, config, github });
         expect(err).toBeNull();
@@ -62,7 +63,7 @@ describe("helpers/filters.ts", () => {
         config.ignoreGlobs.value = ["foobar/**"];
 
         const globFilter = jest.fn();
-        filters.NewGlobFilter.mockReturnValue(globFilter);
+        filtersNewGlobFilter.mockReturnValue(globFilter);
 
         const [result, err] = await getFilters({ client, config, github });
         expect(err).toBeNull();
@@ -78,8 +79,8 @@ describe("helpers/filters.ts", () => {
 
         const globFilter1 = jest.fn();
         const globFilter2 = jest.fn();
-        filters.NewGlobFilter.mockReturnValueOnce(globFilter1);
-        filters.NewGlobFilter.mockReturnValueOnce(globFilter2);
+        filtersNewGlobFilter.mockReturnValueOnce(globFilter1);
+        filtersNewGlobFilter.mockReturnValueOnce(globFilter2);
 
         const [result, err] = await getFilters({ client, config, github });
         expect(err).toBeNull();
@@ -94,7 +95,7 @@ describe("helpers/filters.ts", () => {
       github.context.eventName = "foobar";
 
       const svgsFilter = jest.fn();
-      filters.NewSvgsFilter.mockReturnValue(svgsFilter);
+      filtersNewSvgsFilter.mockReturnValue(svgsFilter);
 
       const [result, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
@@ -108,7 +109,7 @@ describe("helpers/filters.ts", () => {
         github.context.eventName = "pull_request";
 
         const prFilesFilter = jest.fn();
-        filters.NewPrFilesFilter.mockResolvedValue([prFilesFilter, null]);
+        filtersNewPrFilesFilter.mockResolvedValue([prFilesFilter, null]);
 
         const [result, err] = await getFilters({ client, config, github });
         expect(err).toBeNull();
@@ -122,7 +123,7 @@ describe("helpers/filters.ts", () => {
         const error = errors.New("could not get Pull Request");
 
         const prFilesFilter = jest.fn();
-        filters.NewPrFilesFilter.mockResolvedValue([prFilesFilter, error]);
+        filtersNewPrFilesFilter.mockResolvedValue([prFilesFilter, error]);
 
         const [, err] = await getFilters({ client, config, github });
         expect(err).not.toBeNull();
@@ -145,7 +146,7 @@ describe("helpers/filters.ts", () => {
         github.context.eventName = "push";
 
         const pushFilesFilter = jest.fn();
-        filters.NewPushedFilesFilter.mockResolvedValue([
+        filtersNewPushedFilesFilter.mockResolvedValue([
           pushFilesFilter,
           null,
         ]);
@@ -162,7 +163,7 @@ describe("helpers/filters.ts", () => {
         const error = errors.New("could not get commits");
 
         const pushFilesFilter = jest.fn();
-        filters.NewPushedFilesFilter.mockResolvedValue([
+        filtersNewPushedFilesFilter.mockResolvedValue([
           pushFilesFilter,
           error,
         ]);

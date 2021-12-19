@@ -1,8 +1,6 @@
 import type { SupportedSvgoVersions } from "../../src/svgo";
 import type { Octokit } from "../../src/types";
 
-import { mocked } from "ts-jest/utils";
-
 jest.dontMock("js-yaml");
 jest.dontMock("minimatch");
 jest.dontMock("node-eval");
@@ -11,9 +9,7 @@ jest.mock("@actions/core");
 jest.mock("@actions/github");
 
 import * as core from "@actions/core";
-import * as _github from "@actions/github";
-
-const github = mocked(_github);
+import * as github from "@actions/github";
 
 import clients from "../../src/clients";
 import {
@@ -24,6 +20,8 @@ import {
   parseRawSvgoConfig,
 } from "../../src/helpers";
 import inp from "../__common__/inputter.mock";
+
+const githubGetOctokit = github.getOctokit as jest.MockedFunction<typeof github.getOctokit>; // eslint-disable-line max-len
 
 describe("package helpers", () => {
   const EVENT_PULL_REQUEST = "pull_request";
@@ -65,7 +63,7 @@ describe("package helpers", () => {
         fileNotSvg,
         fileSvgInFolderFoo,
       ].map((filename) => ({ filename, status: STATUS_ADDED }));
-      github.getOctokit.mockReturnValueOnce({
+      githubGetOctokit.mockReturnValueOnce({
         rest: {
           repos: {
             getCommit: jest.fn()
@@ -111,7 +109,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((filter) => filter(fileSvg));
+      const result = Array.from(filters).every((filter) => filter(fileSvg));
       expect(result).toBe(true);
     });
 
@@ -127,7 +125,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((f) => f(fileNotSvg));
+      const result = Array.from(filters).every((f) => f(fileNotSvg));
       expect(result).toBe(false);
     });
 
@@ -144,7 +142,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((f) => f(fileSvgInFolderFoo));
+      const result = Array.from(filters).every((f) => f(fileSvgInFolderFoo));
       expect(result).toBe(false);
     });
 
@@ -157,7 +155,7 @@ describe("package helpers", () => {
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
-      const result = filters.every((filter) => filter(svgNotInContext));
+      const result = Array.from(filters).every((f) => f(svgNotInContext));
       expect(result).toBe(false);
     });
   });

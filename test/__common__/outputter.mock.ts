@@ -1,4 +1,4 @@
-import type { Outputter } from "../../src/types";
+import type { Outputter } from "../../src/outputs";
 
 type OutputterMock = jest.Mocked<Outputter>;
 

@@ -2,19 +2,20 @@ import type { Dirent, Stats } from "fs";
 
 import { when, resetAllWhenMocks } from "jest-when";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("fs");
 jest.mock("path");
 jest.mock("../../../src/errors");
 
-import * as _fs from "fs";
-import * as _path from "path";
+import * as fs from "fs";
+import * as path from "path";
 
 import NewBaseFileSystem from "../../../src/file-systems/base";
 
-const fs = mocked(_fs);
-const path = mocked(_path);
+const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
+const fsLstatSync = fs.lstatSync as jest.MockedFunction<typeof fs.lstatSync>;
+const fsReaddirSync = fs.readdirSync as jest.MockedFunction<typeof fs.readdirSync>; // eslint-disable-line max-len
+const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>; // eslint-disable-line max-len
+const fsWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>; // eslint-disable-line max-len
 
 describe("file-systems/base.ts", () => {
   let fileSystem;
@@ -32,8 +33,8 @@ describe("file-systems/base.ts", () => {
     } as Stats;
 
     beforeEach(() => {
-      fs.lstatSync.mockClear();
-      fs.readdirSync.mockClear();
+      fsLstatSync.mockClear();
+      fsReaddirSync.mockClear();
 
       resetAllWhenMocks();
     });
@@ -46,9 +47,9 @@ describe("file-systems/base.ts", () => {
       const file1 = "hello.world" as unknown as Dirent;
       const file2 = "lorem.ipsum" as unknown as Dirent;
 
-      fs.readdirSync.mockReturnValueOnce([dir, file1, file2]);
-      fs.readdirSync.mockReturnValueOnce([dirDir, dirFile]);
-      fs.readdirSync.mockReturnValueOnce([dirDirFile]);
+      fsReaddirSync.mockReturnValueOnce([dir, file1, file2]);
+      fsReaddirSync.mockReturnValueOnce([dirDir, dirFile]);
+      fsReaddirSync.mockReturnValueOnce([dirDirFile]);
 
       when(fs.existsSync)
         .mockReturnValue(true)
@@ -94,10 +95,10 @@ describe("file-systems/base.ts", () => {
     ])("ignore '%s'", (dir) => {
       const fileInDir = "foo.bar" as unknown as Dirent;
 
-      fs.readdirSync.mockReset();
-      fs.readdirSync.mockReturnValueOnce([dir as unknown as Dirent]);
-      fs.readdirSync.mockReturnValueOnce([fileInDir]);
-      fs.existsSync.mockReturnValue(true);
+      fsReaddirSync.mockReset();
+      fsReaddirSync.mockReturnValueOnce([dir as unknown as Dirent]);
+      fsReaddirSync.mockReturnValueOnce([fileInDir]);
+      fsExistsSync.mockReturnValue(true);
 
       when(fs.lstatSync)
         .calledWith(dir)
@@ -121,8 +122,8 @@ describe("file-systems/base.ts", () => {
     };
 
     beforeEach(() => {
-      fs.existsSync.mockClear();
-      fs.readFileSync.mockClear();
+      fsExistsSync.mockClear();
+      fsReadFileSync.mockClear();
     });
 
     test.each([
@@ -131,8 +132,8 @@ describe("file-systems/base.ts", () => {
     ])("read success (content: '%s')", async (content) => {
       const testFile = file;
 
-      fs.existsSync.mockReturnValueOnce(true);
-      fs.readFileSync.mockReturnValueOnce(Buffer.from(content));
+      fsExistsSync.mockReturnValueOnce(true);
+      fsReadFileSync.mockReturnValueOnce(Buffer.from(content));
 
       const [, err]  = await fileSystem.readFile(testFile);
       expect(err).toBeNull();
@@ -145,7 +146,7 @@ describe("file-systems/base.ts", () => {
     });
 
     test("file doesn't exist", async () => {
-      fs.existsSync.mockReturnValueOnce(false);
+      fsExistsSync.mockReturnValueOnce(false);
 
       const [result, err] = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
@@ -154,8 +155,8 @@ describe("file-systems/base.ts", () => {
     });
 
     test("read failure when file exists", async () => {
-      fs.existsSync.mockReturnValueOnce(true);
-      fs.readFileSync.mockImplementationOnce(() => { throw new Error(); });
+      fsExistsSync.mockReturnValueOnce(true);
+      fsReadFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const [result, err]  = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
@@ -170,14 +171,14 @@ describe("file-systems/base.ts", () => {
     };
 
     beforeEach(() => {
-      fs.writeFileSync.mockClear();
+      fsWriteFileSync.mockClear();
     });
 
     test.each([
       "foobar",
       "Hello world!",
     ])("write success (content: '%s')", async (content) => {
-      fs.writeFileSync.mockReturnValueOnce(undefined);
+      fsWriteFileSync.mockReturnValueOnce(undefined);
 
       const err = await fileSystem.writeFile(file, content);
       expect(err).toBeNull();
@@ -187,7 +188,7 @@ describe("file-systems/base.ts", () => {
     });
 
     test("write error", async () => {
-      fs.writeFileSync.mockImplementationOnce(() => { throw new Error(); });
+      fsWriteFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const err = await fileSystem.writeFile(file, "foobar");
       expect(err).not.toBeNull();

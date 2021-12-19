@@ -1,20 +1,7 @@
-const filter = () => false;
-
-const NewGlobFilter = jest.fn()
-  .mockReturnValue(filter)
-  .mockName("filters.NewGlobFilter");
-
-const NewPrFilesFilter = jest.fn()
-  .mockReturnValue([filter, null])
-  .mockName("filters.NewPrFilesFilter");
-
-const NewPushedFilesFilter = jest.fn()
-  .mockReturnValue([filter, null])
-  .mockName("filters.NewPushedFilesFilter");
-
-const NewSvgsFilter = jest.fn()
-  .mockReturnValue(filter)
-  .mockName("filters.NewSvgsFilter");
+import NewGlobFilter from "./glob";
+import NewPrFilesFilter from "./pr-files";
+import NewPushedFilesFilter from "./pushed-files";
+import NewSvgsFilter from "./svgs";
 
 export default {
   NewGlobFilter,

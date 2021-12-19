@@ -1,4 +1,4 @@
-import type { Inputter } from "../../src/types";
+import type { Inputter } from "../../src/inputs";
 
 type InputterMock = jest.Mocked<Inputter>;
 

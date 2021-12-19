@@ -1,19 +1,21 @@
 import type { SupportedSvgoVersions } from "../../../src/svgo";
 
-import { mocked } from "ts-jest/utils";
-
 jest.mock("../../../src/errors");
 jest.mock("../../../src/inputs/getters");
 jest.mock("../../../src/inputs/helpers");
 
 import errors from "../../../src/errors";
-import * as _getters from "../../../src/inputs/getters";
-import * as _helpers from "../../../src/inputs/helpers";
+import * as getters from "../../../src/inputs/getters";
+import * as helpers from "../../../src/inputs/helpers";
 import inputs from "../../../src/inputs/index";
 import inp from "../../__common__/inputter.mock";
 
-const getters = mocked(_getters);
-const helpers = mocked(_helpers);
+const gettersGetIgnoreGlobs = getters.getIgnoreGlobs as jest.MockedFunction<typeof getters.getIgnoreGlobs>; // eslint-disable-line max-len
+const gettersGetIsDryRun = getters.getIsDryRun as jest.MockedFunction<typeof getters.getIsDryRun>; // eslint-disable-line max-len
+const gettersGetIsStrictMode = getters.getIsStrictMode as jest.MockedFunction<typeof getters.getIsStrictMode>; // eslint-disable-line max-len
+const gettersGetSvgoConfigPath = getters.getSvgoConfigPath as jest.MockedFunction<typeof getters.getSvgoConfigPath>; // eslint-disable-line max-len
+const gettersGetSvgoVersion = getters.getSvgoVersion as jest.MockedFunction<typeof getters.getSvgoVersion>; // eslint-disable-line max-len
+const helpersGetDefaultSvgoConfigPath = helpers.getDefaultSvgoConfigPath as jest.MockedFunction<typeof helpers.getDefaultSvgoConfigPath>; // eslint-disable-line max-len
 
 describe("inputs/index.ts", () => {
   describe("::New", () => {
@@ -37,7 +39,7 @@ describe("inputs/index.ts", () => {
       test("can get value", () => {
         const configuredValues = ["foobar"];
 
-        getters.getIgnoreGlobs.mockReturnValueOnce([
+        gettersGetIgnoreGlobs.mockReturnValueOnce([
           { provided, value: configuredValues },
           null,
         ]);
@@ -51,7 +53,7 @@ describe("inputs/index.ts", () => {
       test("can't get value", () => {
         const errorMsg = "couldn't get ignoreGlob";
 
-        getters.getIgnoreGlobs.mockReturnValueOnce([
+        gettersGetIgnoreGlobs.mockReturnValueOnce([
           { provided, value: [] },
           errors.New(errorMsg),
         ]);
@@ -78,7 +80,7 @@ describe("inputs/index.ts", () => {
       test("can get value", () => {
         const configuredValue = false;
 
-        getters.getIsDryRun.mockReturnValueOnce([
+        gettersGetIsDryRun.mockReturnValueOnce([
           { provided, value: configuredValue },
           null,
         ]);
@@ -92,7 +94,7 @@ describe("inputs/index.ts", () => {
       test("can't get value", () => {
         const errorMsg = "couldn't get dry-run";
 
-        getters.getIsDryRun.mockReturnValueOnce([
+        gettersGetIsDryRun.mockReturnValueOnce([
           { provided, value: true },
           errors.New(errorMsg),
         ]);
@@ -119,7 +121,7 @@ describe("inputs/index.ts", () => {
       test("can get value", () => {
         const configuredValue = false;
 
-        getters.getIsStrictMode.mockReturnValueOnce([
+        gettersGetIsStrictMode.mockReturnValueOnce([
           { provided, value: configuredValue },
           null,
         ]);
@@ -133,7 +135,7 @@ describe("inputs/index.ts", () => {
       test("can't get value", () => {
         const errorMsg = "couldn't get strict";
 
-        getters.getIsStrictMode.mockReturnValueOnce([
+        gettersGetIsStrictMode.mockReturnValueOnce([
           { provided, value: true },
           errors.New(errorMsg),
         ]);
@@ -158,13 +160,13 @@ describe("inputs/index.ts", () => {
 
     describe("svgoConfigPath", () => {
       beforeEach(() => {
-        getters.getSvgoConfigPath.mockClear();
+        gettersGetSvgoConfigPath.mockClear();
       });
 
       test("can get value", () => {
         const configuredValue = "foobar";
 
-        getters.getSvgoConfigPath.mockReturnValueOnce([
+        gettersGetSvgoConfigPath.mockReturnValueOnce([
           { provided, value: configuredValue },
           null,
         ]);
@@ -178,7 +180,7 @@ describe("inputs/index.ts", () => {
       test("can't get value", () => {
         const errorMsg = "couldn't get svgo-config";
 
-        getters.getSvgoConfigPath.mockReturnValueOnce([
+        gettersGetSvgoConfigPath.mockReturnValueOnce([
           { provided, value: "" },
           errors.New(errorMsg),
         ]);
@@ -195,11 +197,11 @@ describe("inputs/index.ts", () => {
         ["1", ".svgo.yml"],
         ["2", "svgo.config.js"],
       ])("default value", (svgoVersion, svgoConfigPath) => {
-        getters.getSvgoVersion.mockReturnValueOnce([
+        gettersGetSvgoVersion.mockReturnValueOnce([
           { provided, value: svgoVersion as SupportedSvgoVersions },
           null,
         ]);
-        helpers.getDefaultSvgoConfigPath.mockReturnValueOnce(svgoConfigPath);
+        helpersGetDefaultSvgoConfigPath.mockReturnValueOnce(svgoConfigPath);
 
         const [, err] = inputs.New({ inp });
 
@@ -218,7 +220,7 @@ describe("inputs/index.ts", () => {
       test("can get value", () => {
         const configuredValue =  "2";
 
-        getters.getSvgoVersion.mockReturnValueOnce([
+        gettersGetSvgoVersion.mockReturnValueOnce([
           { provided, value: configuredValue },
           null,
         ]);
@@ -232,7 +234,7 @@ describe("inputs/index.ts", () => {
       test("can't get value", () => {
         const errorMsg = "couldn't get svgo-version";
 
-        getters.getSvgoVersion.mockReturnValueOnce([
+        gettersGetSvgoVersion.mockReturnValueOnce([
           { provided, value: "2" },
           errors.New(errorMsg),
         ]);

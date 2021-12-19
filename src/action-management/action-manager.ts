@@ -1,26 +1,22 @@
-import type { Core } from "../types";
-import type { ActionManager, Condition } from "./types";
+import type { ActionManager, Condition, Core } from "./types";
 
 import { runIf } from "./helpers";
 
 class StandardActionManager implements ActionManager {
-  private core: Core;
-  private strict: boolean;
+  private fail: (msg: string) => void;
+  private strictFail: (msg: string) => void;
 
   constructor(core: Core, strict: boolean) {
-    this.core = core;
-    this.strict = strict;
+    this.fail = core.setFailed;
+    this.strictFail = strict ? core.setFailed : core.warning;
   }
 
   public failIf(condition: Condition, msg: string): void {
-    runIf(condition, () => this.core.setFailed(msg));
+    runIf(condition, () => this.fail(msg));
   }
 
   public strictFailIf(condition: Condition, msg: string): void {
-    runIf(
-      condition,
-      () => this.strict ? this.core.setFailed(msg) : this.core.warning(msg),
-    );
+    runIf(condition, () => this.strictFail(msg));
   }
 }
 

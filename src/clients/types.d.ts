@@ -1,4 +1,6 @@
-import type { error } from "../types";
+import type { error } from "../errors";
+import type { GitHub } from "../types";
+import type { GitHub as _GitHub } from "@actions/github/lib/utils";
 
 interface CommitsGetCommitParams {
   readonly owner: string;
@@ -7,12 +9,12 @@ interface CommitsGetCommitParams {
 }
 
 interface CommitsGetCommitResponse {
-  readonly files: GitFileInfo[];
+  readonly files: Iterable<GitFileInfo>;
 }
 
 type CommitsListFilesParams = CommitsGetCommitParams;
 
-type CommitsListFilesResponse = GitFileInfo[];
+type CommitsListFilesResponse = Iterable<GitFileInfo>;
 
 interface GitFileInfo {
   readonly filename: string;
@@ -32,6 +34,12 @@ interface GitHubClient {
   };
 }
 
+interface Inputter {
+  getInput(name: string, options: { required: boolean; }): string;
+}
+
+type Octokit = InstanceType<typeof _GitHub>;
+
 interface PullsListFilesParams {
   readonly owner: string;
   readonly page?: number;
@@ -40,7 +48,7 @@ interface PullsListFilesParams {
   readonly repo: string;
 }
 
-type PullsListFilesResponse = GitFileInfo[];
+type PullsListFilesResponse = Iterable<GitFileInfo>;
 
 export type {
   CommitsGetCommitParams,
@@ -48,7 +56,10 @@ export type {
   CommitsListFilesParams,
   CommitsListFilesResponse,
   GitFileInfo,
+  GitHub,
   GitHubClient,
+  Inputter,
+  Octokit,
   PullsListFilesParams,
   PullsListFilesResponse,
 };

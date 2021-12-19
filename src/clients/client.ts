@@ -1,4 +1,4 @@
-import type { error, Octokit } from "../types";
+import type { error } from "../errors";
 import type {
   CommitsGetCommitParams,
   CommitsGetCommitResponse,
@@ -6,6 +6,7 @@ import type {
   CommitsListFilesResponse,
   GitFileInfo,
   GitHubClient,
+  Octokit,
   PullsListFilesParams,
   PullsListFilesResponse,
 } from "./types";
@@ -38,7 +39,7 @@ class CommitsClient {
   private async getCommit(
     params: CommitsGetCommitParams,
   ): Promise<[CommitsGetCommitResponse, error]> {
-    let result: CommitsGetCommitResponse = { } as CommitsGetCommitResponse;
+    let result: CommitsGetCommitResponse = { files: [] };
     let err: error = null;
 
     try {
@@ -59,7 +60,7 @@ class CommitsClient {
   public async listFiles(
     params: CommitsListFilesParams,
   ): Promise<[CommitsListFilesResponse, error]> {
-    let result: GitFileInfo[] = [];
+    let result: Iterable<GitFileInfo> = [];
 
     const [commit, err] = await this.getCommit(params);
     if (err === null) {

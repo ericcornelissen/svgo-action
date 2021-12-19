@@ -1,5 +1,3 @@
-import { mocked } from "ts-jest/utils";
-
 jest.mock("../../../src/errors");
 jest.mock("../../../src/parsers");
 
@@ -7,9 +5,10 @@ import errors from "../../../src/errors";
 import {
   parseRawSvgoConfig,
 } from "../../../src/helpers/svgo-config";
-import _parsers from "../../../src/parsers";
+import parsers from "../../../src/parsers";
 
-const parsers = mocked(_parsers);
+const parsersNewYaml = parsers.NewYaml as jest.MockedFunction<typeof parsers.NewYaml>; // eslint-disable-line max-len
+const parsersNewJavaScript = parsers.NewJavaScript as jest.MockedFunction<typeof parsers.NewJavaScript>; // eslint-disable-line max-len
 
 describe("helpers/svgo-config.ts", () => {
   describe("::parseRawSvgoConfig", () => {
@@ -41,7 +40,7 @@ describe("helpers/svgo-config.ts", () => {
       ];
 
       beforeEach(() => {
-        parsers.NewYaml.mockClear();
+        parsersNewYaml.mockClear();
       });
 
       test.each(svgoConfigPaths)("parse success (%s)", (svgoConfigPath) => {
@@ -49,7 +48,7 @@ describe("helpers/svgo-config.ts", () => {
           svgoConfigPath: { value: svgoConfigPath },
         });
 
-        parsers.NewYaml.mockReturnValue(successParser);
+        parsersNewYaml.mockReturnValue(successParser);
 
         const [result, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).toBeNull();
@@ -64,7 +63,7 @@ describe("helpers/svgo-config.ts", () => {
           svgoConfigPath: { value: svgoConfigPath },
         });
 
-        parsers.NewYaml.mockReturnValue(errorParser);
+        parsersNewYaml.mockReturnValue(errorParser);
 
         const [, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).not.toBeNull();
@@ -81,7 +80,7 @@ describe("helpers/svgo-config.ts", () => {
       ];
 
       beforeEach(() => {
-        parsers.NewJavaScript.mockClear();
+        parsersNewJavaScript.mockClear();
       });
 
       test.each(svgoConfigPaths)("parse success (%s)", (svgoConfigPath) => {
@@ -89,7 +88,7 @@ describe("helpers/svgo-config.ts", () => {
           svgoConfigPath: { value: svgoConfigPath },
         });
 
-        parsers.NewJavaScript.mockReturnValue(successParser);
+        parsersNewJavaScript.mockReturnValue(successParser);
 
         const [result, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).toBeNull();
@@ -104,7 +103,7 @@ describe("helpers/svgo-config.ts", () => {
           svgoConfigPath: { value: svgoConfigPath },
         });
 
-        parsers.NewJavaScript.mockReturnValue(errorParser);
+        parsersNewJavaScript.mockReturnValue(errorParser);
 
         const [, err] = parseRawSvgoConfig({ config, rawConfig });
         expect(err).not.toBeNull();

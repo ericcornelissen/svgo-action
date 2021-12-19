@@ -1,8 +1,10 @@
 import type { FilterFn } from "./types";
 
+const SVG_FILE_EXTENSION = ".svg";
+
 function NewSvgsFilter(): FilterFn {
-  return function(filepath: string): boolean {
-    return filepath.endsWith(".svg");
+  return (filepath: string): boolean => {
+    return filepath.endsWith(SVG_FILE_EXTENSION);
   };
 }
 
