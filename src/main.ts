@@ -33,7 +33,7 @@ async function main({ core, github }: Params): Promise<void> {
     core.info("Dry mode enabled, no changes will be written");
   }
 
-  core.debug("Checking if event is supported");
+  core.debug("Checking if the event is supported");
   const [event, ok0] = isEventSupported(github);
   core.info(`Running SVGO Action in '${event}' context`);
   action.strictFailIf(!ok0, `Event not supported '${event}'`);

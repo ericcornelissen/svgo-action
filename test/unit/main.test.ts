@@ -102,6 +102,50 @@ describe("main.ts", () => {
         expect.stringContaining(`'${eventName}'`),
       );
     });
+
+    test("the debug logs", async () => {
+      await main({ core, github });
+
+      expect(core.debug).toHaveBeenCalledWith(
+        "Getting input",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Initializing ActionManagement",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Checking if dry-run is enabled",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Checking if the event is supported",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Initializing GitHub client",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Initializing FileSystem to read SVGO config",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        expect.stringMatching("Reading the SVGO config file at .*"),
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Parsing SVGO configuration",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Initializing SVGO",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Initializing optimization filters",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Initializing FileSystem to read SVGs",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Optimizing SVGs",
+      );
+      expect(core.debug).toHaveBeenCalledWith(
+        "Setting outputs",
+      );
+    });
   });
 
   describe("Dry mode", () => {
