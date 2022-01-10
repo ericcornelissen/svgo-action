@@ -63,9 +63,7 @@ class CommitsClient {
     let result: Iterable<GitFileInfo> = [];
 
     const [commit, err] = await this.getCommit(params);
-    if (err === null) {
-      result = commit.files;
-    }
+    result = commit.files;
 
     return [result, err];
   }
