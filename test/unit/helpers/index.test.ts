@@ -1,11 +1,7 @@
-jest.mock("../../../src/helpers/deprecation");
 jest.mock("../../../src/helpers/events");
 jest.mock("../../../src/helpers/filters");
 jest.mock("../../../src/helpers/svgo-config");
 
-import {
-  deprecationWarnings,
-} from "../../../src/helpers/deprecation";
 import {
   isClientRequired,
   isEventSupported,
@@ -19,10 +15,6 @@ import {
 } from "../../../src/helpers/svgo-config";
 
 describe("helpers/index.ts", () => {
-  test("::deprecationWarnings", () => {
-    expect(helpers.deprecationWarnings).toBe(deprecationWarnings);
-  });
-
   test("::getFilters", () => {
     expect(helpers.getFilters).toBe(getFilters);
   });

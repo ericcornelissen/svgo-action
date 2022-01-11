@@ -11,7 +11,6 @@ import svgoV1 from "../../../src/svgo/v1";
 import svgoV2 from "../../../src/svgo/v2";
 
 const importCwdSilent = importCwd.silent as jest.MockedFunction<typeof importCwd.silent>; // eslint-disable-line max-len
-const svgoV1New = svgoV1.New as jest.MockedFunction<typeof svgoV1.New>;
 const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
 
 describe("svgo/project.ts", () => {
@@ -26,7 +25,6 @@ describe("svgo/project.ts", () => {
     beforeEach(() => {
       importCwdSilent.mockReset();
 
-      svgoV1New.mockClear();
       svgoV2New.mockClear();
     });
 

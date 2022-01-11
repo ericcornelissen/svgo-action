@@ -4,7 +4,6 @@ import actionManagement from "./action-management";
 import clients from "./clients";
 import fileSystems from "./file-systems";
 import {
-  deprecationWarnings,
   getFilters,
   isClientRequired,
   isEventSupported,
@@ -62,7 +61,6 @@ async function main({ core, github }: Params): Promise<void> {
 
   core.debug("Initializing SVGO");
   const [optimizer, err4] = svgo.New({ config, svgoConfig });
-  deprecationWarnings({ config, core });
   action.failIf(err4, "Could not initialize SVGO");
 
   core.debug("Initializing optimization filters");

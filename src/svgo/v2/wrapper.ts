@@ -1,14 +1,13 @@
 import type { error } from "../../errors";
-import type { SVGOptions } from "./types";
-import type svgo from "svgo-v2"; // eslint-disable-line import/default
+import type { SVGO, SVGOptions } from "./types";
 
 import errors from "../../errors";
 
 class SVGOptimizer {
   private options: SVGOptions;
-  private svgo: svgo;
+  private svgo: SVGO;
 
-  constructor(svgo: svgo, options: SVGOptions) {
+  constructor(svgo: SVGO, options: SVGOptions) {
     this.svgo = svgo;
     this.options = options;
   }

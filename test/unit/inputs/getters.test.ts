@@ -286,7 +286,6 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
-      "1",
       "2",
       "project",
     ])("can get input, valid ('%s')", (configuredValue) => {
@@ -294,7 +293,7 @@ describe("inputs/getters.ts", () => {
         .calledWith(inputKey, expect.anything())
         .mockReturnValue(`${configuredValue}`);
 
-      const defaultValue = configuredValue === "1" ? "2" : "1";
+      const defaultValue = configuredValue === "2" ? "project" : "2";
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
       expect(result.value).toBe(configuredValue);

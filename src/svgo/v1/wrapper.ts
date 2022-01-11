@@ -1,13 +1,12 @@
 import type { error } from "../../errors";
-import type { SVGOptions } from "./types";
-import type svgo from "svgo-v1";
+import type { SVGO, SVGOptions } from "./types";
 
 import errors from "../../errors";
 
 class SvgoV1Wrapper {
-  private svgo: svgo;
+  private svgo: InstanceType<SVGO>;
 
-  constructor(svgo: svgo, options: SVGOptions) {
+  constructor(svgo: SVGO, options: SVGOptions) {
     this.svgo = new svgo(options);
   }
 

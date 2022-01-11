@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
+## [v3.0.0] - TBD
+
+### Breaking changes
+
+- Drop **built-in** support for SVGO v1.
+
 ## [Unreleased]
 
 - Specify permissions in documentation. ([#486])

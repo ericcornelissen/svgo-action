@@ -150,7 +150,7 @@ function getSvgoVersion(
   const input = getStringInput({ inp, inputName, defaultValue });
 
   const svgoVersion = input.value;
-  if (svgoVersion !== "1" && svgoVersion !== "2" && svgoVersion !== "project") {
+  if (svgoVersion !== "2" && svgoVersion !== "project") {
     return [
       { ...input, value: defaultValue },
       errors.New(`unsupported SVGO version '${svgoVersion}'`),

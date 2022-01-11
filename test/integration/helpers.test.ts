@@ -1,4 +1,3 @@
-import type { SupportedSvgoVersions } from "../../src/svgo";
 import type { Octokit } from "../../src/types";
 
 jest.dontMock("js-yaml");
@@ -8,12 +7,10 @@ jest.dontMock("node-eval");
 jest.mock("@actions/core");
 jest.mock("@actions/github");
 
-import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 import clients from "../../src/clients";
 import {
-  deprecationWarnings,
   getFilters,
   isClientRequired,
   isEventSupported,
@@ -29,22 +26,6 @@ describe("package helpers", () => {
   const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";
   const EVENT_SCHEDULE = "schedule";
   const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
-
-  describe("::deprecationWarnings", () => {
-    test.each([
-      "1",
-      "2",
-      "project",
-    ])("does not fail (%s)", (svgoVersion) => {
-      const config = {
-        svgoVersion: {
-          value: svgoVersion as SupportedSvgoVersions,
-        },
-      };
-
-      expect(() => deprecationWarnings({ config, core })).not.toThrow();
-    });
-  });
 
   describe("::getFilters", () => {
     let client;
