@@ -74,17 +74,25 @@ jobs:
           file: ./_reports/coverage/lcov.info
           flags: ${{ matrix.type }}
   test-e2e:
-    name: Test - end-to-end (SVGO ${{ matrix.svgo.version }})
+    name: Test - end-to-end (${{ matrix.test.description }})
     needs: [test]
     strategy:
       matrix:
-        svgo:
-          - version: 1
-            config: test/end-to-end/.svgo.yml
-          - version: 2
-            config: test/end-to-end/svgo.config.js
-          - version: project
-            config: test/end-to-end/svgo.config.js
+        test:
+          - description: built-in, v1
+            svgo-version: 1
+            svgo-config: test/end-to-end/.svgo.yml
+          - description: built-in, v2
+            svgo-version: 2
+            svgo-config: test/end-to-end/svgo.config.js
+          - description: project, v1
+            svgo-version: project
+            svgo-config: test/end-to-end/.svgo.yml
+            project-svgo-version: ^1.0.0
+          - description: project, v2
+            svgo-version: project
+            svgo-config: test/end-to-end/svgo.config.js
+            project-svgo-version: ^2.0.0
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -97,8 +105,8 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Install Package-local SVGO
-        if: ${{ matrix.svgo.version == 'project' }}
-        run: npm install --no-save svgo@^2.0.0
+        if: ${{ matrix.test.svgo-version == 'project' }}
+        run: npm install --no-save svgo@${{ matrix.test.project-svgo-version }}
       - name: Build SVGO Action
         run: npm run build
       - name: Get the content of SVGs
@@ -134,8 +142,8 @@ jobs:
         uses: ./
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          svgo-config: ${{ matrix.svgo.config }}
-          svgo-version: ${{ matrix.svgo.version }}
+          svgo-config: ${{ matrix.test.svgo-config }}
+          svgo-version: ${{ matrix.test.svgo-version }}
           ignore: |
             test/end-to-end/ignore/*
       - name: Check the output value
