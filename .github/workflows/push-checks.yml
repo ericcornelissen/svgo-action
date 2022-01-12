@@ -79,9 +79,6 @@ jobs:
     strategy:
       matrix:
         test:
-          - description: built-in, v1
-            svgo-version: 1
-            svgo-config: test/end-to-end/.svgo.yml
           - description: built-in, v2
             svgo-version: 2
             svgo-config: test/end-to-end/svgo.config.js
