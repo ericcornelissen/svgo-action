@@ -111,6 +111,8 @@ module.exports = {
     "jest/no-alias-methods": ["error"],
     "jest/no-duplicate-hooks": "off",
     "jest/no-if": ["error"],
+    "jest/prefer-comparison-matcher": ["error"],
+    "jest/prefer-equality-matcher": ["error"],
     "jest/prefer-to-be": ["error"],
     "jest/prefer-to-contain": ["error"],
     "jest/prefer-to-have-length": ["error"],
