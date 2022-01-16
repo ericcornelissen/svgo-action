@@ -1,7 +1,7 @@
 name: Update
 on:
   push:
-    branches: [main, main-v1]
+    branches: [main, main-v3]
 
 permissions: read-all
 
