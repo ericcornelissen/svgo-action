@@ -202,9 +202,3 @@ jobs:
         env:
           CI: true
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_TOKEN }}
-      - name: Upload mutation report as artifact
-        uses: actions/upload-artifact@v2.3.1
-        with:
-          name: mutation-report-${{ github.sha }}
-          path: |
-            _reports/mutation
