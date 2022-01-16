@@ -20,6 +20,7 @@ module.exports = {
 
   reporters: [
     "clear-text",
+    "dashboard",
     "html",
     "progress",
   ],
