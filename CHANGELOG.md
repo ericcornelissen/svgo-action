@@ -13,6 +13,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.4] - 2022-01-13
+
 - Specify permissions in documentation. ([#486])
 - Improve clarity of example workflows in documentation. ([#486])
 - Improve logging. ([#498])
