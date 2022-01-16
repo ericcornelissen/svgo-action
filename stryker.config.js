@@ -27,9 +27,9 @@ module.exports = {
     baseDir: "_reports/mutation",
   },
   thresholds: {
-    high: 80,
-    low: 70,
-    break: 50,
+    high: 95,
+    low: 85,
+    break: 80,
   },
 
   tempDirName: ".temp/stryker",
