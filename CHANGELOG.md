@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.13] - 2022-01-27
+
 - (Security) Update dependency `node-fetch` to non-vulnerable version. ([#505])
 
 ## [1.3.12] - 2021-11-02
