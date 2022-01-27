@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- (Security) Update dependency `node-fetch` to non-vulnerable version. ([#505])
 
 ## [1.3.12] - 2021-11-02
 
@@ -270,4 +270,5 @@ Versioning].
 [#449]: https://github.com/ericcornelissen/svgo-action/pull/449
 [#469]: https://github.com/ericcornelissen/svgo-action/pull/469
 [#480]: https://github.com/ericcornelissen/svgo-action/pull/480
+[#505]: https://github.com/ericcornelissen/svgo-action/pull/505
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
