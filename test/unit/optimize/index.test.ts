@@ -106,7 +106,7 @@ describe("optimize/index.ts", () => {
         writeFiles.mockResolvedValueOnce(writeError);
 
         const [, err] = await optimize.Files({ config, fs, optimizer });
-        if (isDryRun) {
+        if (isDryRun) { // eslint-disable-line jest/no-conditional-in-test
           expect(err).toBeNull(); // eslint-disable-line jest/no-conditional-expect
           writeFiles(fs, []);
         } else {
