@@ -17,11 +17,11 @@ jobs:
       security-events: write
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2.4.0
+        uses: actions/checkout@v3.0.0
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1.0.31
+        uses: github/codeql-action/init@v1.1.3
         with:
           config-file: ./.github/codeql-config.yml
           languages: javascript
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1.0.31
+        uses: github/codeql-action/analyze@v1.1.3
