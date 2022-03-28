@@ -71,7 +71,7 @@ jobs:
         uses: codecov/codecov-action@v2.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./_reports/coverage/lcov.info
+          file: ./_reports/coverage/${{ matrix.type }}/lcov.info
           flags: ${{ matrix.type }}
   test-e2e:
     name: Test - end-to-end (${{ matrix.test.description }})
