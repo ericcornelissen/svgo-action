@@ -3,7 +3,7 @@
 . "$(dirname $0)/common.sh"
 
 if [ ! $(IS_MERGING) ]; then
-  git stash --quiet --include-untracked --keep-index
+  git stash push --quiet --include-untracked --keep-index
 fi
 
 # Format source code and update staged files
