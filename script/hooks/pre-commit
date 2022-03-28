@@ -1,12 +1,15 @@
 #!/bin/sh
 . "$(dirname $0)/_/husky.sh"
+. "$(dirname $0)/common.sh"
 
-# Stash unstaged files
-git stash -q -u --keep-index
+if [ ! $(IS_MERGING) ]; then
+  git stash push --quiet --include-untracked --keep-index
+fi
 
 # Format source code and update staged files
 npm run format
 git update-index --again
 
-# Restore unstaged files
-git stash pop -q || true
+if [ $(DID_STASH) ]; then
+  git stash pop --quiet
+fi

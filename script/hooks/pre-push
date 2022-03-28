@@ -1,12 +1,15 @@
 #!/bin/sh
 . "$(dirname $0)/_/husky.sh"
+. "$(dirname $0)/common.sh"
 
-# Stash unstaged files
-git stash -q -u --keep-index
+if [ ! $(IS_MERGING) ]; then
+  git stash push --quiet --include-untracked
+fi
 
 # Ensure tests and linting pass
 npm run lint
 npm run test:unit
 
-# Restore unstaged files
-git stash pop -q || true
+if [ $(DID_STASH) ]; then
+  git stash pop --quiet --index
+fi
