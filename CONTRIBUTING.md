@@ -23,8 +23,10 @@ relevant sections of this document.
   - [End-to-End Tests](#end-to-end-tests)
   - [Mutation Testing](#mutation-testing)
 
-> :information_source: If you want to make a contribution to v1 of the Action,
-> please refer to the [Contributing Guidelines for v1].
+> :information_source: This document covers contributing to v2 of the Action. If
+> you want to make a contribution to the latest version of the Action check out
+> the [Contributing Guidelines on `main`]. If you want to make a contribution to
+> v1 of the Action, please refer to the [Contributing Guidelines for v1].
 
 ---
 
@@ -95,10 +97,10 @@ you need an extra package to be able to enforce your style please add it as a
 If you decide to make a contribution, please do use the following workflow:
 
 - Fork the repository.
-- Create a new branch from the latest `main`.
+- Create a new branch from the latest `main-v2`.
 - Make your changes on the new branch.
 - Commit to the new branch and push the commit(s).
-- Open a Pull Request against `main`.
+- Open a Pull Request against `main-v2`.
 
 ## Project Setup
 
@@ -224,6 +226,7 @@ change the Stryker configuration as follows.
 ```
 
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
+[contributing guidelines on `main`]: https://github.com/ericcornelissen/svgo-action/blob/main/CONTRIBUTING.md
 [contributing guidelines for v1]: https://github.com/ericcornelissen/svgo-action/blob/main-v1/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [editorconfig]: https://editorconfig.org/
