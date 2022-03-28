@@ -1,8 +1,11 @@
 const process = require("process");
 
-const coverageSubDir = process.argv.includes("test/integration") ?
-  "integration" :
-  "unit";
+let coverageSubDir = "all";
+if (process.argv.includes("test/integration")) {
+  coverageSubDir = "integration";
+} else if (process.argv.includes("test/unit")) {
+  coverageSubDir = "unit";
+}
 
 module.exports = {
   preset: "ts-jest",
