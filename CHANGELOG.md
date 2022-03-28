@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Use file handles when reading and writing files ([#518])
 
 ## [2.1.5] - 2022-01-27
 
@@ -385,5 +385,6 @@ Versioning].
 [#498]: https://github.com/ericcornelissen/svgo-action/pull/498
 [#505]: https://github.com/ericcornelissen/svgo-action/pull/505
 [#506]: https://github.com/ericcornelissen/svgo-action/pull/506
+[#518]: https://github.com/ericcornelissen/svgo-action/pull/518
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

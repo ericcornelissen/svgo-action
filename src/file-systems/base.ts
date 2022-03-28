@@ -18,9 +18,10 @@ interface Params {
     lstatSync(path: string): {
       isFile(): boolean;
     };
+    openSync(path: string, flags: "r" | "w"): number;
     readdirSync(path: string): Iterable<string>;
-    readFileSync(path: string): Buffer;
-    writeFileSync(path: string, content: string): void;
+    readFileSync(handle: number): Buffer;
+    writeFileSync(handle: number, content: string): void;
   };
   readonly path: {
     resolve(...paths: string[]): string;
@@ -79,22 +80,22 @@ function newListFiles(params: Params): ListFilesFn {
 function newReadFile({ fs }: Params): ReadFileFn {
   return async function(file: FileHandle): Promise<[string, error]> {
     return new Promise((resolve) => {
-      if (!fs.existsSync(file.path)) {
-        const err = errors.New("file not found");
-        resolve(["", err]);
-      } else {
-        let content = "";
-        let err: error = null;
+      let content = "";
+      let err: error = null;
+      try {
+        const fileHandle = fs.openSync(file.path, "r");
 
         try {
-          const buffer = fs.readFileSync(file.path);
+          const buffer = fs.readFileSync(fileHandle);
           content = buffer.toString();
         } catch (thrownError) {
           err = errors.New(`cannot read file '${file.path}' (${thrownError})`);
         }
-
-        resolve([content, err]);
+      } catch (thrownError) {
+        err = errors.New("file not found");
       }
+
+      resolve([content, err]);
     });
   };
 }
@@ -106,11 +107,16 @@ function newWriteFile({ fs }: Params): WriteFileFn {
   ): Promise<error> {
     return new Promise((resolve) => {
       let err: error = null;
-
       try {
-        fs.writeFileSync(file.path, content);
+        const fileHandle = fs.openSync(file.path, "w");
+
+        try {
+          fs.writeFileSync(fileHandle, content);
+        } catch (thrownError) {
+          err = errors.New(`cannot write file '${file.path}' (${thrownError})`);
+        }
       } catch (thrownError) {
-        err = errors.New(`cannot write file '${file.path}' (${thrownError})`);
+        err = errors.New("cannot open file");
       }
 
       resolve(err);
