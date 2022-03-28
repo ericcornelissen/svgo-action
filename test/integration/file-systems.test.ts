@@ -8,6 +8,7 @@ import fileSystems from "../../src/file-systems";
 
 const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const fsLstatSync = fs.lstatSync as jest.MockedFunction<typeof fs.lstatSync>;
+const fsOpenSync = fs.openSync as jest.MockedFunction<typeof fs.openSync>;
 const fsReaddirSync = fs.readdirSync as jest.MockedFunction<typeof fs.readdirSync>; // eslint-disable-line max-len
 const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>; // eslint-disable-line max-len
 const fsWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>; // eslint-disable-line max-len
@@ -70,7 +71,7 @@ describe("package file-systems", () => {
     const fileHandle = { path: "foo.bar" };
 
     beforeEach(() => {
-      fsExistsSync.mockClear();
+      fsOpenSync.mockClear();
       fsReadFileSync.mockClear();
     });
 
@@ -78,7 +79,7 @@ describe("package file-systems", () => {
       const filters = NO_FILTERS;
       const fileContent = "Hello world!";
 
-      fsExistsSync.mockReturnValueOnce(true);
+      fsOpenSync.mockReturnValueOnce(1);
       fsReadFileSync.mockReturnValueOnce(fileContent);
 
       const fileSystem = fileSystems.New({ filters });
@@ -91,7 +92,7 @@ describe("package file-systems", () => {
     test("read failure", async () => {
       const filters = NO_FILTERS;
 
-      fsExistsSync.mockReturnValueOnce(true);
+      fsOpenSync.mockReturnValueOnce(1);
       fsReadFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const fileSystem = fileSystems.New({ filters });
@@ -103,7 +104,7 @@ describe("package file-systems", () => {
     test("file does not exists", async () => {
       const filters = NO_FILTERS;
 
-      fsExistsSync.mockReturnValueOnce(false);
+      fsOpenSync.mockImplementationOnce(() => { throw new Error(); });
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -114,7 +115,7 @@ describe("package file-systems", () => {
     test("file is filtered out", async () => {
       const filters = [() => false];
 
-      fsExistsSync.mockReturnValueOnce(true);
+      fsOpenSync.mockReturnValueOnce(1);
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -128,6 +129,7 @@ describe("package file-systems", () => {
     const fileContent = "Hello world!";
 
     beforeEach(() => {
+      fsOpenSync.mockClear();
       fsWriteFileSync.mockClear();
     });
 
@@ -144,6 +146,17 @@ describe("package file-systems", () => {
       const filters = NO_FILTERS;
 
       fsWriteFileSync.mockImplementationOnce(() => { throw new Error(); });
+
+      const fileSystem = fileSystems.New({ filters });
+
+      const err = await fileSystem.writeFile(fileHandle, fileContent);
+      expect(err).not.toBeNull();
+    });
+
+    test("file cannot be opened", async () => {
+      const filters = NO_FILTERS;
+
+      fsOpenSync.mockImplementationOnce(() => { throw new Error(); });
 
       const fileSystem = fileSystems.New({ filters });
 

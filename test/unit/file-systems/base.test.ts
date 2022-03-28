@@ -13,6 +13,7 @@ import NewBaseFileSystem from "../../../src/file-systems/base";
 
 const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const fsLstatSync = fs.lstatSync as jest.MockedFunction<typeof fs.lstatSync>;
+const fsOpenSync = fs.openSync as jest.MockedFunction<typeof fs.openSync>;
 const fsReaddirSync = fs.readdirSync as jest.MockedFunction<typeof fs.readdirSync>; // eslint-disable-line max-len
 const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>; // eslint-disable-line max-len
 const fsWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>; // eslint-disable-line max-len
@@ -122,7 +123,7 @@ describe("file-systems/base.ts", () => {
     };
 
     beforeEach(() => {
-      fsExistsSync.mockClear();
+      fsOpenSync.mockClear();
       fsReadFileSync.mockClear();
     });
 
@@ -131,22 +132,23 @@ describe("file-systems/base.ts", () => {
       "Hello world!",
     ])("read success (content: '%s')", async (content) => {
       const testFile = file;
+      const fileHandle = content.length;
 
-      fsExistsSync.mockReturnValueOnce(true);
+      fsOpenSync.mockReturnValueOnce(fileHandle);
       fsReadFileSync.mockReturnValueOnce(Buffer.from(content));
 
       const [, err]  = await fileSystem.readFile(testFile);
       expect(err).toBeNull();
 
-      expect(fs.existsSync).toHaveBeenCalledTimes(1);
-      expect(fs.existsSync).toHaveBeenCalledWith(testFile.path);
+      expect(fs.openSync).toHaveBeenCalledTimes(1);
+      expect(fs.openSync).toHaveBeenCalledWith(testFile.path, "r");
 
       expect(fs.readFileSync).toHaveBeenCalledTimes(1);
-      expect(fs.readFileSync).toHaveBeenCalledWith(testFile.path);
+      expect(fs.readFileSync).toHaveBeenCalledWith(fileHandle);
     });
 
     test("file doesn't exist", async () => {
-      fsExistsSync.mockReturnValueOnce(false);
+      fsOpenSync.mockImplementationOnce(() => { throw new Error(); });
 
       const [result, err] = await fileSystem.readFile("foo.bar");
       expect(err).not.toBeNull();
@@ -155,7 +157,7 @@ describe("file-systems/base.ts", () => {
     });
 
     test("read failure when file exists", async () => {
-      fsExistsSync.mockReturnValueOnce(true);
+      fsOpenSync.mockReturnValueOnce(1);
       fsReadFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const [result, err]  = await fileSystem.readFile("foo.bar");
@@ -171,6 +173,7 @@ describe("file-systems/base.ts", () => {
     };
 
     beforeEach(() => {
+      fsOpenSync.mockClear();
       fsWriteFileSync.mockClear();
     });
 
@@ -178,21 +181,36 @@ describe("file-systems/base.ts", () => {
       "foobar",
       "Hello world!",
     ])("write success (content: '%s')", async (content) => {
+      const fileHandle = content.length;
+
+      fsOpenSync.mockReturnValueOnce(fileHandle);
       fsWriteFileSync.mockReturnValueOnce(undefined);
 
       const err = await fileSystem.writeFile(file, content);
       expect(err).toBeNull();
 
+      expect(fs.openSync).toHaveBeenCalledTimes(1);
+      expect(fs.openSync).toHaveBeenCalledWith(file.path, "w");
+
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-      expect(fs.writeFileSync).toHaveBeenCalledWith(file.path, content);
+      expect(fs.writeFileSync).toHaveBeenCalledWith(fileHandle, content);
     });
 
     test("write error", async () => {
+      fsOpenSync.mockReturnValueOnce(1);
       fsWriteFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const err = await fileSystem.writeFile(file, "foobar");
       expect(err).not.toBeNull();
       expect(err).toContain("cannot write file");
+    });
+
+    test("open error", async () => {
+      fsOpenSync.mockImplementationOnce(() => { throw new Error(); });
+
+      const err = await fileSystem.writeFile(file, "foobar");
+      expect(err).not.toBeNull();
+      expect(err).toContain("cannot open file");
     });
   });
 });

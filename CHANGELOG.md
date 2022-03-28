@@ -13,7 +13,11 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Use file handles when reading and writing files ([#518])
+
+## [2.1.5] - 2022-01-27
+
+- (Security) Update dependency `node-fetch` to non-vulnerable version. ([#506])
 
 ## [2.1.4] - 2022-01-13
 
@@ -88,6 +92,10 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.13] - 2022-01-27
+
+- (Security) Update dependency `node-fetch` to non-vulnerable version. ([#505])
 
 ## [1.3.12] - 2021-11-02
 
@@ -381,5 +389,8 @@ Versioning].
 [#481]: https://github.com/ericcornelissen/svgo-action/pull/481
 [#486]: https://github.com/ericcornelissen/svgo-action/pull/486
 [#498]: https://github.com/ericcornelissen/svgo-action/pull/498
+[#505]: https://github.com/ericcornelissen/svgo-action/pull/505
+[#506]: https://github.com/ericcornelissen/svgo-action/pull/506
+[#518]: https://github.com/ericcornelissen/svgo-action/pull/518
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

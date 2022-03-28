@@ -50,7 +50,10 @@ describe("action-management/action-manager.ts", () => {
     });
   });
 
-  describe.each([true, false])("::strictFailIf (strict=%s)", (strict) => {
+  describe.each([
+    [true, core.setFailed],
+    [false, core.warning],
+  ])("::strictFailIf (strict=%s)", (strict, callbackFn) => {
     const msg = "Hello world!";
 
     let actionManager;
@@ -73,8 +76,6 @@ describe("action-management/action-manager.ts", () => {
     });
 
     test("calls the correct function", () => {
-      const callbackFn = strict ? core.setFailed : core.warning; // eslint-disable-line jest/no-if
-
       helpersRunIf.mockImplementationOnce((_, fn) => fn());
 
       actionManager.strictFailIf(false, msg);

@@ -72,7 +72,7 @@ describe("package svgo", () => {
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(validSvg);
-        expect(svgoVersion === "2" ? err1 : "").not.toBeNull();
+        expect(svgoVersion === "2" ? err1 : "").not.toBeNull(); // eslint-disable-line jest/no-conditional-in-test
       });
     });
 

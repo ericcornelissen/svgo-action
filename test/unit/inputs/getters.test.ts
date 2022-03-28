@@ -9,6 +9,7 @@ import {
   getSvgoConfigPath,
   getSvgoVersion,
 } from "../../../src/inputs/getters";
+import { SupportedSvgoVersions } from "../../../src/svgo";
 import inp from "../../__common__/inputter.mock";
 
 describe("inputs/getters.ts", () => {
@@ -286,14 +287,16 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
-      "2",
-      "project",
-    ])("can get input, valid ('%s')", (configuredValue) => {
+      ["2", "project"],
+      ["project", "2"],
+    ])("can get input, valid ('%s')", (configuredValue, _defaultValue) => {
+      expect(configuredValue).not.toEqual(_defaultValue);
+      const defaultValue = _defaultValue as SupportedSvgoVersions;
+
       when(inp.getInput)
         .calledWith(inputKey, expect.anything())
         .mockReturnValue(`${configuredValue}`);
 
-      const defaultValue = configuredValue === "2" ? "project" : "2";
       const [result, err] = getSvgoVersion(inp, defaultValue);
       expect(err).toBeNull();
       expect(result.value).toBe(configuredValue);
