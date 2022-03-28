@@ -173,6 +173,7 @@ describe("file-systems/base.ts", () => {
     };
 
     beforeEach(() => {
+      fsOpenSync.mockClear();
       fsWriteFileSync.mockClear();
     });
 
@@ -180,21 +181,36 @@ describe("file-systems/base.ts", () => {
       "foobar",
       "Hello world!",
     ])("write success (content: '%s')", async (content) => {
+      const fileHandle = content.length;
+
+      fsOpenSync.mockReturnValueOnce(fileHandle);
       fsWriteFileSync.mockReturnValueOnce(undefined);
 
       const err = await fileSystem.writeFile(file, content);
       expect(err).toBeNull();
 
+      expect(fs.openSync).toHaveBeenCalledTimes(1);
+      expect(fs.openSync).toHaveBeenCalledWith(file.path, "w");
+
       expect(fs.writeFileSync).toHaveBeenCalledTimes(1);
-      expect(fs.writeFileSync).toHaveBeenCalledWith(file.path, content);
+      expect(fs.writeFileSync).toHaveBeenCalledWith(fileHandle, content);
     });
 
     test("write error", async () => {
+      fsOpenSync.mockReturnValueOnce(1);
       fsWriteFileSync.mockImplementationOnce(() => { throw new Error(); });
 
       const err = await fileSystem.writeFile(file, "foobar");
       expect(err).not.toBeNull();
       expect(err).toContain("cannot write file");
+    });
+
+    test("open error", async () => {
+      fsOpenSync.mockImplementationOnce(() => { throw new Error(); });
+
+      const err = await fileSystem.writeFile(file, "foobar");
+      expect(err).not.toBeNull();
+      expect(err).toContain("cannot open file");
     });
   });
 });
