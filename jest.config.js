@@ -1,3 +1,12 @@
+const process = require("process");
+
+let coverageSubDir = "all";
+if (process.argv.includes("test/integration")) {
+  coverageSubDir = "integration";
+} else if (process.argv.includes("test/unit")) {
+  coverageSubDir = "unit";
+}
+
 module.exports = {
   preset: "ts-jest",
   testEnvironment: "node",
@@ -7,7 +16,7 @@ module.exports = {
     "<rootDir>/src/.*/__mocks__/.*",
   ],
 
-  coverageDirectory: "_reports/coverage",
+  coverageDirectory: `_reports/coverage/${coverageSubDir}`,
   collectCoverageFrom: [
     "src/**/*.ts",
   ],
