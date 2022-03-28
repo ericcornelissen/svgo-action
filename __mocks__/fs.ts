@@ -10,6 +10,11 @@ const lstatSync = jest.fn()
   })
   .mockName("fs.lstatSync");
 
+// https://nodejs.org/api/fs.html#fsopensyncpath-flags-mode
+const openSync = jest.fn()
+  .mockReturnValue(42)
+  .mockName("fs.openSync");
+
 // https://nodejs.org/api/fs.html#fs_fs_readdirsync_path_options
 const readdirSync = jest.fn()
   .mockReturnValue([])
@@ -28,6 +33,7 @@ const writeFileSync = jest.fn()
 export {
   existsSync,
   lstatSync,
+  openSync,
   readdirSync,
   readFileSync,
   writeFileSync,
