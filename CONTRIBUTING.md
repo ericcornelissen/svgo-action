@@ -142,7 +142,7 @@ run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test:unit`.
 
 Whenever you use the `coverage` variant of a script, a coverage report will be
 generated. The report is available in HTML format at
-`_reports/coverage/lcov-report/index.html`.
+`_reports/coverage/[MODIFIER]/lcov-report/index.html`.
 
 ### Mocking
 
