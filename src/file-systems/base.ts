@@ -18,10 +18,10 @@ interface Params {
     lstatSync(path: string): {
       isFile(): boolean;
     };
-    openSync(path: string, flags: string): number;
+    openSync(path: string, flags: "r" | "w"): number;
     readdirSync(path: string): Iterable<string>;
-    readFileSync(path: number | string): Buffer;
-    writeFileSync(path: number | string, content: string): void;
+    readFileSync(handle: number): Buffer;
+    writeFileSync(handle: number, content: string): void;
   };
   readonly path: {
     resolve(...paths: string[]): string;
