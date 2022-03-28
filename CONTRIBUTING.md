@@ -19,7 +19,8 @@ relevant sections of this document.
 
 > :information_source: This document covers contributing to v1 of the Action. If
 > you want to make a contribution to the latest version of the Action check out
-> the [Contributing Guidelines on `main`].
+> the [Contributing Guidelines on `main`]. If you want to make a contribution to
+> v2 of the Action, please refer to the [Contributing Guidelines for v2].
 
 ---
 
@@ -102,6 +103,7 @@ should follow the naming convention `[FILENAME].test.ts`.
 
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines on `main`]: https://github.com/ericcornelissen/svgo-action/blob/main/CONTRIBUTING.md
+[contributing guidelines for v2]: https://github.com/ericcornelissen/svgo-action/blob/main-v2/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [editorconfig]: https://editorconfig.org/
 [husky]: https://typicode.github.io/husky/#/
