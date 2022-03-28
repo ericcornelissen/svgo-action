@@ -8,17 +8,38 @@ import {
   deprecationWarnings,
 } from "../../../src/helpers/deprecation";
 
+const coreNotice = core.notice as jest.MockedFunction<typeof core.notice>;
 const coreWarning = core.warning as jest.MockedFunction<typeof core.warning>;
 
 describe("helpers/deprecation.ts", () => {
   beforeEach(() => {
+    coreNotice.mockClear();
     coreWarning.mockClear();
+  });
+
+  test.each([
+    "1",
+    "2",
+    "project",
+  ])("deprecated for the Action (SVGO: '%s')", (svgoVersion) => {
+    const config = {
+      svgoVersion: {
+        value: svgoVersion as SupportedSvgoVersions,
+      },
+    };
+
+    deprecationWarnings({ config, core });
+    expect(core.notice).toHaveBeenCalledWith(
+      "General support for SVGO Action v2 ends on 2022-05-31 and security " +
+      "updates will be supported until 2023-04-30. Please upgrade to SVGO " +
+      "Action v3 as soon as possible.",
+    );
   });
 
   test.each([
     "2",
     "project",
-  ])("not deprecated version (%s)", (svgoVersion) => {
+  ])("no deprecated for SVGO version '%s'", (svgoVersion) => {
     const config = {
       svgoVersion: {
         value: svgoVersion as SupportedSvgoVersions,
@@ -31,7 +52,7 @@ describe("helpers/deprecation.ts", () => {
 
   test.each([
     "1",
-  ])("deprecated version (%s)", (svgoVersion) => {
+  ])("deprecated for SVGO version '%s'", (svgoVersion) => {
     const config = {
       svgoVersion: {
         value: svgoVersion as SupportedSvgoVersions,
