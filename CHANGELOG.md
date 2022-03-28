@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update deprecation notice to recommend switching to v3. ([#525])
 
 ## [1.3.13] - 2022-01-27
 
@@ -275,4 +275,5 @@ Versioning].
 [#469]: https://github.com/ericcornelissen/svgo-action/pull/469
 [#480]: https://github.com/ericcornelissen/svgo-action/pull/480
 [#505]: https://github.com/ericcornelissen/svgo-action/pull/505
+[#525]: https://github.com/ericcornelissen/svgo-action/pull/525
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
