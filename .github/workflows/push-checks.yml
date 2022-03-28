@@ -16,7 +16,7 @@ jobs:
         uses: actions/setup-node@v3.0.0
         with:
           cache: npm
-          node-version: 12
+          node-version: 16
       - name: Install Dependencies
         run: npm ci
       - name: Build SVGO Action
@@ -52,7 +52,7 @@ jobs:
         uses: actions/setup-node@v3.0.0
         with:
           cache: npm
-          node-version: 12
+          node-version: 16
       - name: Cache Jest
         uses: actions/cache@v2.1.7
         with:
@@ -98,7 +98,7 @@ jobs:
         uses: actions/setup-node@v3.0.0
         with:
           cache: npm
-          node-version: 12
+          node-version: 16
       - name: Install Dependencies
         run: npm ci
       - name: Install Package-local SVGO
