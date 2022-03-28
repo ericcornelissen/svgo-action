@@ -287,8 +287,7 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
-      ["1", "2"],
-      ["2", "1"],
+      ["2", "project"],
       ["project", "2"],
     ])("can get input, valid ('%s')", (configuredValue, _defaultValue) => {
       expect(configuredValue).not.toEqual(_defaultValue);

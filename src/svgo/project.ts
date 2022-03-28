@@ -1,5 +1,7 @@
 import type { error } from "../errors";
 import type { SVGOptimizer } from "./types";
+import type { SVGO as SVGOv1 } from "./v1/types";
+import type { SVGO as SVGOv2 } from "./v2/types";
 
 import importCwd from "import-cwd";
 
@@ -24,9 +26,9 @@ function createSvgoOptimizerForProject(
   }
 
   if (isSvgoV2(svgo)) {
-    return svgoV2.NewFrom(svgo, options);
+    return svgoV2.NewFrom(svgo as SVGOv2, options);
   } else {
-    return svgoV1.NewFrom(svgo, options);
+    return svgoV1.NewFrom(svgo as SVGOv1, options);
   }
 }
 

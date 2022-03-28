@@ -9,11 +9,9 @@ jest.mock("../../../src/svgo/v2");
 import errors from "../../../src/errors";
 import svgo from "../../../src/svgo/index";
 import _createSvgoOptimizerForProject from "../../../src/svgo/project";
-import svgoV1 from "../../../src/svgo/v1";
 import svgoV2 from "../../../src/svgo/v2";
 
 const createSvgoOptimizerForProject = _createSvgoOptimizerForProject as jest.MockedFunction<typeof _createSvgoOptimizerForProject>; // eslint-disable-line max-len
-const svgoV1New = svgoV1.New as jest.MockedFunction<typeof svgoV1.New>;
 const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
 
 describe("svgo/index.ts", () => {
@@ -23,21 +21,7 @@ describe("svgo/index.ts", () => {
     };
 
     beforeEach(() => {
-      svgoV1New.mockClear();
       svgoV2New.mockClear();
-    });
-
-    test("version 1", () => {
-      const config = {
-        svgoVersion: {
-          value: "1" as SupportedSvgoVersions,
-        },
-      };
-
-      const [result, err] = svgo.New({ config, svgoConfig });
-      expect(err).toBeNull();
-      expect(result).not.toBeNull();
-      expect(svgoV1.New).toHaveBeenCalledWith(svgoConfig);
     });
 
     test("version 2", () => {

@@ -1,9 +1,8 @@
+import type { SVGO } from "../../../../src/svgo/v1/types";
+
 import { when, resetAllWhenMocks } from "jest-when";
 
-jest.mock("svgo-v1");
 jest.mock("../../../../src/errors");
-
-import svgo from "svgo-v1";
 
 import SvgoV1Wrapper from "../../../../src/svgo/v1/wrapper";
 import { invalidSvg, optimizedSvg, validSvg } from "../common";
@@ -12,11 +11,15 @@ describe("svgo/v1/wrapper.ts", () => {
   describe("::optimize", () => {
     const options = { foo: "bar" };
 
+    let svgo: SVGO;
     let optimize: jest.Mock<Promise<{ data: string }>, [string]>;
 
     beforeAll(() => {
-      const _svgo = new svgo();
-      optimize = _svgo.optimize;
+      const _svgo = jest.fn();
+      optimize = jest.fn();
+
+      _svgo.mockReturnValue({ optimize });
+      svgo = _svgo;
     });
 
     beforeEach(() => {

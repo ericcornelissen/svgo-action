@@ -1,9 +1,8 @@
+import type { SVGO, SVGOptions } from "../../../../src/svgo/v2/types";
+
 import { when, resetAllWhenMocks } from "jest-when";
 
-jest.mock("svgo-v2");
 jest.mock("../../../../src/errors");
-
-import svgo from "svgo-v2"; // eslint-disable-line import/default
 
 import SvgoV2Wrapper from "../../../../src/svgo/v2/wrapper";
 import { invalidSvg, optimizedSvg, validSvg } from "../common";
@@ -12,9 +11,14 @@ describe("svgo/v2/wrapper.ts", () => {
   describe("::optimize", () => {
     const options = { foo: "bar" };
 
-    beforeEach(() => {
-      svgo.optimize.mockClear();
+    let svgo: SVGO;
+    let optimize: jest.Mock<{ data: string }, [string, SVGOptions]>;
 
+    beforeEach(() => {
+      optimize = jest.fn();
+      svgo = { optimize };
+
+      optimize.mockClear();
       resetAllWhenMocks();
     });
 

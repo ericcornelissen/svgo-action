@@ -143,7 +143,6 @@ describe("package inputs", () => {
     });
 
     test.each([
-      "1",
       "2",
       "project",
     ])("configured to '%s' (valid)", async (value) => {

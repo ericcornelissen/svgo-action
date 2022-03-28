@@ -23,8 +23,10 @@ relevant sections of this document.
   - [End-to-End Tests](#end-to-end-tests)
   - [Mutation Testing](#mutation-testing)
 
-> :information_source: If you want to make a contribution to v1 of the Action,
-> please refer to the [Contributing Guidelines for v1].
+> :information_source: If you want to make a contribution to v2 of the Action,
+> please refer to the [Contributing Guidelines for v2]. If you want to make a
+> contribution to v1 of the Action, please refer to the [Contributing Guidelines
+> for v1].
 
 ---
 
@@ -225,6 +227,7 @@ change the Stryker configuration as follows.
 
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines for v1]: https://github.com/ericcornelissen/svgo-action/blob/main-v1/CONTRIBUTING.md
+[contributing guidelines for v2]: https://github.com/ericcornelissen/svgo-action/blob/main-v2/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [editorconfig]: https://editorconfig.org/
 [eslint]: https://eslint.org/

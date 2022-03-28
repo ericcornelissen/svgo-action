@@ -5,9 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased]
+## [3.0.0] - TBD
 
-- Use file handles when reading and writing files ([#518])
+### Breaking changes
+
+- Drop **built-in** support for SVGO v1. ([#521])
+
+### Changes
+
+- Use file handles when reading and writing files. ([#518])
 
 ## [2.1.5] - 2022-01-27
 
@@ -386,5 +392,6 @@ Versioning].
 [#505]: https://github.com/ericcornelissen/svgo-action/pull/505
 [#506]: https://github.com/ericcornelissen/svgo-action/pull/506
 [#518]: https://github.com/ericcornelissen/svgo-action/pull/518
+[#521]: https://github.com/ericcornelissen/svgo-action/pull/521
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

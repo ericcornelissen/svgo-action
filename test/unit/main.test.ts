@@ -28,7 +28,6 @@ const actionManagementNew = actionManagement.New as jest.MockedFunction<typeof a
 const clientsNew = clients.New as jest.MockedFunction<typeof clients.New>;
 const coreInfo = core.info as jest.MockedFunction<typeof core.info>;
 const fileSystemsNew = fileSystems.New as jest.MockedFunction<typeof fileSystems.New>; // eslint-disable-line max-len
-const helpersDeprecationWarnings = helpers.deprecationWarnings as jest.MockedFunction<typeof helpers.deprecationWarnings>; // eslint-disable-line max-len
 const helpersIsClientRequired = helpers.isClientRequired as jest.MockedFunction<typeof helpers.isClientRequired>; // eslint-disable-line max-len
 const helpersIsEventSupported = helpers.isEventSupported as jest.MockedFunction<typeof helpers.isEventSupported>; // eslint-disable-line max-len
 const helpersGetFilters = helpers.getFilters as jest.MockedFunction<typeof helpers.getFilters>; // eslint-disable-line max-len
@@ -56,7 +55,6 @@ describe("main.ts", () => {
     coreInfo.mockClear();
     clientsNew.mockClear();
     fileSystemsNew.mockClear();
-    helpersDeprecationWarnings.mockClear();
     helpersGetFilters.mockClear();
     helpersIsEventSupported.mockClear();
     helpersParseRawSvgoConfig.mockClear();
@@ -74,7 +72,6 @@ describe("main.ts", () => {
     expect(actionManagement.New).toHaveBeenCalledTimes(1);
     expect(clients.New).toHaveBeenCalledTimes(1);
     expect(fileSystems.New).toHaveBeenCalledTimes(2);
-    expect(helpers.deprecationWarnings).toHaveBeenCalledTimes(1);
     expect(helpers.getFilters).toHaveBeenCalledTimes(1);
     expect(helpers.isEventSupported).toHaveBeenCalledTimes(1);
     expect(helpers.parseRawSvgoConfig).toHaveBeenCalledTimes(1);

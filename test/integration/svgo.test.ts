@@ -26,7 +26,6 @@ describe("package svgo", () => {
     const svgoConfig = { };
 
     describe.each([
-      ["1", undefined],
       ["2", undefined],
       ["project", svgoV1],
       ["project", svgoV2],

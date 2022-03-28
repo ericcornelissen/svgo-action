@@ -4,7 +4,6 @@ import type { SupportedSvgoVersions, SVGOptimizer } from "./types";
 import errors from "../errors";
 import createSvgoOptimizerForProject from "./project";
 import StubSVGOptimizer from "./stub";
-import svgoV1 from "./v1";
 import svgoV2 from "./v2";
 
 interface Config {
@@ -30,9 +29,6 @@ function New({
   switch (svgoVersion) {
   case "project":
     [svgOptimizer, err] = createSvgoOptimizerForProject(svgoConfig);
-    break;
-  case "1":
-    [svgOptimizer, err] = svgoV1.New(svgoConfig);
     break;
   case "2":
     [svgOptimizer, err] = svgoV2.New(svgoConfig);
