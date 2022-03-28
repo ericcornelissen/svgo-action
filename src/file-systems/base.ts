@@ -18,8 +18,9 @@ interface Params {
     lstatSync(path: string): {
       isFile(): boolean;
     };
+    openSync(path: string, flags: string): number;
     readdirSync(path: string): Iterable<string>;
-    readFileSync(path: string): Buffer;
+    readFileSync(path: number | string): Buffer;
     writeFileSync(path: string, content: string): void;
   };
   readonly path: {
@@ -79,22 +80,22 @@ function newListFiles(params: Params): ListFilesFn {
 function newReadFile({ fs }: Params): ReadFileFn {
   return async function(file: FileHandle): Promise<[string, error]> {
     return new Promise((resolve) => {
-      if (!fs.existsSync(file.path)) {
-        const err = errors.New("file not found");
-        resolve(["", err]);
-      } else {
-        let content = "";
-        let err: error = null;
+      let content = "";
+      let err: error = null;
+      try {
+        const fileHandle = fs.openSync(file.path, "r");
 
         try {
-          const buffer = fs.readFileSync(file.path);
+          const buffer = fs.readFileSync(fileHandle);
           content = buffer.toString();
         } catch (thrownError) {
           err = errors.New(`cannot read file '${file.path}' (${thrownError})`);
         }
-
-        resolve([content, err]);
+      } catch (thrownError) {
+        err = errors.New("file not found");
       }
+
+      resolve([content, err]);
     });
   };
 }
