@@ -134,12 +134,12 @@ commands are available to run the tests, as shown in the overview below. You can
 run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test` or
 `npm run coverage:unit`.
 
-| Scripts            | Modifier           | Description                           |
-| :----------------- | :----------------- | :------------------------------------ |
-| `test`, `coverage` | `all` _(optional)_ | Runs all tests                        |
-| `test`, `coverage` | `unit`             | Runs unit tests          |
-| `test`, `coverage` | `integration`      | Runs integration tests   |
-| `test`             | `mutation`         | Runs mutation tests on the unit tests |
+| Scripts            | Modifier           | Description            |
+| :----------------- | :----------------- | :--------------------- |
+| `test`, `coverage` | `all` _(optional)_ | Runs all tests         |
+| `test`, `coverage` | `unit`             | Runs unit tests        |
+| `test`, `coverage` | `integration`      | Runs integration tests |
+| `test`             | `mutation`         | Runs mutation tests    |
 
 Whenever you use the `coverage` variant of a script, a coverage report will be
 generated. The report is available in HTML format at
