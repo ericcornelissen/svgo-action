@@ -7,7 +7,6 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
-    "prebuild": "node script/prebuild.js",
     "build": "rollup --config rollup.config.js",
     "clean": "run-p clean:reports clean:temp",
     "clean:reports": "rm -rf ./_reports",
