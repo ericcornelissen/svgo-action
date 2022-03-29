@@ -11,12 +11,6 @@
 
   packageRules: [
     {
-      // Configure @vercel/ncc: don't upgrade beyond v0.30.0
-      // See: https://github.com/ericcornelissen/svgo-action/issues/425
-      matchPackageNames: ["@vercel/ncc"],
-      allowedVersions: "<=0.30.0"
-    },
-    {
       // Configure SVGO v2: don't upgrade to v3.x.x
       matchPackageNames: ["svgo-v2"],
       allowedVersions: "<3.0.0"
