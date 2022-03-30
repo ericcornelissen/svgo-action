@@ -16,6 +16,10 @@ Versioning].
 - Drop **built-in** support for SVGO v1. ([#521])
 - Update Node.js runtime to v16. ([#526])
 
+### Changes
+
+- Update versions of recommended Actions in examples. ([#532])
+
 ## [2.1.6] - 2022-03-31
 
 - Add deprecation warning recommending switching to v3 of this Action. ([#524])
@@ -408,5 +412,6 @@ Versioning].
 [#524]: https://github.com/ericcornelissen/svgo-action/pull/524
 [#525]: https://github.com/ericcornelissen/svgo-action/pull/525
 [#526]: https://github.com/ericcornelissen/svgo-action/pull/526
+[#532]: https://github.com/ericcornelissen/svgo-action/pull/532
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
