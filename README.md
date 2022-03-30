@@ -37,7 +37,7 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     # Uncomment the next 2 lines to select a branch for on schedule or dispatch.
     #   with:
     #     ref: main
