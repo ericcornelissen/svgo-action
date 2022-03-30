@@ -206,6 +206,8 @@ We make use of [Mutation Testing] to improve the quality of unit tests. We use
 the mutation testing framework [StrykerJS]. By default the mutation tests run on
 all the source code using all the unit tests. After running the mutation tests,
 a mutation report is available in HTML format at `_reports/mutation/index.html`.
+Alternatively, you can find a report for the `main` branch online as a [Stryker
+Dashboard].
 
 You can change the mutation test configuration (in `stryker.config.js`) to focus
 on a subset of the source code or unit tests (we ask that you don't commit such
@@ -238,3 +240,4 @@ change the Stryker configuration as follows.
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new/choose
 [sinon]: https://sinonjs.org/
 [strykerjs]: https://stryker-mutator.io/
+[stryker dashboard]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
