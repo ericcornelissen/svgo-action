@@ -13,7 +13,7 @@ Versioning].
 
 ### Breaking changes
 
-- Drop **built-in** support for SVGO v1. ([#521])
+- Drop **built-in** support for SVGO v1. ([#521], [#535])
 - Update Node.js runtime to v16. ([#526])
 
 ### Changes
@@ -413,5 +413,6 @@ Versioning].
 [#525]: https://github.com/ericcornelissen/svgo-action/pull/525
 [#526]: https://github.com/ericcornelissen/svgo-action/pull/526
 [#532]: https://github.com/ericcornelissen/svgo-action/pull/532
+[#535]: https://github.com/ericcornelissen/svgo-action/pull/535
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
