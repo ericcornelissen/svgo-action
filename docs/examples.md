@@ -43,7 +43,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v2
+      uses: ericcornelissen/svgo-action@v3
       id: svgo
       with:
         repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -91,7 +91,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v2
+      uses: ericcornelissen/svgo-action@v3
       id: svgo
       with:
         repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -141,7 +141,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v2
+      uses: ericcornelissen/svgo-action@v3
       id: svgo
     - name: Commit optimizations
       uses: stefanzweifel/git-auto-commit-action@v4
@@ -197,7 +197,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v2
+      uses: ericcornelissen/svgo-action@v3
       id: svgo
     - name: Commit optimizations
       uses: stefanzweifel/git-auto-commit-action@v4
@@ -242,7 +242,7 @@ jobs:
     - name: Install dependencies
       run: npm ci
     - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v2
+      uses: ericcornelissen/svgo-action@v3
       with:
         svgo-version: project
 ```

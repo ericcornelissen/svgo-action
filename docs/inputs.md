@@ -34,7 +34,7 @@ To enable dry runs:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     dry-run: true
 ```
@@ -62,7 +62,7 @@ To ignore all files in a specific folder:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     ignore: not/optimized/*
 ```
@@ -72,7 +72,7 @@ To ignore all files in a specific folder and all its subfolders:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     ignore: not/optimized/**/
 ```
@@ -82,7 +82,7 @@ To have multiple ignore globs, use a [YAML] multiline string:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     ignore: |
       folder1/*
@@ -108,7 +108,7 @@ To set the `repo-token` you will typically want to use:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -136,7 +136,7 @@ To enable strict mode:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     strict: true
 ```
@@ -161,7 +161,7 @@ To use an SVGO config file with a non-standard name:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     svgo-config: my-svgo-config.js
 ```
@@ -171,7 +171,7 @@ To use an SVGO config file in a folder:
 ```yaml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     svgo-config: path/to/svgo.config.js
 ```
@@ -211,7 +211,7 @@ To use the SVGO version used by your project:
 
 - name: Install dependencies, including SVGO
   run: npm ci
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     svgo-version: project
 ```

@@ -41,7 +41,7 @@ jobs:
     # Uncomment the next 2 lines to select a branch for on schedule or dispatch.
     #   with:
     #     ref: main
-    - uses: ericcornelissen/svgo-action@v2
+    - uses: ericcornelissen/svgo-action@v3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -66,7 +66,7 @@ To configure the Action you simply set a value for any of the above in the
 Workflow file. For example:
 
 ```yaml
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
     dry-run: true
