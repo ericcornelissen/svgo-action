@@ -7,7 +7,12 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.6] - 2022-03-31
+
 - Add deprecation warning recommending switching to v3 of this Action. ([#524])
+- Update dependency `minimatch`. ([#510])
 - Use file handles when reading and writing files. ([#518])
 
 ## [2.1.5] - 2022-01-27
@@ -87,6 +92,10 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.14] - 2022-03-31
+
+- Update deprecation notice to recommend switching to v3. ([#525])
 
 ## [1.3.13] - 2022-01-27
 
@@ -387,6 +396,8 @@ Versioning].
 [#505]: https://github.com/ericcornelissen/svgo-action/pull/505
 [#506]: https://github.com/ericcornelissen/svgo-action/pull/506
 [#518]: https://github.com/ericcornelissen/svgo-action/pull/518
+[#510]: https://github.com/ericcornelissen/svgo-action/pull/510
 [#524]: https://github.com/ericcornelissen/svgo-action/pull/524
+[#525]: https://github.com/ericcornelissen/svgo-action/pull/525
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
