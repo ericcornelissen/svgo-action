@@ -1,9 +1,9 @@
 jest.mock("js-yaml");
-jest.mock("node-eval");
+jest.mock("eval");
 jest.mock("../../../src/parsers/builder");
 
 import * as yaml from "js-yaml";
-import nodeEval from "node-eval";
+import nodeEval from "eval";
 
 import * as builder from "../../../src/parsers/builder";
 import parsers from "../../../src/parsers/index";
@@ -16,7 +16,7 @@ describe("parsers/index.js", () => {
   });
 
   describe("::NewJavaScript", () => {
-    test("does use node-eval", () => {
+    test("does use eval", () => {
       parsers.NewJavaScript();
       expect(buildSafeParser).toHaveBeenCalledWith(nodeEval);
     });
@@ -33,7 +33,7 @@ describe("parsers/index.js", () => {
       expect(buildSafeParser).toHaveBeenCalledWith(yaml.load);
     });
 
-    test("does not use node-eval", () => {
+    test("does not use eval", () => {
       parsers.NewYaml();
       expect(buildSafeParser).not.toHaveBeenCalledWith(nodeEval);
     });

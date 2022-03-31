@@ -1,4 +1,4 @@
 const nodeEval = jest.fn()
-  .mockName("node-eval::default");
+  .mockName("eval::default");
 
 export default nodeEval;

@@ -1,7 +1,7 @@
 import type { SafeParseFn } from "./types";
 
 import * as yaml from "js-yaml";
-import nodeEval from "node-eval";
+import nodeEval from "eval";
 
 import { buildSafeParser } from "./builder";
 
