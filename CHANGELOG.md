@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [1.3.14] - 2022-03-31
+
 - Update deprecation notice to recommend switching to v3. ([#525])
 
 ## [1.3.13] - 2022-01-27

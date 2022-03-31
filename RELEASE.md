@@ -10,7 +10,7 @@ A typical release process for v1 versions will look something like this (using
 
 1. Switch to the `main-v1` branch and ensure you are up-to-date with origin.
 2. [Update the version] in the package manifest and lockfile, and [update the
-  changelog] accordingly.
+  changelog] and [update the README] accordingly.
 3. Commit the changes using `git commit -a -m "chore: version bump"`.
 4. Create a tag for the new version using `git tag v1.6.1` (including the "v").
 5. Push the new commit and tag using `git push origin main-v1 v1.6.1`.
@@ -47,7 +47,20 @@ To update the changelog add the following text after the `## [Unreleased]` line
 The date should follow the year-month-day format where single-digit months and
 days should be prefixed with a `0` (e.g. `2022-01-01`).
 
+## Updating the README
+
+To update the README, update the links for the Marketplace badge to the new
+version (using `v1.6.1` as an example):
+
+```diff
+- [marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.6.0
+- [marketplace-image]: https://img.shields.io/badge/Marketplace-1.6.0-undefined.svg?logo=github&logoColor=white&style=flat
++ [marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.6.1
++ [marketplace-image]: https://img.shields.io/badge/Marketplace-1.6.1-undefined.svg?logo=github&logoColor=white&style=flat
+```
+
 [github marketplace]: https://github.com/marketplace
 [github release]: https://github.com/ericcornelissen/svgo-action/releases
 [update the changelog]: #updating-the-changelog
+[update the readme]: #updating-the-readme
 [update the version]: #updating-the-version-number
