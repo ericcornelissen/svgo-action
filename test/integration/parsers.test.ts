@@ -1,5 +1,5 @@
-jest.dontMock("js-yaml");
 jest.dontMock("eval");
+jest.dontMock("js-yaml");
 
 import parsers from "../../src/parsers";
 

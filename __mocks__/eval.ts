@@ -1,4 +1,4 @@
-const nodeEval = jest.fn()
+const _eval = jest.fn()
   .mockName("eval::default");
 
-export default nodeEval;
+export default _eval;

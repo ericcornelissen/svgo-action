@@ -1,8 +1,8 @@
 import type { Octokit } from "../../src/types";
 
+jest.dontMock("eval");
 jest.dontMock("js-yaml");
 jest.dontMock("minimatch");
-jest.dontMock("eval");
 
 jest.mock("@actions/core");
 jest.mock("@actions/github");
