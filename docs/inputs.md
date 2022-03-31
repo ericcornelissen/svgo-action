@@ -154,9 +154,6 @@ for [SVGO]. The configuration file must be a JavaScript or a [YAML] file. If the
 specified file is not found the Action will fall back on SVGO's default
 configuration.
 
-> :information_source: If `svgo-version` is configured to `1` the default value
-> of `svgo-config` changes to `".svgo.yml"`.
-
 ### Examples
 
 To use an SVGO config file with a non-standard name:
@@ -177,6 +174,16 @@ To use an SVGO config file in a folder:
 - uses: ericcornelissen/svgo-action@v2
   with:
     svgo-config: path/to/svgo.config.js
+```
+
+To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
+
+```yaml
+# .github/workflows/optimize.yml
+
+- uses: ericcornelissen/svgo-action@v2
+  with:
+    svgo-config: .svgo.yml
 ```
 
 ---
