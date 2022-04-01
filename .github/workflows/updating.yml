@@ -15,7 +15,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
-        uses: actions/setup-node@v3.0.0
+        uses: actions/setup-node@v3.1.0
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -24,7 +24,7 @@ jobs:
       - name: Build lib/index.js
         run: npm run build
       - name: Commit and Push Updated lib/index.js
-        uses: stefanzweifel/git-auto-commit-action@v4.13.1
+        uses: stefanzweifel/git-auto-commit-action@v4.14.0
         with:
           commit_message: "chore: update lib/index.js"
           commit_options: "--no-verify"
