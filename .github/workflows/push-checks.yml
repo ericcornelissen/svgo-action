@@ -10,6 +10,10 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -25,6 +29,10 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -46,6 +54,10 @@ jobs:
           - integration
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -92,6 +104,10 @@ jobs:
             project-svgo-version: ^2.0.0
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -185,6 +201,10 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' || github.ref_name == 'main-v2' }}
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js

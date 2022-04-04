@@ -16,6 +16,10 @@ jobs:
     name: Codecov
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Validate Codecov configuration
@@ -28,6 +32,10 @@ jobs:
     name: Renovate
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: audit
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
