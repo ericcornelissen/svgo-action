@@ -1,13 +1,13 @@
-import type { Dirent, Stats } from "fs";
+import type { Dirent, Stats } from "node:fs";
 
 import { when, resetAllWhenMocks } from "jest-when";
 
-jest.mock("fs");
-jest.mock("path");
+jest.mock("node:fs");
+jest.mock("node:path");
 jest.mock("../../../src/errors");
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 import NewBaseFileSystem from "../../../src/file-systems/base";
 

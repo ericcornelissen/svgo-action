@@ -1,10 +1,10 @@
-import type { Dirent } from "fs";
+import type { Dirent } from "node:fs";
 
 jest.mock("@actions/core");
 jest.mock("@actions/github");
-jest.mock("fs");
+jest.mock("node:fs");
 
-import * as fs from "fs";
+import * as fs from "node:fs";
 
 import * as core from "@actions/core";
 import * as github from "@actions/github";

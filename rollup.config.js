@@ -10,6 +10,7 @@ module.exports = {
     dir: "lib",
     format: "cjs",
   },
+  external: ["node:fs", "node:path"],
   plugins: [
     typescript(),
     commonjs({ ignoreDynamicRequires: true }),
