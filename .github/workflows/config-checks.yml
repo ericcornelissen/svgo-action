@@ -20,7 +20,10 @@ jobs:
       - name: Harden runner
         uses: step-security/harden-runner@v1.4.1
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >
+            codecov.io:443
+            github.com:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Validate Codecov configuration
@@ -36,7 +39,12 @@ jobs:
       - name: Harden runner
         uses: step-security/harden-runner@v1.4.1
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >
+            github.com:443
+            nodejs.org:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
