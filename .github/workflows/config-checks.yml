@@ -6,6 +6,7 @@ on:
     - '.github/renovate.json5'
   pull_request:
     paths:
+    - '.github/workflows/config-checks.yml'
     - '.github/codecov.yml'
     - '.github/renovate.json5'
 
