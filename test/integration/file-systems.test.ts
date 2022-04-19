@@ -1,8 +1,8 @@
-import type { Dirent, Stats } from "fs";
+import type { Dirent, Stats } from "node:fs";
 
-jest.mock("fs");
+jest.mock("node:fs");
 
-import * as fs from "fs";
+import * as fs from "node:fs";
 
 import fileSystems from "../../src/file-systems";
 

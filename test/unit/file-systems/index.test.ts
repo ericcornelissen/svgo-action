@@ -1,10 +1,10 @@
-jest.mock("fs");
-jest.mock("path");
+jest.mock("node:fs");
+jest.mock("node:path");
 jest.mock("../../../src/file-systems/base");
 jest.mock("../../../src/file-systems/filtered");
 
-import * as fs from "fs";
-import * as path from "path";
+import * as fs from "node:fs";
+import * as path from "node:path";
 
 import NewBaseFileSystem from "../../../src/file-systems/base";
 import NewFilteredFileSystem from "../../../src/file-systems/filtered";
