@@ -19,7 +19,10 @@ jobs:
       - name: Harden runner
         uses: step-security/harden-runner@v1.4.1
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Initialize CodeQL
