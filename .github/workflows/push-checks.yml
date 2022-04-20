@@ -231,6 +231,7 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             artifactcache.actions.githubusercontent.com:443
+            dashboard.stryker-mutator.io:443
             github.com:443
             objects.githubusercontent.com:443
             registry.npmjs.org:443
