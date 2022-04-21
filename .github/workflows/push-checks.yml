@@ -223,7 +223,7 @@ jobs:
     name: Test - mutation
     needs: [test]
     runs-on: ubuntu-latest
-    # if: ${{ github.ref_name == 'main' || github.ref_name == 'main-v2' }}
+    if: ${{ github.ref_name == 'main' || github.ref_name == 'main-v2' }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@v1.4.1
