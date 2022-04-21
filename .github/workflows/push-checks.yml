@@ -10,6 +10,15 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -25,6 +34,16 @@ jobs:
     name: Lint
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -46,6 +65,18 @@ jobs:
           - integration
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            codecov.io:443
+            github.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
+            storage.googleapis.com:443
+            uploader.codecov.io:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -92,6 +123,15 @@ jobs:
             project-svgo-version: ^2.0.0
     runs-on: ubuntu-latest
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
@@ -185,6 +225,17 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.ref_name == 'main' || github.ref_name == 'main-v2' }}
     steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.1
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            dashboard.stryker-mutator.io:443
+            github.com:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
