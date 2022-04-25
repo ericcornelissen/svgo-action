@@ -6,6 +6,7 @@ SVGO Action.
 - [Optimize on Pushes](#optimize-on-pushes)
 - [Optimize Pull Requests with Comments](#optimize-pull-requests-with-comments)
 - [Scheduled Optimization Commits](#scheduled-optimization-commits)
+- [Scheduled Optimization Pull Requests](#scheduled-optimization-pull-requests)
 - [Optimize SVGs on Demand](#optimize-svgs-on-demand)
 - [Using Any SVGO Version](#using-any-svgo-version)
 
@@ -152,6 +153,53 @@ jobs:
 
 ---
 
+## Scheduled Optimization Pull Requests
+
+This example uses [actions/checkout] and [peter-evans/create-pull-request] to
+optimize all SVGs in the repository every Monday and create a Pull Request for
+these optimizations. If there are no changes, no commit or Pull Request will be
+created.
+
+Check out [what the Action outputs] to customize the Pull Request and commit
+message to your liking.
+
+```yaml
+# .github/workflows/optimize.yml
+
+name: Optimize
+on:
+  schedule:
+  # Schedule the workflow for once a week on Monday.
+  # For more information, see: https://crontab.guru/
+  - cron:  '0 0 * * 1'
+
+# The minimum required permissions
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  svgs:
+    name: SVGs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Optimize SVGs
+      uses: ericcornelissen/svgo-action@v2
+      id: svgo
+    - name: Create Pull Request for optimized SVGs
+      uses: peter-evans/create-pull-request@v3
+      if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
+      with:
+        commit-message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+        title: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+        body: _This Pull Request was created automatically_
+        branch: optimize-svgs
+```
+
+---
+
 ## Optimize SVGs on Demand
 
 This example uses [actions/checkout] and [stefanzweifel/git-auto-commit-action]
@@ -252,5 +300,6 @@ jobs:
 
 [actions/checkout]: https://github.com/marketplace/actions/checkout
 [npm]: https://www.npmjs.com/
+[peter-evans/create-pull-request]: https://github.com/marketplace/actions/create-pull-request
 [stefanzweifel/git-auto-commit-action]: https://github.com/marketplace/actions/git-auto-commit
 [thollander/actions-comment-pull-request]: https://github.com/marketplace/actions/comment-pull-request
