@@ -18,14 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.1
+        uses: step-security/harden-runner@v1.4.3
         with:
           egress-policy: block
           allowed-endpoints: >
             codecov.io:443
             github.com:443
       - name: Checkout Repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Validate Codecov configuration
         run: |
           RESULT=$(curl -s -o /dev/null -w "%{http_code}" --data-binary @./.github/codecov.yml https://codecov.io/validate)
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.1
+        uses: step-security/harden-runner@v1.4.3
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -46,9 +46,9 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout Repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.0
+        uses: actions/setup-node@v3.1.1
         with:
           node-version-file: .nvmrc
       - name: Install Renovate CLI

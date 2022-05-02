@@ -13,7 +13,7 @@ jobs:
       contents: write
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.1
+        uses: step-security/harden-runner@v1.4.3
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -22,9 +22,9 @@ jobs:
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
-        uses: actions/checkout@v3.0.0
+        uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.0
+        uses: actions/setup-node@v3.1.1
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -33,7 +33,7 @@ jobs:
       - name: Build lib/index.js
         run: npm run build
       - name: Commit and Push Updated lib/index.js
-        uses: stefanzweifel/git-auto-commit-action@v4.14.0
+        uses: stefanzweifel/git-auto-commit-action@v4.14.1
         with:
           commit_message: "chore: update lib/index.js"
           commit_options: "--no-verify"
