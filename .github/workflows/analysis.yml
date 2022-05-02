@@ -22,7 +22,9 @@ jobs:
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
+            ghcr.io:443
             github.com:443
+            pkg-containers.githubusercontent.com:443
             uploads.github.com:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
