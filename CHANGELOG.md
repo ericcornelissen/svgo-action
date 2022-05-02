@@ -9,6 +9,7 @@ Versioning].
 
 - Add example workflow for scheduled optimization Pull Requests. ([#544])
 - Replace dependency `node-eval` by `eval`. ([#536])
+- Update dependency `@actions/core`. ([#546])
 - Update dependency `@actions/github`. ([#537])
 
 ## [3.0.0] - 2022-03-31
@@ -419,5 +420,6 @@ Versioning].
 [#536]: https://github.com/ericcornelissen/svgo-action/pull/536
 [#537]: https://github.com/ericcornelissen/svgo-action/pull/537
 [#544]: https://github.com/ericcornelissen/svgo-action/pull/544
+[#546]: https://github.com/ericcornelissen/svgo-action/pull/546
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
