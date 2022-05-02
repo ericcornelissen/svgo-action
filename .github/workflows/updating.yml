@@ -15,7 +15,12 @@ jobs:
       - name: Harden runner
         uses: step-security/harden-runner@v1.4.1
         with:
-          egress-policy: audit
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
         uses: actions/checkout@v3.0.0
       - name: Install Node.js
