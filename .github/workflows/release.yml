@@ -1,0 +1,94 @@
+name: Releases
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      update_type:
+        description: Update type
+        required: true
+        default: minor
+        type: choice
+        options: [patch, minor, major]
+
+permissions: read-all
+
+jobs:
+  pr:
+    name: Create Pull Request
+    if: ${{ github.event_name == 'workflow_dispatch' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # To push a commit
+      pull-requests: write # To open a Pull Request
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.3
+        with:
+          egress-policy: audit
+      - name: Check out code
+        uses: actions/checkout@v3.0.2
+      - name: Install Node.js
+        uses: actions/setup-node@v3.1.1
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Bump version
+        run: npm version ${{ github.event.inputs.update_type }} --no-git-tag-version
+      - name: Update CHANGELOG
+        run: node script/bump-changelog.js
+      - name: Update build files
+        run: npm run build
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4.0.3
+        with:
+          title: New ${{ github.event.inputs.update_type }} release for v3
+          body: _This Pull Request was created automatically_
+          branch: release-${{ github.event.inputs.update_type }}
+          branch-suffix: random
+          commit-message: Version bump
+  release:
+    name: Create Release
+    if: ${{ github.event_name == 'push' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # To push a tag
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.3
+        with:
+          egress-policy: audit
+      - name: Checkout code
+        uses: actions/checkout@v3.0.2
+        with:
+          fetch-depth: 0 # To obtain all tags
+      - name: Install Node.js
+        uses: actions/setup-node@v3.1.1
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Check if version is released
+        id: version
+        run: |
+          VERSION="v$(cat package.json | jq -r '.version')"
+          echo "::set-output name=version::$VERSION"
+          if [ $(git tag -l $VERSION) ]; then
+            echo "::set-output name=released::true"
+          else
+            echo "::set-output name=released::false"
+          fi
+      - name: Release new version as tags
+        if: ${{ steps.version.outputs.released == 'false' }}
+        run: |
+          # Create tag for new version
+          git tag ${{ steps.version.outputs.version }}
+          git push origin ${{ steps.version.outputs.version }}
+
+          # Update what the latest v3 tag points to
+          git tag --force v3
+          git push origin --force v3
