@@ -32,65 +32,17 @@ relevant sections of this document.
 
 ## Bug Reports
 
-If you have problems with the _SVGO Action_ or think you've found a bug, please
-report it to the developers; we ask you to **always** open an issue describing
-the bug as soon as possible so that we, and others, are aware of the bug.
-
-Before reporting a bug, make sure you've actually found a real bug. Carefully
-read the documentation and see if it really says you can do what you're trying
-to do. If it's not clear whether you should be able to do something or not,
-report that too; it's a bug in the documentation! Also, make sure the bug has
-not already been reported.
-
-When preparing to report a bug, try to isolate it to a small working example
-that reproduces the problem. Once you have this, collect additional information
-such as:
-
-- The exact version of SVGO Action you're using.
-- A description of the expected behaviour and the actual behaviour.
-- All error and warning messages.
-- A link to a workflow run where the bug occurs with [debug logging] enabled.
-
-Once you have a precise problem you can report it as a [Bug Report].
+No bug fixes will be provided nor accepted for v1 of the SVGO Action going
+forward, unless the bug has an impact on the security of the Action.
 
 ## Feature Requests
 
-New features are welcomed, but we want to avoid feature creep. For this reason
-we recommend you [open an issue] first so you don't spend time working on
-something that won't be included. Be sure to check if the feature hasn't been
-requested before.
-
-Once the feature you requested has been approved, you can start implementing it
-(if you want to do that). It is advised to indicate you're working on the
-feature so others don't start working on the same feature as you do. Also, don't
-start working on a feature which someone else is working on. Give everyone a
-chance to make contributions.
-
-When you open a Pull Request that implements a new feature make sure to link to
-the relevant feature request and explain how you implemented the feature as
-clearly as possible.
-
-> :information_source: If you, for whatever reason, can no longer continue your
-> contribution please let us know. This gives others an opportunity to work on
-> it. If we don't hear from you for an extended period of time we may decide to
-> allow others to work on the feature you've been assigned to.
+No new features will be added to v1 of the SVGO Action going forward.
 
 ## Corrections
 
-Corrections, be it fixing typos or refactoring code, are valuable contributions.
-If you want to improve the documentation in this way feel free to open a Pull
-Request with the changes you want to make directly, or [open an issue] first if
-you prefer.
-
-If you want to improve the code base make sure to follow the code style that
-is enforced through the [ESLint] configuration. If your changes can be enforced
-through ESLint, please update the `.eslintrc.js` configuration accordingly. If
-you need an extra package to be able to enforce your style please add it as a
-`devDependency`.
-
-> :information_source: Keep in mind that the developers of the project determine
-> the code style of as they see fit. For this reason, take the time to explain
-> why you think your changes improve the project.
+Corrections (such as fixing typos) for v1 of the SVGO Action will not be
+provided but may be accepted when contributed, if the changes are trivial.
 
 ## Workflow
 
