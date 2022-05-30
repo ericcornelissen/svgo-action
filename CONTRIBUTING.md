@@ -36,7 +36,7 @@ No new features will be added to v1 of the SVGO Action going forward.
 ## Corrections
 
 Corrections (such as fixing typos) for v1 of the SVGO Action will not be
-provided but may be accepted when provided if the changes are trivial.
+provided but may be accepted when contributed, if the changes are trivial.
 
 ## Workflow
 
