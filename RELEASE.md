@@ -16,9 +16,6 @@ A typical release process for v1 versions will look something like this (using
 5. Push the new commit and tag using `git push origin main-v1 v1.6.1`.
 6. Update the tag pointing to the latest v1 release using `git tag -f v1`.
 7. Push the tag using `git push origin v1 --force`.
-8. Navigate to the repository on GitHub and create a new [GitHub Release]. Make
-  sure the release isn't published to the [GitHub Marketplace] by unchecking the
-  checkbox.
 
 ## Updating the Version Number
 
