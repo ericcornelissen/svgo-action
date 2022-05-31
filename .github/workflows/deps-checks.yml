@@ -34,4 +34,4 @@ jobs:
       - name: Initialize repository
         run: npm ci
       - name: Audit npm dependencies
-        run: npm audit
+        run: npm run audit
