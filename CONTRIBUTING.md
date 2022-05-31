@@ -32,16 +32,16 @@ relevant sections of this document.
 
 ## Bug Reports
 
-No bug fixes will be provided nor accepted for v1 of the SVGO Action going
+No bug fixes will be provided nor accepted for v2 of the SVGO Action going
 forward, unless the bug has an impact on the security of the Action.
 
 ## Feature Requests
 
-No new features will be added to v1 of the SVGO Action going forward.
+No new features will be added to v2 of the SVGO Action going forward.
 
 ## Corrections
 
-Corrections (such as fixing typos) for v1 of the SVGO Action will not be
+Corrections (such as fixing typos) for v2 of the SVGO Action will not be
 provided but may be accepted when contributed, if the changes are trivial.
 
 ## Workflow
