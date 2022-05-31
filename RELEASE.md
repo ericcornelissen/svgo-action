@@ -18,8 +18,10 @@ The release process is as follows:
 
 1. Initiate a new release by triggering the `release.yml` workflow manually. Use
    an update type in accordance with [Semantic Versioning].
-1. Review the created Pull Request and merge if everything looks OK. After
-   merging a [git tag] for the new version will be created automatically.
+1. Review the created Pull Request and make sure the changes look OK. Make
+   changes if necessary, for example for major releases. Merge the Pull Request
+   when the release is ready. After merging, a [git tag] for the new version
+   will be created automatically.
 1. Create a new [GitHub Release] for the (automatically) created tag. If the
    version should be published to the [GitHub Marketplace] ensure that checkbox
    is checked.
@@ -34,11 +36,10 @@ In case the release is a major release, some additional steps need to be carried
 out:
 
 1. Ensure any references to the major version in the documentation are updated.
-   Make sure these changes are included in the release.
 1. Update the automated release workflow to create releases for the new major
    version.
-1. Create a new `vX` tag for the new major version. Don't update the one for the
-   old major version.
+
+Make sure these additional changes are included in the release.
 
 ## Manual Releases (Discouraged)
 
@@ -68,10 +69,16 @@ version (using `v3.1.4` as an example):
    npm run build
    ```
 
+1. Update the contents of the `lib/` directory using:
+
+   ```sh
+   npm run build
+   ```
+
 1. Update the version number in the package manifest and lockfile:
 
    ```sh
-   npm version v3.1.4 --no-git-tag-version
+   npm version --no-git-tag-version v3.1.4
    ```
 
    If that fails change the value of the version field in `package.json` to the
@@ -104,27 +111,39 @@ version (using `v3.1.4` as an example):
    The date should follow the year-month-day format where single-digit months
    and days should be prefixed with a `0` (e.g. `2022-01-01`).
 
-1. Commit the changes to `main` using:
+1. Commit the changes to a release branch and push using:
 
    ```sh
+   git checkout -b v3-release-candidate
    git add lib/ CHANGELOG.md package.json package-lock.json
    git commit --no-verify -m "Version bump"
+   git push origin v3-release-candidate
    ```
 
-   (The `--no-verify` option is required to commit the changes to `lib/`.)
+   (The `--no-verify` option is required to commit the changes in `lib/`.)
 
-1. Create a tag for the new version and update the tag pointing to the latest v3
-   release using:
+1. Create a Pull Request to merge `v3-release-candidate` into `main`. Merge the
+   Pull Request if the changes look OK and all CI checks are passing.
+
+1. After the Pull Request is merged, sync the `main` branch:
+
+   ```sh
+   git switch main
+   git pull origin main
+   ```
+
+   And create a tag for the new version and update the tag pointing to the
+   latest v3 release using:
 
    ```sh
    git tag v3.1.4
    git tag -f v3
    ```
 
-1. Push the commit and tags:
+1. Push the tags:
 
    ```sh
-   git push origin main v3.1.4
+   git push origin v3.1.4
    git push origin v3 --force
    ```
 
