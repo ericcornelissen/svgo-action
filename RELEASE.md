@@ -6,7 +6,7 @@ guidelines found in this file.
 ## Outline
 
 A typical release process for the major version 2 will look something like this
-(using `v2.7.0` as an example):
+(using `v2.3.3` as an example):
 
 1. Make sure that your local copy of the repository is up-to-date:
 
@@ -33,15 +33,15 @@ A typical release process for the major version 2 will look something like this
    Update the version number in the package manifest and lockfile:
 
    ```sh
-   npm version --no-git-tag-version v2.7.1
+   npm version --no-git-tag-version v2.3.4
    ```
 
    If that fails change the value of the version field in `package.json` to the
    new version:
 
    ```diff
-   -  "version": "2.7.0",
-   +  "version": "2.7.1",
+   -  "version": "2.3.3",
+   +  "version": "2.3.4",
    ```
 
    and to update the version number in `package-lock.json` it is recommended to
@@ -54,7 +54,7 @@ A typical release process for the major version 2 will look something like this
    ```md
    - _No changes yet_
 
-   ## [2.7.1] - YYYY-MM-DD
+   ## [2.3.4] - YYYY-MM-DD
    ```
 
    The date should follow the year-month-day format where single-digit months
@@ -71,14 +71,14 @@ A typical release process for the major version 2 will look something like this
    latest v2 release using:
 
    ```sh
-   git tag v2.7.1
+   git tag v2.3.4
    git tag -f v2
    ```
 
 1. Push the commit and tags:
 
    ```sh
-   git push origin main-v2 v2.7.1
+   git push origin main-v2 v2.3.4
    git push origin v2 --force
    ```
 
