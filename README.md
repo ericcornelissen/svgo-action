@@ -13,6 +13,10 @@ Automatically run [SVGO] with GitHub Actions.
 
 ### Install the Action
 
+> :warning: Version 2 of the SVGO Action is almost end-of-life (EOL). It will
+> receive security updates until 2023-04-30. No other support will be provided.
+> After that date, the version will no longer receive any updates.
+
 Create a Workflow file (e.g.: `.github/workflows/optimize.yml`, see [Creating a
 Workflow file]) with the workflow below - or check out [the examples] for
 various complete workflows. You can also check [what the Action does for each
