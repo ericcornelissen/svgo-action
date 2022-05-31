@@ -7,6 +7,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
+    "audit": "better-npm-audit audit",
     "prebuild": "node script/prebuild.js",
     "build": "ncc build src/main.ts -m -o lib",
     "clean": "run-p clean:reports",
