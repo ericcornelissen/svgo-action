@@ -26,40 +26,17 @@ relevant sections of this document.
 
 ## Bug Reports
 
-> :warning: Support for bug fixes in SVGO Action v1 ends on 2022-05-31. Bugs
-> reported after that date have no guarantee of being fixed.
-
-If you have problems with _SVGO Action_ or think you've found a bug, please
-report it to the developers; we ask you to **always** open an issue describing
-the bug as soon as possible so that we, and others, are aware of the bug.
-
-Before reporting a bug, make sure you've actually found a real bug. Carefully
-read the documentation and see if it really says you can do what you're trying
-to do. If it's not clear whether you should be able to do something or not,
-report that too; it's a bug in the documentation! Also, make sure the bug has
-not already been reported.
-
-When preparing to report a bug, try to isolate it to a small working example
-that reproduces the problem. Once you have this, collect additional information
-such as:
-
-- The version of SVGO Action you're using.
-- A description of the expected behaviour and the actual behaviour.
-- Error and/or warning messages.
-- A link to an action run where the bug occurs with [debug logging] enabled.
-
-Once you have a precise problem you can report it as a [Bug Report].
+No bug fixes will be provided nor accepted for v1 of the SVGO Action going
+forward, unless the bug has an impact on the security of the Action.
 
 ## Feature Requests
 
-No new features will be added to v1 going forward.
+No new features will be added to v1 of the SVGO Action going forward.
 
 ## Corrections
 
-Corrections such as fixing typos are valuable contributions and a good place to
-start contributing. If you want to improve the documentation in this way feel
-free to open a Pull Request with the changes you want to make directly, or [open
-an issue] first if you prefer.
+Corrections (such as fixing typos) for v1 of the SVGO Action will not be
+provided but may be accepted when contributed, if the changes are trivial.
 
 ## Workflow
 
