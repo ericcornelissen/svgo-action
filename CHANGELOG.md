@@ -7,8 +7,13 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.7] - 2022-06-01
+
 - Add example workflow for scheduled optimization Pull Requests. ([#545])
 - Update dependency `@actions/github`. ([#538])
+- Update deprecation warning for end-of-life (EOL) of v2. ([#555])
 
 ## [2.1.6] - 2022-03-31
 
@@ -93,6 +98,10 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.15] - 2022-06-01
+
+- Update deprecation warning for end-of-life (EOL) of v1. ([#554])
 
 ## [1.3.14] - 2022-03-31
 
@@ -402,5 +411,7 @@ Versioning].
 [#525]: https://github.com/ericcornelissen/svgo-action/pull/525
 [#538]: https://github.com/ericcornelissen/svgo-action/pull/538
 [#545]: https://github.com/ericcornelissen/svgo-action/pull/545
+[#554]: https://github.com/ericcornelissen/svgo-action/pull/554
+[#555]: https://github.com/ericcornelissen/svgo-action/pull/555
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
