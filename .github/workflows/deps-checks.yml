@@ -1,0 +1,35 @@
+name: Dependency Analysis
+on:
+  schedule:
+    - cron: "0 0 * * 0"
+
+permissions: read-all
+
+jobs:
+  npm-audit:
+    name: Audit npm on ${{ matrix.version }}
+    strategy:
+      version:
+        type:
+          - main-v1
+          - main-v2
+          - main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.3
+        with:
+          egress-policy: audit
+      - name: Checkout repository
+        uses: actions/checkout@v3.0.2
+        with:
+          ref: ${{ matrix.version }}
+      - name: Install Node.js
+        uses: actions/setup-node@v3.1.1
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Initialize repository
+        run: npm ci
+      - name: Audit npm dependencies
+        run: npm audit
