@@ -14,6 +14,10 @@ Automatically run [SVGO] with GitHub Actions.
 
 ### Install the Action
 
+> :warning: Version 1 of the SVGO Action is almost end-of-life (EOL). It will
+> receive security updates until 2022-08-31. No other support will be provided.
+> After that date, the version will no longer receive any updates.
+
 Create a Workflow file (e.g.: `.github/workflows/svgo.yml`, see [Creating a
 Workflow file]) with the following content to utilize the SVGO Action. You can
 check [what the Action does for each `on` event](/docs/events.md) and [what the
@@ -168,8 +172,8 @@ on:
     - "**.svg"
 ```
 
-[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.14
-[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.14-undefined.svg?logo=github&logoColor=white&style=flat
+[marketplace-url]: https://github.com/marketplace/actions/svgo-action?version=v1.3.15
+[marketplace-image]: https://img.shields.io/badge/Marketplace-v1.3.15-undefined.svg?logo=github&logoColor=white&style=flat
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Amain-v1
 [ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/main-v1?logo=github
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action

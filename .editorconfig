@@ -19,6 +19,7 @@ max_line_length = unset
 max_line_length = 120 # Allow longer lines in test files for test descriptions
 
 [*.md]
+indent_size = unset # Irregular indentation needed for, e.g., numbered lists
 max_line_length = unset # Handled by markdownlint
 
 [test/fixtures/*.json]
