@@ -9,20 +9,20 @@ The [`release.yml`](./.github/workflows/release.yml) [GitHub Actions] workflow
 should be used to create releases. This workflow:
 
 1. Can be [triggered manually] to initiate a new release by means of a Pull
-  Request.
+   Request.
 1. Is triggered on the `main` branch and will create a [git tag] for the version
-  in the manifest **if** it doesn't exist yet. This will also keep the `v3` tag
-  up-to-date.
+   in the manifest **if** it doesn't exist yet. This will also keep the `v3` tag
+   up-to-date.
 
 The release process is as follows:
 
 1. Initiate a new release by triggering the `release.yml` workflow manually. Use
-  an update type in accordance with [Semantic Versioning].
+   an update type in accordance with [Semantic Versioning].
 1. Review the created Pull Request and merge if everything looks OK. After
-  merging a [git tag] for the new version will be created automatically.
+   merging a [git tag] for the new version will be created automatically.
 1. Create a new [GitHub Release] for the (automatically) created tag. If the
-  version should be published to the [GitHub Marketplace] ensure that checkbox
-  is checked.
+   version should be published to the [GitHub Marketplace] ensure that checkbox
+   is checked.
 
 ### Non-current Releases
 
@@ -34,11 +34,11 @@ In case the release is a major release, some additional steps need to be carried
 out:
 
 1. Ensure any references to the major version in the documentation are updated.
-  Make sure these changes are included in the release.
+   Make sure these changes are included in the release.
 1. Update the automated release workflow to create releases for the new major
-  version.
+   version.
 1. Create a new `vX` tag for the new major version. Don't update the one for the
-  old major version.
+   old major version.
 
 ## Manual Releases (Discouraged)
 
@@ -46,88 +46,90 @@ If it's not possible to use automated releases, or if something goes wrong with
 the automatic release process, you can follow these steps to release a new
 version (using `v3.1.4` as an example):
 
-1. Make sure that your local copy of the repository is up-to-date:
+1. Make sure that your local copy of the repository is up-to-date. Either sync:
 
-  ```sh
-  # Sync
-  git switch main
-  git pull origin main
+   ```sh
+   git switch main
+   git pull origin main
+   ```
 
-  # Or clone
-  git clone git@github.com:ericcornelissen/svgo-action.git
-  ```
+   Or use a fresh clone:
+
+   ```sh
+   git clone git@github.com:ericcornelissen/svgo-action.git
+   ```
 
 1. Verify that the repository is in a state that can be released:
 
-  ```sh
-  npm install
-  npm run lint
-  npm run coverage:all
-  npm run build
-  ```
+   ```sh
+   npm ci # Use "ci" ("clean install"), not "install"
+   npm run lint
+   npm run coverage:all
+   npm run build
+   ```
 
 1. Update the version number in the package manifest and lockfile:
 
-  ```sh
-  npm version v3.1.4 --no-git-tag-version
-  ```
+   ```sh
+   npm version v3.1.4 --no-git-tag-version
+   ```
 
-  If that fails change the value of the version field in `package.json` to the
-  new version:
+   If that fails change the value of the version field in `package.json` to the
+   new version:
 
-  ```diff
-  -  "version": "2.7.0",
-  +  "version": "3.1.4",
-  ```
+   ```diff
+   -  "version": "2.7.0",
+   +  "version": "3.1.4",
+   ```
 
-  and to update the version number in `package-lock.json` it is recommended to
-  run `npm install` (after updating `package.json`) which will sync the version
-  number.
+   and to update the version number in `package-lock.json` it is recommended to
+   run `npm install` (after updating `package.json`) which will sync the version
+   number.
 
 1. Update the changelog:
 
-  ```sh
-  node script/bump-changelog.js
-  ```
+   ```sh
+   node script/bump-changelog.js
+   ```
 
-  If that fails, manually add the following text after the `## [Unreleased]`
-  line:
+   If that fails, manually add the following text after the `## [Unreleased]`
+   line:
 
-  ```md
-  - _No changes yet_
+   ```md
+   - _No changes yet_
 
-  ## [3.1.4] - YYYY-MM-DD
-  ```
+   ## [3.1.4] - YYYY-MM-DD
+   ```
 
-  The date should follow the year-month-day format where single-digit months
-  and days should be prefixed with a `0` (e.g. `2022-01-01`).
+   The date should follow the year-month-day format where single-digit months
+   and days should be prefixed with a `0` (e.g. `2022-01-01`).
 
 1. Commit the changes to `main` using:
 
-  ```sh
-  git add lib/ CHANGELOG.md package.json package-lock.json
-  git commit --no-verify -m "Version bump"
-  ```
+   ```sh
+   git add lib/ CHANGELOG.md package.json package-lock.json
+   git commit --no-verify -m "Version bump"
+   ```
 
-  (The `--no-verify` option is required to commit the changes to `lib/`.)
+   (The `--no-verify` option is required to commit the changes to `lib/`.)
 
 1. Create a tag for the new version and update the tag pointing to the latest v3
-  release using
+   release using:
 
-  ```sh
-  git tag v3.1.4
-  git tag -f v3
-  ```
+   ```sh
+   git tag v3.1.4
+   git tag -f v3
+   ```
 
 1. Push the commit and tags:
 
-  ```sh
-  git push origin main v3.1.4
-  git push origin v3 --force
-  ```
+   ```sh
+   git push origin main v3.1.4
+   git push origin v3 --force
+   ```
 
 1. Create a new [GitHub Release]. If the version should be published to the
-  [GitHub Marketplace] ensure that checkbox is checked.
+   [GitHub Marketplace] ensure that checkbox is checked.
 
 [git tag]: https://git-scm.com/book/en/v2/Git-Basics-Tagging
 [github actions]: https://github.com/features/actions
