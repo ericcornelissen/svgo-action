@@ -10,8 +10,8 @@ jobs:
   npm-audit:
     name: Audit npm on ${{ matrix.version }}
     strategy:
-      version:
-        type:
+      matrix:
+        version:
           - main-v1
           - main-v2
           - main
