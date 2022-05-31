@@ -7,6 +7,7 @@
   "license": "MIT",
   "main": "lib/index.js",
   "scripts": {
+    "audit": "better-npm-audit audit",
     "prebuild": "node script/prebuild.js",
     "build": "ncc build src/main.ts -m -o lib",
     "clean": "run-p clean:reports",
@@ -59,6 +60,7 @@
     "@typescript-eslint/eslint-plugin": "4.32.0",
     "@typescript-eslint/parser": "4.32.0",
     "@vercel/ncc": "0.30.0",
+    "better-npm-audit": "3.7.3",
     "editorconfig-checker": "4.0.2",
     "eslint": "7.32.0",
     "eslint-plugin-jest": "24.5.0",
