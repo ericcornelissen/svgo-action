@@ -21,3 +21,6 @@ max_line_length = unset # Handled by markdownlint
 
 [lib/*]
 max_line_length = unset # Irrelevant for generated files
+
+[.nsprc]
+max_line_length = unset # Not practical for this configuration file
