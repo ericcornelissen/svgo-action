@@ -22,7 +22,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.2.0
         with:
           cache: npm
           node-version: 16
@@ -47,7 +47,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.2.0
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -80,12 +80,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.2.0
         with:
           cache: npm
           node-version: 16
       - name: Cache Jest
-        uses: actions/cache@v3.0.2
+        uses: actions/cache@v3.0.3
         with:
           path: .cache/jest
           key: ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
@@ -135,7 +135,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.2.0
         with:
           cache: npm
           node-version: 16
@@ -239,7 +239,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.2.0
         with:
           cache: npm
           node-version-file: .nvmrc
