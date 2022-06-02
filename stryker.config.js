@@ -25,7 +25,7 @@ module.exports = {
     "progress",
   ],
   htmlReporter: {
-    baseDir: "_reports/mutation",
+    fileName: "_reports/mutation/index.html",
   },
   thresholds: {
     high: 95,
