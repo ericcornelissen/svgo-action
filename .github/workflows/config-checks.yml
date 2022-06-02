@@ -48,7 +48,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.1.1
+        uses: actions/setup-node@v3.2.0
         with:
           node-version-file: .nvmrc
       - name: Install Renovate CLI
