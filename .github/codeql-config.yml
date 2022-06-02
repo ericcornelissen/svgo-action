@@ -1,5 +1,8 @@
 name: SVGO-Action CodeQL config
 
+packs:
+  - aeisenberg/codeql-actions-queries@1.0.1
+
 queries:
   - uses: security-extended
 

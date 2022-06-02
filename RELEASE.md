@@ -63,7 +63,7 @@ version (using `v3.1.4` as an example):
 1. Verify that the repository is in a state that can be released:
 
    ```sh
-   npm ci # Use "ci" ("clean install"), not "install"
+   npm clean-install
    npm run lint
    npm run coverage:all
    npm run build
