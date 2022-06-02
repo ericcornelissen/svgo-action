@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.0.1] - 2022-06-02
+
 - Add example workflow for scheduled optimization Pull Requests. ([#544])
 - Replace dependency `node-eval` by `eval`. ([#536], [#551])
 - Update dependency `@actions/core`. ([#546], [#558])
