@@ -32,45 +32,11 @@ describe.each([
     EVENT_REPOSITORY_DISPATCH,
     EVENT_SCHEDULE,
     EVENT_WORKFLOW_DISPATCH,
-  ])("known event ('%s')", (eventName) => {
+    "uNkNoWn EvEnT",
+  ])("event is '%s'", (eventName) => {
     const env = {
       context: {
         eventName,
-      },
-    };
-
-    test("did optimize", () => {
-      const err = outputs.Set({ env, data, out });
-
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(
-        DID_OPTIMIZE,
-        `${didOptimize}`,
-      );
-    });
-
-    test("optimized count", () => {
-      const err = outputs.Set({ env, data, out });
-
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(
-        OPTIMIZED_COUNT,
-        `${optimizedCount}`,
-      );
-    });
-
-    test("svg count", () => {
-      const err = outputs.Set({ env, data, out });
-
-      expect(err).toBeNull();
-      expect(out.setOutput).toHaveBeenCalledWith(SVG_COUNT, `${svgCount}`);
-    });
-  });
-
-  describe("unknown event", () => {
-    const env = {
-      context: {
-        eventName: "uNkNoWn EvEnT",
       },
     };
 

@@ -7,24 +7,13 @@ import * as github from "@actions/github";
 import clients from "../../../src/clients";
 import errors from "../../../src/errors";
 import New from "../../../src/filters/pushed-files";
+import { createFilesList } from "../../__common__/generate";
 import inp from "../../__common__/inputter.mock";
 
 describe("filters/pushed-files.ts", () => {
   describe("::New", () => {
     let client;
     let context;
-
-    function createFilesList(length: number): unknown[] {
-      const result: unknown[] = [];
-      for (let _ = 0; _ < length; _++) {
-        result.push({
-          status: "added",
-          filename: "foo.bar",
-        });
-      }
-
-      return result;
-    }
 
     beforeAll(() => {
       [client] = clients.New({ github, inp });

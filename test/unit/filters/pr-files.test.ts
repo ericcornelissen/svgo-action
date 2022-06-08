@@ -7,6 +7,7 @@ import * as github from "@actions/github";
 import clients from "../../../src/clients";
 import errors from "../../../src/errors";
 import New from "../../../src/filters/pr-files";
+import { createFilesList } from "../../__common__/generate";
 import inp from "../../__common__/inputter.mock";
 
 describe("filters/pr-files.ts", () => {
@@ -15,18 +16,6 @@ describe("filters/pr-files.ts", () => {
     let context;
 
     const pageSize = 100;
-
-    function createFilesList(length: number): unknown[] {
-      const result: unknown[] = [];
-      for (let _ = 0; _ < length; _++) {
-        result.push({
-          status: "added",
-          filename: "foo.bar",
-        });
-      }
-
-      return result;
-    }
 
     beforeAll(() => {
       [client] = clients.New({ github, inp });

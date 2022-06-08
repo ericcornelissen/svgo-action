@@ -6,6 +6,7 @@ import * as github from "@actions/github";
 
 import clients from "../../src/clients";
 import filters from "../../src/filters";
+import { createFilesList } from "../__common__/generate";
 import inp from "../__common__/inputter.mock";
 
 describe("package filters", () => {
@@ -35,18 +36,6 @@ describe("package filters", () => {
     let octokit;
 
     const pageSize = 100;
-
-    function createFilesList(length: number): unknown[] {
-      const result: unknown[] = [];
-      for (let _ = 0; _ < length; _++) {
-        result.push({
-          status: "added",
-          filename: "foo.bar",
-        });
-      }
-
-      return result;
-    }
 
     beforeAll(() => {
       [client] = clients.New({ github, inp });

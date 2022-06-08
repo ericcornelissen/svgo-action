@@ -12,6 +12,7 @@ const coreSetFailed = core.setFailed as jest.MockedFunction<typeof core.setFaile
 const helpersRunIf = helpers.runIf as jest.MockedFunction<typeof helpers.runIf>;
 
 describe("action-management/action-manager.ts", () => {
+  const msg = "Hello world!";
   const testConditions = [
     true,
     false,
@@ -19,18 +20,16 @@ describe("action-management/action-manager.ts", () => {
     errors.New("foobar"),
   ];
 
+  let actionManager;
+
+  beforeEach(() => {
+    coreSetFailed.mockClear();
+    helpersRunIf.mockClear();
+  });
+
   describe.each([true, false])("::failIf (strict=%s)", (strict) => {
-    const msg = "Hello world!";
-
-    let actionManager;
-
     beforeEach(() => {
       actionManager = new StandardActionManager(core, strict);
-    });
-
-    beforeEach(() => {
-      coreSetFailed.mockClear();
-      helpersRunIf.mockClear();
     });
 
     test.each([
@@ -54,17 +53,8 @@ describe("action-management/action-manager.ts", () => {
     [true, core.setFailed],
     [false, core.warning],
   ])("::strictFailIf (strict=%s)", (strict, callbackFn) => {
-    const msg = "Hello world!";
-
-    let actionManager;
-
     beforeEach(() => {
       actionManager = new StandardActionManager(core, strict);
-    });
-
-    beforeEach(() => {
-      coreSetFailed.mockClear();
-      helpersRunIf.mockClear();
     });
 
     test.each([
