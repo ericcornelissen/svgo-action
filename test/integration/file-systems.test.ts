@@ -24,13 +24,11 @@ describe("package file-systems", () => {
       isFile() { return true; },
     } as Stats;
 
-    test("no filters", () => {
-      const filters = NO_FILTERS;
+    const folder1 = "folder1" as unknown as Dirent;
+    const folder1file1 = "folder1/file1" as unknown as Dirent;
+    const file1 = "file1" as unknown as Dirent;
 
-      const folder1 = "folder1" as unknown as Dirent;
-      const folder1file1 = "folder1/file1" as unknown as Dirent;
-      const file1 = "file1" as unknown as Dirent;
-
+    beforeEach(() => {
       fsReaddirSync.mockReturnValueOnce([folder1, file1]);
       fsReaddirSync.mockReturnValueOnce([folder1file1]);
       fsExistsSync.mockReturnValue(true);
@@ -38,6 +36,10 @@ describe("package file-systems", () => {
       fsLstatSync.mockReturnValueOnce(lstatDir);
       fsLstatSync.mockReturnValueOnce(lstatFile);
       fsLstatSync.mockReturnValueOnce(lstatFile);
+    });
+
+    test("no filters", () => {
+      const filters = NO_FILTERS;
 
       const fileSystem = fileSystems.New({ filters });
 
@@ -47,18 +49,6 @@ describe("package file-systems", () => {
 
     test("a filter", () => {
       const filters = [() => false];
-
-      const folder1 = "folder1" as unknown as Dirent;
-      const folder1file1 = "folder1/file1" as unknown as Dirent;
-      const file1 = "file1" as unknown as Dirent;
-
-      fsReaddirSync.mockReturnValueOnce([folder1, file1]);
-      fsReaddirSync.mockReturnValueOnce([folder1file1]);
-      fsExistsSync.mockReturnValue(true);
-
-      fsLstatSync.mockReturnValueOnce(lstatDir);
-      fsLstatSync.mockReturnValueOnce(lstatFile);
-      fsLstatSync.mockReturnValueOnce(lstatFile);
 
       const fileSystem = fileSystems.New({ filters });
 
