@@ -4,10 +4,10 @@ jest.mock("@actions/core");
 jest.mock("@actions/github");
 jest.mock("node:fs");
 
-import * as fs from "node:fs";
 
 import * as core from "@actions/core";
 import * as github from "@actions/github";
+import * as fs from "node:fs";
 
 const coreSetOutput = core.setOutput as jest.MockedFunction<typeof core.setOutput>; // eslint-disable-line max-len
 const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>; // eslint-disable-line max-len
