@@ -68,7 +68,7 @@ there are no changes, nothing will be committed or commented.
 Check out [what the Action outputs] to customize the commit message and Pull
 Request comment to your liking.
 
-> :warning: This does not work for Pull Requests from forks. This is because
+> **Warning** This does not work for Pull Requests from forks. This is because
 > GitHub Actions do not have permission to alter forked repositories.
 
 ```yaml

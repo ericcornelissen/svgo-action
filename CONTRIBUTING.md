@@ -23,10 +23,9 @@ relevant sections of this document.
   - [End-to-End Tests](#end-to-end-tests)
   - [Mutation Testing](#mutation-testing)
 
-> :information_source: If you want to make a contribution to v2 of the Action,
-> please refer to the [Contributing Guidelines for v2]. If you want to make a
-> contribution to v1 of the Action, please refer to the [Contributing Guidelines
-> for v1].
+> **Note** If you want to make a contribution to v2 of the Action, please refer
+> to the [Contributing Guidelines for v2]. If you want to make a contribution to
+> v1 of the Action, please refer to the [Contributing Guidelines for v1].
 
 ---
 
@@ -70,10 +69,10 @@ When you open a Pull Request that implements a new feature make sure to link to
 the relevant feature request and explain how you implemented the feature as
 clearly as possible.
 
-> :information_source: If you, for whatever reason, can no longer continue your
-> contribution please let us know. This gives others an opportunity to work on
-> it. If we don't hear from you for an extended period of time we may decide to
-> allow others to work on the feature you've been assigned to.
+> **Note** If you, for whatever reason, can no longer continue your contribution
+> please let us know. This gives others an opportunity to work on it. If we
+> don't hear from you for an extended period of time we may decide to allow
+> others to work on the feature you've been assigned to.
 
 ## Corrections
 
@@ -88,9 +87,9 @@ through ESLint, please update the `.eslintrc.js` configuration accordingly. If
 you need an extra package to be able to enforce your style please add it as a
 `devDependency`.
 
-> :information_source: Keep in mind that the developers of the project determine
-> the code style of as they see fit. For this reason, take the time to explain
-> why you think your changes improve the project.
+> **Note** Keep in mind that the developers of the project determine the code
+> style of as they see fit. For this reason, take the time to explain why you
+> think your changes improve the project.
 
 ## Workflow
 

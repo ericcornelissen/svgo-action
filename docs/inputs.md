@@ -24,7 +24,7 @@ The `dry-run` input can be used to run the Action without having it write any
 changes. This can be useful for debugging or when you just want to give the
 Action a try.
 
-> :warning: If you misconfigure this input the Action assumes you wanted to
+> **Warning** If you misconfigure this input the Action assumes you wanted to
 > enable it and set `dry-run` to `true`.
 
 ### Examples
@@ -52,8 +52,8 @@ Action. By default, no files are ignored. The value is interpreted as a [glob],
 if there are multiple lines each line is interpreted as a [glob]. Any file that
 matches (any of) the configured glob(s) will **not** be optimized by the Action.
 
-> :information_source: Regardless of the value of this input, the Action will
-> only consider files with the `.svg` file extension.
+> **Note** Regardless of the value of this input, the Action will only consider
+> files with the `.svg` file extension.
 
 ### Examples
 
@@ -125,7 +125,7 @@ The `strict` input can be used to enable _strict mode_. In strict mode, the
 Action will fail in the event of a non-critical error (instead of just in the
 event of a critical error).
 
-> :warning: If you misconfigure this input the Action assumes you wanted to
+> **Warning** If you misconfigure this input the Action assumes you wanted to
 > enable it and set `strict` to `true`. This in turn results in the Action
 > failing due to an invalid input.
 
@@ -199,7 +199,7 @@ want to use. This can be either `2` for the latest v2 release, or the string
 `"project"` for the version of SVGO installed for your project. For `"project"`
 both SVGO v1 and v2 are supported.
 
-> :warning: SVGO v1 has been deprecated, we strongly recommend upgrading to
+> **Warning** SVGO v1 has been deprecated, we strongly recommend upgrading to
 > SVGO v2. For more information see the [SVGO v2 release notes].
 
 ### Examples

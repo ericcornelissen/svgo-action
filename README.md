@@ -86,7 +86,7 @@ changed. To do this you can change the Workflow file that uses this Action to be
 triggered only when SVGs change. Update the value of `pull_request` and/or
 `push` as follows:
 
-> :warning: This will cause the entire Workflow to be run only when an SVG
+> **Warning** This will cause the entire Workflow to be run only when an SVG
 > changes. Jobs that should run for every push or Pull Request must be specified
 > in a separate Workflow file.
 
