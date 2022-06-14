@@ -134,6 +134,10 @@ module.exports = {
         project: "./tsconfig.json",
       },
       rules: {
+        "@typescript-eslint/consistent-generic-constructors": [
+          "error",
+          "type-annotation",
+        ],
         "@typescript-eslint/consistent-type-exports": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
         "@typescript-eslint/member-delimiter-style": ["error", {
