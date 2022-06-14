@@ -25,6 +25,7 @@ jobs:
             artifactcache.actions.githubusercontent.com:443
             ghcr.io:443
             github.com:443
+            nodejs.org:443
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout repository

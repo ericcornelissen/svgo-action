@@ -17,6 +17,7 @@ jobs:
           allowed-endpoints: >
             artifactcache.actions.githubusercontent.com:443
             github.com:443
+            nodejs.org:443
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
@@ -25,7 +26,7 @@ jobs:
         uses: actions/setup-node@v3.2.0
         with:
           cache: npm
-          node-version: 16
+          node-version-file: .nvmrc
       - name: Install Dependencies
         run: npm ci
       - name: Build SVGO Action
@@ -41,6 +42,7 @@ jobs:
           allowed-endpoints: >
             artifactcache.actions.githubusercontent.com:443
             github.com:443
+            nodejs.org:443
             objects.githubusercontent.com:443
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
@@ -73,6 +75,7 @@ jobs:
             artifactcache.actions.githubusercontent.com:443
             codecov.io:443
             github.com:443
+            nodejs.org:443
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
             storage.googleapis.com:443
@@ -83,7 +86,7 @@ jobs:
         uses: actions/setup-node@v3.2.0
         with:
           cache: npm
-          node-version: 16
+          node-version-file: .nvmrc
       - name: Cache Jest
         uses: actions/cache@v3.0.3
         with:
@@ -130,6 +133,7 @@ jobs:
           allowed-endpoints: >
             artifactcache.actions.githubusercontent.com:443
             github.com:443
+            nodejs.org:443
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout Repository
@@ -138,7 +142,7 @@ jobs:
         uses: actions/setup-node@v3.2.0
         with:
           cache: npm
-          node-version: 16
+          node-version-file: .nvmrc
       - name: Install Dependencies
         run: npm ci
       - name: Install Package-local SVGO
@@ -233,6 +237,7 @@ jobs:
             artifactcache.actions.githubusercontent.com:443
             dashboard.stryker-mutator.io:443
             github.com:443
+            nodejs.org:443
             objects.githubusercontent.com:443
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
