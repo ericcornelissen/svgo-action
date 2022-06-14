@@ -30,7 +30,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.2.0
+        uses: actions/setup-node@v3.3.0
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -43,7 +43,7 @@ jobs:
       - name: Update build files
         run: npm run build
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4.0.3
+        uses: peter-evans/create-pull-request@v4.0.4
         with:
           title: New ${{ github.event.inputs.update_type }} release for v3
           body: _This Pull Request was created automatically_
@@ -66,7 +66,7 @@ jobs:
         with:
           fetch-depth: 0 # To obtain all tags
       - name: Install Node.js
-        uses: actions/setup-node@v3.2.0
+        uses: actions/setup-node@v3.3.0
         with:
           cache: npm
           node-version-file: .nvmrc
