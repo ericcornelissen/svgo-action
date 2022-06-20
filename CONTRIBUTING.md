@@ -106,7 +106,7 @@ If you decide to make a contribution, please do use the following workflow:
 To be able to contribute you need at least the following:
 
 - _Git_;
-- _Node.js_ v16 or higher and _npm_ v8.1.2 or higher;
+- _Node.js_ v18 or higher and _npm_ v8.1.2 or higher;
 - (Recommended) a code editor with _[EditorConfig]_ support;
 
 We use [Husky] to automatically install git hooks. Please enable it when
