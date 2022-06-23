@@ -255,3 +255,29 @@ jobs:
         env:
           CI: true
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_TOKEN }}
+  vet:
+    name: Vet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.3
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            nodejs.org:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.2
+      - name: Install Node.js
+        uses: actions/setup-node@v3.3.0
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install Dependencies
+        run: npm ci
+      - name: Vet
+        run: npm run vet
