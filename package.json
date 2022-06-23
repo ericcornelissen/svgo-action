@@ -28,7 +28,8 @@
     "test:all": "jest",
     "test:unit": "jest test/unit",
     "test:integration": "jest test/integration",
-    "test:mutation": "stryker run stryker.config.js"
+    "test:mutation": "stryker run stryker.config.js",
+    "vet": "depcheck && unimported"
   },
   "repository": {
     "type": "git",
