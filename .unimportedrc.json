@@ -1,0 +1,16 @@
+{
+  "entry": [
+    "lib/index.js",
+    "src/index.ts"
+  ],
+  "extensions": [
+    ".d.ts",
+    ".js",
+    ".ts"
+  ],
+  "ignoreUnresolved": [],
+  "ignoreUnused": [],
+  "ignoreUnimported": [
+    "**/__mocks__/**"
+  ]
+}
