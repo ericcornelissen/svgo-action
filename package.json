@@ -51,6 +51,7 @@
   "dependencies": {
     "@actions/core": "1.8.2",
     "@actions/github": "5.0.3",
+    "encoding": "0.1.13",
     "eval": "0.1.8",
     "import-cwd": "3.0.0",
     "js-yaml": "4.1.0",
