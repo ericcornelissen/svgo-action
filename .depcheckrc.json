@@ -1,0 +1,8 @@
+{
+  "ignores": [
+    "@commitlint/*",
+    "@stryker-mutator/*",
+    "@types/*"
+  ],
+  "ignore-path": ".gitignore"
+}
