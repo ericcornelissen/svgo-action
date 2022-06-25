@@ -108,6 +108,7 @@ To be able to contribute you need at least the following:
 - _Git_;
 - _Node.js_ v16 or higher and _npm_ v8.1.2 or higher;
 - (Recommended) a code editor with _[EditorConfig]_ support;
+- (Optional) [`nektos/act`];
 
 We use [Husky] to automatically install git hooks. Please enable it when
 contributing to _SVGO Action_. If you have npm installation scripts disabled,
@@ -197,8 +198,19 @@ The end-to-end tests verify three things:
 1. That the Action outputs are correct, and
 1. That SVGs are modified on disk.
 
-Due to the nature of these tests they cannot be run locally. It is generally not
-necessary to add new end-to-end tests when you make a contribution.
+#### Running End-to-end Tests Locally
+
+You can use [`nektos/act`] to run the end-to-end tests locally. If you have the
+`act` program available on your PATH you can use `npm run test:e2e` to run the
+end-to-end tests.
+
+There are some limitations to using [`nektos/act`]:
+
+- It depends on [Docker] to run workflows.
+- Your system may not support all operating systems the tests should run on.
+  Hence, the end-to-end tests may succeed locally but fail on GitHub because you
+  couldn't run them for all operating systems.
+- All jobs that the end-to-end test job `needs` have to be executed as well.
 
 ### Mutation Testing
 
@@ -231,12 +243,14 @@ change the Stryker configuration as follows.
 [contributing guidelines for v1]: https://github.com/ericcornelissen/svgo-action/blob/main-v1/CONTRIBUTING.md
 [contributing guidelines for v2]: https://github.com/ericcornelissen/svgo-action/blob/main-v2/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
+[docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/
 [eslint]: https://eslint.org/
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
 [mocking]: https://stackoverflow.com/a/2666006
 [mutation testing]: https://en.wikipedia.org/wiki/Mutation_testing
+[`nektos/act`]: https://github.com/nektos/act
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new/choose
 [sinon]: https://sinonjs.org/
 [strykerjs]: https://stryker-mutator.io/
