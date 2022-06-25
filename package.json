@@ -29,7 +29,8 @@
     "test:unit": "jest test/unit",
     "test:integration": "jest test/integration",
     "test:e2e": "act --job test-e2e",
-    "test:mutation": "stryker run stryker.config.js"
+    "test:mutation": "stryker run stryker.config.js",
+    "vet": "depcheck && unimported"
   },
   "repository": {
     "type": "git",
@@ -51,6 +52,7 @@
   "dependencies": {
     "@actions/core": "1.8.2",
     "@actions/github": "5.0.3",
+    "encoding": "0.1.13",
     "eval": "0.1.8",
     "import-cwd": "3.0.0",
     "js-yaml": "4.1.0",
@@ -73,6 +75,7 @@
     "@types/node": "16.11.39",
     "@typescript-eslint/eslint-plugin": "5.28.0",
     "@typescript-eslint/parser": "5.28.0",
+    "depcheck": "1.4.3",
     "editorconfig-checker": "4.0.2",
     "eslint": "8.17.0",
     "eslint-plugin-import": "2.26.0",
@@ -88,7 +91,8 @@
     "rollup": "2.75.6",
     "rollup-plugin-terser": "7.0.2",
     "ts-jest": "28.0.5",
-    "typescript": "4.7.3"
+    "typescript": "4.7.3",
+    "unimported": "1.21.0"
   },
   "engines": {
     "node": ">=16.0.0",

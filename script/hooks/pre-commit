@@ -12,6 +12,9 @@ if [ ! $(IS_MERGING) ]; then
   git stash push --quiet --include-untracked --keep-index
 fi
 
+# Run vetting tools
+npm run vet
+
 # Run linters that don't support formatting
 npm run lint:ws
 
