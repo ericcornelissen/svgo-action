@@ -7,17 +7,21 @@ on:
   schedule:
     - cron: '0 7 * * 3'
 
+permissions: read-all
+
 jobs:
   codeql:
     name: CodeQL
     runs-on: ubuntu-latest
+    permissions:
+      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v1
+        uses: github/codeql-action/init@v2.1.12
         with:
           config-file: ./.github/codeql-config.yml
           languages: javascript
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v1
+        uses: github/codeql-action/analyze@v2.1.12
