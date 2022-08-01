@@ -66,6 +66,7 @@ jobs:
           - unit
           - integration
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@v1.4.4
@@ -103,6 +104,7 @@ jobs:
           CI: true
       - name: Upload Code Coverage
         uses: codecov/codecov-action@v3.1.0
+        if: ${{ always() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./_reports/coverage/${{ matrix.type }}/lcov.info
