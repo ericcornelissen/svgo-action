@@ -167,9 +167,9 @@ the file will be updated automatically prior to a release.
 ## Testing
 
 It is important to test any changes and equally important to add tests for
-previously untested code. Tests for this project are written using [Jest] and
-[Sinon]. All tests go into the `test/` folders and all test files should follow
-the naming convention `[FILENAME].test.ts`.
+previously untested code. Tests for this project are written using [Jest]. All
+tests go into the `test/` folder and all test files should follow the naming
+convention `[FILENAME].test.ts`.
 
 The tests for _SVGO Action_ are split between unit and integration test. Various
 commands are available to run the tests, as shown in the overview below. You can
@@ -181,6 +181,7 @@ run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test` or
 | `test`, `coverage` | `all` _(optional)_ | Runs all tests         |
 | `test`, `coverage` | `unit`             | Runs unit tests        |
 | `test`, `coverage` | `integration`      | Runs integration tests |
+| `test`             | `e2e`              | Runs end-to-end tests  |
 | `test`             | `mutation`         | Runs mutation tests    |
 
 Whenever you use the `coverage` variant of a script, a coverage report will be
@@ -306,7 +307,6 @@ There are some limitations to using [`nektos/act`]:
 [open feature requests]: https://github.com/ericcornelissen/svgo-action/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement+
 [open issues]: https://github.com/ericcornelissen/svgo-action/issues
 [rollup.js]: https://rollupjs.org/guide/en/
-[sinon]: https://sinonjs.org/
 [security policy]: ./SECURITY.md
 [strykerjs]: https://stryker-mutator.io/
 [stryker dashboard]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
