@@ -67,21 +67,6 @@ we recommend you [open an issue] first so you don't spend time working on
 something that won't be included. Be sure to check if the feature hasn't been
 requested before.
 
-Once the feature you requested has been approved, you can start implementing it
-(if you want to do that). It is advised to indicate you're working on the
-feature so others don't start working on the same feature as you do. Also, don't
-start working on a feature which someone else is working on. Give everyone a
-chance to make contributions.
-
-When you open a Pull Request that implements a new feature make sure to link to
-the relevant feature request and explain how you implemented the feature as
-clearly as possible.
-
-> **Note** If you, for whatever reason, can no longer continue your contribution
-> please let us know. This gives others an opportunity to work on it. If we
-> don't hear from you for an extended period of time we may decide to allow
-> others to work on the feature you've been assigned to.
-
 ### Corrections
 
 Corrections, such as fixing typos or refactoring code, are important. For
@@ -95,6 +80,20 @@ issue] first if you prefer.
 You are always free to contribute by working on one of the confirmed [open
 bug reports], approved [open feature requests], or any of the other accepted
 [open issues] and opening a Pull Request for it.
+
+It is advised to indicate that you will be working on a issue by commenting on
+that issue. This is so others don't start working on the same issue as you are.
+Also, don't start working on an issue which someone else is working on - give
+everyone a chance to make contributions.
+
+When you open a Pull Request that implements an issue make sure to link to that
+issue in the Pull Request description and explain how you implemented the issue
+as clearly as possible.
+
+> **Note** If you, for whatever reason, can no longer continue your contribution
+> please share this in the issue or your Pull Request. This gives others the
+> opportunity to work on it. If we don't hear from you for an extended period of
+> time we may decide to allow others to work on the issue you were assigned to.
 
 ### Project Setup
 
