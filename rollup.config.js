@@ -7,7 +7,7 @@ import { terser } from "rollup-plugin-terser";
 export default {
   input: "src/index.ts",
   output: {
-    dir: "lib",
+    file: "lib/index.cjs",
     format: "cjs",
   },
   external: ["node:fs", "node:path"],

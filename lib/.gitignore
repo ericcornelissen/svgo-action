@@ -1,0 +1,3 @@
+# allowlist for Action executables
+*
+!index.cjs
