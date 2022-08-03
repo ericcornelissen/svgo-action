@@ -1,10 +1,10 @@
-const commonjs = require("@rollup/plugin-commonjs");
-const json = require("@rollup/plugin-json");
-const nodeResolve = require("@rollup/plugin-node-resolve").nodeResolve;
-const typescript = require("@rollup/plugin-typescript");
-const terser = require("rollup-plugin-terser").terser;
+import commonjs from "@rollup/plugin-commonjs";
+import json from "@rollup/plugin-json";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import typescript from "@rollup/plugin-typescript";
+import { terser } from "rollup-plugin-terser";
 
-module.exports = {
+export default {
   input: "src/index.ts",
   output: {
     dir: "lib",

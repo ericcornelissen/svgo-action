@@ -5,6 +5,7 @@
   "description": "Automatically run SVGO with GitHub Actions",
   "homepage": "https://github.com/marketplace/actions/svgo-action",
   "license": "MIT",
+  "type": "module",
   "main": "lib/index.js",
   "scripts": {
     "audit": "npm audit",

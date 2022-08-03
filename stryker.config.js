@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   coverageAnalysis: "perTest",
   inPlace: false,
   mutate: [

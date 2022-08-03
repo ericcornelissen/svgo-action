@@ -1,4 +1,4 @@
-const process = require("process");
+import process from "process";
 
 let coverageSubDir = "all";
 if (process.argv.includes("test/integration")) {
@@ -7,7 +7,7 @@ if (process.argv.includes("test/integration")) {
   coverageSubDir = "unit";
 }
 
-module.exports = {
+export default {
   preset: "ts-jest",
   testEnvironment: "node",
   cacheDirectory: "./.cache/jest",
