@@ -63,8 +63,8 @@ Once you have a precise problem you can report it as a [bug report].
 ### Feature Requests
 
 New features are welcomed, but we want to avoid feature creep. For this reason
-we recommend you [open an issue] first so you don't spend time working on
-something that won't be included. Be sure to check if the feature hasn't been
+we recommend you open a [feature request] first so you don't spend time working
+on something that won't be included. Be sure to check if the feature hasn't been
 requested before.
 
 ### Corrections
@@ -131,7 +131,7 @@ old) tests pass. See the [testing](#testing) section for more details.
 
 #### Linting
 
-This project use [ESLint], [markdownlint], and [editorconfig-checker] for
+This project uses [ESLint], [markdownlint], and [editorconfig-checker] for
 linting. If you make changes to the code or documentation, make sure to follow
 the code style that is enforced through the linters. Use `npm run lint` to check
 the code style or `npm run format` to format changes in accordance with the code
@@ -175,7 +175,7 @@ commands are available to run the tests, as shown in the overview below. You can
 run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test` or
 `npm run coverage:unit`.
 
-| Scripts            | Modifier           | Description            |
+| Script             | Modifier           | Description            |
 | :----------------- | :----------------- | :--------------------- |
 | `test`, `coverage` | `all` _(optional)_ | Runs all tests         |
 | `test`, `coverage` | `unit`             | Runs unit tests        |
@@ -195,11 +195,11 @@ always match the name of the file it mocks.
 
 Mocks for Node.js modules go into the `__mocks__` directory at the root of the
 project. The name of the mock file should always match the name of the Node.js
-module. In the case of a scoped node module, the mock file should be placed in a
-folders with the name of the scope. For example, the mock for `@actions/core`
-can be found at `__mocks__/@actions/core.ts`.
+module. For scoped Node.js modules, the mock file should be placed in a folder
+with the name of the scope. For example, the mock for `@actions/core` can be
+found at `__mocks__/@actions/core.ts`.
 
-Any non-mock module inside a `__mocks__` folder should follow the naming
+Any non-mock file inside a `__mocks__` folder should follow the naming
 convention `__[FILENAME]__.ts`. Any mock that is not tied to a file or Node.js
 module should be placed in the `test/__common__` folder and follow the naming
 convention `[FILENAME].mock.ts`.
@@ -295,6 +295,7 @@ There are some limitations to using [`nektos/act`]:
 [editorconfig]: https://editorconfig.org/
 [editorconfig-checker]: https://editorconfig-checker.github.io/
 [eslint]: https://eslint.org/
+[feature request]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=enhancement&template=feature_request.md
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
 [markdownlint]: https://github.com/DavidAnson/markdownlint
