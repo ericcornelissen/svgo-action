@@ -102,7 +102,7 @@ To be able to contribute you need at least the following:
 - _Git_;
 - _Node.js_ v16 or higher and _npm_ v8.1.2 or higher;
 - (Recommended) A code editor with _[EditorConfig]_ support;
-- (Optional) _[`nektos/act`]_ for running end-to-end tests locally;
+- (Optional) _[`nektos/act`]_;
 
 We use [Husky] to automatically install git hooks. Please enable it when
 contributing to _SVGO Action_. If you have npm installation scripts disabled,
