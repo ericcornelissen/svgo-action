@@ -23,7 +23,7 @@
     "lint:js": "eslint . --ext .js,.ts",
     "lint:md": "markdownlint -i node_modules **/*.md .github/**/*.md",
     "lint:ws": "editorconfig-checker -disable-max-line-length",
-    "postinstall": "is-ci || husky install script/hooks",
+    "prepare": "is-ci || husky install script/hooks",
     "test": "npm run test:all",
     "test:all": "jest",
     "test:unit": "jest test/unit",
