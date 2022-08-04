@@ -113,6 +113,7 @@ jobs:
     name: Test - end-to-end (${{ matrix.test.description }})
     needs: [test]
     strategy:
+      fail-fast: false
       matrix:
         test:
           - description: built-in, v2
