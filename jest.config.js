@@ -1,4 +1,4 @@
-import process from "process";
+import process from "node:process";
 
 let coverageSubDir = "all";
 if (process.argv.includes("test/integration")) {
