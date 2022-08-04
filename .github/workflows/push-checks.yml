@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.3
+        uses: step-security/harden-runner@v1.4.4
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -23,7 +23,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.4.1
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.3
+        uses: step-security/harden-runner@v1.4.4
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -49,7 +49,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.4.1
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -66,9 +66,10 @@ jobs:
           - unit
           - integration
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.3
+        uses: step-security/harden-runner@v1.4.4
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -83,12 +84,12 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.4.1
         with:
           cache: npm
           node-version-file: .nvmrc
       - name: Cache Jest
-        uses: actions/cache@v3.0.4
+        uses: actions/cache@v3.0.5
         with:
           path: .cache/jest
           key: ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
@@ -103,6 +104,7 @@ jobs:
           CI: true
       - name: Upload Code Coverage
         uses: codecov/codecov-action@v3.1.0
+        if: ${{ always() }}
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./_reports/coverage/${{ matrix.type }}/lcov.info
@@ -111,23 +113,24 @@ jobs:
     name: Test - end-to-end (${{ matrix.test.description }})
     needs: [test]
     strategy:
+      fail-fast: false
       matrix:
         test:
           - description: built-in, v2
             svgo-version: 2
-            svgo-config: test/end-to-end/svgo.config.js
+            svgo-config: test/end-to-end/svgo.config.cjs
           - description: project, v1
             svgo-version: project
             svgo-config: test/end-to-end/.svgo.yml
             project-svgo-version: ^1.0.0
           - description: project, v2
             svgo-version: project
-            svgo-config: test/end-to-end/svgo.config.js
+            svgo-config: test/end-to-end/svgo.config.cjs
             project-svgo-version: ^2.0.0
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.3
+        uses: step-security/harden-runner@v1.4.4
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -139,7 +142,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.4.1
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -230,7 +233,7 @@ jobs:
     if: ${{ github.ref_name == 'main' || github.ref_name == 'main-v2' }}
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.3
+        uses: step-security/harden-runner@v1.4.4
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -244,7 +247,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.4.1
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -255,3 +258,29 @@ jobs:
         env:
           CI: true
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_TOKEN }}
+  vet:
+    name: Vet
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@v1.4.4
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            nodejs.org:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+            si05acprodeus1file1.blob.core.windows.net:443
+      - name: Checkout Repository
+        uses: actions/checkout@v3.0.2
+      - name: Install Node.js
+        uses: actions/setup-node@v3.4.1
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install Dependencies
+        run: npm ci
+      - name: Vet
+        run: npm run vet

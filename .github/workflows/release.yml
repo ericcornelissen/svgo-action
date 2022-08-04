@@ -24,7 +24,7 @@ jobs:
       pull-requests: write # To open a Pull Request
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.3
+        uses: step-security/harden-runner@v1.4.4
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -38,7 +38,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v3.0.2
       - name: Install Node.js
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.4.1
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -66,7 +66,7 @@ jobs:
       contents: write # To push a tag
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.3
+        uses: step-security/harden-runner@v1.4.4
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -82,7 +82,7 @@ jobs:
         with:
           fetch-depth: 0 # To obtain all tags
       - name: Install Node.js
-        uses: actions/setup-node@v3.3.0
+        uses: actions/setup-node@v3.4.1
         with:
           cache: npm
           node-version-file: .nvmrc

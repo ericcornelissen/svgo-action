@@ -108,12 +108,16 @@ module.exports = {
       fn: "test",
       withinDescribe: "test",
     }],
+    "jest/max-expects": ["error", {
+      max: 13,
+    }],
     "jest/no-alias-methods": ["error"],
     "jest/no-conditional-in-test": ["error"],
     "jest/no-duplicate-hooks": "off",
     "jest/prefer-comparison-matcher": ["error"],
     "jest/prefer-equality-matcher": ["error"],
     "jest/prefer-hooks-in-order": ["error"],
+    "jest/prefer-mock-promise-shorthand": ["error"],
     "jest/prefer-to-be": ["error"],
     "jest/prefer-to-contain": ["error"],
     "jest/prefer-to-have-length": ["error"],
@@ -154,24 +158,17 @@ module.exports = {
       },
     },
     { // Configuration files
-      files: ["*.js"],
+      files: ["*.cjs"],
       globals: {
         "__dirname": "readonly",
         "module": "readonly",
         "require": "readonly",
       },
-      rules: {
-        "@typescript-eslint/no-var-requires": "off",
-        "security/detect-non-literal-fs-filename": "off",
-      },
     },
     { // Script files
-      files: ["script/**/*.ts"],
+      files: ["script/**/*.js"],
       rules: {
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/explicit-module-boundary-types": ["error", {
-          allowArgumentsExplicitlyTypedAsAny: true,
-        }],
+        "security/detect-non-literal-fs-filename": "off",
       },
     },
     { // Test files

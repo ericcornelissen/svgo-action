@@ -7,7 +7,9 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve notes and warnings readability in the documentation. ([#566])
+- Remove dependency `encoding`. ([#592])
+- Update dependency `@actions/core`. ([#582])
 
 ## [3.0.1] - 2022-06-02
 
@@ -368,9 +370,7 @@ Versioning].
 [#335]: https://github.com/ericcornelissen/svgo-action/pull/335
 [#337]: https://github.com/ericcornelissen/svgo-action/pull/337
 [#339]: https://github.com/ericcornelissen/svgo-action/pull/339
-[#343]: https://github.com/ericcornelissen/svgo-action/pull/343
 [#344]: https://github.com/ericcornelissen/svgo-action/pull/344
-[#346]: https://github.com/ericcornelissen/svgo-action/pull/346
 [#352]: https://github.com/ericcornelissen/svgo-action/pull/352
 [#355]: https://github.com/ericcornelissen/svgo-action/pull/355
 [#357]: https://github.com/ericcornelissen/svgo-action/pull/357
@@ -428,5 +428,8 @@ Versioning].
 [#546]: https://github.com/ericcornelissen/svgo-action/pull/546
 [#551]: https://github.com/ericcornelissen/svgo-action/pull/551
 [#558]: https://github.com/ericcornelissen/svgo-action/pull/558
+[#566]: https://github.com/ericcornelissen/svgo-action/pull/566
+[#582]: https://github.com/ericcornelissen/svgo-action/pull/582
+[#592]: https://github.com/ericcornelissen/svgo-action/pull/592
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

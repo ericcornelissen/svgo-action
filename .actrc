@@ -1,0 +1,3 @@
+--platform ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest
+--quiet
+--use-gitignore

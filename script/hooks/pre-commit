@@ -5,12 +5,16 @@
 if [ ! $(IS_MERGING) ]; then
   LIB_STAGED_COUNT=$(git diff --name-only --staged lib/ | wc -l)
   if [ "$LIB_STAGED_COUNT" -ne "0" ]; then
-    echo "[INFO] All changes to the lib/ directory have been unstaged. Changes in the lib/ directory should not be committed."
+    echo "[INFO] All changes to the lib/ directory have been unstaged."
+    echo "[INFO] Changes in the lib/ directory should not be committed."
     git restore --staged lib/
   fi
 
   git stash push --quiet --include-untracked --keep-index
 fi
+
+# Run vetting tools
+npm run vet
 
 # Run linters that don't support formatting
 npm run lint:ws
