@@ -1,6 +1,6 @@
 {
   "entry": [
-    "lib/index.js",
+    "lib/index.cjs",
     "src/index.ts"
   ],
   "extensions": [

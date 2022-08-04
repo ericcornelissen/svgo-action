@@ -113,18 +113,19 @@ jobs:
     name: Test - end-to-end (${{ matrix.test.description }})
     needs: [test]
     strategy:
+      fail-fast: false
       matrix:
         test:
           - description: built-in, v2
             svgo-version: 2
-            svgo-config: test/end-to-end/svgo.config.js
+            svgo-config: test/end-to-end/svgo.config.cjs
           - description: project, v1
             svgo-version: project
             svgo-config: test/end-to-end/.svgo.yml
             project-svgo-version: ^1.0.0
           - description: project, v2
             svgo-version: project
-            svgo-config: test/end-to-end/svgo.config.js
+            svgo-config: test/end-to-end/svgo.config.cjs
             project-svgo-version: ^2.0.0
     runs-on: ubuntu-latest
     steps:
