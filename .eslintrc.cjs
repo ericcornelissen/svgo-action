@@ -158,24 +158,17 @@ module.exports = {
       },
     },
     { // Configuration files
-      files: ["*.js"],
+      files: ["*.cjs"],
       globals: {
         "__dirname": "readonly",
         "module": "readonly",
         "require": "readonly",
       },
-      rules: {
-        "@typescript-eslint/no-var-requires": "off",
-        "security/detect-non-literal-fs-filename": "off",
-      },
     },
     { // Script files
-      files: ["script/**/*.ts"],
+      files: ["script/**/*.js"],
       rules: {
-        "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/explicit-module-boundary-types": ["error", {
-          allowArgumentsExplicitlyTypedAsAny: true,
-        }],
+        "security/detect-non-literal-fs-filename": "off",
       },
     },
     { // Test files
