@@ -2,7 +2,13 @@
   "ignores": [
     "@commitlint/*",
     "@stryker-mutator/*",
-    "@types/*"
+    "@types/*",
+    "ts-jest"
   ],
-  "ignore-path": ".gitignore"
+  "ignore-path": ".gitignore",
+  "parsers": {
+    "**/*.cjs": "es6",
+    "**/*.js": "es6",
+    "**/*.ts": "typescript"
+  }
 }
