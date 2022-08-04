@@ -6,7 +6,7 @@
   "homepage": "https://github.com/marketplace/actions/svgo-action",
   "license": "MIT",
   "type": "module",
-  "main": "lib/index.js",
+  "main": "lib/index.cjs",
   "scripts": {
     "audit": "npm audit",
     "build": "rollup --config rollup.config.js",
