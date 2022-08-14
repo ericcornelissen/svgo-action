@@ -9,7 +9,7 @@ Versioning].
 
 - Improve notes and warnings readability in the documentation. ([#566])
 - Remove dependency `encoding`. ([#592])
-- Update dependency `@actions/core`. ([#582])
+- Update dependency `@actions/core`. ([#582], [#595])
 
 ## [3.0.1] - 2022-06-02
 
@@ -431,5 +431,6 @@ Versioning].
 [#566]: https://github.com/ericcornelissen/svgo-action/pull/566
 [#582]: https://github.com/ericcornelissen/svgo-action/pull/582
 [#592]: https://github.com/ericcornelissen/svgo-action/pull/592
+[#595]: https://github.com/ericcornelissen/svgo-action/pull/595
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
