@@ -23,7 +23,7 @@ A typical release process for v1 versions will look something like this (using
 1. Verify that the repository is in a state that can be released:
 
    ```sh
-   npm ci # Use "ci" ("clean install"), not "install"
+   npm clean-install
    npm run lint
    npm run test:coverage
    npm run build
@@ -74,7 +74,7 @@ A typical release process for v1 versions will look something like this (using
 
    ```sh
    git add lib/ CHANGELOG.md package.json package-lock.json README.md
-   git commit -m "chore: version bump"
+   git commit --no-verify -m "chore: version bump"
    ```
 
 1. Create a [git tag] for the new version and update the tag pointing to the
