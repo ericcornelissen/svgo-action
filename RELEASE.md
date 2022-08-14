@@ -23,7 +23,7 @@ A typical release process for the major version 2 will look something like this
 1. Verify that the repository is in a state that can be released:
 
    ```sh
-   npm ci # Use "ci" ("clean install"), not "install"
+   npm clean-install
    npm run lint
    npm run coverage:all
    npm run build
@@ -64,7 +64,7 @@ A typical release process for the major version 2 will look something like this
 
    ```sh
    git add lib/ CHANGELOG.md package.json package-lock.json
-   git commit -m "chore: version bump"
+   git commit --no-verify -m "chore: version bump"
    ```
 
 1. Create a [git tag] for the new version and update the tag pointing to the

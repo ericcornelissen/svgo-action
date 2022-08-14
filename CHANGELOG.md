@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.8] - 2022-08-14
+
 - Update dependency `@actions/core`. ([#598])
 
 ## [2.1.7] - 2022-06-01
