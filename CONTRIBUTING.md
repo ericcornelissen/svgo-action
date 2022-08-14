@@ -100,7 +100,7 @@ as clearly as possible.
 To be able to contribute you need at least the following:
 
 - _Git_;
-- _Node.js_ v16 or higher and _npm_ v8.1.2 or higher;
+- _Node.js_ v18 or higher and _npm_ v8.1.2 or higher;
 - (Recommended) A code editor with _[EditorConfig]_ support;
 - (Optional) _[`nektos/act`]_;
 
