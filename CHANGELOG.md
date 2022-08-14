@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.0.2] - 2022-08-14
+
 - Improve notes and warnings readability in the documentation. ([#566])
 - Remove dependency `encoding`. ([#592])
 - Update dependency `@actions/core`. ([#582], [#595])
