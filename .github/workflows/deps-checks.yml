@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.4
+        uses: step-security/harden-runner@v1.4.5
         with:
           egress-policy: block
           allowed-endpoints: >
