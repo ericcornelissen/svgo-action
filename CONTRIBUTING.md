@@ -176,11 +176,8 @@ change the Stryker configuration as follows.
   },
 ```
 
-[bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines on `main`]: https://github.com/ericcornelissen/svgo-action/blob/main/CONTRIBUTING.md
-[debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [editorconfig]: https://editorconfig.org/
-[eslint]: https://eslint.org/
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
 [mocking]: https://stackoverflow.com/a/2666006
