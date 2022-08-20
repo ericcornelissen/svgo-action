@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update deprecation warning for end-of-life (EOL) of v1. ([#599])
 
 ## [1.3.16] - 2022-08-14
 
