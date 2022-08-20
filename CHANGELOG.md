@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased]
+## [1.3.17] - 2022-08-31
 
 - Update deprecation warning for end-of-life (EOL) of v1. ([#599])
 
@@ -290,4 +290,5 @@ Versioning].
 [#525]: https://github.com/ericcornelissen/svgo-action/pull/525
 [#554]: https://github.com/ericcornelissen/svgo-action/pull/554
 [#597]: https://github.com/ericcornelissen/svgo-action/pull/597
+[#599]: https://github.com/ericcornelissen/svgo-action/pull/599
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
