@@ -25,8 +25,7 @@ relevant sections of this document.
 
 > :information_source: This document covers contributing to v2 of the Action. If
 > you want to make a contribution to the latest version of the Action check out
-> the [Contributing Guidelines on `main`]. If you want to make a contribution to
-> v1 of the Action, please refer to the [Contributing Guidelines for v1].
+> the [Contributing Guidelines on `main`].
 
 ---
 
@@ -179,7 +178,6 @@ change the Stryker configuration as follows.
 
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines on `main`]: https://github.com/ericcornelissen/svgo-action/blob/main/CONTRIBUTING.md
-[contributing guidelines for v1]: https://github.com/ericcornelissen/svgo-action/blob/main-v1/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [editorconfig]: https://editorconfig.org/
 [eslint]: https://eslint.org/
