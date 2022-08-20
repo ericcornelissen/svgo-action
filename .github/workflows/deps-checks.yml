@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - main-v1
           - main-v2
           - main
     runs-on: ubuntu-latest
