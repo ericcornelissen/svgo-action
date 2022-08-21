@@ -2,8 +2,8 @@ import type { Dirent, Stats } from "node:fs";
 
 import { when, resetAllWhenMocks } from "jest-when";
 
-jest.mock("node:fs");
-jest.mock("node:path");
+jest.mock("node:fs", () => require("../../__common__/node-fs.mock.ts"));
+jest.mock("node:path", () => require("../../__common__/node-path.mock.ts"));
 jest.mock("../../../src/errors");
 
 import * as fs from "node:fs";

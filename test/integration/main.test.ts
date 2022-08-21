@@ -2,7 +2,7 @@ import type { Dirent } from "node:fs";
 
 jest.mock("@actions/core");
 jest.mock("@actions/github");
-jest.mock("node:fs");
+jest.mock("node:fs", () => require("../__common__/node-fs.mock.ts"));
 
 import * as fs from "node:fs";
 
