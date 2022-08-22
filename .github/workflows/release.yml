@@ -51,7 +51,7 @@ jobs:
       - name: Update build files
         run: npm run build
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4.0.4
+        uses: peter-evans/create-pull-request@v4.1.1
         with:
           title: New ${{ github.event.inputs.update_type }} release for v3
           body: _This Pull Request was created automatically_
