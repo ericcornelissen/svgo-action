@@ -89,7 +89,7 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
       - name: Cache Jest
-        uses: actions/cache@v3.0.7
+        uses: actions/cache@v3.0.8
         with:
           path: .cache/jest
           key: ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
