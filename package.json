@@ -22,7 +22,7 @@
     "format:md": "npm run lint:md -- --fix",
     "lint": "run-p lint:js lint:md lint:ws",
     "lint:js": "eslint . --ext .js,.ts",
-    "lint:md": "markdownlint -i node_modules **/*.md .github/**/*.md",
+    "lint:md": "markdownlint -i node_modules -- ./*.md **/*.md .github/**/*.md",
     "lint:ws": "editorconfig-checker -disable-max-line-length",
     "prepare": "is-ci || husky install script/hooks",
     "test": "npm run test:all",
