@@ -1,5 +1,5 @@
-jest.mock("node:fs");
-jest.mock("node:path");
+jest.mock("node:fs", () => require("../../__common__/node-fs.mock.ts"));
+jest.mock("node:path", () => require("../../__common__/node-path.mock.ts"));
 jest.mock("../../../src/file-systems/base");
 jest.mock("../../../src/file-systems/filtered");
 

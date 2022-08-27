@@ -1,6 +1,6 @@
 import type { Dirent, Stats } from "node:fs";
 
-jest.mock("node:fs");
+jest.mock("node:fs", () => require("../__common__/node-fs.mock.ts"));
 
 import * as fs from "node:fs";
 
