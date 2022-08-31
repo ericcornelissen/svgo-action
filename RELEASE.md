@@ -19,7 +19,7 @@ A typical release process for the major version 2 will look something like this
 
    ```sh
    git clone git@github.com:ericcornelissen/svgo-action.git
-   git switch main-v2
+   git checkout main-v2
    ```
 
 1. Verify that the repository is in a state that can be released:
@@ -68,13 +68,13 @@ A typical release process for the major version 2 will look something like this
    git checkout -b v2-release-candidate
    git add lib/ CHANGELOG.md package.json package-lock.json
    git commit --no-verify -m "chore: version bump"
-   git push origin v3-release-candidate
+   git push origin v2-release-candidate
    ```
 
    (The `--no-verify` option is required to commit the changes in `lib/`.)
 
 1. Create a Pull Request to merge `v2-release-candidate` into `main-v2`. Merge
-  the Pull Request if the changes look OK and all CI checks are passing.
+   the Pull Request if the changes look OK and all CI checks are passing.
 
 1. After the Pull Request is merged, sync the `main-v2` branch:
 
