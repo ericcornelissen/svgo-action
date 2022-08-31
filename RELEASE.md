@@ -11,8 +11,8 @@ should be used to create releases. This workflow:
 1. Can be [triggered manually] to initiate a new release by means of a Pull
    Request.
 1. Is triggered on the `main` branch and will create a [git tag] for the version
-   in the manifest **if** it doesn't exist yet. This will also keep the `v3` tag
-   up-to-date.
+   in the manifest **if** it doesn't exist yet. This will also keep the `v3`
+   branch up-to-date.
 
 The release process is as follows:
 
@@ -50,7 +50,7 @@ version (using `v3.1.4` as an example):
 1. Make sure that your local copy of the repository is up-to-date. Either sync:
 
    ```sh
-   git switch main
+   git checkout main
    git pull origin main
    ```
 
@@ -128,23 +128,27 @@ version (using `v3.1.4` as an example):
 1. After the Pull Request is merged, sync the `main` branch:
 
    ```sh
-   git switch main
+   git checkout main
    git pull origin main
    ```
 
-   And create a tag for the new version and update the tag pointing to the
-   latest v3 release using:
+   Create a tag for the new version:
 
    ```sh
    git tag v3.1.4
-   git tag -f v3
    ```
 
-1. Push the tags:
+   And update the commit that the `v3` branch points to:
 
    ```sh
-   git push origin v3.1.4
-   git push origin v3 --force
+   git checkout v3
+   git merge main
+   ```
+
+1. Push the `v3` branch and new tag:
+
+   ```sh
+   git push origin v3 v3.1.4
    ```
 
 1. Create a new [GitHub Release]. If the version should be published to the

@@ -13,8 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         version:
-          - main-v2
           - main
+          - main-v2
+          - v2
+          - v3
     runs-on: ubuntu-latest
     steps:
       - name: Harden runner
