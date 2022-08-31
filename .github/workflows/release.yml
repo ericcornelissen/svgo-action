@@ -105,6 +105,5 @@ jobs:
           git tag ${{ steps.version.outputs.version }}
           git push origin ${{ steps.version.outputs.version }}
 
-          # Update what the latest v3 tag points to
-          git tag --force v3
-          git push origin --force v3
+          # Update what commit the v3 branch points to
+          git push origin HEAD:v3

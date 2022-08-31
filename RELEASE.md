@@ -11,8 +11,8 @@ should be used to create releases. This workflow:
 1. Can be [triggered manually] to initiate a new release by means of a Pull
    Request.
 1. Is triggered on the `main` branch and will create a [git tag] for the version
-   in the manifest **if** it doesn't exist yet. This will also keep the `v3` tag
-   up-to-date.
+   in the manifest **if** it doesn't exist yet. This will also keep the `v3`
+   branch up-to-date.
 
 The release process is as follows:
 
