@@ -115,6 +115,7 @@ module.exports = {
     "jest/no-conditional-in-test": ["error"],
     "jest/no-duplicate-hooks": "off",
     "jest/prefer-comparison-matcher": ["error"],
+    "jest/prefer-each": ["error"],
     "jest/prefer-equality-matcher": ["error"],
     "jest/prefer-hooks-in-order": ["error"],
     "jest/prefer-mock-promise-shorthand": ["error"],
