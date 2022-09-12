@@ -21,7 +21,7 @@ jobs:
       security-events: write
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@dd2c410b088af7c0dc8046f3ac9a8f4148492a95
+        uses: step-security/harden-runner@0b61316f5a3fc8b7b29daa3d9b4a37cd052d11ed
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -33,9 +33,9 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@b398f525a5587552e573b247ac661067fafa920b
+        uses: github/codeql-action/init@9ba4d500aa0261992135290a8c8eff47a4bb2ecb
         with:
           config-file: ./.github/codeql-config.yml
           languages: javascript
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@b398f525a5587552e573b247ac661067fafa920b
+        uses: github/codeql-action/analyze@9ba4d500aa0261992135290a8c8eff47a4bb2ecb
