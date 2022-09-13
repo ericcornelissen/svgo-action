@@ -24,7 +24,7 @@ jobs:
       pull-requests: write # To open a Pull Request
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.5
+        uses: step-security/harden-runner@dd2c410b088af7c0dc8046f3ac9a8f4148492a95
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -36,9 +36,9 @@ jobs:
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
       - name: Check out code
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -51,7 +51,7 @@ jobs:
       - name: Update build files
         run: npm run build
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4.1.1
+        uses: peter-evans/create-pull-request@18f90432bedd2afd6a825469ffd38aa24712a91d
         with:
           title: New ${{ github.event.inputs.update_type }} release for v3
           body: _This Pull Request was created automatically_
@@ -66,7 +66,7 @@ jobs:
       contents: write # To push a tag
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@v1.4.5
+        uses: step-security/harden-runner@dd2c410b088af7c0dc8046f3ac9a8f4148492a95
         with:
           egress-policy: block
           allowed-endpoints: >
@@ -78,11 +78,11 @@ jobs:
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout code
-        uses: actions/checkout@v3.0.2
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
         with:
           fetch-depth: 0 # To obtain all tags
       - name: Install Node.js
-        uses: actions/setup-node@v3.4.1
+        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
         with:
           cache: npm
           node-version-file: .nvmrc
