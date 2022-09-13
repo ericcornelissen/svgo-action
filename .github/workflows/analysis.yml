@@ -31,7 +31,7 @@ jobs:
             pkg-containers.githubusercontent.com:443
             uploads.github.com:443
       - name: Checkout Repository
-        uses: actions/checkout@dcd71f646680f2efd8db4afa5ad64fdcba30e748 # renovate: tag=v3.0.1
+        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - name: Initialize CodeQL
         uses: github/codeql-action/init@b398f525a5587552e573b247ac661067fafa920b # renovate: tag=v2.1.22
         with:
