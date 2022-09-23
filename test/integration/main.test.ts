@@ -10,7 +10,7 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 const coreSetOutput = core.setOutput as jest.MockedFunction<typeof core.setOutput>; // eslint-disable-line max-len
-const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>; // eslint-disable-line max-len
+const fsExistsSync = fs.existsSync as jest.MockedFunction<typeof fs.existsSync>;
 const fsReaddirSync = fs.readdirSync as jest.MockedFunction<typeof fs.readdirSync>; // eslint-disable-line max-len
 const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFileSync>; // eslint-disable-line max-len
 
