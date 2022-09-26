@@ -51,8 +51,9 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3.4.1
         with:
+          cache: npm
           node-version-file: .nvmrc
-      - name: Install Renovate CLI
-        run: npm install -g renovate
+      - name: Install Dependencies
+        run: npm ci
       - name: Validate Renovate Configuration
-        run: renovate-config-validator
+        run: npm run lint:renovate
