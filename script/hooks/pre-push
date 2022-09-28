@@ -1,8 +1,8 @@
 #!/bin/sh
-. "$(dirname $0)/_/husky.sh"
-. "$(dirname $0)/common.sh"
+. "$(dirname "$0")/_/husky.sh"
+. "$(dirname "$0")/common.sh"
 
-if [ ! $(IS_MERGING) ]; then
+if [ ! "$(IS_MERGING)" ]; then
   git stash push --quiet --include-untracked
 fi
 
@@ -15,6 +15,6 @@ if command -v shellcheck > /dev/null; then
   npm run lint:sh
 fi
 
-if [ $(DID_STASH) ]; then
+if [ "$(DID_STASH)" ]; then
   git stash pop --quiet --index
 fi
