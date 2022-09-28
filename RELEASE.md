@@ -8,7 +8,7 @@ guidelines found in this file.
 To release a new version follow these steps:
 
 1. [Manually trigger] the [release workflow] from the `main` branch; Use an
-   update type in accordance with [semantic versioning]. This will create a Pull
+   update type in accordance with [Semantic Versioning]. This will create a Pull
    Request that start the release process.
 1. Review the created Pull Request and make sure the changes look OK. Make
    changes if necessary, for example for [major releases]. Merge the Pull
@@ -150,5 +150,6 @@ Make sure these additional changes are included in the release.
 [github marketplace]: https://github.com/marketplace
 [github release]: https://github.com/ericcornelissen/svgo-action/releases
 [manually trigger]: https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
+[release workflow]: ./.github/workflows/release.yml
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
 [major releases]: #major-releases
