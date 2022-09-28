@@ -29,6 +29,7 @@ jobs:
             ghcr.io:443
             github.com:443
             nodejs.org:443
+            objects.githubusercontent.com:443
             registry.npmjs.org:443
             si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout repository
