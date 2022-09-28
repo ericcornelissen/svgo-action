@@ -19,6 +19,10 @@ npm run vet
 # Run linters that don't support formatting
 npm run lint:ws
 
+if command -v shellcheck > /dev/null; then
+  npm run lint:sh
+fi
+
 # Format source code and update staged files
 npm run format
 git update-index --again

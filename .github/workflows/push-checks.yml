@@ -60,6 +60,8 @@ jobs:
         run: npm ci
       - name: Lint Source Code
         run: npm run lint
+      - name: Lint Shell Scripts
+        run: npm run lint:sh
   test:
     name: Test - ${{ matrix.type }}
     needs: [build]
