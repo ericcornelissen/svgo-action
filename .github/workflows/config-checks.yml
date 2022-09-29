@@ -27,11 +27,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - name: Validate Codecov configuration
-        run: |
-          RESULT=$(curl -s -o /dev/null -w "%{http_code}" --data-binary @./.github/codecov.yml https://codecov.io/validate)
-          if ! [[ $RESULT == "200" ]]; then
-            exit 1
-          fi
+        run: sh script/validate-codecov-config.sh
   renovate:
     name: Renovate
     runs-on: ubuntu-latest
