@@ -1,7 +1,12 @@
 # Release Guidelines
 
-If you need to release a new version of the _SVGO Action_ you should follow the
-guidelines found in this file.
+If you need to release a new version of the _SVGO Action_, follow the guidelines
+found in this document.
+
+- [Automated Releases (Preferred)](#automated-releases-preferred)
+- [Manual Releases (Discouraged)](#manual-releases-discouraged)
+- [Major Releases](#major-releases)
+- [Non-current Releases](#non-current-releases)
 
 ## Automated Releases (Preferred)
 
@@ -11,16 +16,11 @@ To release a new version follow these steps:
    update type in accordance with [Semantic Versioning]. This will create a Pull
    Request that start the release process.
 1. Review the created Pull Request and make sure the changes look OK. Make
-   changes if necessary, for example for [major releases]. Merge the Pull
-   Request when the release is ready. After merging, a [git tag] for the new
-   version will be created automatically.
+   changes if necessary, for example for major releases. Merge the Pull Request
+   when the release is ready. After merging, a [git tag] for the new version
+   will be created automatically.
 1. Create a new [GitHub Release] for the (automatically) created tag. Ensure the
    version is published to the [GitHub Marketplace].
-
-## Non-current Releases
-
-When releasing an older version, refer to the Release Guidelines (`RELEASE.md`)
-of the respective main branch.
 
 ## Manual Releases (Discouraged)
 
@@ -137,14 +137,19 @@ version (using `v3.1.4` as an example):
 
 ## Major Releases
 
-In case the release is a major release, some additional steps need to be carried
-out:
+For major releases, some additional steps are required. This may include:
 
-1. Ensure any references to the major version in the documentation are updated.
-1. Update the automated release workflow to create releases for the new major
-   version.
+- Ensure any references to the major version in the documentation (external and
+  internal) are updated.
+- Update the automated release workflow to create releases for the new major
+  version.
 
-Make sure these additional changes are included in the release.
+Make sure these additional changes are included in the release Pull Request.
+
+## Non-current Releases
+
+When releasing an older version of the project, refer to the Release Guidelines
+(`RELEASE.md`) of the respective main branch instead.
 
 [git tag]: https://git-scm.com/book/en/v2/Git-Basics-Tagging
 [github marketplace]: https://github.com/marketplace
@@ -152,4 +157,3 @@ Make sure these additional changes are included in the release.
 [manually trigger]: https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
 [release workflow]: ./.github/workflows/release.yml
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
-[major releases]: #major-releases
