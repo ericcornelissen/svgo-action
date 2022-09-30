@@ -91,9 +91,9 @@ jobs:
       - name: Check if version is released
         id: version
         run: |
-          VERSION="v$(cat package.json | jq -r '.version')"
+          VERSION="v$(jq -r '.version' < package.json)"
           echo "::set-output name=version::$VERSION"
-          if [ $(git tag -l $VERSION) ]; then
+          if [ "$(git tag -l "$VERSION")" ]; then
             echo "::set-output name=released::true"
           else
             echo "::set-output name=released::false"
@@ -102,8 +102,8 @@ jobs:
         if: ${{ steps.version.outputs.released == 'false' }}
         run: |
           # Create tag for new version
-          git tag ${{ steps.version.outputs.version }}
-          git push origin ${{ steps.version.outputs.version }}
+          git tag "${{ steps.version.outputs.version }}"
+          git push origin "${{ steps.version.outputs.version }}"
 
           # Update what commit the v3 branch points to
           git push origin HEAD:v3

@@ -1,8 +1,8 @@
 #!/bin/sh
-. "$(dirname $0)/_/husky.sh"
-. "$(dirname $0)/common.sh"
+. "$(dirname "$0")/_/husky.sh"
+. "$(dirname "$0")/common.sh"
 
-if [ ! $(IS_MERGING) ]; then
+if [ ! "$(IS_MERGING)" ]; then
   LIB_STAGED_COUNT=$(git diff --name-only --staged lib/ | wc -l)
   if [ "$LIB_STAGED_COUNT" -ne "0" ]; then
     echo "[INFO] All changes to the lib/ directory have been unstaged."
@@ -19,10 +19,14 @@ npm run vet
 # Run linters that don't support formatting
 npm run lint:ws
 
+if command -v shellcheck > /dev/null; then
+  npm run lint:sh
+fi
+
 # Format source code and update staged files
 npm run format
 git update-index --again
 
-if [ $(DID_STASH) ]; then
+if [ "$(DID_STASH)" ]; then
   git stash pop --quiet
 fi
