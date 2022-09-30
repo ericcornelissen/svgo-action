@@ -3,12 +3,10 @@ on:
   push:
     paths:
     - '.github/codecov.yml'
-    - '.github/renovate.json5'
   pull_request:
     paths:
     - '.github/workflows/config-checks.yml'
     - '.github/codecov.yml'
-    - '.github/renovate.json5'
 
 permissions: read-all
 
@@ -32,28 +30,3 @@ jobs:
           if ! [[ $RESULT == "200" ]]; then
             exit 1
           fi
-  renovate:
-    name: Renovate
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden runner
-        uses: step-security/harden-runner@dd2c410b088af7c0dc8046f3ac9a8f4148492a95 # tag=v1.4.5
-        with:
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            github.com:443
-            nodejs.org:443
-            objects.githubusercontent.com:443
-            registry.npmjs.org:443
-      - name: Checkout Repository
-        uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
-      - name: Install Node.js
-        uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tag=v3.4.1
-        with:
-          cache: npm
-          node-version-file: .nvmrc
-      - name: Install Dependencies
-        run: npm ci
-      - name: Validate Renovate Configuration
-        run: npm run lint:renovate
