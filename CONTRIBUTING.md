@@ -101,6 +101,7 @@ To be able to contribute you need at least the following:
 - _Git_;
 - _Node.js_ v18 or higher and _npm_ v8.1.2 or higher;
 - (Recommended) A code editor with _[EditorConfig]_ support;
+- (Suggested) [ShellCheck];
 - (Optional) _[`nektos/act`]_;
 
 We use [Husky] to automatically install git hooks. Please enable it when
@@ -135,6 +136,11 @@ linting. If you make changes to the code or documentation, make sure to follow
 the code style that is enforced through the linters. Use `npm run lint` to check
 the code style or `npm run format` to format changes in accordance with the code
 style.
+
+Additionally, it is recommend using to validate all changes to shell scripts
+using [ShellCheck]. You can do this locally using `npm run lint:sh` if you have
+[ShellCheck] installed. This happens automatically in the project's continuous
+integration.
 
 If you want to improve the code style, update the configuration file for the
 respective linter accordingly. If you need an extra package to be able to
@@ -306,5 +312,6 @@ There are some limitations to using [`nektos/act`]:
 [open issues]: https://github.com/ericcornelissen/svgo-action/issues
 [rollup.js]: https://rollupjs.org/guide/en/
 [security policy]: ./SECURITY.md
+[shellcheck]: https://github.com/koalaman/shellcheck
 [strykerjs]: https://stryker-mutator.io/
 [stryker dashboard]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
