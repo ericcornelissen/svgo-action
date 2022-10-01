@@ -7,5 +7,5 @@ queries:
   - uses: security-extended
 
 paths-ignore:
-  - node_modules
-  - lib
+  - ./node_modules/
+  - ./lib/
