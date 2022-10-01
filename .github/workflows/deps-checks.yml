@@ -31,7 +31,6 @@ jobs:
             nodejs.org:443
             objects.githubusercontent.com:443
             registry.npmjs.org:443
-            si05acprodeus1file1.blob.core.windows.net:443
       - name: Checkout repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
         with:
