@@ -2,7 +2,7 @@ name: Config
 on:
   pull_request:
     paths:
-      - ./.github/workflows/check-config.yml
+      - ./.github/workflows/check-configs.yml
       - ./.github/codecov.yml
   push:
     branches:
