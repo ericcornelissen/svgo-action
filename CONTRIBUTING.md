@@ -268,8 +268,8 @@ operations and network communication).
 ### End-to-End Tests
 
 The end-to-end tests are defined in the `test-e2e` job in the GitHub Actions
-workflow file `push-checks.yml`. The test operate with and on the fixtures found
-in `test/end-to-end`. During end-to-end testing, the Action is run as if it was
+workflow file `check.yml`. The test operate with and on the fixtures found in
+`test/end-to-end`. During end-to-end testing, the Action is run as if it was
 triggered by a `schedule` event.
 
 The end-to-end tests verify three things:

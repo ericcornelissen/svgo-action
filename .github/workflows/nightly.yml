@@ -1,0 +1,14 @@
+name: Nightly
+on:
+  schedule:
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  audit:
+    name: Audit
+    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main
+    with:
+      refs: '["main", "v3", "main-v2", "v2"]'
