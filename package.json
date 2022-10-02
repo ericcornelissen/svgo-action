@@ -9,6 +9,7 @@
   "main": "lib/index.cjs",
   "scripts": {
     "audit": "npm audit",
+    "audit:prod": "npm audit --omit dev",
     "build": "rollup --config rollup.config.js",
     "clean": "run-p clean:reports clean:temp",
     "clean:reports": "rm -rf ./_reports",
