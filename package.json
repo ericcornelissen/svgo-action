@@ -25,7 +25,7 @@
     "lint:js": "eslint . --report-unused-disable-directives --ext .js,.ts",
     "lint:md": "markdownlint -i node_modules -- ./*.md **/*.md .github/**/*.md",
     "lint:renovate": "renovate-config-validator",
-    "lint:sh": "shellcheck -e SC1090,SC1091,SC2155 script/hooks/*.sh script/hooks/pre-*",
+    "lint:sh": "shellcheck -e SC1090,SC1091,SC2155 script/*.sh script/hooks/*.sh script/hooks/pre-*",
     "lint:ws": "editorconfig-checker -disable-max-line-length",
     "prepare": "is-ci || husky install script/hooks",
     "test": "npm run test:all",
