@@ -67,5 +67,9 @@ jobs:
           node-version-file: .nvmrc
       - name: Install dependencies
         run: npm ci
-      - name: Audit dependencies
+      - name: Audit all npm dependencies
+        if: ${{ !startsWith(matrix.ref, 'v') }}
         run: npm run audit
+      - name: Audit production npm dependencies
+        if: ${{ startsWith(matrix.ref, 'v') }}
+        run: npm run audit -- --production
