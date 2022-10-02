@@ -13,7 +13,7 @@ permissions: read-all
 jobs:
   audit:
     name: Audit
-    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@ci/add-gitleaks
+    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main
   build:
     name: Build
     runs-on: ubuntu-latest
