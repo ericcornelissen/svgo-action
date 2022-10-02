@@ -15,12 +15,7 @@ To release a new version follow these steps:
 1. [Manually trigger] the [release workflow] from the `main` branch; Use an
    update type in accordance with [Semantic Versioning]. This will create a Pull
    Request that start the release process.
-1. Review the created Pull Request and make sure the changes look OK. Make
-   changes if necessary, for example for major releases. Merge the Pull Request
-   when the release is ready. After merging, a [git tag] for the new version
-   will be created automatically.
-1. Create a new [GitHub Release] for the (automatically) created tag. Ensure the
-   version is published to the [GitHub Marketplace].
+1. Follow the instructions in the description of the created Pull Request.
 
 ## Manual Releases (Discouraged)
 
@@ -132,8 +127,8 @@ version (using `v3.1.4` as an example):
    git push origin v3 v3.1.4
    ```
 
-1. Create a new [GitHub Release]. Ensure the version is published to the [GitHub
-   Marketplace].
+1. Create a new [GitHub Release] for the new tag. Ensure the version is
+   published to the [GitHub Marketplace].
 
 ## Major Releases
 
