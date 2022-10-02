@@ -23,6 +23,11 @@ if command -v shellcheck > /dev/null; then
   npm run lint:sh
 fi
 
+# Scan for secrets (if tool is installed)
+if command -v gitleaks > /dev/null; then
+  gitleaks protect
+fi
+
 # Format source code and update staged files
 npm run format
 git update-index --again

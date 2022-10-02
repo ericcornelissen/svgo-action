@@ -15,6 +15,11 @@ if command -v shellcheck > /dev/null; then
   npm run lint:sh
 fi
 
+# Scan for secrets (if tool is installed)
+if command -v gitleaks > /dev/null; then
+  gitleaks protect
+fi
+
 if [ "$(DID_STASH)" ]; then
   git stash pop --quiet --index
 fi
