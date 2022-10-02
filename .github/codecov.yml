@@ -1,16 +1,16 @@
 coverage:
   precision: 2
   round: down
-  range: "80...100"
+  range: 80...100
   status:
     project:
       default: false
       source:
         paths:
-          - src/
+          - ./src/
 
 comment:
-  layout: "diff, flags, files"
+  layout: diff, flags, files
   behavior: default  # update, if exists. Otherwise post new.
   require_changes: true  # only post the comment if coverage changes
   require_base: no
@@ -19,12 +19,12 @@ comment:
 flags:
   unit:
     paths:
-      - src/**/*.ts
+      - ./src/**/*.ts
   integration:
     paths:
-      - src/**/*.ts
+      - ./src/**/*.ts
 
 ignore:
-  - "lib/*"
-  - "script/*"
-  - "test/**/*"
+  - ./lib/*
+  - ./script/*
+  - ./test/**/*

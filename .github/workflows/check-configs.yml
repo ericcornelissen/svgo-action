@@ -1,12 +1,13 @@
-name: Config Validation
+name: Config
 on:
-  push:
-    paths:
-    - '.github/codecov.yml'
   pull_request:
     paths:
-    - '.github/workflows/config-checks.yml'
-    - '.github/codecov.yml'
+      - ./.github/workflows/check-configs.yml
+      - ./.github/codecov.yml
+  push:
+    branches:
+      - main
+      - main-v2
 
 permissions: read-all
 
@@ -22,7 +23,7 @@ jobs:
           allowed-endpoints: >
             codecov.io:443
             github.com:443
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tag=v3.0.2
       - name: Validate Codecov configuration
         run: sh script/validate-codecov-config.sh
