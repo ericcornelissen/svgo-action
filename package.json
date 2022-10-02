@@ -8,6 +8,7 @@
   "main": "lib/index.js",
   "scripts": {
     "audit": "better-npm-audit audit",
+    "audit:prod": "better-npm-audit audit --production",
     "prebuild": "node script/prebuild.js",
     "build": "ncc build src/index.ts -m -o lib",
     "clean": "run-p clean:reports clean:temp",
