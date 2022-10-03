@@ -37,15 +37,6 @@ version (using `v3.1.4` as an example):
    git clone git@github.com:ericcornelissen/svgo-action.git
    ```
 
-1. Verify that the repository is in a state that can be released:
-
-   ```shell
-   npm clean-install
-   npm run lint
-   npm run coverage:all
-   npm run vet
-   ```
-
 1. Update the contents of the `lib/` directory using:
 
    ```shell
@@ -58,17 +49,16 @@ version (using `v3.1.4` as an example):
    npm version --no-git-tag-version v3.1.4
    ```
 
-   If that fails change the value of the version field in `package.json` to the
+   If that fails, change the value of the version field in `package.json` to the
    new version:
 
    ```diff
-   -  "version": "2.7.0",
+   -  "version": "3.1.3",
    +  "version": "3.1.4",
    ```
 
-   and to update the version number in `package-lock.json` it is recommended to
-   run `npm install` (after updating `package.json`) which will sync the version
-   number.
+   and update the version number in `package-lock.json` using `npm install`
+   (after updating `package.json`), which will sync the version number.
 
 1. Update the changelog:
 
@@ -88,12 +78,12 @@ version (using `v3.1.4` as an example):
    The date should follow the year-month-day format where single-digit months
    and days should be prefixed with a `0` (e.g. `2022-01-01`).
 
-1. Commit the changes to a release branch and push using:
+1. Commit the changes to a new release branch and push using:
 
    ```shell
    git checkout -b release-$(sha1sum package-lock.json | awk '{print $1}')
    git add lib/ CHANGELOG.md package.json package-lock.json
-   git commit --no-verify --message "Version bump"
+   git commit --no-verify --message "chore: version bump"
    git checkout -b release-$(sha1sum package-lock.json | awk '{print $1}')
    ```
 
@@ -101,7 +91,8 @@ version (using `v3.1.4` as an example):
 
 1. Create a Pull Request to merge the release branch into `main`.
 
-1. Merge the Pull Request if all continuous integration checks passed.
+1. Merge the Pull Request if the changes look OK and all continuous integration
+   checks are passing.
 
    > **Note** At this point, the continuous delivery automation may pick up and
    > complete the release process. Check whether or not this happens. If yes,
@@ -121,14 +112,14 @@ version (using `v3.1.4` as an example):
    git tag v3.1.4
    ```
 
-1. Update the `v3` branch to point to the same commit as the new [git tag]:
+1. Update the `v3` branch to point to the same commit as the new tag:
 
    ```shell
    git checkout v3
    git merge main
    ```
 
-1. Push the `v3` branch and new [git tag]:
+1. Push the `v3` branch and new tag:
 
    ```shell
    git push origin v3 v3.1.4
@@ -140,8 +131,9 @@ version (using `v3.1.4` as an example):
 
 Create a new [GitHub Release] for the [git tag] of the new release. The release
 title should be "Release {_version_}" (e.g. "Release v3.1.4"). The release text
-should be the changes from the [changelog] for the version. Ensure the version
-is published to the [GitHub Marketplace] as well.
+should be the changes from the [changelog] for the version (including links).
+
+Ensure the version is published to the [GitHub Marketplace] as well.
 
 ## Major Releases
 
