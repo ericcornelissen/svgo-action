@@ -14,7 +14,7 @@ Automatically run [SVGO] with GitHub Actions.
 ### Install the Action
 
 Create a Workflow file (e.g.: `.github/workflows/optimize.yml`, see [Creating a
-Workflow file]) with the workflow below - or check out [the examples] for
+Workflow file]) with the workflow below - or check out the [examples] for
 various complete workflows. You can also check [what the Action does for each
 `on` event] and [what the Action outputs] for subsequent steps.
 
@@ -51,28 +51,42 @@ GitHub's rest API. This is only needed for `pull_request` and `push` events._
 
 ### Configure the Action
 
-The following inputs are available when using the SVGO Action.
-
-| Name           | Description                               | Default            | Documentation                             |
-| -------------- | ----------------------------------------- | ------------------ | ----------------------------------------- |
-| `dry-run`      | Prevent the Action from writing changes   | `false`            | [docs](./docs/inputs.md#dry-run)          |
-| `ignore`       | [glob]s of SVGs that should be ignored    | `""`               | [docs](./docs/inputs.md#ignore)           |
-| `repo-token`   | A GitHub token (`secrets.GITHUB_TOKEN`)   | `""`               | [docs](./docs/inputs.md#repository-token) |
-| `strict`       | Fail on non-critical errors               | `false`            | [docs](./docs/inputs.md#strict-mode)      |
-| `svgo-config`  | The path of the [SVGO] configuration file | `"svgo.config.js"` | [docs](./docs/inputs.md#svgo-config)      |
-| `svgo-version` | The version of [SVGO] to use              | `2`                | [docs](./docs/inputs.md#svgo-version)     |
-
-To configure the Action you simply set a value for any of the above in the
-Workflow file. For example:
+The following inputs are available when using the SVGO Action. More details can
+be found in the [inputs documentation].
 
 ```yaml
 - uses: ericcornelissen/svgo-action@v3
   with:
-    repo-token: ${{ secrets.GITHUB_TOKEN }}
+    # Prevent the Action from writing changes.
+    #
+    # Default: `false`
     dry-run: true
-    ignore: do/not/optimize/**/
-    strict: false
+
+    # Globs of SVGs that should be ignored.
+    #
+    # Default: ""
+    ignore: |
+      vendor/**/
+
+    # A GitHub token (`${{ secrets.GITHUB_TOKEN }}`), required when running on
+    # pushes or Pull Requests.
+    #
+    # Default: ""
+    repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+    # Fail on non-critical errors.
+    #
+    # Default: false
+    strict: true
+
+    # The path of the SVGO configuration file.
+    #
+    # Default: "svgo.config.js"
     svgo-config: path/to/svgo-config.js
+
+    # The version of SVGO to use for optimizing.
+    #
+    # Default: 2
     svgo-version: 2
 ```
 
@@ -128,9 +142,9 @@ permissions: read-all
 [fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
-[glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
-[the examples]: ./docs/examples.md
+[examples]: ./docs/examples.md
+[inputs documentation]: ./docs/inputs.md
 [what the action does for each `on` event]: ./docs/events.md
 [what the action outputs]: ./docs/outputs.md
