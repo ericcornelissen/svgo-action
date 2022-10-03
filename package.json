@@ -50,7 +50,7 @@
     "svgo"
   ],
   "dependencies": {
-    "@actions/core": "1.9.1",
+    "@actions/core": "1.10.0",
     "@actions/github": "5.0.1",
     "import-cwd": "3.0.0",
     "js-yaml": "4.1.0",
