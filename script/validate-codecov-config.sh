@@ -1,6 +1,13 @@
 #!/bin/sh
 
-RESULT=$(curl -s -o /dev/null -w "%{http_code}" --data-binary @./.github/codecov.yml https://codecov.io/validate)
+RESULT=$( \
+  curl --silent \
+    --output /dev/null \
+    --write-out "%{http_code}" \
+    --data-binary @./.github/codecov.yml \
+    https://codecov.io/validate \
+)
+
 if [ "$RESULT" != "200" ]; then
   echo "Codecov configuration is invalid"
   exit 1
