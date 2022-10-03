@@ -9,6 +9,7 @@ Versioning].
 
 - Update dependency `@actions/core`. ([#622])
 - Update dependency `@actions/github`. ([#622])
+- Update inputs overview in documentation. ([#634])
 
 ## [3.0.2] - 2022-08-14
 
@@ -453,5 +454,6 @@ Versioning].
 [#597]: https://github.com/ericcornelissen/svgo-action/pull/597
 [#599]: https://github.com/ericcornelissen/svgo-action/pull/599
 [#622]: https://github.com/ericcornelissen/svgo-action/pull/622
+[#634]: https://github.com/ericcornelissen/svgo-action/pull/634
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
