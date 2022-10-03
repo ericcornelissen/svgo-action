@@ -1,0 +1,8 @@
+# Check out markdownlint at: https://github.com/DavidAnson/markdownlint
+
+default: true
+
+MD013: # Line length
+  tables: false
+MD024: # Multiple headings with the same content
+  siblings_only: true

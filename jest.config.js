@@ -1,3 +1,5 @@
+// Check out jest at: https://jestjs.io/
+
 import process from "node:process";
 
 let coverageSubDir = "all";
@@ -21,9 +23,9 @@ export default {
     "src/**/*.ts",
   ],
   coveragePathIgnorePatterns: [
-    "lib",
-    "node_modules",
-    "test",
+    "lib/",
+    "node_modules/",
+    "test/",
   ],
   coverageThreshold: {
     global: {
