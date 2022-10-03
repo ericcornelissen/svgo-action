@@ -218,7 +218,6 @@ To use the SVGO version used by your project:
 
 [`on: pull_request`]: ./events.md#on-pull_request
 [`on: push`]: ./events.md#on-push
-
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo

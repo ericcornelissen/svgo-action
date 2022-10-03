@@ -118,7 +118,7 @@ on:
 
 The minimum required [permissions] needed to run this Action are:
 
-```yml
+```yaml
 permissions:
   contents: read
   # Uncomment the next line if you're using the Action on Pull Requests
