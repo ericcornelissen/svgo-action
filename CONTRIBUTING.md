@@ -16,7 +16,7 @@ relevant sections of this document.
   - [Feature Requests](#feature-requests)
   - [Corrections](#corrections)
 - [Making Changes](#making-changes)
-  - [Project Setup](#project-setup)
+  - [Prerequisites](#prerequisites)
   - [Workflow](#workflow)
   - [Development Details](#development-details)
 - [Testing](#testing)
@@ -76,9 +76,8 @@ issue] first if you prefer.
 
 ## Making Changes
 
-You are always free to contribute by working on one of the confirmed [open
-bug reports], approved [open feature requests], or any of the other accepted
-[open issues] and opening a Pull Request for it.
+You are always free to contribute by working on one of the confirmed or accepted
+(and unassigned) [open issues] and opening a Pull Request for it.
 
 It is advised to indicate that you will be working on a issue by commenting on
 that issue. This is so others don't start working on the same issue as you are.
@@ -94,17 +93,18 @@ as clearly as possible.
 > opportunity to work on it. If we don't hear from you for an extended period of
 > time we may decide to allow others to work on the issue you were assigned to.
 
-### Project Setup
+### Prerequisites
 
 To be able to contribute you need at least the following:
 
-- _Git_;
-- _Node.js_ v18 or higher and _npm_ v8.1.2 or higher;
-- (Recommended) A code editor with _[EditorConfig]_ support;
+- Git;
+- Node.js v18 or higher and npm v8.1.2 or higher;
+- (Recommended) a code editor with [EditorConfig] support;
 - (Suggested) [ShellCheck];
-- (Optional) _[`nektos/act`]_;
+- (Optional) [act] and [Docker];
+- (Optional) [curl];
 
-We use [Husky] to automatically install git hooks. Please enable it when
+We use [husky] to automatically install git hooks. Please enable it when
 contributing to the project. If you have npm installation scripts disabled,
 run `npm run prepare` after installing dependencies.
 
@@ -280,11 +280,11 @@ The end-to-end tests verify three things:
 
 #### Running End-to-end Tests Locally
 
-You can use [`nektos/act`] to run the end-to-end tests locally. If you have the
-`act` program available on your PATH you can use `npm run test:e2e` to run the
+You can use [act] to run the end-to-end tests locally. If you have the `act`
+program available on your PATH you can use `npm run test:e2e` to run the
 end-to-end tests.
 
-There are some limitations to using [`nektos/act`]:
+There are some limitations to using [act]:
 
 - It depends on [Docker] to run workflows.
 - Your system may not support all operating systems the tests should run on.
@@ -292,8 +292,10 @@ There are some limitations to using [`nektos/act`]:
   couldn't run them for all operating systems.
 - All jobs that the end-to-end test job `needs` have to be executed as well.
 
+[act]: https://github.com/nektos/act
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines for v2]: https://github.com/ericcornelissen/svgo-action/blob/main-v2/CONTRIBUTING.md
+[curl]: https://curl.se/
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/
@@ -305,10 +307,7 @@ There are some limitations to using [`nektos/act`]:
 [markdownlint]: https://github.com/DavidAnson/markdownlint
 [mocking]: https://stackoverflow.com/a/2666006
 [mutation testing]: https://en.wikipedia.org/wiki/Mutation_testing
-[`nektos/act`]: https://github.com/nektos/act
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new/choose
-[open bug reports]: https://github.com/ericcornelissen/svgo-action/issues?q=is%3Aopen+is%3Aissue+label%3Abug
-[open feature requests]: https://github.com/ericcornelissen/svgo-action/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement+
 [open issues]: https://github.com/ericcornelissen/svgo-action/issues
 [rollup.js]: https://rollupjs.org/guide/en/
 [security policy]: ./SECURITY.md
