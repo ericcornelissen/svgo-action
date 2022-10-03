@@ -38,9 +38,9 @@ For security related issues, please refer to the [security policy].
 
 ### Bug Reports
 
-If you have problems with the _SVGO Action_ or think you've found a bug, please
-report it to the developers; we ask you to **always** open an issue describing
-the bug as soon as possible so that we, and others, are aware of the bug.
+If you have problems with the project or think you've found a bug, please report
+it to the developers; we ask you to **always** open an issue describing the bug
+as soon as possible so that we, and others, are aware of the bug.
 
 Before reporting a bug, make sure you've actually found a real bug. Carefully
 read the documentation and see if it really says you can do what you're trying
@@ -52,7 +52,7 @@ When preparing to report a bug, try to isolate it to a small working example
 that reproduces the problem. Once you have this, collect additional information
 such as:
 
-- The exact version of SVGO Action you're using.
+- The exact version of the Action you're using.
 - A description of the expected behaviour and the actual behaviour.
 - All error and warning messages.
 - A link to a workflow run where the bug occurs with [debug logging] enabled.
@@ -105,7 +105,7 @@ To be able to contribute you need at least the following:
 - (Optional) _[`nektos/act`]_;
 
 We use [Husky] to automatically install git hooks. Please enable it when
-contributing to _SVGO Action_. If you have npm installation scripts disabled,
+contributing to the project. If you have npm installation scripts disabled,
 run `npm run prepare` after installing dependencies.
 
 ### Workflow
@@ -175,7 +175,7 @@ previously untested code. Tests for this project are written using [Jest]. All
 tests go into the `test/` folder and all test files should follow the naming
 convention `[FILENAME].test.ts`.
 
-The tests for _SVGO Action_ are split between unit and integration test. Various
+The tests for the project are split between unit and integration test. Various
 commands are available to run the tests, as shown in the overview below. You can
 run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test` or
 `npm run coverage:unit`.

@@ -1,4 +1,8 @@
-# Contributor Covenant Code of Conduct
+# Code of Conduct
+
+This is the code of conduct for the _SVGO Action_. It is adapted from the
+[Contributor Covenant], version 1.4. For answers to common questions about this
+code of conduct, see the [FAQ].
 
 ## Our Pledge
 
@@ -64,12 +68,5 @@ Project maintainers who do not follow or enforce the Code of Conduct in good
 faith may face temporary or permanent repercussions as determined by other
 members of the project's leadership.
 
-## Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 1.4, available at: [contributor-covenant.org]. For answers to common
-questions about this code of conduct, see the [FAQ].
-
-[homepage]: https://www.contributor-covenant.org
-[contributor-covenant.org]: https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+[contributor covenant]: https://www.contributor-covenant.org
 [faq]: https://www.contributor-covenant.org/faq
