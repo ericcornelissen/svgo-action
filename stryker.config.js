@@ -1,3 +1,5 @@
+// Check out Stryker at: https://stryker-mutator.io/
+
 export default {
   coverageAnalysis: "perTest",
   inPlace: false,
