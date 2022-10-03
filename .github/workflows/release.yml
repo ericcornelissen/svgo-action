@@ -93,7 +93,7 @@ jobs:
         run: |
           VERSION="v$(jq -r '.version' < package.json)"
           echo "::set-output name=version::$VERSION"
-          if [ "$(git tag -l "$VERSION")" ]; then
+          if [ "$(git tag --list "$VERSION")" ]; then
             echo "::set-output name=released::true"
           else
             echo "::set-output name=released::false"
