@@ -79,7 +79,7 @@ version (using `v3.1.4` as an example):
    If that fails, manually add the following text after the `## [Unreleased]`
    line:
 
-   ```md
+   ```markdown
    - _No changes yet_
 
    ## [3.1.4] - YYYY-MM-DD

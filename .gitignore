@@ -1,12 +1,16 @@
-# IDEs
-.idea
-.vscode
-
-# dependencies directory
-node_modules/
-
-# generated and temporary files and folders
 .cache/
 .temp/
 _reports/
-*.log
+
+# ESLint
+.eslintcache
+
+# IDEs
+.idea/
+.vscode/
+
+# Node.js
+node_modules/
+.npm/
+.node_repl_history
+npm-debug.log*
