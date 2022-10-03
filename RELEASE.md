@@ -5,6 +5,7 @@ found in this document.
 
 - [Automated Releases (Preferred)](#automated-releases-preferred)
 - [Manual Releases (Discouraged)](#manual-releases-discouraged)
+- [Creating a GitHub Release](#creating-a-github-release)
 - [Major Releases](#major-releases)
 - [Non-current Releases](#non-current-releases)
 
@@ -25,20 +26,20 @@ version (using `v3.1.4` as an example):
 
 1. Make sure that your local copy of the repository is up-to-date. Either sync:
 
-   ```sh
+   ```shell
    git checkout main
    git pull origin main
    ```
 
    Or use a fresh clone:
 
-   ```sh
+   ```shell
    git clone git@github.com:ericcornelissen/svgo-action.git
    ```
 
 1. Verify that the repository is in a state that can be released:
 
-   ```sh
+   ```shell
    npm clean-install
    npm run lint
    npm run coverage:all
@@ -47,13 +48,13 @@ version (using `v3.1.4` as an example):
 
 1. Update the contents of the `lib/` directory using:
 
-   ```sh
+   ```shell
    npm run build
    ```
 
 1. Update the version number in the package manifest and lockfile:
 
-   ```sh
+   ```shell
    npm version --no-git-tag-version v3.1.4
    ```
 
@@ -71,7 +72,7 @@ version (using `v3.1.4` as an example):
 
 1. Update the changelog:
 
-   ```sh
+   ```shell
    node script/bump-changelog.js
    ```
 
@@ -89,46 +90,58 @@ version (using `v3.1.4` as an example):
 
 1. Commit the changes to a release branch and push using:
 
-   ```sh
+   ```shell
    git checkout -b release-$(sha1sum package-lock.json | awk '{print $1}')
    git add lib/ CHANGELOG.md package.json package-lock.json
-   git commit --no-verify -m "Version bump"
+   git commit --no-verify --message "Version bump"
    git checkout -b release-$(sha1sum package-lock.json | awk '{print $1}')
    ```
 
    The `--no-verify` option is required to commit the changes in `lib/`.
 
-1. Create a Pull Request to merge the release branch into `main`. Merge the Pull
-   Request if all continuous integration checks passed.
+1. Create a Pull Request to merge the release branch into `main`.
+
+1. Merge the Pull Request if all continuous integration checks passed.
+
+   > **Note** At this point, the continuous delivery automation may pick up and
+   > complete the release process. Check whether or not this happens. If yes,
+   > [create a GitHub Release]. If no, or only partially, continue following the
+   > remaining steps.
 
 1. Immediately after the Pull Request is merged, sync the `main` branch:
 
-   ```sh
+   ```shell
    git checkout main
    git pull origin main
    ```
 
 1. Create a [git tag] for the new version:
 
-   ```sh
+   ```shell
    git tag v3.1.4
    ```
 
-1. Update the `v3` branch to point to the same commit as the new tag:
+1. Update the `v3` branch to point to the same commit as the new [git tag]:
 
-   ```sh
+   ```shell
    git checkout v3
    git merge main
    ```
 
-1. Push the `v3` branch and new tag:
+1. Push the `v3` branch and new [git tag]:
 
-   ```sh
+   ```shell
    git push origin v3 v3.1.4
    ```
 
-1. Create a new [GitHub Release] for the new tag. Ensure the version is
-   published to the [GitHub Marketplace].
+1. [Create a GitHub Release].
+
+## Creating a GitHub Release
+
+Create a new [GitHub Release] for the [git tag] of the new release. The release
+title should be "Release {_version_}" (e.g. "Release v3.1.4"). The release text
+should be the changes from the [changelog] for the version. Ensure the version
+is published to the [GitHub Marketplace] as well.
 
 ## Major Releases
 
@@ -146,6 +159,8 @@ Make sure these additional changes are included in the release Pull Request.
 When releasing an older version of the project, refer to the Release Guidelines
 (`RELEASE.md`) of the respective main branch instead.
 
+[changelog]: ./CHANGELOG.md
+[create a gitHub release]: #creating-a-github-release
 [git tag]: https://git-scm.com/book/en/v2/Git-Basics-Tagging
 [github marketplace]: https://github.com/marketplace
 [github release]: https://github.com/ericcornelissen/svgo-action/releases
