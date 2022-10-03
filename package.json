@@ -51,7 +51,7 @@
   ],
   "dependencies": {
     "@actions/core": "1.10.0",
-    "@actions/github": "5.0.1",
+    "@actions/github": "5.1.1",
     "import-cwd": "3.0.0",
     "js-yaml": "4.1.0",
     "minimatch": "5.0.1",
