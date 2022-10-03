@@ -295,11 +295,10 @@ jobs:
         svgo-version: project
 ```
 
-[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
-[what the action outputs]: ./outputs.md
-
 [actions/checkout]: https://github.com/marketplace/actions/checkout
 [npm]: https://www.npmjs.com/
+[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [peter-evans/create-pull-request]: https://github.com/marketplace/actions/create-pull-request
 [stefanzweifel/git-auto-commit-action]: https://github.com/marketplace/actions/git-auto-commit
 [thollander/actions-comment-pull-request]: https://github.com/marketplace/actions/comment-pull-request
+[what the action outputs]: ./outputs.md
