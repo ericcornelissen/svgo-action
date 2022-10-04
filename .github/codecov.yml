@@ -20,9 +20,11 @@ flags:
   unit:
     paths:
       - ./src/**/*.ts
+      - ./src/*.ts
   integration:
     paths:
       - ./src/**/*.ts
+      - ./src/*.ts
 
 ignore:
   - ./lib/*
