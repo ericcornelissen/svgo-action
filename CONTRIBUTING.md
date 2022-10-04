@@ -4,8 +4,8 @@ The _SVGO Action_ project welcomes contributions and corrections of all forms.
 This includes improvements to the documentation or code base, new tests, bug
 fixes, and implementations of new features. We recommend you [open an issue]
 before making any substantial changes so you can be sure your work won't be
-rejected. But for changes such as fixing a typo you can open a Pull Request
-directly.
+rejected. But for small changes, such as fixing a typo, you can open a Pull
+Request directly.
 
 If you plan to make a contribution, please do make sure to read through the
 relevant sections of this document.
@@ -21,11 +21,11 @@ relevant sections of this document.
   - [Development Details](#development-details)
 - [Testing](#testing)
   - [Mocking](#mocking)
-  - [Unit Tests](#unit-tests)
-  - [Integration Tests](#integration-tests)
-  - [End-to-End Tests](#end-to-end-tests)
+  - [Unit Testing](#unit-testing)
+  - [Integration Testing](#integration-testing)
+  - [End-to-End Testing](#end-to-end-testing)
 
-> **Note** If you want to make a contribution to v2 of the Action, please refer
+> **Note**: If you want to make a contribution to v2 of the Action, please refer
 > to the [Contributing Guidelines for v2].
 
 ---
@@ -57,14 +57,14 @@ such as:
 - All error and warning messages.
 - A link to a workflow run where the bug occurs with [debug logging] enabled.
 
-Once you have a precise problem you can report it as a [bug report].
+Once you have a precise problem you can submit a [bug report].
 
 ### Feature Requests
 
 New features are welcomed, but we want to avoid feature creep. For this reason
 we recommend you open a [feature request] first so you don't spend time working
-on something that won't be included. Be sure to check if the feature hasn't been
-requested before.
+on something that won't be included. Make sure the feature hasn't been requested
+before.
 
 ### Corrections
 
@@ -88,25 +88,21 @@ When you open a Pull Request that implements an issue make sure to link to that
 issue in the Pull Request description and explain how you implemented the issue
 as clearly as possible.
 
-> **Note** If you, for whatever reason, can no longer continue your contribution
-> please share this in the issue or your Pull Request. This gives others the
-> opportunity to work on it. If we don't hear from you for an extended period of
-> time we may decide to allow others to work on the issue you were assigned to.
+> **Note**: If you, for whatever reason, can not continue your work, please
+> share this in the issue or your Pull Request. This gives others an opportunity
+> to work on it. If we don't hear from you for an extended period of time we may
+> decide to allow others to work on the issue you were assigned to.
 
 ### Prerequisites
 
-To be able to contribute you need at least the following:
+To be able to contribute you need the following tooling:
 
-- Git;
-- Node.js v18 or higher and npm v8.1.2 or higher;
+- [Git];
+- [Node.js] v18 or higher and [npm] v8.1.2 or higher;
 - (Recommended) a code editor with [EditorConfig] support;
 - (Suggested) [ShellCheck];
 - (Optional) [act] and [Docker];
 - (Optional) [curl];
-
-We use [husky] to automatically install git hooks. Please enable it when
-contributing to the project. If you have npm installation scripts disabled,
-run `npm run prepare` after installing dependencies.
 
 ### Workflow
 
@@ -123,30 +119,48 @@ If you decide to make a contribution, please use the following workflow:
 Before you start making changes you should run `npm install`. This ensures your
 local development environment is setup and ready to go.
 
-When making changes it is important that 1) your changes are properly formatted
-and 2) your changes are properly tested (if it is a code change). The former can
-be achieved with the `npm run format` command. The latter requires you to add
-new test cases to the project, you can use `npm run test` to verify the new (and
-old) tests pass. See the [testing](#testing) section for more details.
+[husky] is used to automatically install git hooks. Please enable it when
+contributing to the project. If you have npm installation scripts disabled,
+run `npm run prepare` after installing dependencies.
+
+When making a contribution make sure your changes are [tested](#testing),
+[well-formatted](#linting), and [vetted](#vetting).
+
+#### Building
+
+This project uses [rollup.js] to compile the source code into a standalone
+JavaScript file (which can be found in the `lib/` directory). This is so that it
+can be invoked as a standalone "executable" when used as an Action. Otherwise
+the the contents of `node_modules/` would have to be included in the repository.
+
+The file is generated using the `npm run build` command; you can run this
+command to see if your changes are valid. You should **not** include changes to
+this file when committing - if you try to commit it, the pre-commit hook will
+automatically unstage the changes.
+
+Instead, the file will be updated automatically prior to a release as well as
+build when necessary for testing.
 
 #### Linting
 
-This project uses [ESLint], [markdownlint], and [editorconfig-checker] for
-linting. If you make changes to the code or documentation, make sure to follow
-the code style that is enforced through the linters. Use `npm run lint` to check
-the code style or `npm run format` to format changes in accordance with the code
-style.
+This project uses linters to enforce code style and catch mistakes. Use the
+command `npm run lint` to run all linters or `npm run format` to update
+formatting automatically.
 
-Additionally, it is recommend using to validate all changes to shell scripts
-using [ShellCheck]. You can do this locally using `npm run lint:sh` if you have
-[ShellCheck] installed. This happens automatically in the project's continuous
-integration.
+Alternatively, you can use one of the following to lint using individual tools:
+
+| File type                          | Command                |
+| :--------------------------------- | :--------------------- |
+| TypeScript/JavaScript (`.{js,ts}`) | `npm run lint:js`      |
+| MarkDown (`.md`)                   | `npm run lint:md`      |
+| Shell scripts (`.{,sh}`)           | `npm run lint:sh`      |
+| Whitespace (`.*`)                  | `npm run lint:ws`      |
 
 If you want to improve the code style, update the configuration file for the
 respective linter accordingly. If you need an extra package to be able to
-enforce your style please add it as a `devDependency`.
+enforce your style, add it as a `devDependency`.
 
-> **Note** Keep in mind that the developers of the project determine the code
+> **Note**: Keep in mind that the developers of the project determine the code
 > style as they see fit. For this reason, take the time to explain why you think
 > your changes improve the project.
 
@@ -155,30 +169,19 @@ enforce your style please add it as a `devDependency`.
 The project is vetted using a small collection of static analysis tools. Run
 `npm run vet` to analyze the project for potential problems.
 
-#### Building
-
-This project uses [rollup.js] to compile the source code into a standalone
-JavaScript file. This file can be found in the `lib/` directory. The file is
-generated using the `npm run build` command; you can run this command to see if
-your changes are valid.
-
-You should **NOT** include changes to this file when committing. If you try to
-commit it, the pre-commit hook will automatically unstage the changes. Instead,
-the file will be updated automatically prior to a release.
-
 ---
 
 ## Testing
 
-It is important to test any changes and equally important to add tests for
+It is important to test any changes and equally important to add tests
 previously untested code. Tests for this project are written using [Jest]. All
 tests go into the `test/` folder and all test files should follow the naming
 convention `[FILENAME].test.ts`.
 
-The tests for the project are split between unit and integration test. Various
-commands are available to run the tests, as shown in the overview below. You can
-run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g. `npm run test` or
-`npm run coverage:unit`.
+The tests for the project are split between unit, integration, and end-to-end
+(e2e) test. Various commands are available to run the tests, as shown in the
+overview below. You can run a command as `npm run [SCRIPT]:[MODIFIER]`, e.g.
+`npm run test` or `npm run coverage:unit`.
 
 | Script             | Modifier           | Description            |
 | :----------------- | :----------------- | :--------------------- |
@@ -195,8 +198,8 @@ generated. The report is available in HTML format at
 ### Mocking
 
 We make extensive use of [mocking]. A mock for a particular file goes into the
-`__mocks__` folder in the folder of that file. The name of a mock file should
-always match the name of the file it mocks.
+`__mocks__` folder inside the folder of that file. The name of a mock file
+should always match the name of the file it mocks.
 
 Mocks for Node.js modules go into the `__mocks__` directory at the root of the
 project. The name of the mock file should always match the name of the Node.js
@@ -205,11 +208,13 @@ with the name of the scope. For example, the mock for `@actions/core` can be
 found at `__mocks__/@actions/core.ts`.
 
 Any non-mock file inside a `__mocks__` folder should follow the naming
-convention `__[FILENAME]__.ts`. Any mock that is not tied to a file or Node.js
-module should be placed in the `test/__common__` folder and follow the naming
-convention `[FILENAME].mock.ts`.
+convention `__[FILENAME]__.ts`.
 
-### Unit Tests
+Any mock that is not tied to a file or Node.js module, or that includes one or
+more characters illegal on some file systems, should be placed in the
+`test/__common__` folder and follow the naming convention `[FILENAME].mock.ts`.
+
+### Unit Testing
 
 All unit tests go into the `test/unit` folder, which mimics the structure of the
 `src/` folder. To run unit tests you can use the `npm run test:unit` command.
@@ -253,7 +258,7 @@ a particular file you can change the Stryker configuration as follows.
   },
 ```
 
-### Integration Tests
+### Integration Testing
 
 All integrations tests go into the `test/integration` folder, which mimics the
 top-level structure of the `src/` folder. To run integration tests you can use
@@ -265,7 +270,7 @@ correctly. As such, while an integration test should still focus on one thing,
 it is generally not necessary to mock anything (exceptions include file system
 operations and network communication).
 
-### End-to-End Tests
+### End-to-End Testing
 
 The end-to-end tests are defined in the `test-e2e` job in the GitHub Actions
 workflow file `check.yml`. The test operate with and on the fixtures found in
@@ -281,8 +286,8 @@ The end-to-end tests verify three things:
 #### Running End-to-end Tests Locally
 
 You can use [act] to run the end-to-end tests locally. If you have the `act`
-program available on your PATH you can use `npm run test:e2e` to run the
-end-to-end tests.
+program available on your PATH you can use `npm run test:e2e` to run the e2e
+tests.
 
 There are some limitations to using [act]:
 
@@ -299,16 +304,16 @@ There are some limitations to using [act]:
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/
-[editorconfig-checker]: https://editorconfig-checker.github.io/
-[eslint]: https://eslint.org/
 [feature request]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=enhancement&template=feature_request.md
+[git]: https://git-scm.com/
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
-[markdownlint]: https://github.com/DavidAnson/markdownlint
 [mocking]: https://stackoverflow.com/a/2666006
 [mutation testing]: https://en.wikipedia.org/wiki/Mutation_testing
-[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new/choose
-[open issues]: https://github.com/ericcornelissen/svgo-action/issues
+[node.js]: https://nodejs.org/en/
+[npm]: https://www.npmjs.com/
+[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new
+[open issues]: https://github.com/ericcornelissen/svgo-action/issues?q=is%3Aissue+is%3Aopen+no%3Aassignee
 [rollup.js]: https://rollupjs.org/guide/en/
 [security policy]: ./SECURITY.md
 [shellcheck]: https://github.com/koalaman/shellcheck
