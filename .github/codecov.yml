@@ -19,10 +19,10 @@ comment:
 flags:
   unit:
     paths:
-      - ./src/**/*.ts
+      - ./src/
   integration:
     paths:
-      - ./src/**/*.ts
+      - ./src/
 
 ignore:
   - ./lib/*
