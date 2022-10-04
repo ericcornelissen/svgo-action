@@ -240,10 +240,14 @@ at `_reports/mutation/index.html`. Alternatively, you can find a report for the
 `main` branch online as a [Stryker Dashboard].
 
 By default the mutation tests run on all the source code using all the unit
-tests. Since this is a slow process, you can change the mutation test config (in
-`stryker.config.js`) to focus on a subset of the source code or unit tests (we
-ask that you don't commit such changes). For example, to run mutation tests for
-a particular file you can change the Stryker configuration as follows.
+tests. The first time you run the mutation tests can be rather slow. However,
+this project leverages Stryker's incremental mode, meaning that subsequent runs
+of the mutation tests are much faster.
+
+If you don't have time for an initial slow run, you can opt to change the config
+in `stryker.config.js` to focus on a subset of the source code or unit tests
+(you should never commit such changes). For example, to run mutation tests for
+a particular source code file you can change the config as follows.
 
 ```diff
   mutate: [
