@@ -165,6 +165,9 @@ module.exports = {
         "module": "readonly",
         "require": "readonly",
       },
+      rules: {
+        "@typescript-eslint/no-var-requires": "off",
+      },
     },
     { // Script files
       files: ["script/**/*.js"],

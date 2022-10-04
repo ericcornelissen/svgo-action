@@ -11,8 +11,15 @@ export default {
     "!src/**/*.d.ts",
     "!src/**/__mocks__/**/*.ts",
   ],
-  commandRunner: {
-    command: "npm run test:unit -- --runInBand",
+
+  testRunner: "jest",
+  testRunnerNodeArgs: ["--experimental-vm-modules"],
+  jest: {
+    projectType: "custom",
+    configFile: "jest.config.cjs",
+    config: {
+      testMatch: ["<rootDir>/test/unit/**/*.test.ts"],
+    },
   },
 
   incremental: true,
