@@ -69,6 +69,7 @@
     "@rollup/plugin-node-resolve": "14.1.0",
     "@rollup/plugin-typescript": "8.5.0",
     "@stryker-mutator/core": "6.2.2",
+    "@stryker-mutator/jest-runner": "6.2.2",
     "@stryker-mutator/typescript-checker": "6.2.2",
     "@types/jest": "29.1.1",
     "@types/jest-when": "3.5.2",
