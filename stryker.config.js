@@ -42,9 +42,9 @@ export default {
     fileName: `${reportsDir}/index.html`,
   },
   thresholds: {
+    break: 95,
     high: 95,
     low: 85,
-    break: 80,
   },
 
   tempDirName: ".temp/stryker",
