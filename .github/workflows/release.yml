@@ -1,4 +1,4 @@
-name: Releases
+name: Release
 on:
   push:
     branches:
@@ -67,8 +67,8 @@ jobs:
                   `package-lock.json`.
             - [ ] A new release is added to `CHANGELOG.md` with the correct
                   version number and date.
-            - [ ] The new version number is in accordance with the [semantic
-                  versioning] rules.
+            - [ ] The new version number is in accordance with the [Semantic
+                  Versioning] rules.
             - [ ] The `lib/index.cjs` file has been updated.
             - [ ] There are no other changes in the Pull Request.
 
@@ -85,8 +85,6 @@ jobs:
             [^1]: It may take a few minutes for this to happen.
 
             [create a github release]: https://github.com/ericcornelissen/svgo-action/blob/a0d6d2031e7cafa1b7c0b71b30453a453058de23/RELEASE.md#creating-a-github-release
-            [github marketplace]: https://github.com/marketplace
-            [github release]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
             [semantic versioning]: https://semver.org/spec/v2.0.0.html
           branch: release-${{ github.event.inputs.update_type }}
           branch-suffix: random
