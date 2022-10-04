@@ -1,5 +1,7 @@
 // Check out Stryker at: https://stryker-mutator.io/
 
+const reportsDir = "_reports/mutation";
+
 export default {
   coverageAnalysis: "perTest",
   inPlace: false,
@@ -9,9 +11,19 @@ export default {
     "!src/**/*.d.ts",
     "!src/**/__mocks__/**/*.ts",
   ],
-  commandRunner: {
-    command: "npm run test:unit -- --runInBand",
+
+  testRunner: "jest",
+  testRunnerNodeArgs: ["--experimental-vm-modules"],
+  jest: {
+    projectType: "custom",
+    configFile: "jest.config.cjs",
+    config: {
+      testMatch: ["<rootDir>/test/unit/**/*.test.ts"],
+    },
   },
+
+  incremental: true,
+  incrementalFile: `${reportsDir}/stryker-incremental.json`,
 
   timeoutMS: 25000,
   timeoutFactor: 2.5,
@@ -27,12 +39,12 @@ export default {
     "progress",
   ],
   htmlReporter: {
-    fileName: "_reports/mutation/index.html",
+    fileName: `${reportsDir}/index.html`,
   },
   thresholds: {
+    break: 95,
     high: 95,
     low: 85,
-    break: 80,
   },
 
   tempDirName: ".temp/stryker",

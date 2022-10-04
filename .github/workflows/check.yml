@@ -270,7 +270,6 @@ jobs:
   test-mutation:
     name: Test - mutation
     runs-on: ubuntu-latest
-    if: ${{ github.ref_name == 'main' || github.ref_name == 'main-v2' }}
     needs:
       - test
     steps:
@@ -293,6 +292,13 @@ jobs:
         with:
           cache: npm
           node-version-file: .nvmrc
+      - name: Cache Stryker incremental report
+        uses: actions/cache@ac8075791e805656e71b4ba23325ace9e3421120 # tag=v3.0.9
+        with:
+          path: _reports/mutation/stryker-incremental.json
+          key: mutation-${{ github.run_number }}
+          restore-keys: |
+            mutation-
       - name: Install dependencies
         run: npm ci
       - name: Run mutation tests
