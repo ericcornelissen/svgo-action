@@ -23,9 +23,8 @@ function deprecationWarnings({
   }
 
   core.notice(
-    "General support for SVGO Action v2 ended 2022-05-31. Security " +
-    "updates will be supported until 2023-04-30. Please upgrade to SVGO " +
-    "Action v3 as soon as possible.",
+    "Support for SVGO Action v2 ended 2023-04-30. Please upgrade to the " +
+    "latest version as soon as possible",
   );
 }
 
