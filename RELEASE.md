@@ -22,12 +22,9 @@ A typical release process for the major version 2 will look something like this
    git checkout main-v2
    ```
 
-1. Verify that the repository is in a state that can be released:
+1. Update the contents of the `lib/` directory using:
 
-   ```sh
-   npm clean-install
-   npm run lint
-   npm run coverage:all
+   ```shell
    npm run build
    ```
 
