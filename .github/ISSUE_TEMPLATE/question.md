@@ -7,7 +7,7 @@ labels: question
 # Question
 
 <!-- The version of the Action you're using -->
-- **SVGO Action version**: <!-- e.g. v1.1.0 -->
+- **SVGO Action version**: <!-- e.g. v3.0.3 -->
 
 <!-- The context in which the Action is running -->
 - **On**: <!-- e.g. pull_request -->
