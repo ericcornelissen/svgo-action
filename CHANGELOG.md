@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [2.1.9] - 2022-10-15
+
 - Update dependency `@actions/core`. ([#633])
 - Update dependency `@actions/github`. ([#633])
 
