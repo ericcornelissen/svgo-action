@@ -143,6 +143,7 @@ For major releases, some additional steps are required. This may include:
   internal) are updated.
 - Update the automated release workflow to create releases for the new major
   version.
+- Update the issue templates to align with the new major version.
 
 Make sure these additional changes are included in the release Pull Request.
 
