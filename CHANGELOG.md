@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.0.3] - 2022-10-15
+
 - Update dependency `@actions/core`. ([#622])
 - Update dependency `@actions/github`. ([#622])
 - Update inputs overview in the documentation. ([#634])
