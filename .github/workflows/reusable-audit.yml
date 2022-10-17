@@ -72,5 +72,4 @@ jobs:
         run: npm run audit
       - name: Audit production npm dependencies
         if: ${{ startsWith(matrix.ref, 'v') }}
-        run: npm run audit -- --production
-        # TODO: Replace with `run: npm run audit:prod`
+        run: npm run audit:prod
