@@ -248,17 +248,29 @@ jobs:
         run: |
           export SVG=$(cat test/end-to-end/not-optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.svg-one }}' = "$SVG" ]; then
+            echo "=== BEFORE ==="
+            echo  '${{ steps.original-svgs.outputs.svg-one }}'
+            echo "=== AFTER ==="
+            echo "$SVG"
             exit 4
           fi
 
           export SVG=$(cat test/end-to-end/not-optimized-2.svg)
           if [ '${{ steps.original-svgs.outputs.svg-two }}' = "$SVG" ]; then
+            echo "=== BEFORE ==="
+            echo  '${{ steps.original-svgs.outputs.svg-two }}'
+            echo "=== AFTER ==="
+            echo "$SVG"
             exit 5
           fi
       - name: Check the content of already optimized SVGs
         run: |
           export SVG=$(cat test/end-to-end/optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.optimized-svg-one }}' != "$SVG" ]; then
+            echo "=== BEFORE ==="
+            echo  '${{ steps.original-svgs.outputs.optimized-svg-one }}'
+            echo "=== AFTER ==="
+            echo "$SVG"
             exit 6
           fi
       - name: Check the content of ignored SVGs
