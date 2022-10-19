@@ -216,9 +216,6 @@ jobs:
           echo "optimized-svg-one=$SVG_OPTIMIZED_1" >> $GITHUB_OUTPUT
 
           export SVG_IGNORED_1=$(cat test/end-to-end/ignore/ignored-1.svg)
-          SVG_IGNORED_1="${SVG_IGNORED_1//'%'/'%25'}"
-          SVG_IGNORED_1="${SVG_IGNORED_1//$'\n'/'%0A'}"
-          SVG_IGNORED_1="${SVG_IGNORED_1//$'\r'/'%0D'}"
           echo "ignored-svg-one=$SVG_IGNORED_1" >> $GITHUB_OUTPUT
       - name: Run SVGO Action
         uses: ./
