@@ -201,25 +201,25 @@ jobs:
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
-          echo "::set-output name=svg-one::$SVG"
+          echo "svg-one=$SVG" >> $GITHUB_OUTPUT
 
           export SVG=$(cat test/end-to-end/not-optimized-2.svg)
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
-          echo "::set-output name=svg-two::$SVG"
+          echo "svg-two=$SVG" >> $GITHUB_OUTPUT
 
           export SVG=$(cat test/end-to-end/optimized-1.svg)
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
-          echo "::set-output name=optimized-svg-one::$SVG"
+          echo "optimized-svg-one=$SVG" >> $GITHUB_OUTPUT
 
           export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           SVG="${SVG//'%'/'%25'}"
           SVG="${SVG//$'\n'/'%0A'}"
           SVG="${SVG//$'\r'/'%0D'}"
-          echo "::set-output name=ignored-svg-one::$SVG"
+          echo "ignored-svg-one=$SVG" >> $GITHUB_OUTPUT
       - name: Run SVGO Action
         uses: ./
         id: svgo
