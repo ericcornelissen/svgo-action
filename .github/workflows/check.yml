@@ -265,6 +265,10 @@ jobs:
         run: |
           export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           if [ '${{ steps.original-svgs.outputs.ignored-svg-one }}' != "$SVG" ]; then
+            echo "=== BEFORE ==="
+            echo  '${{ steps.original-svgs.outputs.ignored-svg-one }}'
+            echo "=== AFTER ==="
+            echo "$SVG"
             exit 7
           fi
   test-mutation:
