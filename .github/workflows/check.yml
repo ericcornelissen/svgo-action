@@ -216,6 +216,9 @@ jobs:
           echo "optimized-svg-one=$SVG_OPTIMIZED_1" >> $GITHUB_OUTPUT
 
           export SVG_IGNORED_1=$(cat test/end-to-end/ignore/ignored-1.svg)
+          SVG_IGNORED_1="${SVG_IGNORED_1//'%'/'%25'}"
+          SVG_IGNORED_1="${SVG_IGNORED_1//$'\n'/'%0A'}"
+          SVG_IGNORED_1="${SVG_IGNORED_1//$'\r'/'%0D'}"
           echo "ignored-svg-one=$SVG_IGNORED_1" >> $GITHUB_OUTPUT
       - name: Run SVGO Action
         uses: ./
@@ -273,6 +276,9 @@ jobs:
       - name: Check the content of ignored SVGs
         run: |
           export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
           if [ '${{ steps.original-svgs.outputs.ignored-svg-one }}' != "$SVG" ]; then
             echo "=== BEFORE ==="
             echo  '${{ steps.original-svgs.outputs.ignored-svg-one }}'
