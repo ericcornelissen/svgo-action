@@ -197,29 +197,29 @@ jobs:
       - name: Get the content of SVGs
         id: original-svgs
         run: |
-          export SVG=$(cat test/end-to-end/not-optimized-1.svg)
-          SVG="${SVG//'%'/'%25'}"
-          SVG="${SVG//$'\n'/'%0A'}"
-          SVG="${SVG//$'\r'/'%0D'}"
-          echo "svg-one=$SVG" >> $GITHUB_OUTPUT
+          export SVG_1=$(cat test/end-to-end/not-optimized-1.svg)
+          SVG_1="${SVG_1//'%'/'%25'}"
+          SVG_1="${SVG_1//$'\n'/'%0A'}"
+          SVG_1="${SVG_1//$'\r'/'%0D'}"
+          echo "svg-one=$SVG_1" >> $GITHUB_OUTPUT
 
-          export SVG=$(cat test/end-to-end/not-optimized-2.svg)
-          SVG="${SVG//'%'/'%25'}"
-          SVG="${SVG//$'\n'/'%0A'}"
-          SVG="${SVG//$'\r'/'%0D'}"
-          echo "svg-two=$SVG" >> $GITHUB_OUTPUT
+          export SVG_2=$(cat test/end-to-end/not-optimized-2.svg)
+          SVG_2="${SVG_2//'%'/'%25'}"
+          SVG_2="${SVG_2//$'\n'/'%0A'}"
+          SVG_2="${SVG_2//$'\r'/'%0D'}"
+          echo "svg-two=$SVG_2" >> $GITHUB_OUTPUT
 
-          export SVG=$(cat test/end-to-end/optimized-1.svg)
-          SVG="${SVG//'%'/'%25'}"
-          SVG="${SVG//$'\n'/'%0A'}"
-          SVG="${SVG//$'\r'/'%0D'}"
-          echo "optimized-svg-one=$SVG" >> $GITHUB_OUTPUT
+          export SVG_OPTIMIZED_1=$(cat test/end-to-end/optimized-1.svg)
+          SVG_OPTIMIZED_1="${SVG_OPTIMIZED_1//'%'/'%25'}"
+          SVG_OPTIMIZED_1="${SVG_OPTIMIZED_1//$'\n'/'%0A'}"
+          SVG_OPTIMIZED_1="${SVG_OPTIMIZED_1//$'\r'/'%0D'}"
+          echo "optimized-svg-one=$SVG_OPTIMIZED_1" >> $GITHUB_OUTPUT
 
-          export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
-          SVG="${SVG//'%'/'%25'}"
-          SVG="${SVG//$'\n'/'%0A'}"
-          SVG="${SVG//$'\r'/'%0D'}"
-          echo "ignored-svg-one=$SVG" >> $GITHUB_OUTPUT
+          export SVG_IGNORED_1=$(cat test/end-to-end/ignore/ignored-1.svg)
+          SVG_IGNORED_1="${SVG_IGNORED_1//'%'/'%25'}"
+          SVG_IGNORED_1="${SVG_IGNORED_1//$'\n'/'%0A'}"
+          SVG_IGNORED_1="${SVG_IGNORED_1//$'\r'/'%0D'}"
+          echo "ignored-svg-one=$SVG_IGNORED_1" >> $GITHUB_OUTPUT
       - name: Run SVGO Action
         uses: ./
         id: svgo
