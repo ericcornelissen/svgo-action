@@ -247,6 +247,9 @@ jobs:
       - name: Check the content of newly optimized SVGs
         run: |
           export SVG=$(cat test/end-to-end/not-optimized-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
           if [ '${{ steps.original-svgs.outputs.svg-one }}' = "$SVG" ]; then
             echo "=== BEFORE ==="
             echo  '${{ steps.original-svgs.outputs.svg-one }}'
@@ -266,6 +269,9 @@ jobs:
       - name: Check the content of already optimized SVGs
         run: |
           export SVG=$(cat test/end-to-end/optimized-1.svg)
+          SVG="${SVG//'%'/'%25'}"
+          SVG="${SVG//$'\n'/'%0A'}"
+          SVG="${SVG//$'\r'/'%0D'}"
           if [ '${{ steps.original-svgs.outputs.optimized-svg-one }}' != "$SVG" ]; then
             echo "=== BEFORE ==="
             echo  '${{ steps.original-svgs.outputs.optimized-svg-one }}'
