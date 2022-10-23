@@ -243,4 +243,9 @@ module.exports = {
       },
     },
   ],
+  ignorePatterns: [
+    // Don't ignore configuration files
+    "!.github/",
+    "!.*.yml",
+  ],
 };
