@@ -1,7 +1,5 @@
 // Check out Stryker at: https://stryker-mutator.io/
 
-const reportsDir = "_reports/mutation";
-
 export default {
   coverageAnalysis: "perTest",
   inPlace: false,
@@ -23,7 +21,7 @@ export default {
   },
 
   incremental: true,
-  incrementalFile: `${reportsDir}/stryker-incremental.json`,
+  incrementalFile: ".cache/stryker/incremental.json",
 
   timeoutMS: 25000,
   timeoutFactor: 2.5,
@@ -39,7 +37,7 @@ export default {
     "progress",
   ],
   htmlReporter: {
-    fileName: `${reportsDir}/index.html`,
+    fileName: "_reports/mutation/index.html",
   },
   thresholds: {
     break: 95,
