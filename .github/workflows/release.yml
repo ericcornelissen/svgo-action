@@ -117,11 +117,11 @@ jobs:
         id: version
         run: |
           VERSION="v$(jq -r '.version' < package.json)"
-          echo "::set-output name=version::$VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
           if [ "$(git tag --list "$VERSION")" ]; then
-            echo "::set-output name=released::true"
+            echo "released=true" >> $GITHUB_OUTPUT
           else
-            echo "::set-output name=released::false"
+            echo "released=false" >> $GITHUB_OUTPUT
           fi
       - name: Release new version
         if: ${{ steps.version.outputs.released == 'false' }}
