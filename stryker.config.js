@@ -3,6 +3,7 @@
 export default {
   coverageAnalysis: "perTest",
   inPlace: false,
+  ignoreStatic: true,
   mutate: [
     "src/**/*.ts",
     "!src/index.ts",
@@ -22,9 +23,6 @@ export default {
 
   incremental: true,
   incrementalFile: ".cache/stryker/incremental.json",
-
-  timeoutMS: 25000,
-  timeoutFactor: 2.5,
 
   disableTypeChecks: "{src,test}/**/*.ts",
   checkers: ["typescript"],
@@ -46,5 +44,5 @@ export default {
   },
 
   tempDirName: ".temp/stryker",
-  cleanTempDir: false,
+  cleanTempDir: true,
 };
