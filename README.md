@@ -5,7 +5,6 @@
 [![Mutation Report][mutation-image]][mutation-url]
 [![Maintainability][maintainability-image]][maintainability-url]
 [![Snyk Status][snyk-image]][snyk-url]
-[![FOSSA Status][fossa-image]][fossa-url]
 
 Automatically run [SVGO] with GitHub Actions.
 
@@ -138,8 +137,6 @@ permissions: read-all
 [maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 [snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
 [snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
-[fossa-image]: https://app.fossa.com/api/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action.svg?type=shield
-[fossa-url]: https://app.fossa.com/projects/git%2Bgithub.com%2Fericcornelissen%2Fsvgo-action?ref=badge_shield
 
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
