@@ -158,7 +158,7 @@ module.exports = {
         }],
       },
     },
-    { // Configuration files
+    { // Configuration files (JavaScript)
       files: ["*.cjs"],
       globals: {
         "__dirname": "readonly",
@@ -167,6 +167,57 @@ module.exports = {
       },
       rules: {
         "@typescript-eslint/no-var-requires": "off",
+      },
+    },
+    { // Configuration files (YAML)
+      files: [".github/**/*.yml", "*.yml"],
+      extends: [
+        "plugin:yml/standard",
+      ],
+      rules: {
+        // ESLint (https://eslint.org/docs/rules/)
+        "max-len": "off",
+        "spaced-comment": "off", // Per https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
+
+        // eslint-plugin-yml
+        // https://ota-meshi.github.io/eslint-plugin-yml/rules/
+        "yml/block-mapping": ["error", "always"],
+        "yml/block-mapping-colon-indicator-newline": ["error", "never"],
+        "yml/block-mapping-question-indicator-newline": ["error", "never"],
+        "yml/block-sequence": ["error", "always"],
+        "yml/block-sequence-hyphen-indicator-newline": ["error", "never"],
+        "yml/file-extension": ["error", {
+          extension: "yml",
+          caseSensitive: true,
+        }],
+        "yml/indent": ["error", 2],
+        "yml/key-name-casing": "off",
+        "yml/key-spacing": ["error", {
+          afterColon: true,
+          beforeColon: false,
+          mode: "strict",
+        }],
+        "yml/no-empty-document": "error",
+        "yml/no-empty-key": "error",
+        "yml/no-empty-mapping-value": "error",
+        "yml/no-empty-sequence-entry": "error",
+        "yml/no-irregular-whitespace": "error",
+        "yml/no-multiple-empty-lines": ["error", {
+          max: 1,
+          maxEOF: 0,
+          maxBOF: 0,
+        }],
+        "yml/no-tab-indent": "error",
+        "yml/plain-scalar": ["error", "always"],
+        "yml/quotes": ["error", {
+          avoidEscape: true,
+          prefer: "double",
+        }],
+        "yml/require-string-key": "error",
+        "yml/sort-keys": "off",
+        "yml/sort-sequence-values": "off",
+        "yml/spaced-comment": ["error", "always"],
+        "yml/vue-custom-block/no-parsing-error": "off",
       },
     },
     { // Script files
@@ -185,5 +236,10 @@ module.exports = {
         "security/detect-non-literal-fs-filename": "off",
       },
     },
+  ],
+  ignorePatterns: [
+    // Don't ignore configuration files
+    "!.github/",
+    "!.*.yml",
   ],
 };
