@@ -176,6 +176,7 @@ module.exports = {
       ],
       rules: {
         // ESLint (https://eslint.org/docs/rules/)
+        "max-len": "off",
         "spaced-comment": "off", // Per https://ota-meshi.github.io/eslint-plugin-yml/rules/spaced-comment.html
 
         // eslint-plugin-yml
@@ -214,14 +215,7 @@ module.exports = {
         }],
         "yml/require-string-key": "error",
         "yml/sort-keys": "off",
-        "yml/sort-sequence-values": ["error",
-          {
-            pathPattern: ".*",
-            order: {
-              type: "asc",
-            },
-          },
-        ],
+        "yml/sort-sequence-values": "off",
         "yml/spaced-comment": ["error", "always"],
         "yml/vue-custom-block/no-parsing-error": "off",
       },
