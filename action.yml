@@ -22,7 +22,7 @@ outputs:
   OPTIMIZED_COUNT:
     description: The number of SVGs that were optimized
   SVG_COUNT:
-    description: "The number of SVGs that were detected "
+    description: The number of SVGs that were detected
 
 runs:
   using: node16
