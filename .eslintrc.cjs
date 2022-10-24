@@ -18,11 +18,6 @@ module.exports = {
     "plugin:security/recommended",
   ],
 
-  ignorePatterns: [
-    "node_modules/", // dependencies directory
-    "lib/", // TypeScript generated files
-  ],
-
   globals: {
     "jest": "readonly",
   },
@@ -238,8 +233,21 @@ module.exports = {
     },
   ],
   ignorePatterns: [
+    "node_modules/",
+    ".idea/",
+    ".npm/",
+    ".vscode/",
+
+    // Generated & temporary
+    ".cache/",
+    ".temp/",
+    "_reports/",
+    "lib/",
+
     // Don't ignore configuration files
     "!.github/",
+    "!.*.cjs",
+    "!.*.js",
     "!.*.yml",
   ],
 };
