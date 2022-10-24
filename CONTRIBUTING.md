@@ -171,6 +171,15 @@ enforce your style, add it as a `devDependency`.
 The project is vetted using a small collection of static analysis tools. Run
 `npm run vet` to analyze the project for potential problems.
 
+#### Licenses
+
+This project uses [licensee] to check for potential license violations in
+project dependencies. To validate the licenses, run `npm run check-licenses`,
+which will exit with a non-zero exit code if there's a violation.
+
+The configuration, including allowed licenses and exceptions, can be found in
+`.licensee.json`.
+
 ---
 
 ## Testing
@@ -314,6 +323,7 @@ There are some limitations to using [act]:
 [git]: https://git-scm.com/
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
+[licensee]: https://github.com/jslicense/licensee.js
 [mocking]: https://stackoverflow.com/a/2666006
 [mutation testing]: https://en.wikipedia.org/wiki/Mutation_testing
 [node.js]: https://nodejs.org/en/

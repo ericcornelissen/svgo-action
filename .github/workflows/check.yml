@@ -65,6 +65,32 @@ jobs:
           languages: javascript
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@807578363a7869ca324a79039e6db9c843e0e100 # tag=v2.1.27
+  licenses:
+    name: Licenses
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@2e205a28d0e1da00c5f53b161f4067b052c61f34 # tag=v1.5.0
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            nodejs.org:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+      - name: Checkout repository
+        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+      - name: Install Node.js
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm ci
+      - name: Check licenses
+        run: npm run check-licenses
   lint:
     name: Lint
     runs-on: ubuntu-latest
