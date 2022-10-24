@@ -3,7 +3,6 @@
 [![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Mutation Report][mutation-image]][mutation-url]
-[![Maintainability][maintainability-image]][maintainability-url]
 [![Snyk Status][snyk-image]][snyk-url]
 
 Automatically run [SVGO] with GitHub Actions.
@@ -127,14 +126,12 @@ permissions:
 permissions: read-all
 ```
 
-[ci-url]: https://github.com/ericcornelissen/svgo-action/actions?query=workflow%3A%22Code+Validation%22+branch%3Amain
-[ci-image]: https://img.shields.io/github/workflow/status/ericcornelissen/svgo-action/Code%20Validation/main?logo=github
+[ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
+[ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
 [mutation-url]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
 [mutation-image]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fericcornelissen%2Fsvgo-action%2Fmain
-[maintainability-url]: https://codeclimate.com/github/ericcornelissen/svgo-action/maintainability
-[maintainability-image]: https://api.codeclimate.com/v1/badges/4b1085a28f00ec5f9225/maintainability
 [snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
 [snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 

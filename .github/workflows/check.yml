@@ -1,6 +1,6 @@
 name: Check
 on:
-  pull_request:
+  pull_request: ~
   push:
     branches:
       - main
@@ -116,13 +116,14 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Lint source code
+        if: ${{ always() }}
         run: npm run lint
       - name: Lint shell scripts
+        if: ${{ always() }}
         run: npm run lint:sh
   test:
     name: Test - ${{ matrix.type }}
     runs-on: ubuntu-latest
-    if: ${{ always() }}
     needs:
       - build
     strategy:
