@@ -171,7 +171,14 @@ enforce your style, add it as a `devDependency`.
 The project is vetted using a small collection of static analysis tools. Run
 `npm run vet` to analyze the project for potential problems.
 
-#### Licenses
+#### Auditing
+
+##### Vulnerabilities
+
+To scan for vulnerabilities in all dependencies, run `npm run audit`. To scan
+only production dependencies, run `npm run audit:prod`.
+
+##### Licenses
 
 This project uses [licensee] to check for potential license violations in
 project dependencies. To validate the licenses, run `npm run check-licenses`,
