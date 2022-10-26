@@ -1,11 +1,13 @@
 import type { SupportedSvgoVersions } from "../../src/svgo";
 
 jest.dontMock("svgo-v2");
+jest.dontMock("svgo-v3");
 
 jest.mock("import-cwd");
 
 import importCwd from "import-cwd";
 import svgoV2 from "svgo-v2"; // eslint-disable-line import/default
+import svgoV3 from "svgo-v3"; // eslint-disable-line import/default
 
 import SVGO from "../../src/svgo";
 
@@ -37,8 +39,10 @@ describe("package svgo", () => {
 
     describe.each([
       ["2", undefined],
+      ["3", undefined],
       ["project", svgoV1Mock],
       ["project", svgoV2],
+      ["project", svgoV3],
     ])("::optimize (%s, %s)", (svgoVersion, svgoImport) => {
       const config = {
         svgoVersion: {
@@ -79,7 +83,9 @@ describe("package svgo", () => {
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(validSvg);
-        expect(svgoVersion === "2" ? err1 : "").not.toBeNull(); // eslint-disable-line jest/no-conditional-in-test
+        expect(
+          svgoVersion === "2" || svgoVersion === "3" ? err1 : "", // eslint-disable-line jest/no-conditional-in-test
+        ).not.toBeNull();
       });
     });
 

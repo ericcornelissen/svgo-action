@@ -144,6 +144,7 @@ describe("package inputs", () => {
 
     test.each([
       "2",
+      "3",
       "project",
     ])("configured to '%s' (valid)", async (value) => {
       doMockSvgoVersionInput(() => `${value}`);
