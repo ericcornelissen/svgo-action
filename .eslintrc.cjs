@@ -166,13 +166,16 @@ module.exports = {
     },
     { // Configuration files (JSON)
       files: [
+        ".github/renovate.json",
         "*.json",
       ],
       plugins: [
         "json",
       ],
       rules: {
-        "json/*": ["error"],
+        "json/*": ["error", {
+          "allowComments": true,
+        }],
       },
     },
     { // Configuration files (YAML)
