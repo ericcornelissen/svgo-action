@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.1.0] - 2022-10-26
+
 - Add support for using SVGO v3. ([#661])
 
 ## [3.0.3] - 2022-10-15

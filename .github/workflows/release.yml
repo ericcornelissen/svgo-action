@@ -81,6 +81,7 @@ jobs:
 
             [create a github release]: https://github.com/ericcornelissen/svgo-action/blob/a0d6d2031e7cafa1b7c0b71b30453a453058de23/RELEASE.md#creating-a-github-release
             [semantic versioning]: https://semver.org/spec/v2.0.0.html
+          labels: release
           branch: release-${{ github.event.inputs.update_type }}
           branch-suffix: random
           commit-message: "chore: version bump"
