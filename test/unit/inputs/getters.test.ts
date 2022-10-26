@@ -288,6 +288,7 @@ describe("inputs/getters.ts", () => {
 
     test.each([
       ["2", "project"],
+      ["3", "2"],
       ["project", "2"],
     ])("can get input, valid ('%s')", (configuredValue, _defaultValue) => {
       expect(configuredValue).not.toEqual(_defaultValue);
@@ -304,7 +305,7 @@ describe("inputs/getters.ts", () => {
 
     test.each([
       "0",
-      "3",
+      "4",
       "42",
     ])("can get input, unsupported ('%s')", (configuredValue) => {
       const defaultValue = "2";

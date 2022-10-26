@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Add support for using SVGO v3. ([#661])
 
 ## [3.0.3] - 2022-10-15
 
@@ -459,5 +459,6 @@ Versioning].
 [#599]: https://github.com/ericcornelissen/svgo-action/pull/599
 [#622]: https://github.com/ericcornelissen/svgo-action/pull/622
 [#634]: https://github.com/ericcornelissen/svgo-action/pull/634
+[#661]: https://github.com/ericcornelissen/svgo-action/pull/661
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

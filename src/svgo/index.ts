@@ -5,6 +5,7 @@ import errors from "../errors";
 import createSvgoOptimizerForProject from "./project";
 import StubSVGOptimizer from "./stub";
 import svgoV2 from "./v2";
+import svgoV3 from "./v3";
 
 interface Config {
   readonly svgoVersion: {
@@ -32,6 +33,9 @@ function New({
     break;
   case "2":
     [svgOptimizer, err] = svgoV2.New(svgoConfig);
+    break;
+  case "3":
+    [svgOptimizer, err] = svgoV3.New(svgoConfig);
     break;
   default:
     err = errors.New(`unknown value '${svgoVersion}'`);

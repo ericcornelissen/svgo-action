@@ -64,7 +64,8 @@
     "import-cwd": "3.0.0",
     "js-yaml": "4.1.0",
     "minimatch": "5.1.0",
-    "svgo-v2": "npm:svgo@2.8.0"
+    "svgo-v2": "npm:svgo@2.8.0",
+    "svgo-v3": "npm:svgo@3.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "17.1.2",

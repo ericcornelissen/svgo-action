@@ -9,9 +9,20 @@ import errors from "../errors";
 import StubSVGOptimizer from "./stub";
 import svgoV1 from "./v1";
 import svgoV2 from "./v2";
+import svgoV3 from "./v3";
 
 function isSvgoV2(importedSvgo: unknown): boolean {
-  return Object.prototype.hasOwnProperty.call(importedSvgo, "optimize");
+  return Object.prototype.hasOwnProperty.call(
+    importedSvgo,
+    "extendDefaultPlugins",
+  );
+}
+
+function isSvgoV3(importedSvgo: unknown): boolean {
+  return Object.prototype.hasOwnProperty.call(
+    importedSvgo,
+    "loadConfig",
+  );
 }
 
 function createSvgoOptimizerForProject(
@@ -27,6 +38,8 @@ function createSvgoOptimizerForProject(
 
   if (isSvgoV2(svgo)) {
     return svgoV2.NewFrom(svgo as SVGOv2, options);
+  } else if (isSvgoV3(svgo)) {
+    return svgoV3.NewFrom(svgo as SVGOv2, options);
   } else {
     return svgoV1.NewFrom(svgo as SVGOv1, options);
   }
