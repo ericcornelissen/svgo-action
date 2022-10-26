@@ -3,15 +3,18 @@ jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/stub");
 jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
+jest.mock("../../../src/svgo/v3");
 
 import importCwd from "import-cwd";
 
 import createSvgoOptimizerForProject from "../../../src/svgo/project";
 import svgoV1 from "../../../src/svgo/v1";
 import svgoV2 from "../../../src/svgo/v2";
+import svgoV3 from "../../../src/svgo/v3";
 
 const importCwdSilent = importCwd.silent as jest.MockedFunction<typeof importCwd.silent>; // eslint-disable-line max-len
 const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
+const svgoV3New = svgoV3.New as jest.MockedFunction<typeof svgoV3.New>;
 
 describe("svgo/project.ts", () => {
   describe("::New", () => {
@@ -20,12 +23,14 @@ describe("svgo/project.ts", () => {
     };
 
     const svgoV1Export = { };
-    const svgoV2Export = { optimize: () => "" };
+    const svgoV2Export = { extendDefaultPlugins: () => "" };
+    const svgoV3Export = { loadConfig: () => "" };
 
     beforeEach(() => {
       importCwdSilent.mockReset();
 
       svgoV2New.mockClear();
+      svgoV3New.mockClear();
     });
 
     test("tries to import 'svgo'", () => {
@@ -65,6 +70,16 @@ describe("svgo/project.ts", () => {
         expect(svgoV2.NewFrom).toHaveBeenCalledWith(svgoV2Export, svgoConfig);
       });
 
+      test("with config, SVGO v3", () => {
+        importCwdSilent.mockReturnValue(svgoV3Export);
+
+        const [result, err] = createSvgoOptimizerForProject(svgoConfig);
+        expect(err).toBeNull();
+        expect(result).not.toBeNull();
+
+        expect(svgoV3.NewFrom).toHaveBeenCalledWith(svgoV3Export, svgoConfig);
+      });
+
       test("without config, SVGO v1", () => {
         importCwdSilent.mockReturnValue(svgoV1Export);
 
@@ -83,6 +98,16 @@ describe("svgo/project.ts", () => {
         expect(result).not.toBeNull();
 
         expect(svgoV2.NewFrom).toHaveBeenCalledWith(svgoV2Export, { });
+      });
+
+      test("without config, SVGO v3", () => {
+        importCwdSilent.mockReturnValue(svgoV3Export);
+
+        const [result, err] = createSvgoOptimizerForProject();
+        expect(err).toBeNull();
+        expect(result).not.toBeNull();
+
+        expect(svgoV3.NewFrom).toHaveBeenCalledWith(svgoV3Export, { });
       });
     });
   });

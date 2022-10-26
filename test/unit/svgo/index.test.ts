@@ -5,14 +5,17 @@ jest.mock("../../../src/svgo/project");
 jest.mock("../../../src/svgo/stub");
 jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
+jest.mock("../../../src/svgo/v3");
 
 import errors from "../../../src/errors";
 import svgo from "../../../src/svgo/index";
 import _createSvgoOptimizerForProject from "../../../src/svgo/project";
 import svgoV2 from "../../../src/svgo/v2";
+import svgoV3 from "../../../src/svgo/v3";
 
 const createSvgoOptimizerForProject = _createSvgoOptimizerForProject as jest.MockedFunction<typeof _createSvgoOptimizerForProject>; // eslint-disable-line max-len
 const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
+const svgoV3New = svgoV3.New as jest.MockedFunction<typeof svgoV3.New>;
 
 describe("svgo/index.ts", () => {
   describe("::New", () => {
@@ -22,6 +25,7 @@ describe("svgo/index.ts", () => {
 
     beforeEach(() => {
       svgoV2New.mockClear();
+      svgoV3New.mockClear();
     });
 
     test("version 2", () => {
@@ -35,6 +39,19 @@ describe("svgo/index.ts", () => {
       expect(err).toBeNull();
       expect(result).not.toBeNull();
       expect(svgoV2.New).toHaveBeenCalledWith(svgoConfig);
+    });
+
+    test("version 3", () => {
+      const config = {
+        svgoVersion: {
+          value: "3" as SupportedSvgoVersions,
+        },
+      };
+
+      const [result, err] = svgo.New({ config, svgoConfig });
+      expect(err).toBeNull();
+      expect(result).not.toBeNull();
+      expect(svgoV3.New).toHaveBeenCalledWith(svgoConfig);
     });
 
     describe("project", () => {
