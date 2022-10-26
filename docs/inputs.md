@@ -1,5 +1,8 @@
 # SVGO Action Inputs
 
+> :warning: Version 2 of the SVGO Action is end-of-life (EOL) since 2023-04-30.
+> No support will be provided going forward.
+
 This documentation describes all the inputs of the SVGO Action.
 
 - [Dry Run](#dry-run)

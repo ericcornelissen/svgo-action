@@ -15,7 +15,7 @@ _This table only includes information on versions `<3.0.0`._
 
 ## Reporting a Vulnerability
 
-Version 1 of the SVGO Action is no longer supported. If you found a potential
+Version 2 of the SVGO Action is no longer supported. If you found a potential
 vulnerability in it, please report this publicly. For example in the public
 repository of the project.
 
