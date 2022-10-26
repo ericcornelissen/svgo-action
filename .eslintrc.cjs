@@ -164,6 +164,20 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "off",
       },
     },
+    { // Configuration files (JSON)
+      files: [
+        ".github/renovate.json",
+        "*.json",
+      ],
+      plugins: [
+        "json",
+      ],
+      rules: {
+        "json/*": ["error", {
+          "allowComments": true,
+        }],
+      },
+    },
     { // Configuration files (YAML)
       files: [".github/**/*.yml", "*.yml"],
       extends: [
@@ -248,6 +262,7 @@ module.exports = {
     "!.github/",
     "!.*.cjs",
     "!.*.js",
+    "!.*.json",
     "!.*.yml",
   ],
 };
