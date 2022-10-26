@@ -23,35 +23,42 @@ describe("svgo/index.ts", () => {
       multipass: false,
     };
 
-    beforeEach(() => {
-      svgoV2New.mockClear();
-      svgoV3New.mockClear();
+    describe("v2", () => {
+      beforeEach(() => {
+        svgoV2New.mockClear();
+      });
+
+      test("create instance", () => {
+        const config = {
+          svgoVersion: {
+            value: "2" as SupportedSvgoVersions,
+          },
+        };
+
+        const [result, err] = svgo.New({ config, svgoConfig });
+        expect(err).toBeNull();
+        expect(result).not.toBeNull();
+        expect(svgoV2.New).toHaveBeenCalledWith(svgoConfig);
+      });
     });
 
-    test("version 2", () => {
-      const config = {
-        svgoVersion: {
-          value: "2" as SupportedSvgoVersions,
-        },
-      };
+    describe("v3", () => {
+      beforeEach(() => {
+        svgoV3New.mockClear();
+      });
 
-      const [result, err] = svgo.New({ config, svgoConfig });
-      expect(err).toBeNull();
-      expect(result).not.toBeNull();
-      expect(svgoV2.New).toHaveBeenCalledWith(svgoConfig);
-    });
+      test("create instance", () => {
+        const config = {
+          svgoVersion: {
+            value: "3" as SupportedSvgoVersions,
+          },
+        };
 
-    test("version 3", () => {
-      const config = {
-        svgoVersion: {
-          value: "3" as SupportedSvgoVersions,
-        },
-      };
-
-      const [result, err] = svgo.New({ config, svgoConfig });
-      expect(err).toBeNull();
-      expect(result).not.toBeNull();
-      expect(svgoV3.New).toHaveBeenCalledWith(svgoConfig);
+        const [result, err] = svgo.New({ config, svgoConfig });
+        expect(err).toBeNull();
+        expect(result).not.toBeNull();
+        expect(svgoV3.New).toHaveBeenCalledWith(svgoConfig);
+      });
     });
 
     describe("project", () => {

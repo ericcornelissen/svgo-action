@@ -1,3 +1,6 @@
+jest.dontMock("svgo-v2");
+jest.dontMock("svgo-v3");
+
 jest.mock("import-cwd");
 jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/stub");
@@ -6,6 +9,8 @@ jest.mock("../../../src/svgo/v2");
 jest.mock("../../../src/svgo/v3");
 
 import importCwd from "import-cwd";
+import svgoV2Export from "svgo-v2"; // eslint-disable-line import/default
+import svgoV3Export from "svgo-v3"; // eslint-disable-line import/default
 
 import createSvgoOptimizerForProject from "../../../src/svgo/project";
 import svgoV1 from "../../../src/svgo/v1";
@@ -23,8 +28,6 @@ describe("svgo/project.ts", () => {
     };
 
     const svgoV1Export = { };
-    const svgoV2Export = { extendDefaultPlugins: () => "" };
-    const svgoV3Export = { loadConfig: () => "" };
 
     beforeEach(() => {
       importCwdSilent.mockReset();
