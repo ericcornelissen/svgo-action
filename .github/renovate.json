@@ -1,22 +1,16 @@
 {
   "extends": [
     "config:base",
-
-    // Explicitly enable semantic commit messages
     ":semanticCommits",
-
-    // Make sure all updates are combined into a single PR
     "group:all"
   ],
 
   "packageRules": [
     {
-      // Configure SVGO v2: don't upgrade to v3.x.x
       "matchPackageNames": ["svgo-v2"],
       "allowedVersions": "<3.0.0"
     },
     {
-      // Configure SVGO v3: don't upgrade to v4.x.x
       "matchPackageNames": ["svgo-v3"],
       "allowedVersions": "<4.0.0"
     }
@@ -24,20 +18,15 @@
 
   "lockFileMaintenance": {
     "extends": [
-      // Make sure all updates are combined into a single PR
       "group:all"
     ],
 
-    // Explicitly enable lockfile maintenance
     "enabled": true,
 
-    // This schedule should be the same as the general schedule!
     "schedule": "on the first day of the month"
   },
 
-  // Schedule PRs to be created once every two weeks
   "schedule": "on the first day of the month",
 
-  // Apply the 'dependencies' label to all Pull Requests created by Renovate
   "labels": ["dependencies"]
 }

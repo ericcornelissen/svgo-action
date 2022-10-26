@@ -173,9 +173,7 @@ module.exports = {
         "json",
       ],
       rules: {
-        "json/*": ["error", {
-          "allowComments": true,
-        }],
+        "json/*": ["error"],
       },
     },
     { // Configuration files (YAML)
