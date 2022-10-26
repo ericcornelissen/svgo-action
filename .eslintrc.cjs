@@ -164,6 +164,17 @@ module.exports = {
         "@typescript-eslint/no-var-requires": "off",
       },
     },
+    { // Configuration files (JSON)
+      files: [
+        "*.json",
+      ],
+      plugins: [
+        "json",
+      ],
+      rules: {
+        "json/*": ["error"],
+      },
+    },
     { // Configuration files (YAML)
       files: [".github/**/*.yml", "*.yml"],
       extends: [
@@ -248,6 +259,7 @@ module.exports = {
     "!.github/",
     "!.*.cjs",
     "!.*.js",
+    "!.*.json",
     "!.*.yml",
   ],
 };
