@@ -11,8 +11,6 @@ module.exports = {
     "inlineStyles",
     "minifyStyles",
     "convertStyleToAttrs",
-    "cleanupIDs",
-    "prefixIds",
     "removeRasterImages",
     "removeUselessDefs",
     "cleanupNumericValues",
