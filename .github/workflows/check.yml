@@ -187,6 +187,9 @@ jobs:
           - description: built-in, v2
             svgo-version: 2
             svgo-config: test/end-to-end/svgo.config.cjs
+          - description: built-in, v3
+            svgo-version: 3
+            svgo-config: test/end-to-end/svgo.config.cjs
           - description: project, v1
             svgo-version: project
             svgo-config: test/end-to-end/.svgo.yml
@@ -195,6 +198,10 @@ jobs:
             svgo-version: project
             svgo-config: test/end-to-end/svgo.config.cjs
             project-svgo-version: ^2.0.0
+          - description: project, v3
+            svgo-version: project
+            svgo-config: test/end-to-end/svgo.config.cjs
+            project-svgo-version: ^3.0.0
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@2e205a28d0e1da00c5f53b161f4067b052c61f34 # tag=v1.5.0
