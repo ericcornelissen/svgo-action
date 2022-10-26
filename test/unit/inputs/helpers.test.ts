@@ -8,5 +8,10 @@ describe("inputs/helpers.ts", () => {
       const result = getDefaultSvgoConfigPath("2");
       expect(result).toBe("svgo.config.js");
     });
+
+    test("version 3", () => {
+      const result = getDefaultSvgoConfigPath("3");
+      expect(result).toBe("svgo.config.js");
+    });
   });
 });
