@@ -195,14 +195,25 @@ To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
 | `svgo-version` | `2`           |
 
 The `svgo-version` input allows you to specify the version of [SVGO] that you
-want to use. This can be either `2` for the latest v2 release, or the string
-`"project"` for the version of SVGO installed for your project. For `"project"`
-both SVGO v1 and v2 are supported.
+want to use. This can be either `3` for the latest v3 release, `2` for the
+latest v2 release, or the string `"project"` for the version of SVGO installed
+for your project. For `"project"` SVGO v1, v2, and v3 are supported.
 
 > **Warning** SVGO v1 has been deprecated, we strongly recommend upgrading to
-> SVGO v2. For more information see the [SVGO v2 release notes].
+> SVGO v3 or v2. For more information see the [SVGO v3 release notes] or [SVGO
+> v2 release notes].
 
 ### Examples
+
+To use the SVGO version 3:
+
+```yaml
+# .github/workflows/optimize.yml
+
+- uses: ericcornelissen/svgo-action@v3
+  with:
+    svgo-version: 3
+```
 
 To use the SVGO version used by your project:
 
@@ -222,4 +233,5 @@ To use the SVGO version used by your project:
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
 [svgo v2 release notes]: https://github.com/svg/svgo/releases/tag/v2.0.0
+[svgo v3 release notes]: https://github.com/svg/svgo/releases/tag/v3.0.0
 [yaml]: https://yaml.org/
