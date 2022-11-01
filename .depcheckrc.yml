@@ -4,7 +4,9 @@ ignores:
   - "@commitlint/*"
   - "@stryker-mutator/*"
   - "@types/*"
+  - rollup
   - ts-jest
+  - typescript
 ignore-path: .gitignore
 
 parsers:
