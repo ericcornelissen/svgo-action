@@ -232,24 +232,20 @@ jobs:
       - name: Get the content of SVGs
         id: original-svgs
         run: |
-          export SVG_1=$(cat test/end-to-end/not-optimized-1.svg)
           echo 'svg-one<<EOF' >> $GITHUB_OUTPUT
-          echo "$SVG_1" >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/not-optimized-1.svg)" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
-          export SVG_2=$(cat test/end-to-end/not-optimized-2.svg)
           echo 'svg-two<<EOF' >> $GITHUB_OUTPUT
-          echo "$SVG_2" >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/not-optimized-2.svg)" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
-          export SVG_OPTIMIZED_1=$(cat test/end-to-end/optimized-1.svg)
           echo 'optimized-svg-one<<EOF' >> $GITHUB_OUTPUT
-          echo "$SVG_OPTIMIZED_1" >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/optimized-1.svg)" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
 
-          export SVG_IGNORED_1=$(cat test/end-to-end/ignore/ignored-1.svg)
           echo 'ignored-svg-one<<EOF' >> $GITHUB_OUTPUT
-          echo "$SVG_IGNORED_1" >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/ignore/ignored-1.svg)" >> $GITHUB_OUTPUT
           echo 'EOF' >> $GITHUB_OUTPUT
       - name: Run SVGO Action
         uses: ./
