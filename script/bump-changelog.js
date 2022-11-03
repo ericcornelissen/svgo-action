@@ -1,20 +1,18 @@
-import fs from "node:fs";
-import path from "node:path";
+import {
+  getChangelog,
+  getCurrentVersionHeader,
+  isCurrentVersionReleased,
+  writeChangelog,
+} from "./helpers.js";
 
 const STR_UNRELEASED = "## [Unreleased]";
 const STR_NO_CHANGES = "- _No changes yet_";
 
-const manifestFile = path.resolve("./package.json");
-const changelogFile = path.resolve("./CHANGELOG.md");
-
-const manifestRaw = fs.readFileSync(manifestFile).toString();
-const manifest = JSON.parse(manifestRaw);
-const version = manifest.version;
-
-const changelog = fs.readFileSync(changelogFile).toString();
-if (changelog.includes(`## [${version}]`)) {
-  throw new Error(`${version} already in CHANGELOG`);
+if (isCurrentVersionReleased()) {
+  throw new Error("The current version in the manifest was already released");
 }
+
+const changelog = getChangelog();
 
 const unreleasedTitleIndex = changelog.indexOf(STR_UNRELEASED);
 if (unreleasedTitleIndex === -1) {
@@ -35,7 +33,7 @@ const day = _day < 10 ? `0${_day}` : _day;
 const newChangelog =
   changelog.slice(0, unreleasedTitleIndex + STR_UNRELEASED.length) +
   `\n\n${STR_NO_CHANGES}` +
-  `\n\n## [${version}] - ${year}-${month}-${day}` +
+  `\n\n${getCurrentVersionHeader()} - ${year}-${month}-${day}` +
   changelog.slice(unreleasedTitleIndex + STR_UNRELEASED.length);
 
-fs.writeFileSync(changelogFile, newChangelog);
+writeChangelog(newChangelog);
