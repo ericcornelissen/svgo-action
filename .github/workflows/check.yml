@@ -232,29 +232,21 @@ jobs:
       - name: Get the content of SVGs
         id: original-svgs
         run: |
-          export SVG_1=$(cat test/end-to-end/not-optimized-1.svg)
-          SVG_1="${SVG_1//'%'/'%25'}"
-          SVG_1="${SVG_1//$'\n'/'%0A'}"
-          SVG_1="${SVG_1//$'\r'/'%0D'}"
-          echo "svg-one=$SVG_1" >> $GITHUB_OUTPUT
+          echo 'svg-one<<EOF' >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/not-optimized-1.svg)" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
 
-          export SVG_2=$(cat test/end-to-end/not-optimized-2.svg)
-          SVG_2="${SVG_2//'%'/'%25'}"
-          SVG_2="${SVG_2//$'\n'/'%0A'}"
-          SVG_2="${SVG_2//$'\r'/'%0D'}"
-          echo "svg-two=$SVG_2" >> $GITHUB_OUTPUT
+          echo 'svg-two<<EOF' >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/not-optimized-2.svg)" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
 
-          export SVG_OPTIMIZED_1=$(cat test/end-to-end/optimized-1.svg)
-          SVG_OPTIMIZED_1="${SVG_OPTIMIZED_1//'%'/'%25'}"
-          SVG_OPTIMIZED_1="${SVG_OPTIMIZED_1//$'\n'/'%0A'}"
-          SVG_OPTIMIZED_1="${SVG_OPTIMIZED_1//$'\r'/'%0D'}"
-          echo "optimized-svg-one=$SVG_OPTIMIZED_1" >> $GITHUB_OUTPUT
+          echo 'optimized-svg-one<<EOF' >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/optimized-1.svg)" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
 
-          export SVG_IGNORED_1=$(cat test/end-to-end/ignore/ignored-1.svg)
-          SVG_IGNORED_1="${SVG_IGNORED_1//'%'/'%25'}"
-          SVG_IGNORED_1="${SVG_IGNORED_1//$'\n'/'%0A'}"
-          SVG_IGNORED_1="${SVG_IGNORED_1//$'\r'/'%0D'}"
-          echo "ignored-svg-one=$SVG_IGNORED_1" >> $GITHUB_OUTPUT
+          echo 'ignored-svg-one<<EOF' >> $GITHUB_OUTPUT
+          echo "$(cat test/end-to-end/ignore/ignored-1.svg)" >> $GITHUB_OUTPUT
+          echo 'EOF' >> $GITHUB_OUTPUT
       - name: Run SVGO Action
         uses: ./
         id: svgo
@@ -282,9 +274,6 @@ jobs:
       - name: Check the content of newly optimized SVGs
         run: |
           export SVG=$(cat test/end-to-end/not-optimized-1.svg)
-          SVG="${SVG//'%'/'%25'}"
-          SVG="${SVG//$'\n'/'%0A'}"
-          SVG="${SVG//$'\r'/'%0D'}"
           if [ '${{ steps.original-svgs.outputs.svg-one }}' = "$SVG" ]; then
             echo "=== BEFORE ==="
             echo  '${{ steps.original-svgs.outputs.svg-one }}'
@@ -304,9 +293,6 @@ jobs:
       - name: Check the content of already optimized SVGs
         run: |
           export SVG=$(cat test/end-to-end/optimized-1.svg)
-          SVG="${SVG//'%'/'%25'}"
-          SVG="${SVG//$'\n'/'%0A'}"
-          SVG="${SVG//$'\r'/'%0D'}"
           if [ '${{ steps.original-svgs.outputs.optimized-svg-one }}' != "$SVG" ]; then
             echo "=== BEFORE ==="
             echo  '${{ steps.original-svgs.outputs.optimized-svg-one }}'
@@ -317,9 +303,6 @@ jobs:
       - name: Check the content of ignored SVGs
         run: |
           export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
-          SVG="${SVG//'%'/'%25'}"
-          SVG="${SVG//$'\n'/'%0A'}"
-          SVG="${SVG//$'\r'/'%0D'}"
           if [ '${{ steps.original-svgs.outputs.ignored-svg-one }}' != "$SVG" ]; then
             echo "=== BEFORE ==="
             echo  '${{ steps.original-svgs.outputs.ignored-svg-one }}'
