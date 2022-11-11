@@ -143,4 +143,5 @@ jobs:
         uses: ncipollo/release-action@4c75f0f2e4ae5f3c807cf0904605408e319dcaac # tag=v1.11.1
         with:
           body: ${{ steps.version.outputs.release_notes }}
+          name: Release ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version }}
