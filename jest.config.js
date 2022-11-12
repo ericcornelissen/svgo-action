@@ -1,6 +1,6 @@
 // Check out Jest at: https://jestjs.io/
 
-const process = require("node:process");
+import process from "node:process";
 
 let coverageSubDir = "all";
 if (process.argv.includes("test/integration")) {
@@ -9,7 +9,7 @@ if (process.argv.includes("test/integration")) {
   coverageSubDir = "unit";
 }
 
-module.exports = {
+export default {
   preset: "ts-jest",
   testEnvironment: "node",
   cacheDirectory: "./.cache/jest",

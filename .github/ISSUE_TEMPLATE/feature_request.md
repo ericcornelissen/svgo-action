@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Request a feature for the SVGO Action
+about: Request a feature for the SVGO Action.
 labels: enhancement
 ---
 
