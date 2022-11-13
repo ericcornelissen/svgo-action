@@ -15,7 +15,7 @@ export default {
   testRunnerNodeArgs: ["--experimental-vm-modules"],
   jest: {
     projectType: "custom",
-    configFile: "jest.config.cjs",
+    configFile: "jest.config.js",
     config: {
       testMatch: ["<rootDir>/test/unit/**/*.test.ts"],
     },
