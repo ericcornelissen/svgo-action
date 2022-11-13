@@ -37,7 +37,7 @@ jobs:
           GITLEAKS_ENABLE_UPLOAD_ARTIFACT: false
           GITLEAKS_ENABLE_SUMMARY: true
   npm:
-    name: npm (${{ matrix.ref }})
+    name: npm
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
