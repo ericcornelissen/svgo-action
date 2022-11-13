@@ -1,3 +1,5 @@
+# Check out CodeQL at: https://codeql.github.com/
+
 name: SVGO-Action CodeQL config
 
 packs:
