@@ -1,3 +1,5 @@
+# Check out Codecov at: https://codecov.io/
+
 coverage:
   precision: 2
   round: down

@@ -1,6 +1,6 @@
 ---
 name: Documentation
-about: Report problems with SVGO Action's documentation
+about: Report problems with SVGO Action's documentation.
 labels: docs
 ---
 
