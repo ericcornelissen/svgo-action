@@ -1,3 +1,5 @@
+// Check out ESLint at: https://eslint.org/
+
 module.exports = {
   root: true,
   parser: "@typescript-eslint/parser",

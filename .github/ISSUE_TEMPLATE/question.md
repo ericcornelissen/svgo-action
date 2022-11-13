@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask a question about the SVGO Action
+about: Ask a question about the SVGO Action.
 labels: question
 ---
 

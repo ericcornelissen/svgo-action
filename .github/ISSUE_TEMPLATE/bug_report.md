@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Report a problem with the SVGO Action
+about: Report a problem with the SVGO Action.
 labels: bug
 ---
 

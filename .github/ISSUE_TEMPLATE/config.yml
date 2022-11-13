@@ -1,4 +1,4 @@
 contact_links:
   - name: CONTRIBUTING.md
-    about: Not sure where to start? Check out the Contributing Guidelines.
+    about: Not sure where to start? Check the Contributing Guidelines.
     url: https://github.com/ericcornelissen/svgo-action/blob/develop/CONTRIBUTING.md
