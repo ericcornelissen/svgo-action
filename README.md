@@ -3,7 +3,6 @@
 [![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 [![Mutation Report][mutation-image]][mutation-url]
-[![Snyk Status][snyk-image]][snyk-url]
 
 Automatically run [SVGO] with GitHub Actions.
 
@@ -132,8 +131,6 @@ permissions: read-all
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
 [mutation-url]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
 [mutation-image]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fericcornelissen%2Fsvgo-action%2Fmain
-[snyk-image]: https://snyk.io/test/github/ericcornelissen/svgo-action/badge.svg?targetFile=package.json
-[snyk-url]: https://snyk.io/test/github/ericcornelissen/svgo-action?targetFile=package.json
 
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
