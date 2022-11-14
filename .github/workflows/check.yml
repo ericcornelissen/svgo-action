@@ -118,6 +118,9 @@ jobs:
       - name: Lint source code
         if: ${{ always() }}
         run: npm run lint
+      - name: Lint Dockerfile
+        if: ${{ always() }}
+        run: npm run lint:docker
       - name: Lint shell scripts
         if: ${{ always() }}
         run: npm run lint:sh

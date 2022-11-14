@@ -19,6 +19,9 @@ npm run vet
 # Run linters that don't support formatting
 npm run lint:ws
 
+if command -v docker > /dev/null; then
+  npm run lint:docker
+fi
 if command -v shellcheck > /dev/null; then
   npm run lint:sh
 fi

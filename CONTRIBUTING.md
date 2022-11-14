@@ -149,15 +149,16 @@ formatting automatically.
 
 Alternatively, you can use one of the following to lint using individual tools:
 
-| File type                | Command             |
-| :----------------------- | :------------------ |
-| JavaScript (`.{cjs,js}`) | `npm run lint:js`   |
-| JSON (`.json`)           | `npm run lint:json` |
-| MarkDown (`.md`)         | `npm run lint:md`   |
-| Shell scripts (`.{,sh}`) | `npm run lint:sh`   |
-| TypeScript (`.ts`)       | `npm run lint:ts`   |
-| Whitespace (`.*`)        | `npm run lint:ws`   |
-| YAML (`.yml`)            | `npm run lint:yml`  |
+| Category                 | Command               |
+| :----------------------- | :-------------------- |
+| `Dockerfile`             | `npm run lint:docker` |
+| JavaScript (`.{cjs,js}`) | `npm run lint:js`     |
+| JSON (`.json`)           | `npm run lint:json`   |
+| MarkDown (`.md`)         | `npm run lint:md`     |
+| Shell scripts (`.{,sh}`) | `npm run lint:sh`     |
+| TypeScript (`.ts`)       | `npm run lint:ts`     |
+| Whitespace (`.*`)        | `npm run lint:ws`     |
+| YAML (`.yml`)            | `npm run lint:yml`    |
 
 If you want to improve the code style, update the configuration file for the
 respective linter accordingly. If you need an extra package to be able to
