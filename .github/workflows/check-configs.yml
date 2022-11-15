@@ -4,6 +4,7 @@ on:
     paths:
       - ./.github/workflows/check-configs.yml
       - ./.github/codecov.yml
+      - ./script/validate-codecov-config.sh
   push:
     branches:
       - main
