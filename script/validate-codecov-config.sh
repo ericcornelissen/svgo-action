@@ -9,7 +9,7 @@ RESULT=$( \
 )
 
 if [ "$RESULT" != "200" ]; then
-  echo "Codecov configuration is invalid"
+  echo "Codecov configuration is invalid (got $RESULT)"
   exit 1
 else
   echo "Codecov configuration is valid"
