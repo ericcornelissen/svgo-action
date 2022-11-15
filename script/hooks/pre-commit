@@ -15,6 +15,7 @@ fi
 
 # Run vetting tools
 npm run vet
+npm run license-check
 
 # Run linters that don't support formatting
 npm run lint:ws
