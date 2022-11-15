@@ -2,9 +2,9 @@ name: Config
 on:
   pull_request:
     paths:
-      - ./.github/workflows/check-configs.yml
-      - ./.github/codecov.yml
-      - ./script/validate-codecov-config.sh
+      - .github/workflows/check-configs.yml
+      - .github/codecov.yml
+      - script/validate-codecov-config.sh
   push:
     branches:
       - main
