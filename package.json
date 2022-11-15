@@ -32,7 +32,7 @@
     "lint:js": "npm run _eslint -- --ext .cjs,.js",
     "lint:json": "npm run _eslint -- --ext .json",
     "lint:md": "markdownlint --dot --ignore-path .gitignore .",
-    "lint:sh": "shellcheck -e SC1090,SC1091,SC2155 script/*.sh script/hooks/*.sh script/hooks/pre-*",
+    "lint:sh": "shellcheck -e SC1090,SC1091,SC2155 script/*.sh script/hooks/*.sh script/hooks/commit-* script/hooks/pre-*",
     "lint:ts": "npm run _eslint -- --ext .ts",
     "lint:ws": "editorconfig-checker -disable-max-line-length",
     "lint:yml": "npm run _eslint -- --ext .yml",
