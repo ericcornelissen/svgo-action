@@ -1,0 +1,17 @@
+# Check out hadolint at: https://github.com/hadolint/hadolint
+
+failure-threshold: style
+format: tty
+
+override:
+  error: ~
+  warning: ~
+  info: ~
+  style: ~
+ignored: ~
+
+label-schema: ~
+strict-labels: true
+
+trustedRegistries:
+  - mcr.microsoft.com

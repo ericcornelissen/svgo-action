@@ -1,0 +1,49 @@
+{
+  "name": "svgo-action",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "args": {
+      "NODE_VERSION": "18",
+      "IMAGE_VARIANT": "bullseye"
+    }
+  },
+  "features": {
+    "docker-in-docker": "latest",
+    "git": "os-provided"
+  },
+
+  "postStartCommand": "npm install",
+  "remoteUser": "root",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "DavidAnson.vscode-markdownlint",
+        "EditorConfig.EditorConfig",
+        "medo64.render-crlf",
+        "timonwong.shellcheck"
+      ],
+      "settings": {
+        // Editor
+        "editor.renderWhitespace": "all",
+        "editor.rulers": [80],
+        "editor.tabSize": 2,
+        "files.trimFinalNewlines": true,
+        "files.trimTrailingWhitespace": true,
+
+        // Plugins
+        "code-eol.newlineCharacter": "¬",
+        "code-eol.returnCharacter": "¤",
+        "code-eol.crlfCharacter": "¤¬",
+        "markdownlint.ignore": [
+          "LICENSE"
+        ],
+        "shellcheck.exclude": [
+          "SC1090",
+          "SC1091",
+          "SC2155"
+        ]
+      }
+    }
+  }
+}
