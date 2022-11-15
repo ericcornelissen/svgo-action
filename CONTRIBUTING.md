@@ -183,8 +183,10 @@ only production dependencies, run `npm run audit:prod`.
 ##### Licenses
 
 This project uses [licensee] to check for potential license violations in
-project dependencies. To validate the licenses, run `npm run check-licenses`,
-which will exit with a non-zero exit code if there's a violation.
+project dependencies. To validate the licenses, run `npm run license-check`.
+This will output nothing if no problems are detected, or output a list of
+packages without approved licenses and exit with a non-zero exit code if there
+is any violation.
 
 The configuration, including allowed licenses and exceptions, can be found in
 `.licensee.json`.
