@@ -27,7 +27,7 @@ and reference this `id` and the name of the output in the step(s) that uses it.
 A step that uses an output value must come after the SVGO Action's step. For
 example:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 steps:

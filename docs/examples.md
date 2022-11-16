@@ -24,7 +24,7 @@ the `main` branch. If there are no changes, nothing will be committed.
 Check out [what the Action outputs] to customize the commit message to your
 liking.
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 name: Optimize
@@ -71,7 +71,7 @@ Request comment to your liking.
 > **Warning** This does not work for Pull Requests from forks. This is because
 > GitHub Actions do not have permission to alter forked repositories.
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 name: Optimize
@@ -120,7 +120,7 @@ changes, nothing will be committed.
 Check out [what the Action outputs] to customize the commit message to your
 liking.
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 name: Optimize
@@ -163,7 +163,7 @@ created.
 Check out [what the Action outputs] to customize the Pull Request and commit
 message to your liking.
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 name: Optimize
@@ -211,7 +211,7 @@ workflow's page in your repository.
 Check out [what the Action outputs] to customize the commit message to your
 liking.
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 name: Optimize
@@ -262,7 +262,7 @@ This example uses [actions/checkout] and [npm] to optimize SVGs in the project
 using a specific version of SVGO. You can combine this example with one of the
 other examples in this document to get the optimized SVGs back in your project.
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 name: Optimize
