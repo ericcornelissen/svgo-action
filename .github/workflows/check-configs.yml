@@ -1,14 +1,18 @@
+definitions:
+  path-filters: &path-filters
+    - .github/workflows/check-configs.yml
+    - .github/codecov.yml
+    - script/validate-codecov-config.sh
+
 name: Config
 on:
   pull_request:
-    paths:
-      - .github/workflows/check-configs.yml
-      - .github/codecov.yml
-      - script/validate-codecov-config.sh
+    paths: *path-filters
   push:
     branches:
       - main
       - main-v2
+    paths: *path-filters
 
 permissions: read-all
 
