@@ -30,7 +30,8 @@ liking.
 name: Optimize
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 # The minimum required permissions
 permissions:
@@ -41,18 +42,18 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v3
-      id: svgo
-      with:
-        repo-token: ${{secrets.GITHUB_TOKEN}}
-    - name: Commit optimizations
-      uses: stefanzweifel/git-auto-commit-action@v4
-      if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
-      with:
-        commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Optimize SVGs
+        uses: ericcornelissen/svgo-action@v3
+        id: svgo
+        with:
+          repo-token: ${{secrets.GITHUB_TOKEN}}
+      - name: Commit optimizations
+        uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
+        with:
+          commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
 ```
 
 ---
@@ -77,7 +78,8 @@ Request comment to your liking.
 name: Optimize
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 # The minimum required permissions
 permissions:
@@ -89,24 +91,24 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v3
-      id: svgo
-      with:
-        repo-token: ${{secrets.GITHUB_TOKEN}}
-    - name: Commit optimizations
-      uses: stefanzweifel/git-auto-commit-action@v4
-      if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
-      with:
-        commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
-    - name: Comment on Pull Request
-      uses: thollander/actions-comment-pull-request@v1
-      if: ${{steps.svgo.outputs.DID_OPTIMIZE && github.event_name == 'pull_request'}}
-      with:
-        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        message: Optimized ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Optimize SVGs
+        uses: ericcornelissen/svgo-action@v3
+        id: svgo
+        with:
+          repo-token: ${{secrets.GITHUB_TOKEN}}
+      - name: Commit optimizations
+        uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
+        with:
+          commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+      - name: Comment on Pull Request
+        uses: thollander/actions-comment-pull-request@v1
+        if: ${{steps.svgo.outputs.DID_OPTIMIZE && github.event_name == 'pull_request'}}
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          message: Optimized ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
 ```
 
 ---
@@ -126,9 +128,9 @@ liking.
 name: Optimize
 on:
   schedule:
-  # Schedule the workflow for once a week on Monday.
-  # For more information, see: https://crontab.guru/
-  - cron:  '0 0 * * 1'
+    # Schedule the workflow for once a week on Monday.
+    # For more information, see: https://crontab.guru/
+    - cron: "0 0 * * 1"
 
 # The minimum required permissions
 permissions:
@@ -139,16 +141,16 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v3
-      id: svgo
-    - name: Commit optimizations
-      uses: stefanzweifel/git-auto-commit-action@v4
-      if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
-      with:
-        commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Optimize SVGs
+        uses: ericcornelissen/svgo-action@v3
+        id: svgo
+      - name: Commit optimizations
+        uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
+        with:
+          commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
 ```
 
 ---
@@ -169,9 +171,9 @@ message to your liking.
 name: Optimize
 on:
   schedule:
-  # Schedule the workflow for once a week on Monday.
-  # For more information, see: https://crontab.guru/
-  - cron:  '0 0 * * 1'
+    # Schedule the workflow for once a week on Monday.
+    # For more information, see: https://crontab.guru/
+    - cron: "0 0 * * 1"
 
 # The minimum required permissions
 permissions:
@@ -183,19 +185,19 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v3
-      id: svgo
-    - name: Create Pull Request for optimized SVGs
-      uses: peter-evans/create-pull-request@v4
-      if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
-      with:
-        commit-message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
-        title: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
-        body: _This Pull Request was created automatically_
-        branch: optimize-svgs
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Optimize SVGs
+        uses: ericcornelissen/svgo-action@v3
+        id: svgo
+      - name: Create Pull Request for optimized SVGs
+        uses: peter-evans/create-pull-request@v4
+        if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
+        with:
+          commit-message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+          title: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+          body: _This Pull Request was created automatically_
+          branch: optimize-svgs
 ```
 
 ---
@@ -215,7 +217,8 @@ liking.
 # .github/workflows/optimize.yml
 
 name: Optimize
-on: [workflow_dispatch]
+on:
+  - workflow_dispatch
 
 # This Workflow is triggered through the GitHub API:
 #   curl -X POST \
@@ -242,16 +245,16 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v3
-      id: svgo
-    - name: Commit optimizations
-      uses: stefanzweifel/git-auto-commit-action@v4
-      if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
-      with:
-        commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Optimize SVGs
+        uses: ericcornelissen/svgo-action@v3
+        id: svgo
+      - name: Commit optimizations
+        uses: stefanzweifel/git-auto-commit-action@v4
+        if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
+        with:
+          commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
 ```
 
 ---
@@ -270,7 +273,7 @@ on:
   # You can replace "schedule" with any other event you need and this example
   # will still work.
   schedule:
-  - cron:  '0 0 * * 1'
+    - cron: "0 0 * * 1"
 
 # The minimum required permissions
 permissions:
@@ -281,18 +284,18 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-    # If SVGO is a (dev)dependency of your project you can just install your
-    # dependencies as usual. If SVGO is not yet a dependency of your project, we
-    # recommend you run `npm install --save-dev svgo@v2` and commit your project
-    # manifests (e.g. package.json and package-lock.json) first.
-    - name: Install dependencies
-      run: npm ci
-    - name: Optimize SVGs
-      uses: ericcornelissen/svgo-action@v3
-      with:
-        svgo-version: project
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      # If SVGO is a (dev)dependency of your project you can just install your
+      # dependencies as usual. If SVGO is not yet a dependency of your project,
+      # we recommend you run `npm install --save-dev svgo@v2` and commit your
+      # project manifests (e.g. package.json and package-lock.json) first.
+      - name: Install dependencies
+        run: npm ci
+      - name: Optimize SVGs
+        uses: ericcornelissen/svgo-action@v3
+        with:
+          svgo-version: project
 ```
 
 [actions/checkout]: https://github.com/marketplace/actions/checkout

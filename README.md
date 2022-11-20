@@ -18,29 +18,29 @@ various complete workflows. You can also check [what the Action does for each
 ```yml
 name: Optimize
 on:
-# Comment the next line if you *don't* want the Action to run on Pull Requests.
-  pull_request:
-# Uncomment the next line if you want the Action to run on pushes.
-#   push:
-# Uncomment the next 2 lines if you want the Action to run on a schedule.
-#   schedule:
-#   - cron:  '0 * * * 1'  # See https://crontab.guru/
-# Uncomment one of the next 2 lines if you want to manually trigger the Action.
-#   repository_dispatch:
-#   workflow_dispatch:
+  # Comment the next line if you don't want the Action to run on Pull Requests.
+  pull_request: ~
+  # Uncomment the next line if you want the Action to run on pushes.
+  #   push:
+  # Uncomment the next 2 lines if you want the Action to run on a schedule.
+  #   schedule:
+  #   - cron:  '0 * * * 1'  # See https://crontab.guru/
+  # Uncomment 1 of the next 2 lines if you want to manually trigger the Action.
+  #   repository_dispatch:
+  #   workflow_dispatch:
 
 jobs:
   svgs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    # Uncomment the next 2 lines to select a branch for on schedule or dispatch.
-    #   with:
-    #     ref: main
-    - uses: ericcornelissen/svgo-action@v3
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      # Uncomment the next 2 lines to select a branch for schedule or dispatch.
+      #   with:
+      #     ref: main
+      - uses: ericcornelissen/svgo-action@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 _Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
@@ -105,10 +105,10 @@ triggered only when SVGs change. Update the value of `pull_request` and/or
 on:
   pull_request:
     paths:
-    - "**.svg"
+      - "**.svg"
   push:
     paths:
-    - "**.svg"
+      - "**.svg"
 ```
 
 #### Token Permissions
@@ -120,8 +120,11 @@ permissions:
   contents: read
   # Uncomment the next line if you're using the Action on Pull Requests
   #   pull-requests: read
+```
 
-# Or use `read-all` to allow reading in all scopes (recommended for open source)
+Or use `read-all` to allow reading in all scopes (recommended for open source):
+
+```yml
 permissions: read-all
 ```
 

@@ -31,15 +31,15 @@ example:
 # .github/workflows/optimize.yml
 
 steps:
-- uses: ericcornelissen/svgo-action@v3
-  id: svgo  # <-- You need to give the SVGO Action's step a unique id
-- name: Did any SVGs get optimized?
-  run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
-  #                   ^^^^         ^^^^^^^^^^^^
-  #                   |            |
-  #                   |            | The name of the output you want to use
-  #                   |
-  #                   | The id of the SVGO Action's step
+  - uses: ericcornelissen/svgo-action@v3
+    id: svgo  # <-- You need to give the SVGO Action's step a unique id
+  - name: Did any SVGs get optimized?
+    run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
+    #                   ^^^^         ^^^^^^^^^^^^
+    #                   |            |
+    #                   |            | The name of the output you want to use
+    #                   |
+    #                   | The id of the SVGO Action's step
 ```
 
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
