@@ -149,16 +149,16 @@ formatting automatically.
 
 Alternatively, you can use one of the following to lint using individual tools:
 
-| Category                 | Command               |
-| :----------------------- | :-------------------- |
-| `Dockerfile`             | `npm run lint:docker` |
-| JavaScript (`.{cjs,js}`) | `npm run lint:js`     |
-| JSON (`.json`)           | `npm run lint:json`   |
-| MarkDown (`.md`)         | `npm run lint:md`     |
-| Shell scripts (`.{,sh}`) | `npm run lint:sh`     |
-| TypeScript (`.ts`)       | `npm run lint:ts`     |
-| Whitespace (`.*`)        | `npm run lint:ws`     |
-| YAML (`.yml`)            | `npm run lint:yml`    |
+| Category                 | Command               | Linter                 |
+| :----------------------- | :-------------------- | :--------------------- |
+| `Dockerfile`             | `npm run lint:docker` | [hadolint]             |
+| JavaScript (`.{cjs,js}`) | `npm run lint:js`     | [ESLint]               |
+| JSON (`.json`)           | `npm run lint:json`   | [eslint-plugin-json]   |
+| MarkDown (`.md`)         | `npm run lint:md`     | [markdownlint]         |
+| Shell scripts (`.{,sh}`) | `npm run lint:sh`     | [ShellCheck]           |
+| TypeScript (`.ts`)       | `npm run lint:ts`     | [ESLint]               |
+| Whitespace (`.*`)        | `npm run lint:ws`     | [editorconfig-checker] |
+| YAML (`.yml`)            | `npm run lint:yml`    | [eslint-plugin-yml]    |
 
 If you want to improve the code style, update the configuration file for the
 respective linter accordingly. If you need an extra package to be able to
@@ -330,11 +330,17 @@ There are some limitations to using [act]:
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/
+[editorconfig-checker]: https://www.npmjs.com/package/editorconfig-checker
+[eslint]: https://eslint.org/
+[eslint-plugin-json]: https://www.npmjs.com/package/eslint-plugin-json
+[eslint-plugin-yml]: https://www.npmjs.com/package/eslint-plugin-yml
 [feature request]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=enhancement&template=feature_request.md
 [git]: https://git-scm.com/
+[hadolint]: https://github.com/hadolint/hadolint
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
 [licensee]: https://github.com/jslicense/licensee.js
+[markdownlint]: https://github.com/DavidAnson/markdownlint
 [mocking]: https://stackoverflow.com/a/2666006
 [mutation testing]: https://en.wikipedia.org/wiki/Mutation_testing
 [node.js]: https://nodejs.org/en/
