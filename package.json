@@ -8,6 +8,7 @@
   "type": "module",
   "main": "lib/index.cjs",
   "scripts": {
+    "prepare": "is-ci || husky install script/hooks",
     "_clean": "git clean --force -X",
     "_eslint": "eslint --report-unused-disable-directives",
     "audit": "npm audit",
@@ -40,7 +41,6 @@
     "lint:ts": "npm run _eslint -- . --ext .ts",
     "lint:ws": "editorconfig-checker -disable-max-line-length",
     "lint:yml": "npm run _eslint -- . --ext .yml",
-    "prepare": "is-ci || husky install script/hooks",
     "test": "npm run test:all",
     "test:all": "jest",
     "test:unit": "jest test/unit",
