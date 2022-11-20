@@ -27,7 +27,7 @@ describe("svgo/project.ts", () => {
       multipass: false,
     };
 
-    const svgoV1Export = { };
+    class svgoV1Export { }
 
     beforeEach(() => {
       importCwdSilent.mockReset();
