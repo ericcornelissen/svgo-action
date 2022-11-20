@@ -131,7 +131,10 @@ module.exports = {
   },
   overrides: [
     { // Source code only
-      files: ["src/**/*.ts"],
+      files: [
+        "src/**/*.ts",
+        "**/*.md/*.ts",
+      ],
       parserOptions: {
         project: "./tsconfig.json",
       },
@@ -170,6 +173,7 @@ module.exports = {
       files: [
         ".github/renovate.json",
         "*.json",
+        "**/*.md/*.json",
       ],
       plugins: [
         "json",
@@ -179,7 +183,11 @@ module.exports = {
       },
     },
     { // Configuration files (YAML)
-      files: [".github/**/*.yml", "*.yml"],
+      files: [
+        ".github/**/*.yml",
+        "*.yml",
+        "**/*.md/*.yml",
+      ],
       extends: [
         "plugin:yml/standard",
       ],
@@ -230,7 +238,10 @@ module.exports = {
       },
     },
     { // Script files
-      files: ["script/**/*.js"],
+      files: [
+        "script/**/*.js",
+        "**/*.md/*.js",
+      ],
       rules: {
         "security/detect-non-literal-fs-filename": "off",
       },
@@ -244,6 +255,15 @@ module.exports = {
         "security/detect-object-injection": "off",
         "security/detect-non-literal-fs-filename": "off",
       },
+    },
+    { // Documentation (MarkDown)
+      files: [
+        "**/*.md",
+      ],
+      plugins: [
+        "markdown",
+      ],
+      processor: "markdown/markdown",
     },
   ],
   ignorePatterns: [
