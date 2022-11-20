@@ -8,7 +8,7 @@ supported with security updates.
 | Version | Supported | End-of-life |
 | ------: | :-------- | :---------- |
 |   3.x.x | Yes       | -           |
-|   2.x.x | Yes       | 2023-04-30  |
+|   2.x.x | No        | 2023-04-30  |
 |   1.x.x | No        | 2022-08-31  |
 |   0.x.x | No        | 2020-08-31  |
 
