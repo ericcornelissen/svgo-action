@@ -16,7 +16,7 @@ function getValuesForOutputs(
 ): Map<OutputName, string> {
   const result: Map<OutputName, string>  = new Map();
   for (const name of names) {
-    const getValueForOutputKey = outputsMap[name];
+    const getValueForOutputKey = outputsMap[name]; // eslint-disable-line security/detect-object-injection
     const value = getValueForOutputKey(data);
     result.set(name, value);
   }
