@@ -47,7 +47,10 @@
     "test:integration": "jest test/integration",
     "test:e2e": "act --job test-e2e",
     "test:mutation": "stryker run stryker.config.js",
-    "vet": "depcheck && unimported && type-coverage --at-least 100 --project tsconfig.json --strict"
+    "vet": "run-p --silent 'vet:*'",
+    "vet:deps": "depcheck",
+    "vet:imports": "unimported",
+    "vet:ts": "type-coverage --at-least 100 --project tsconfig.json --strict"
   },
   "repository": {
     "type": "git",
