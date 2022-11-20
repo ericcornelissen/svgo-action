@@ -9,6 +9,10 @@ on:
     branches:
       - main
       - main-v2
+    paths:
+      - .github/workflows/check-configs.yml
+      - .github/codecov.yml
+      - script/validate-codecov-config.sh
 
 permissions: read-all
 
