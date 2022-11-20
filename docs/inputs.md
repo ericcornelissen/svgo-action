@@ -31,7 +31,7 @@ Action a try.
 
 To enable dry runs:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -59,7 +59,7 @@ matches (any of) the configured glob(s) will **not** be optimized by the Action.
 
 To ignore all files in a specific folder:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -69,7 +69,7 @@ To ignore all files in a specific folder:
 
 To ignore all files in a specific folder and all its subfolders:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -79,7 +79,7 @@ To ignore all files in a specific folder and all its subfolders:
 
 To have multiple ignore globs, use a [YAML] multiline string:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -105,7 +105,7 @@ can determine which SVGs should be optimized.
 
 To set the `repo-token` you will typically want to use:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -133,7 +133,7 @@ event of a critical error).
 
 To enable strict mode:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -158,7 +158,7 @@ configuration.
 
 To use an SVGO config file with a non-standard name:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -168,7 +168,7 @@ To use an SVGO config file with a non-standard name:
 
 To use an SVGO config file in a folder:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -178,7 +178,7 @@ To use an SVGO config file in a folder:
 
 To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v2
@@ -207,7 +207,7 @@ for your project. For `"project"` SVGO v1, v2, and v3 are supported.
 
 To use the SVGO version 3:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
@@ -217,7 +217,7 @@ To use the SVGO version 3:
 
 To use the SVGO version used by your project:
 
-```yaml
+```yml
 # .github/workflows/optimize.yml
 
 - name: Install dependencies, including SVGO

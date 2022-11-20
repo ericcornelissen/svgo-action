@@ -15,32 +15,32 @@ Workflow file]) with the workflow below - or check out the [examples] for
 various complete workflows. You can also check [what the Action does for each
 `on` event] and [what the Action outputs] for subsequent steps.
 
-```yaml
+```yml
 name: Optimize
 on:
-# Comment the next line if you *don't* want the Action to run on Pull Requests.
-  pull_request:
-# Uncomment the next line if you want the Action to run on pushes.
-#   push:
-# Uncomment the next 2 lines if you want the Action to run on a schedule.
-#   schedule:
-#   - cron:  '0 * * * 1'  # See https://crontab.guru/
-# Uncomment one of the next 2 lines if you want to manually trigger the Action.
-#   repository_dispatch:
-#   workflow_dispatch:
+  # Comment the next line if you don't want the Action to run on Pull Requests.
+  pull_request: ~
+  # Uncomment the next line if you want the Action to run on pushes.
+  #   push:
+  # Uncomment the next 2 lines if you want the Action to run on a schedule.
+  #   schedule:
+  #   - cron:  '0 * * * 1'  # See https://crontab.guru/
+  # Uncomment 1 of the next 2 lines if you want to manually trigger the Action.
+  #   repository_dispatch:
+  #   workflow_dispatch:
 
 jobs:
   svgs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    # Uncomment the next 2 lines to select a branch for on schedule or dispatch.
-    #   with:
-    #     ref: main
-    - uses: ericcornelissen/svgo-action@v3
-      with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v3
+      # Uncomment the next 2 lines to select a branch for schedule or dispatch.
+      #   with:
+      #     ref: main
+      - uses: ericcornelissen/svgo-action@v3
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
 _Note: This grants access to the `GITHUB_TOKEN` so the Action can make calls to
@@ -51,7 +51,7 @@ GitHub's rest API. This is only needed for `pull_request` and `push` events._
 The following inputs are available when using the SVGO Action. More details can
 be found in the [inputs documentation].
 
-```yaml
+```yml
 - uses: ericcornelissen/svgo-action@v3
   with:
     # Prevent the Action from writing changes.
@@ -101,27 +101,30 @@ triggered only when SVGs change. Update the value of `pull_request` and/or
 > changes. Jobs that should run for every push or Pull Request must be specified
 > in a separate Workflow file.
 
-```yaml
+```yml
 on:
   pull_request:
     paths:
-    - "**.svg"
+      - "**.svg"
   push:
     paths:
-    - "**.svg"
+      - "**.svg"
 ```
 
 #### Token Permissions
 
 The minimum required [permissions] needed to run this Action are:
 
-```yaml
+```yml
 permissions:
   contents: read
   # Uncomment the next line if you're using the Action on Pull Requests
   #   pull-requests: read
+```
 
-# Or use `read-all` to allow reading in all scopes (recommended for open source)
+Or use `read-all` to allow reading in all scopes (recommended for open source):
+
+```yml
 permissions: read-all
 ```
 
