@@ -29,18 +29,18 @@ function createSvgoOptimizerForProject(
   options: unknown = { },
 ): [SVGOptimizer, error] {
   const svgo = importCwd.silent("svgo");
-  if (svgo === undefined) {
+  if (svgo === undefined || svgo === null) {
     return [
       StubSVGOptimizer,
       errors.New("package-local SVGO not found"),
     ];
   }
 
-  if (
-    svgo === null ||
-    (typeof svgo !== "object" && typeof svgo !== "function")
-  ) {
-    throw new Error("SVGO not found in project");
+  if (typeof svgo !== "object" && typeof svgo !== "function") {
+    return [
+      StubSVGOptimizer,
+      errors.New(`unexpected SVGO import (${svgo})`),
+    ];
   }
 
   if (isSvgoV2(svgo)) {
