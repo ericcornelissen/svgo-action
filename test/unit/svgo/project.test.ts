@@ -27,7 +27,7 @@ describe("svgo/project.ts", () => {
       multipass: false,
     };
 
-    const svgoV1Export = { };
+    class svgoV1Export { }
 
     beforeEach(() => {
       importCwdSilent.mockReset();
@@ -43,13 +43,22 @@ describe("svgo/project.ts", () => {
       expect(importCwdSilent).toHaveBeenCalledWith("svgo");
     });
 
-    test("unsuccessful import", () => {
-      importCwdSilent.mockReturnValue(undefined);
+    test.each([null, undefined])("unsuccessful import (%s)", (v) => {
+      importCwdSilent.mockReturnValue(v);
 
       const [result, err] = createSvgoOptimizerForProject();
       expect(result).not.toBeNull();
       expect(err).not.toBeNull();
       expect(err).toBe("package-local SVGO not found");
+    });
+
+    test("unexpected import", () => {
+      importCwdSilent.mockReturnValue(3.14);
+
+      const [result, err] = createSvgoOptimizerForProject();
+      expect(result).not.toBeNull();
+      expect(err).not.toBeNull();
+      expect(err).toMatch(/^unexpected SVGO import/);
     });
 
     describe("successful import", () => {
