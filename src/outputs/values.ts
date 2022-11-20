@@ -4,28 +4,19 @@ import { OutputName } from "./names";
 
 type DataToOutput = (data: OptimizedProjectStats) => string;
 
-const outputsMap: Map<OutputName, DataToOutput> = new Map([
-  [
-    OutputName.DID_OPTIMIZE,
-    (data) => `${data.optimizedCount > 0}`,
-  ],
-  [
-    OutputName.OPTIMIZED_COUNT,
-    (data) => `${data.optimizedCount}`,
-  ],
-  [
-    OutputName.SVG_COUNT,
-    (data) => `${data.svgCount}`,
-  ],
-]);
+const outputsMap: Record<OutputName, DataToOutput> = {
+  [OutputName.DID_OPTIMIZE]: (data) => `${data.optimizedCount > 0}`,
+  [OutputName.OPTIMIZED_COUNT]: (data) => `${data.optimizedCount}`,
+  [OutputName.SVG_COUNT]: (data) => `${data.svgCount}`,
+};
 
 function getValuesForOutputs(
   names: Iterable<OutputName>,
   data: OptimizedProjectStats,
 ): Map<OutputName, string> {
-  const result = new Map();
+  const result: Map<OutputName, string>  = new Map();
   for (const name of names) {
-    const getValueForOutputKey = outputsMap.get(name) as DataToOutput;
+    const getValueForOutputKey = outputsMap[name];
     const value = getValueForOutputKey(data);
     result.set(name, value);
   }

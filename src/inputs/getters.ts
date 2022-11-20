@@ -158,7 +158,7 @@ function getSvgoVersion(
   }
 
   return [
-    input as InputValue<SupportedSvgoVersions>,
+    input as InputValue<SupportedSvgoVersions>, // type-coverage:ignore-line
     null,
   ];
 }
