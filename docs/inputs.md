@@ -181,7 +181,7 @@ To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v2
+- uses: ericcornelissen/svgo-action@v3
   with:
     svgo-config: .svgo.yml
 ```
