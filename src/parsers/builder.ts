@@ -5,16 +5,16 @@ import errors from "../errors";
 
 function buildSafeParser<T>(parseFn: ParseFn<T>): SafeParseFn<T> {
   return (raw: string): [T, error] => {
-    let options: T = { } as T;
+    let parsed: T = { } as T; // type-coverage:ignore-line
     let err: error = null;
 
     try {
-      options = parseFn(raw);
+      parsed = parseFn(raw);
     } catch (thrownError) {
       err = errors.New(`parse error (${thrownError})`);
     }
 
-    return [options, err];
+    return [parsed, err];
   };
 }
 

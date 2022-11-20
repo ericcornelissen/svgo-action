@@ -49,7 +49,7 @@ class CommitsClient {
         ref: params.ref,
       });
 
-      result = response.data as CommitsGetCommitResponse;
+      result = response.data as CommitsGetCommitResponse; // type-coverage:ignore-line
     } catch (thrownError) {
       err = errors.New(`could not get commit '${params.ref}' (${thrownError})`);
     }
