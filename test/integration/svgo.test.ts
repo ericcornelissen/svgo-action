@@ -92,17 +92,6 @@ describe("package svgo", () => {
     describe("initialization fails", () => {
       const svgoConfig = { };
 
-      test("invalid svgo-version", () => {
-        const config = {
-          svgoVersion: {
-            value: "foobar" as SupportedSvgoVersions,
-          },
-        };
-
-        const [, err] = SVGO.New({ config, svgoConfig });
-        expect(err).not.toBeNull();
-      });
-
       test("project-level SVGO missing", () => {
         importCwdSilent.mockReturnValueOnce(undefined);
 
