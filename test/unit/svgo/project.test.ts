@@ -19,6 +19,7 @@ import svgoV1 from "../../../src/svgo/v1";
 import svgoV2 from "../../../src/svgo/v2";
 import svgoV3 from "../../../src/svgo/v3";
 
+const coreWarning = core.warning as jest.MockedFunction<typeof core.warning>;
 const importCwdSilent = importCwd.silent as jest.MockedFunction<typeof importCwd.silent>; // eslint-disable-line max-len
 const svgoV2New = svgoV2.New as jest.MockedFunction<typeof svgoV2.New>;
 const svgoV3New = svgoV3.New as jest.MockedFunction<typeof svgoV3.New>;
@@ -32,6 +33,8 @@ describe("svgo/project.ts", () => {
     class svgoV1Export { }
 
     beforeEach(() => {
+      coreWarning.mockClear();
+
       importCwdSilent.mockReset();
 
       svgoV2New.mockClear();
@@ -122,6 +125,36 @@ describe("svgo/project.ts", () => {
         expect(result).not.toBeNull();
 
         expect(svgoV3.NewFrom).toHaveBeenCalledWith(svgoV3Export, { });
+      });
+
+      test("deprecation warning for SVGO v1", () => {
+        importCwdSilent.mockReturnValue(svgoV1Export);
+
+        const [, err] = createSvgoOptimizerForProject(svgoConfig, core);
+        expect(err).toBeNull(); // check for unexpected errors
+
+        expect(core.warning).toHaveBeenCalledWith(
+          "Support for SVGO v1 has been deprecated and will be removed in " +
+          "the next major version",
+        );
+      });
+
+      test("no deprecation warning for SVGO v2", () => {
+        importCwdSilent.mockReturnValue(svgoV2Export);
+
+        const [, err] = createSvgoOptimizerForProject(svgoConfig, core);
+        expect(err).toBeNull(); // check for unexpected errors
+
+        expect(core.warning).not.toHaveBeenCalled();
+      });
+
+      test("no deprecation warning for SVGO v3", () => {
+        importCwdSilent.mockReturnValue(svgoV3Export);
+
+        const [, err] = createSvgoOptimizerForProject(svgoConfig, core);
+        expect(err).toBeNull(); // check for unexpected errors
+
+        expect(core.warning).not.toHaveBeenCalled();
       });
     });
   });
