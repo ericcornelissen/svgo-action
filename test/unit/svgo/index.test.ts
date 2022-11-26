@@ -98,20 +98,5 @@ describe("svgo/index.ts", () => {
         expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(svgoConfig);
       });
     });
-
-    test.each([
-      "foobar",
-      "Hello world!",
-    ])("unknown string ('%s')", (svgoVersionValue) => {
-      const config = {
-        svgoVersion: {
-          value: svgoVersionValue as SupportedSvgoVersions,
-        },
-      };
-
-      const [, err] = svgo.New({ config, svgoConfig });
-      expect(err).not.toBeNull();
-      expect(err).toEqual(expect.stringContaining("unknown value"));
-    });
   });
 });
