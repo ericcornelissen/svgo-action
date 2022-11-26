@@ -107,20 +107,5 @@ describe("svgo/index.ts", () => {
         );
       });
     });
-
-    test.each([
-      "foobar",
-      "Hello world!",
-    ])("unknown string ('%s')", (svgoVersionValue) => {
-      const config = {
-        svgoVersion: {
-          value: svgoVersionValue as SupportedSvgoVersions,
-        },
-      };
-
-      const [, err] = svgo.New({ config, log: core, svgoConfig });
-      expect(err).not.toBeNull();
-      expect(err).toEqual(expect.stringContaining("unknown value"));
-    });
   });
 });
