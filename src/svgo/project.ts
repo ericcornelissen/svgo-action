@@ -1,5 +1,5 @@
 import type { error } from "../errors";
-import type { SVGOptimizer } from "./types";
+import type { Logger, SVGOptimizer } from "./types";
 import type { SVGO as SVGOv1 } from "./v1/types";
 import type { SVGO as SVGOv2 } from "./v2/types";
 
@@ -27,6 +27,7 @@ function isSvgoV3(importedSvgo: object): boolean {
 
 function createSvgoOptimizerForProject(
   options: unknown = { },
+  log: Logger,
 ): [SVGOptimizer, error] {
   const svgo = importCwd.silent("svgo");
   if (svgo === undefined || svgo === null) {
@@ -50,6 +51,10 @@ function createSvgoOptimizerForProject(
     const instance = svgo as SVGOv2; // type-coverage:ignore-line
     return svgoV3.NewFrom(instance, options);
   } else {
+    log.warning(
+      "Support for SVGO v1 has been deprecated and will be removed in the " +
+      "next major version",
+    );
     const instance = svgo as SVGOv1; // type-coverage:ignore-line
     return svgoV1.NewFrom(instance, options);
   }

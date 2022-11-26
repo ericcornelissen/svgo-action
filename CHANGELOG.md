@@ -9,6 +9,7 @@ Versioning].
 
 - Correct example in `svgo-config` option documentation. ([#688])
 - Correct `svgo-version` input (short) description. ([#691])
+- Deprecate usage of SVGO v1 with `svgo-version: project`. ([#693])
 - Improve error handling for package-level SVGO importing. ([#684])
 - Update "Optimize SVGs on Demand" example workflow. ([#694])
 - Update SVGO v3 to `v3.0.2`. ([#683])
@@ -477,6 +478,7 @@ Versioning].
 [#684]: https://github.com/ericcornelissen/svgo-action/pull/684
 [#688]: https://github.com/ericcornelissen/svgo-action/pull/688
 [#691]: https://github.com/ericcornelissen/svgo-action/pull/691
+[#693]: https://github.com/ericcornelissen/svgo-action/pull/693
 [#694]: https://github.com/ericcornelissen/svgo-action/pull/694
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

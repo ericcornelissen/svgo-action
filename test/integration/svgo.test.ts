@@ -3,8 +3,10 @@ import type { SupportedSvgoVersions } from "../../src/svgo";
 jest.dontMock("svgo-v2");
 jest.dontMock("svgo-v3");
 
+jest.mock("@actions/core");
 jest.mock("import-cwd");
 
+import * as core from "@actions/core";
 import importCwd from "import-cwd";
 import svgoV2 from "svgo-v2"; // eslint-disable-line import/default
 import svgoV3 from "svgo-v3"; // eslint-disable-line import/default
@@ -55,7 +57,7 @@ describe("package svgo", () => {
       });
 
       test("valid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, log: core, svgoConfig });
         expect(err0).toBeNull();
 
         const [result, err1] = await svgo.optimize(validSvg);
@@ -64,7 +66,7 @@ describe("package svgo", () => {
       });
 
       test("invalid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, log: core, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(invalidSvg);
@@ -79,7 +81,7 @@ describe("package svgo", () => {
           ],
         };
 
-        const [svgo, err0] = SVGO.New({ config, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, log: core, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(validSvg);
@@ -101,7 +103,7 @@ describe("package svgo", () => {
           },
         };
 
-        const [, err] = SVGO.New({ config, svgoConfig });
+        const [, err] = SVGO.New({ config, log: core, svgoConfig });
         expect(err).not.toBeNull();
       });
     });
