@@ -60,7 +60,7 @@ async function main({ core, github }: Params): Promise<void> {
   );
 
   core.debug("Initializing SVGO");
-  const [optimizer, err4] = svgo.New({ config, svgoConfig });
+  const [optimizer, err4] = svgo.New({ config, log: core, svgoConfig });
   action.failIf(err4, "Could not initialize SVGO");
 
   core.debug("Initializing optimization filters");
