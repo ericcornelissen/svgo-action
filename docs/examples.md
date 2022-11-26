@@ -220,21 +220,25 @@ name: Optimize
 on:
   - workflow_dispatch
 
-# This Workflow is triggered through the GitHub API:
-#   curl -X POST \
-#        -H "Authorization: Bearer <token>" \
-#        -d '{"ref":"main"}' \
-#        https://api.github.com/repos/<owner>/<repo>/actions/workflows/optimize.yml/dispatches
+# This Workflow can be triggered in the UI or using the GitHub API:
+# - To trigger it in the UI, follow:
+#   https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
 #
-# Replacing <token> by a personal access token with scope `public_repo`, <owner>
-# by the repositories owner (user or organization), <repo> by the repositories
-# name.
+# - To trigger it using the GitHub API, use:
+#     curl -X POST \
+#          -H "Authorization: Bearer <token>" \
+#          -d '{"ref":"main"}' \
+#          https://api.github.com/repos/<owner>/<repo>/actions/workflows/optimize.yml/dispatches
 #
-# NOTE: "main" in the payload (-d) refers to the branch on which the workflow
-# should be triggered. Usually you want this to be the default branch.
+#   Replacing <token> by a personal access token with scope `public_repo`,
+#   <owner> by the repositories owner (user or organization), <repo> by the
+#   repositories name.
 #
-# NOTE: "optimize.yml" in the URL has to be updated if the workflow file is not
-# called "optimize.yml".
+#   Notes:
+#   - "main" in the payload (-d) refers to the branch on which the workflow
+#     should be triggered. Usually you want this to be the default branch.
+#   - "optimize.yml" in the URL has to be updated if the workflow file is not
+#     called "optimize.yml".
 
 # The minimum required permissions
 permissions:
