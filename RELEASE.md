@@ -95,9 +95,8 @@ version (using `v3.1.4` as an example):
    checks are passing.
 
    > **Note** At this point, the continuous delivery automation may pick up and
-   > complete the release process. Check whether or not this happens. If yes,
-   > [create a GitHub Release]. If no, or only partially, continue following the
-   > remaining steps.
+   > complete the release process. Check whether or not this happens. If no, or
+   > only partially, continue following the remaining steps.
 
 1. Immediately after the Pull Request is merged, sync the `main` branch:
 
