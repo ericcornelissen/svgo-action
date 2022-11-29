@@ -45,6 +45,11 @@ jobs:
           node-version-file: .nvmrc
       - name: Install dependencies
         run: npm ci
+      - uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # tag=v1.7.0
+        id: release-token
+        with:
+          app_id: ${{ secrets.RELEASE_APP_ID }}
+          private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
       - name: Bump version
         run: npm version ${{ github.event.inputs.update_type }} --no-git-tag-version
       - name: Update CHANGELOG
@@ -54,6 +59,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@b4d51739f96fca8047ad065eccef63442d8e99f7 # tag=v4.2.0
         with:
+          token: ${{ steps.release-token.outputs.token }}
           title: New ${{ github.event.inputs.update_type }} release for v3
           body: |
             _This Pull Request was created automatically_

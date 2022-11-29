@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.1.2] - 2022-11-29
+
 - Correct example in `svgo-config` option documentation. ([#688])
 - Correct `svgo-version` input (short) description. ([#691])
 - Deprecate usage of SVGO v1 with `svgo-version: project`. ([#693])
