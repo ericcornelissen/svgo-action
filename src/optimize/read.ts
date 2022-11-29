@@ -34,8 +34,17 @@ async function readFiles(
   ];
 }
 
+function* yieldFiles(
+  fs: FileReader,
+): Iterable<Promise<[ReadFileHandle, error]>> {
+  for (const file of fs.listFiles()) {
+    yield readFile(fs, file);
+  }
+}
+
 export {
   readFiles,
+  yieldFiles,
 };
 
 export type {

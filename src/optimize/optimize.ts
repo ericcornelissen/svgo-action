@@ -7,17 +7,24 @@ import type {
 
 import errors from "../errors";
 
+const NO_FILE = null as unknown as OptimizedFileHandle; // type-coverage:ignore-line
+
 async function optimizeFile(
   optimizer: Optimizer,
-  file: ReadFileHandle,
+  filePromise: Promise<[ReadFileHandle, error]>,
 ): Promise<[OptimizedFileHandle, error]> {
-  const [optimizedContent, err] = await optimizer.optimize(file.content);
-  return [{ ...file, optimizedContent }, err];
+  const [file, err0] = await filePromise;
+  if (err0 !== null) {
+    return [NO_FILE, err0];
+  }
+
+  const [optimizedContent, err1] = await optimizer.optimize(file.content);
+  return [{ ...file, optimizedContent }, err1];
 }
 
 async function optimizeAll(
   optimizer: Optimizer,
-  files: Iterable<ReadFileHandle>,
+  files: Iterable<Promise<[ReadFileHandle, error]>>,
 ): Promise<[Iterable<OptimizedFileHandle>, error]> {
   const promises: Promise<[OptimizedFileHandle, error]>[] = [];
   for (const file of files) {

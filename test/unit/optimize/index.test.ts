@@ -13,7 +13,7 @@ import * as write from "../../../src/optimize/write";
 import optimizer from "../../__common__/optimizer.mock";
 
 const optimizeAll = _optimize.optimizeAll as jest.MockedFunction<typeof _optimize.optimizeAll>; // eslint-disable-line max-len
-const readFiles = read.readFiles as jest.MockedFunction<typeof read.readFiles>;
+const yieldFiles = read.yieldFiles as jest.MockedFunction<typeof read.yieldFiles>; // eslint-disable-line max-len
 const writeFiles = write.writeFiles as jest.MockedFunction<typeof write.writeFiles>;// eslint-disable-line max-len
 
 describe("optimize/index.ts", () => {
@@ -26,8 +26,8 @@ describe("optimize/index.ts", () => {
 
     beforeEach(() => {
       optimizeAll.mockClear();
-      readFiles.mockClear();
       writeFiles.mockClear();
+      yieldFiles.mockClear();
     });
 
     test("optimize files", async () => {
@@ -37,7 +37,7 @@ describe("optimize/index.ts", () => {
       expect(err).toBeNull();
 
       expect(optimizeAll).toHaveBeenCalled();
-      expect(readFiles).toHaveBeenCalled();
+      expect(yieldFiles).toHaveBeenCalled();
       expect(writeFiles).toHaveBeenCalled();
     });
 
@@ -48,7 +48,7 @@ describe("optimize/index.ts", () => {
       expect(err).toBeNull();
 
       expect(optimizeAll).toHaveBeenCalled();
-      expect(readFiles).toHaveBeenCalled();
+      expect(yieldFiles).toHaveBeenCalled();
       expect(writeFiles).not.toHaveBeenCalled();
     });
 
@@ -68,7 +68,9 @@ describe("optimize/index.ts", () => {
       ];
 
       test.each(testCases)("svg count, %#", async (files) => {
-        readFiles.mockResolvedValueOnce([files, null]);
+        yieldFiles.mockReturnValueOnce(
+          files.map((file) => Promise.resolve([file, null])),
+        );
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).toBeNull();

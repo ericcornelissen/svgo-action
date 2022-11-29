@@ -8,7 +8,7 @@ import type {
 import errors from "../errors";
 import { len } from "../utils";
 import { optimizeAll } from "./optimize";
-import { readFiles } from "./read";
+import { yieldFiles } from "./read";
 import { writeFiles } from "./write";
 
 interface Config {
@@ -28,7 +28,7 @@ async function Files({
   fs,
   optimizer,
 }: Params): Promise<[OptimizeProjectData, error]> {
-  const [files, readError] = await readFiles(fs);
+  const files = yieldFiles(fs);
   const [optimizedFiles, optimizeError] = await optimizeAll(optimizer, files);
 
   let writeError: error = null;
@@ -39,9 +39,9 @@ async function Files({
   return [
     {
       optimizedCount: len(optimizedFiles),
-      svgCount: len(files),
+      svgCount: len(files), // TODO: `len` of a generator doesn't work
     },
-    errors.Combine(readError, optimizeError, writeError),
+    errors.Combine(optimizeError, writeError),
   ];
 }
 
