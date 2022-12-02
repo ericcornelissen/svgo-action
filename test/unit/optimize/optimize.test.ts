@@ -138,5 +138,40 @@ describe("optimize/optimize.ts", () => {
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(inFiles.length);
     });
+
+    test.each([
+      [
+        [
+          { path: "foo.bar", content: "<svg>a</svg>" },
+          { path: "bar.foo", content: "<svg>b</svg>" },
+        ],
+        [
+          { path: "does not exist", content: "c" },
+        ],
+      ],
+      [
+        [],
+        [
+          { path: "does not exist", content: "a" },
+          { path: "also does not exist", content: "b" },
+        ],
+      ],
+    ])("missing files when optimizing, %#", async (goodFiles, badFiles) => {
+      const inFiles = [...badFiles, ...goodFiles];
+
+      const [{ fileCount, optimizedFiles: outFiles }, err] = await optimizeAll(
+        optimizer,
+        // eslint-disable-next-line jest/no-conditional-in-test
+        inFiles.map((file) => file.path.includes("not")
+          ? Promise.resolve([file, errors.New("missing")])
+          : Promise.resolve([file, null]),
+        ),
+      );
+      expect(err).not.toBeNull();
+      expect(fileCount).toBe(goodFiles.length + badFiles.length);
+      expect(outFiles).toHaveLength(goodFiles.length);
+
+      expect(optimizer.optimize).toHaveBeenCalledTimes(goodFiles.length);
+    });
   });
 });
