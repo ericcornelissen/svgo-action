@@ -50,7 +50,7 @@ describe("package optimize", () => {
       const [stats, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
 
-      // TODO: restore expect(stats.svgCount).toBe(files.length);
+      expect(stats.svgCount).toBe(files.length);
       expect(stats.optimizedCount).toBe(files.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(files.length);
@@ -66,7 +66,7 @@ describe("package optimize", () => {
       const [stats, err] = await optimize.Files({ config, fs, optimizer });
       expect(err).toBeNull();
 
-      // TODO: restore expect(stats.svgCount).toBe(files.length);
+      expect(stats.svgCount).toBe(files.length);
       expect(stats.optimizedCount).toBe(files.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(files.length);

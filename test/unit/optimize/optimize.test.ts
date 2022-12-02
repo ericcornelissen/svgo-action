@@ -42,11 +42,12 @@ describe("optimize/optimize.ts", () => {
           .mockResolvedValue([`${file.content}-${i}`, null]);
       });
 
-      const [outFiles, err] = await optimizeAll(
+      const [{ fileCount, optimizedFiles: outFiles }, err] = await optimizeAll(
         optimizer,
         inFiles.map((file) => Promise.resolve([file, null])),
       );
       expect(err).toBeNull();
+      expect(fileCount).toBe(inFiles.length);
       expect(outFiles).toHaveLength(inFiles.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(inFiles.length);
@@ -85,11 +86,12 @@ describe("optimize/optimize.ts", () => {
           .mockResolvedValue([file.content, null]);
       });
 
-      const [outFiles, err] = await optimizeAll(
+      const [{ fileCount, optimizedFiles: outFiles }, err] = await optimizeAll(
         optimizer,
         inFiles.map((file) => Promise.resolve([file, null])),
       );
       expect(err).toBeNull();
+      expect(fileCount).toBe(notOptimizedFiles.length + optimizedFiles.length);
       expect(outFiles).toHaveLength(notOptimizedFiles.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(inFiles.length);
@@ -126,11 +128,12 @@ describe("optimize/optimize.ts", () => {
           .mockResolvedValue(["", errors.New("could not optimize file")]);
       });
 
-      const [outFiles, err] = await optimizeAll(
+      const [{ fileCount, optimizedFiles: outFiles }, err] = await optimizeAll(
         optimizer,
         inFiles.map((file) => Promise.resolve([file, null])),
       );
       expect(err).not.toBeNull();
+      expect(fileCount).toBe(goodFiles.length + badFiles.length);
       expect(outFiles).toHaveLength(goodFiles.length);
 
       expect(optimizer.optimize).toHaveBeenCalledTimes(inFiles.length);

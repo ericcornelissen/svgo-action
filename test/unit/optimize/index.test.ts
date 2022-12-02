@@ -31,6 +31,11 @@ describe("optimize/index.ts", () => {
     });
 
     test("optimize files", async () => {
+      optimizeAll.mockResolvedValueOnce([
+        { fileCount: 0, optimizedFiles: [] },
+        null,
+      ]);
+
       const config = { isDryRun: { value: false } };
 
       const [, err] = await optimize.Files({ config, fs, optimizer });
@@ -42,6 +47,11 @@ describe("optimize/index.ts", () => {
     });
 
     test("dry run enabled", async () => {
+      optimizeAll.mockResolvedValueOnce([
+        { fileCount: 0, optimizedFiles: [] },
+        null,
+      ]);
+
       const config = { isDryRun: { value: true } };
 
       const [, err] = await optimize.Files({ config, fs, optimizer });
@@ -68,6 +78,10 @@ describe("optimize/index.ts", () => {
       ];
 
       test.each(testCases)("svg count, %#", async (files) => {
+        optimizeAll.mockResolvedValueOnce([
+          { fileCount: files.length, optimizedFiles: files },
+          null,
+        ]);
         yieldFiles.mockReturnValueOnce(
           files.map((file) => Promise.resolve([file, null])),
         );
@@ -78,7 +92,10 @@ describe("optimize/index.ts", () => {
       });
 
       test.each(testCases)("optimized count, %#", async (files) => {
-        optimizeAll.mockResolvedValueOnce([files, null]);
+        optimizeAll.mockResolvedValueOnce([
+          { fileCount: files.length, optimizedFiles: files },
+          null,
+        ]);
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).toBeNull();
@@ -87,7 +104,10 @@ describe("optimize/index.ts", () => {
 
       test.each(testCases)("read error, %#", async (files) => {
         const readError = errors.New("foobar");
-        optimizeAll.mockResolvedValueOnce([files, readError]);
+        optimizeAll.mockResolvedValueOnce([
+          { fileCount: files.length, optimizedFiles: files },
+          readError,
+        ]);
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).not.toBeNull();
@@ -96,7 +116,10 @@ describe("optimize/index.ts", () => {
 
       test.each(testCases)("optimize error, %#", async (files) => {
         const optimizeError = errors.New("foobar");
-        optimizeAll.mockResolvedValueOnce([files, optimizeError]);
+        optimizeAll.mockResolvedValueOnce([
+          { fileCount: files.length, optimizedFiles: files },
+          optimizeError,
+        ]);
 
         const [stats, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).not.toBeNull();
@@ -106,6 +129,10 @@ describe("optimize/index.ts", () => {
       test("write error", async () => {
         const writeError = errors.New("foobar");
         writeFiles.mockResolvedValueOnce(writeError);
+        optimizeAll.mockResolvedValueOnce([
+          { fileCount: 0, optimizedFiles: [] },
+          null,
+        ]);
 
         const [, err] = await optimize.Files({ config, fs, optimizer });
         if (isDryRun) { // eslint-disable-line jest/no-conditional-in-test

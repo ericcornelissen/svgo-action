@@ -6,6 +6,12 @@ import type {
 } from "./types";
 
 import errors from "../errors";
+import { len } from "../utils";
+
+interface OptimizeResults {
+  readonly fileCount: number;
+  readonly optimizedFiles: Iterable<OptimizedFileHandle>;
+}
 
 const NO_FILE = null as unknown as OptimizedFileHandle; // type-coverage:ignore-line
 
@@ -25,7 +31,7 @@ async function optimizeFile(
 async function optimizeAll(
   optimizer: Optimizer,
   files: Iterable<Promise<[ReadFileHandle, error]>>,
-): Promise<[Iterable<OptimizedFileHandle>, error]> {
+): Promise<[OptimizeResults, error]> {
   const promises: Promise<[OptimizedFileHandle, error]>[] = [];
   for (const file of files) {
     const promise = optimizeFile(optimizer, file);
@@ -40,7 +46,7 @@ async function optimizeAll(
   const errs = filesAndErrors.map(([, err]) => err);
 
   return [
-    optimizedFiles,
+    { fileCount: len(promises), optimizedFiles },
     errors.Combine(...errs),
   ];
 }

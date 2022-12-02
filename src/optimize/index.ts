@@ -29,7 +29,8 @@ async function Files({
   optimizer,
 }: Params): Promise<[OptimizeProjectData, error]> {
   const files = yieldFiles(fs);
-  const [optimizedFiles, optimizeError] = await optimizeAll(optimizer, files);
+  const [optimizeResults, optimizeError] = await optimizeAll(optimizer, files);
+  const { fileCount, optimizedFiles } = optimizeResults;
 
   let writeError: error = null;
   if (!config.isDryRun.value) {
@@ -39,7 +40,7 @@ async function Files({
   return [
     {
       optimizedCount: len(optimizedFiles),
-      svgCount: len(files), // TODO: `len` of a generator doesn't work
+      svgCount: fileCount,
     },
     errors.Combine(optimizeError, writeError),
   ];
