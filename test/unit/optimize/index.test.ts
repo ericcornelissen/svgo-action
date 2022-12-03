@@ -1,18 +1,18 @@
+import { when, resetAllWhenMocks } from "jest-when";
+
 jest.mock("../../../src/errors");
 jest.mock("../../../src/file-systems");
 jest.mock("../../../src/optimize/optimize");
 jest.mock("../../../src/optimize/read");
 jest.mock("../../../src/optimize/write");
 
-import errors from "../../../src/errors";
+import errors, { error } from "../../../src/errors";
 import fileSystems from "../../../src/file-systems";
 import optimize from "../../../src/optimize/index";
-import * as _optimize from "../../../src/optimize/optimize";
 import * as read from "../../../src/optimize/read";
 import * as write from "../../../src/optimize/write";
 import optimizer from "../../__common__/optimizer.mock";
 
-const optimizeAll = _optimize.optimizeAll as jest.MockedFunction<typeof _optimize.optimizeAll>; // eslint-disable-line max-len
 const yieldFiles = read.yieldFiles as jest.MockedFunction<typeof read.yieldFiles>; // eslint-disable-line max-len
 const writeFiles = write.writeFiles as jest.MockedFunction<typeof write.writeFiles>;// eslint-disable-line max-len
 
@@ -25,114 +25,159 @@ describe("optimize/index.ts", () => {
     });
 
     beforeEach(() => {
-      optimizeAll.mockClear();
       writeFiles.mockClear();
       yieldFiles.mockClear();
+
+      resetAllWhenMocks();
     });
 
-    test("optimize files", async () => {
-      optimizeAll.mockResolvedValueOnce([
-        { fileCount: 0, optimizedFiles: [] },
-        null,
-      ]);
+    describe("dry mode", () => {
+      beforeEach(() => {
+        yieldFiles.mockReturnValue([]);
+      });
 
-      const config = { isDryRun: { value: false } };
+      test("disabled", async () => {
+        const config = { isDryRun: { value: false } };
 
-      const [, err] = await optimize.Files({ config, fs, optimizer });
-      expect(err).toBeNull();
+        const [, err] = await optimize.Files({ config, fs, optimizer });
+        expect(err).toBeNull();
 
-      expect(optimizeAll).toHaveBeenCalled();
-      expect(yieldFiles).toHaveBeenCalled();
-      expect(writeFiles).toHaveBeenCalled();
-    });
+        expect(yieldFiles).toHaveBeenCalled();
+        expect(writeFiles).toHaveBeenCalled();
+      });
 
-    test("dry run enabled", async () => {
-      optimizeAll.mockResolvedValueOnce([
-        { fileCount: 0, optimizedFiles: [] },
-        null,
-      ]);
+      test("enabled", async () => {
+        const config = { isDryRun: { value: true } };
 
-      const config = { isDryRun: { value: true } };
+        const [, err] = await optimize.Files({ config, fs, optimizer });
+        expect(err).toBeNull();
 
-      const [, err] = await optimize.Files({ config, fs, optimizer });
-      expect(err).toBeNull();
-
-      expect(optimizeAll).toHaveBeenCalled();
-      expect(yieldFiles).toHaveBeenCalled();
-      expect(writeFiles).not.toHaveBeenCalled();
+        expect(yieldFiles).toHaveBeenCalled();
+        expect(writeFiles).not.toHaveBeenCalled();
+      });
     });
 
     describe.each([true, false])("outputs (dry mode: %p)", (isDryRun) => {
       const config = { isDryRun: { value: isDryRun } };
 
-      const testCases = [
-        [[]],
-        [[
-          { path: "foo.bar", content: "<svg>1</svg>", optimizedContent: "svg" },
-        ]],
-        [[
-          { path: "foo.bar", content: "<svg>1</svg>", optimizedContent: "s" },
-          { path: "bar.foo", content: "<svg>2</svg>", optimizedContent: "v" },
-          { path: "foobar", content: "<svg>3</svg>", optimizedContent: "g" },
-        ]],
-      ];
+      describe.each([
+        [{
+          faultyFiles: [],
+          goodFiles: [],
+          missingFiles: [],
+          optimizedFiles: [],
+        }],
+        [{
+          faultyFiles: [],
+          goodFiles: [
+            { path: "foo.bar", content: "<svg>1</svg>" },
+          ],
+          missingFiles: [],
+          optimizedFiles: [],
+        }],
+        [{
+          faultyFiles: [],
+          goodFiles: [
+            { path: "foo.bar", content: "<svg>1</svg>" },
+            { path: "bar.foo", content: "<svg>2</svg>" },
+            { path: "foobar", content: "<svg>3</svg>" },
+          ],
+          missingFiles: [],
+          optimizedFiles: [],
+        }],
+        [{
+          faultyFiles: [],
+          goodFiles: [
+            { path: "foo.bar", content: "<svg>a</svg>" },
+            { path: "bar.foo", content: "<svg>b</svg>" },
+          ],
+          missingFiles: [
+            { path: "missing.svg", content: "" },
+          ],
+          optimizedFiles: [
+            { path: "optimized.svg", content: "<svg>c</svg>" },
+          ],
+        }],
+        [{
+          faultyFiles: [
+            { path: "not-a.svg", content: "this isn't a SVG" },
+          ],
+          goodFiles: [],
+          missingFiles: [
+            { path: "missing.svg", content: "" },
+          ],
+          optimizedFiles: [
+            { path: "optimized.svg", content: "<svg>a</svg>" },
+          ],
+        }],
+      ])("test scenario %#", ({
+        faultyFiles,
+        goodFiles,
+        missingFiles,
+        optimizedFiles,
+      }) => {
+        const inFiles = [
+          ...faultyFiles,
+          ...goodFiles,
+          ...missingFiles,
+          ...optimizedFiles,
+        ];
 
-      test.each(testCases)("svg count, %#", async (files) => {
-        optimizeAll.mockResolvedValueOnce([
-          { fileCount: files.length, optimizedFiles: files },
-          null,
-        ]);
-        yieldFiles.mockReturnValueOnce(
-          files.map((file) => Promise.resolve([file, null])),
-        );
+        beforeEach(() => {
+          yieldFiles.mockReturnValueOnce(
+            inFiles.map(
+              (file) => missingFiles.includes(file)
+                ? Promise.resolve([file, errors.New("missing")])
+                : Promise.resolve([file, null]),
+            ),
+          );
 
-        const [stats, err] = await optimize.Files({ config, fs, optimizer });
-        expect(err).toBeNull();
-        expect(stats.svgCount).toBe(files.length);
-      });
+          faultyFiles.forEach((file) => {
+            when(optimizer.optimize)
+              .calledWith(file.content)
+              .mockResolvedValue(["", errors.New("optimization failed")]);
+          });
+          goodFiles.forEach((file, i) => {
+            when(optimizer.optimize)
+              .calledWith(file.content)
+              .mockResolvedValue([`${file.content}-${i}`, null]);
+          });
+          optimizedFiles.forEach((file) => {
+            when(optimizer.optimize)
+              .calledWith(file.content)
+              .mockResolvedValue([file.content, null]);
+          });
+        });
 
-      test.each(testCases)("optimized count, %#", async (files) => {
-        optimizeAll.mockResolvedValueOnce([
-          { fileCount: files.length, optimizedFiles: files },
-          null,
-        ]);
+        test("svg count", async () => {
+          const [stats, err] = await optimize.Files({ config, fs, optimizer });
+          assertError(err);
+          expect(stats.svgCount).toBe(inFiles.length);
+        });
 
-        const [stats, err] = await optimize.Files({ config, fs, optimizer });
-        expect(err).toBeNull();
-        expect(stats.optimizedCount).toBe(files.length);
-      });
+        test("optimized count", async () => {
+          const [stats, err] = await optimize.Files({ config, fs, optimizer });
+          assertError(err);
+          expect(stats.optimizedCount).toBe(goodFiles.length);
+        });
 
-      test.each(testCases)("read error, %#", async (files) => {
-        const readError = errors.New("foobar");
-        optimizeAll.mockResolvedValueOnce([
-          { fileCount: files.length, optimizedFiles: files },
-          readError,
-        ]);
-
-        const [stats, err] = await optimize.Files({ config, fs, optimizer });
-        expect(err).not.toBeNull();
-        expect(stats.optimizedCount).toBe(files.length);
-      });
-
-      test.each(testCases)("optimize error, %#", async (files) => {
-        const optimizeError = errors.New("foobar");
-        optimizeAll.mockResolvedValueOnce([
-          { fileCount: files.length, optimizedFiles: files },
-          optimizeError,
-        ]);
-
-        const [stats, err] = await optimize.Files({ config, fs, optimizer });
-        expect(err).not.toBeNull();
-        expect(stats.optimizedCount).toBe(files.length);
+        function assertError(err: error) {
+          if (
+            faultyFiles.length +
+            missingFiles.length +
+            optimizedFiles.length === 0
+          ) {
+            expect(err).toBeNull();
+          } else {
+            expect(err).not.toBeNull();
+          }
+        }
       });
 
       test("write error", async () => {
         const writeError = errors.New("foobar");
         writeFiles.mockResolvedValueOnce(writeError);
-        optimizeAll.mockResolvedValueOnce([
-          { fileCount: 0, optimizedFiles: [] },
-          null,
-        ]);
+        yieldFiles.mockReturnValueOnce([]);
 
         const [, err] = await optimize.Files({ config, fs, optimizer });
         if (isDryRun) { // eslint-disable-line jest/no-conditional-in-test
