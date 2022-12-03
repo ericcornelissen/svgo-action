@@ -2,7 +2,6 @@ import { when, resetAllWhenMocks } from "jest-when";
 
 jest.mock("../../../src/errors");
 jest.mock("../../../src/file-systems");
-jest.mock("../../../src/optimize/optimize");
 jest.mock("../../../src/optimize/read");
 jest.mock("../../../src/optimize/write");
 
