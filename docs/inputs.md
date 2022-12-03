@@ -197,7 +197,8 @@ To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
 The `svgo-version` input allows you to specify the version of [SVGO] that you
 want to use. This can be either `3` for the latest v3 release, `2` for the
 latest v2 release, or the string `"project"` for the version of SVGO installed
-for your project. For `"project"` SVGO v1, v2, and v3 are supported.
+for your project. For `"project"` SVGO v2 and v3 are supported, v1 support is
+deprecated.
 
 > **Warning** SVGO v1 has been deprecated, we strongly recommend upgrading to
 > SVGO v3 or v2. For more information see the [SVGO v3 release notes] or [SVGO

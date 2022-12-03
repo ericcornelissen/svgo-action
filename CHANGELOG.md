@@ -7,9 +7,15 @@ Versioning].
 
 ## [Unreleased]
 
+- Update dependency `minimatch`. ([#700])
+
+## [3.1.2] - 2022-11-29
+
 - Correct example in `svgo-config` option documentation. ([#688])
 - Correct `svgo-version` input (short) description. ([#691])
+- Deprecate usage of SVGO v1 with `svgo-version: project`. ([#693])
 - Improve error handling for package-level SVGO importing. ([#684])
+- Update "Optimize SVGs on Demand" example workflow. ([#694])
 - Update SVGO v3 to `v3.0.2`. ([#683])
 
 ## [3.1.1] - 2022-11-11
@@ -476,5 +482,8 @@ Versioning].
 [#684]: https://github.com/ericcornelissen/svgo-action/pull/684
 [#688]: https://github.com/ericcornelissen/svgo-action/pull/688
 [#691]: https://github.com/ericcornelissen/svgo-action/pull/691
+[#693]: https://github.com/ericcornelissen/svgo-action/pull/693
+[#694]: https://github.com/ericcornelissen/svgo-action/pull/694
+[#700]: https://github.com/ericcornelissen/svgo-action/pull/700
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

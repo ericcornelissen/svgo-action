@@ -156,6 +156,7 @@ module.exports = {
           },
           multilineDetection: "brackets",
         }],
+        "@typescript-eslint/switch-exhaustiveness-check": ["error"],
       },
     },
     { // Configuration files (JavaScript)
