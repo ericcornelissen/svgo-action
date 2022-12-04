@@ -7,7 +7,8 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Improve performance when optimizing many SVGs. ([#696])
+- Update dependency `minimatch`. ([#700])
 
 ## [3.1.2] - 2022-11-29
 
@@ -484,5 +485,7 @@ Versioning].
 [#691]: https://github.com/ericcornelissen/svgo-action/pull/691
 [#693]: https://github.com/ericcornelissen/svgo-action/pull/693
 [#694]: https://github.com/ericcornelissen/svgo-action/pull/694
+[#696]: https://github.com/ericcornelissen/svgo-action/pull/696
+[#700]: https://github.com/ericcornelissen/svgo-action/pull/700
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

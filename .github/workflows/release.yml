@@ -26,8 +26,9 @@ jobs:
       pull-requests: write # To open a Pull Request
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@2e205a28d0e1da00c5f53b161f4067b052c61f34 # tag=v1.5.0
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
+          disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
@@ -57,7 +58,7 @@ jobs:
       - name: Update built files
         run: npm run build
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@b4d51739f96fca8047ad065eccef63442d8e99f7 # tag=v4.2.0
+        uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04 # v4.2.3
         with:
           token: ${{ steps.release-token.outputs.token }}
           title: New ${{ github.event.inputs.update_type }} release for v3
@@ -99,8 +100,9 @@ jobs:
       contents: write # To push a tag and create a GitHub Release
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@2e205a28d0e1da00c5f53b161f4067b052c61f34 # tag=v1.5.0
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
+          disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
             api.github.com:443
@@ -146,7 +148,7 @@ jobs:
           git push origin HEAD:v3
       - name: Create GitHub Release
         if: ${{ steps.version.outputs.released == 'false' }}
-        uses: ncipollo/release-action@4c75f0f2e4ae5f3c807cf0904605408e319dcaac # tag=v1.11.1
+        uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169 # v1.11.2
         with:
           body: ${{ steps.version.outputs.release_notes }}
           name: Release ${{ steps.version.outputs.version }}
