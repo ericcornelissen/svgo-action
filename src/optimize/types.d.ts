@@ -4,14 +4,9 @@ interface FileHandle {
   readonly path: string;
 }
 
-interface FileReader {
+interface FileSystem {
   listFiles(): Iterable<FileHandle>;
   readFile(file: FileHandle): Promise<[string, error]>;
-}
-
-interface FileSystem extends FileReader, FileWriter { }
-
-interface FileWriter {
   writeFile(file: FileHandle, content: string): Promise<error>;
 }
 
@@ -20,7 +15,8 @@ interface OptimizeProjectData {
   readonly svgCount: number;
 }
 
-interface OptimizedFileHandle extends ReadFileHandle {
+interface OptimizedFileHandle {
+  readonly content: string;
   readonly optimizedContent: string;
 }
 
@@ -28,17 +24,10 @@ interface Optimizer {
   optimize(s: string): Promise<[string, error]>;
 }
 
-interface ReadFileHandle extends FileHandle {
-  readonly content: string;
-}
-
 export type {
   FileHandle,
-  FileReader,
-  FileWriter,
   FileSystem,
   OptimizeProjectData,
   OptimizedFileHandle,
   Optimizer,
-  ReadFileHandle,
 };

@@ -1,15 +1,16 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
+
 import type { error } from "../errors";
 import type {
+  FileHandle,
   FileSystem,
+  OptimizedFileHandle,
   OptimizeProjectData,
   Optimizer,
 } from "./types";
 
 import errors from "../errors";
 import { len } from "../utils";
-import { optimizeAll } from "./optimize";
-import { readFiles } from "./read";
-import { writeFiles } from "./write";
 
 interface Config {
   readonly isDryRun: {
@@ -23,25 +24,57 @@ interface Params {
   readonly optimizer: Optimizer;
 }
 
+const NO_FILE = null as unknown as OptimizedFileHandle; // type-coverage:ignore-line
+
+function wasOptimized(file: OptimizedFileHandle): boolean {
+  return file.content === file.optimizedContent;
+}
+
+async function File(file: FileHandle, {
+  config,
+  fs,
+  optimizer,
+}: Params): Promise<[OptimizedFileHandle, error]> {
+  const [content, err0] = await fs.readFile(file);
+  if (err0 !== null) {
+    return [NO_FILE, err0];
+  }
+
+  const [optimizedContent, err1] = await optimizer.optimize(content);
+  if (err1 !== null) {
+    return [NO_FILE, err1];
+  }
+
+  const result = { ...file, content, optimizedContent };
+  const err2 = config.isDryRun.value || wasOptimized(result)
+    ? null
+    : await fs.writeFile(file, optimizedContent);
+  return [result, err2];
+}
+
 async function Files({
   config,
   fs,
   optimizer,
 }: Params): Promise<[OptimizeProjectData, error]> {
-  const [files, readError] = await readFiles(fs);
-  const [optimizedFiles, optimizeError] = await optimizeAll(optimizer, files);
-
-  let writeError: error = null;
-  if (!config.isDryRun.value) {
-    writeError = await writeFiles(fs, optimizedFiles);
+  const promises: Promise<[OptimizedFileHandle, error]>[] = [];
+  for (const file of fs.listFiles()) {
+    const promise = File(file, { config, fs, optimizer });
+    promises.push(promise);
   }
+
+  const filesAndErrors = await Promise.all(promises);
+  const optimizedFiles = filesAndErrors
+    .filter(([, err]) => err === null)
+    .filter(([file]) => !wasOptimized(file));
+  const errs = filesAndErrors.map(([, err]) => err);
 
   return [
     {
       optimizedCount: len(optimizedFiles),
-      svgCount: len(files),
+      svgCount: len(promises),
     },
-    errors.Combine(readError, optimizeError, writeError),
+    errors.Combine(...errs),
   ];
 }
 
