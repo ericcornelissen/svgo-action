@@ -44,7 +44,6 @@ async function File(file: FileHandle, {
   const err2 = config.isDryRun.value
     ? null
     : await fs.writeFile(file, optimizedContent);
-
   return [{ ...file, content, optimizedContent }, err2];
 }
 
