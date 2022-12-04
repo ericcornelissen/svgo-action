@@ -34,8 +34,12 @@ interface GitHubClient {
   };
 }
 
+interface InputOptions {
+  readonly required: boolean;
+}
+
 interface Inputter {
-  getInput(name: string, options: { required: boolean; }): string;
+  getInput(name: string, options: InputOptions): string;
 }
 
 type Octokit = InstanceType<typeof _GitHub>;
