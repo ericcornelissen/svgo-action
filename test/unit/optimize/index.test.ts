@@ -5,7 +5,6 @@ import { when, resetAllWhenMocks } from "jest-when";
 jest.mock("../../../src/errors");
 jest.mock("../../../src/file-systems");
 jest.mock("../../../src/optimize/read");
-jest.mock("../../../src/optimize/write");
 
 import errors, { error } from "../../../src/errors";
 import fileSystems from "../../../src/file-systems";
