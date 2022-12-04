@@ -1,4 +1,3 @@
-import type { error } from "../../../src/errors";
 import type { FileSystem } from "../../../src/file-systems";
 
 import { when, resetAllWhenMocks } from "jest-when";
@@ -23,6 +22,7 @@ describe("optimize/index.ts", () => {
       fs.listFiles.mockClear();
       fs.readFile.mockClear();
       fs.writeFile.mockClear();
+      optimizer.optimize.mockClear();
 
       resetAllWhenMocks();
     });
@@ -41,6 +41,8 @@ describe("optimize/index.ts", () => {
         expect(err).toBeNull();
 
         expect(fs.listFiles).toHaveBeenCalled();
+        expect(fs.readFile).toHaveBeenCalled();
+        expect(optimizer.optimize).toHaveBeenCalled();
         expect(fs.writeFile).toHaveBeenCalled();
       });
 
@@ -51,6 +53,8 @@ describe("optimize/index.ts", () => {
         expect(err).toBeNull();
 
         expect(fs.listFiles).toHaveBeenCalled();
+        expect(fs.readFile).toHaveBeenCalled();
+        expect(optimizer.optimize).toHaveBeenCalled();
         expect(fs.writeFile).not.toHaveBeenCalled();
       });
     });
@@ -173,30 +177,56 @@ describe("optimize/index.ts", () => {
           });
         });
 
+        test("errors", async () => {
+          const problematicFileCount = faultyFiles.length
+            + missingFiles.length
+            + optimizedFiles.length
+            + readonlyFiles.length;
+
+          const [, err] = await optimize.Files({ config, fs, optimizer });
+          if (problematicFileCount === 0) { // eslint-disable-line jest/no-conditional-in-test
+            expect(err).toBeNull(); // eslint-disable-line jest/no-conditional-expect
+          } else {
+            expect(err).not.toBeNull(); // eslint-disable-line jest/no-conditional-expect
+          }
+        });
+
         test("svg count", async () => {
-          const [stats, err] = await optimize.Files({ config, fs, optimizer });
-          assertError(err);
+          const [stats] = await optimize.Files({ config, fs, optimizer });
           expect(stats.svgCount).toBe(inFiles.length);
         });
 
         test("optimized count", async () => {
-          const [stats, err] = await optimize.Files({ config, fs, optimizer });
-          assertError(err);
+          const [stats] = await optimize.Files({ config, fs, optimizer });
           expect(stats.optimizedCount).toBe(optimizedCount);
         });
 
-        function assertError(err: error) {
-          if (
+        test("reading files", async () => {
+          await optimize.Files({ config, fs, optimizer });
+          expect(fs.readFile).toHaveBeenCalledTimes(inFiles.length);
+        });
+
+        test("optimizing files", async () => {
+          await optimize.Files({ config, fs, optimizer });
+          expect(optimizer.optimize).toHaveBeenCalledTimes(
+            goodFiles.length +
             faultyFiles.length +
-            missingFiles.length +
             optimizedFiles.length +
-            readonlyFiles.length === 0
-          ) {
-            expect(err).toBeNull();
+            readonlyFiles.length,
+          );
+        });
+
+        test("writing files", async () => {
+          await optimize.Files({ config, fs, optimizer });
+          if (isDryRun) { // eslint-disable-line jest/no-conditional-in-test
+            expect(fs.writeFile).not.toHaveBeenCalled(); // eslint-disable-line jest/no-conditional-expect
           } else {
-            expect(err).not.toBeNull();
+            expect(fs.writeFile).toHaveBeenCalledTimes( // eslint-disable-line jest/no-conditional-expect
+              goodFiles.length +
+              readonlyFiles.length,
+            );
           }
-        }
+        });
       });
     });
   });

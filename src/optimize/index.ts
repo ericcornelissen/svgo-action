@@ -2,11 +2,11 @@
 
 import type { error } from "../errors";
 import type {
+  FileHandle,
   FileSystem,
   OptimizedFileHandle,
   OptimizeProjectData,
   Optimizer,
-  FileHandle,
 } from "./types";
 
 import errors from "../errors";
@@ -26,6 +26,10 @@ interface Params {
 
 const NO_FILE = null as unknown as OptimizedFileHandle; // type-coverage:ignore-line
 
+function wasOptimized(file: OptimizedFileHandle): boolean {
+  return file.content === file.optimizedContent;
+}
+
 async function File(file: FileHandle, {
   config,
   fs,
@@ -41,10 +45,13 @@ async function File(file: FileHandle, {
     return [NO_FILE, err1];
   }
 
+  const result = { ...file, content, optimizedContent };
   const err2 = config.isDryRun.value
     ? null
-    : await fs.writeFile(file, optimizedContent);
-  return [{ ...file, content, optimizedContent }, err2];
+    : wasOptimized(result)
+      ? null
+      : await fs.writeFile(file, optimizedContent);
+  return [result, err2];
 }
 
 async function Files({
@@ -61,8 +68,7 @@ async function Files({
   const filesAndErrors = await Promise.all(promises);
   const optimizedFiles = filesAndErrors
     .filter(([, err]) => err === null)
-    .map(([files]) => files)
-    .filter((file) => file.content !== file.optimizedContent);
+    .filter(([file]) => !wasOptimized(file));
   const errs = filesAndErrors.map(([, err]) => err);
 
   return [
