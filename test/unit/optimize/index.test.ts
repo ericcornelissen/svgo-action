@@ -5,15 +5,11 @@ import { when, resetAllWhenMocks } from "jest-when";
 
 jest.mock("../../../src/errors");
 jest.mock("../../../src/file-systems");
-jest.mock("../../../src/optimize/read");
 
 import errors from "../../../src/errors";
 import fileSystems from "../../../src/file-systems";
 import optimize from "../../../src/optimize/index";
-import * as read from "../../../src/optimize/read";
 import optimizer from "../../__common__/optimizer.mock";
-
-const yieldFiles = read.yieldFiles as jest.MockedFunction<typeof read.yieldFiles>; // eslint-disable-line max-len
 
 describe("optimize/index.ts", () => {
   describe("::Files", () => {
@@ -24,7 +20,8 @@ describe("optimize/index.ts", () => {
     });
 
     beforeEach(() => {
-      yieldFiles.mockClear();
+      fs.listFiles.mockClear();
+      fs.readFile.mockClear();
       fs.writeFile.mockClear();
 
       resetAllWhenMocks();
@@ -32,11 +29,8 @@ describe("optimize/index.ts", () => {
 
     describe("dry mode", () => {
       beforeEach(() => {
-        yieldFiles.mockReturnValue([
-          Promise.resolve([
-            { path: "foo.bar", content: "<svg>bar</svg>" },
-            null,
-          ]),
+        fs.listFiles.mockReturnValue([
+          { path: "foo.bar" },
         ]);
       });
 
@@ -46,7 +40,7 @@ describe("optimize/index.ts", () => {
         const [, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).toBeNull();
 
-        expect(yieldFiles).toHaveBeenCalled();
+        expect(fs.listFiles).toHaveBeenCalled();
         expect(fs.writeFile).toHaveBeenCalled();
       });
 
@@ -56,7 +50,7 @@ describe("optimize/index.ts", () => {
         const [, err] = await optimize.Files({ config, fs, optimizer });
         expect(err).toBeNull();
 
-        expect(yieldFiles).toHaveBeenCalled();
+        expect(fs.listFiles).toHaveBeenCalled();
         expect(fs.writeFile).not.toHaveBeenCalled();
       });
     });
@@ -142,13 +136,16 @@ describe("optimize/index.ts", () => {
           (isDryRun ? readonlyFiles.length : 0);
 
         beforeEach(() => {
-          yieldFiles.mockReturnValueOnce(
-            inFiles.map(
-              (file) => missingFiles.includes(file)
-                ? Promise.resolve([file, errors.New("missing")])
-                : Promise.resolve([file, null]),
-            ),
-          );
+          fs.listFiles.mockReturnValueOnce(inFiles);
+          inFiles.forEach((file) => {
+            when(fs.readFile)
+              .calledWith(file)
+              .mockImplementation(() => {
+                return missingFiles.includes(file)
+                  ? Promise.resolve([file.content, errors.New("missing")])
+                  : Promise.resolve([file.content, null]);
+              });
+          });
 
           faultyFiles.forEach((file) => {
             when(optimizer.optimize)

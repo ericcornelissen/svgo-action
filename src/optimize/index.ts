@@ -3,16 +3,14 @@
 import type { error } from "../errors";
 import type {
   FileSystem,
-  FileWriter,
   OptimizedFileHandle,
   OptimizeProjectData,
   Optimizer,
-  ReadFileHandle,
+  FileHandle,
 } from "./types";
 
 import errors from "../errors";
 import { len } from "../utils";
-import { yieldFiles } from "./read";
 
 interface Config {
   readonly isDryRun: {
@@ -28,28 +26,26 @@ interface Params {
 
 const NO_FILE = null as unknown as OptimizedFileHandle; // type-coverage:ignore-line
 
-const NOOP_WRITER: FileWriter = {
-  writeFile: () => Promise.resolve(null),
-};
-
-async function File(
-  optimizer: Optimizer,
-  writer: FileWriter,
-  filePromise: Promise<[ReadFileHandle, error]>,
-): Promise<[OptimizedFileHandle, error]> {
-  const [file, err0] = await filePromise;
+async function File(file: FileHandle, {
+  config,
+  fs,
+  optimizer,
+}: Params): Promise<[OptimizedFileHandle, error]> {
+  const [content, err0] = await fs.readFile(file);
   if (err0 !== null) {
     return [NO_FILE, err0];
   }
 
-  const [optimizedContent, err1] = await optimizer.optimize(file.content);
-  const optimizedFile = { ...file, optimizedContent };
+  const [optimizedContent, err1] = await optimizer.optimize(content);
   if (err1 !== null) {
     return [NO_FILE, err1];
   }
 
-  const err2 = await writer.writeFile(file, optimizedContent);
-  return [optimizedFile, err2];
+  const err2 = config.isDryRun.value
+    ? null
+    : await fs.writeFile(file, optimizedContent);
+
+  return [{ ...file, content, optimizedContent }, err2];
 }
 
 async function Files({
@@ -57,13 +53,9 @@ async function Files({
   fs,
   optimizer,
 }: Params): Promise<[OptimizeProjectData, error]> {
-  const files = yieldFiles(fs);
-
   const promises: Promise<[OptimizedFileHandle, error]>[] = [];
-  for (const file of files) {
-    const promise = config.isDryRun.value
-      ? File(optimizer, NOOP_WRITER, file)
-      : File(optimizer, fs, file);
+  for (const file of fs.listFiles()) {
+    const promise = File(file, { config, fs, optimizer });
     promises.push(promise);
   }
 
