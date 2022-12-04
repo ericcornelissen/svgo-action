@@ -46,11 +46,9 @@ async function File(file: FileHandle, {
   }
 
   const result = { ...file, content, optimizedContent };
-  const err2 = config.isDryRun.value
+  const err2 = config.isDryRun.value || wasOptimized(result)
     ? null
-    : wasOptimized(result)
-      ? null
-      : await fs.writeFile(file, optimizedContent);
+    : await fs.writeFile(file, optimizedContent);
   return [result, err2];
 }
 
