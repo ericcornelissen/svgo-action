@@ -1,6 +1,9 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
+
 import type { error } from "../errors";
 import type {
   FileSystem,
+  FileWriter,
   OptimizedFileHandle,
   OptimizeProjectData,
   Optimizer,
@@ -10,7 +13,6 @@ import type {
 import errors from "../errors";
 import { len } from "../utils";
 import { yieldFiles } from "./read";
-import { writeFiles } from "./write";
 
 interface Config {
   readonly isDryRun: {
@@ -26,8 +28,13 @@ interface Params {
 
 const NO_FILE = null as unknown as OptimizedFileHandle; // type-coverage:ignore-line
 
+const NOOP_WRITER: FileWriter = {
+  writeFile: () => Promise.resolve(null),
+};
+
 async function File(
   optimizer: Optimizer,
+  writer: FileWriter,
   filePromise: Promise<[ReadFileHandle, error]>,
 ): Promise<[OptimizedFileHandle, error]> {
   const [file, err0] = await filePromise;
@@ -36,7 +43,13 @@ async function File(
   }
 
   const [optimizedContent, err1] = await optimizer.optimize(file.content);
-  return [{ ...file, optimizedContent }, err1];
+  const optimizedFile = { ...file, optimizedContent };
+  if (err1 !== null) {
+    return [NO_FILE, err1];
+  }
+
+  const err2 = await writer.writeFile(file, optimizedContent);
+  return [optimizedFile, err2];
 }
 
 async function Files({
@@ -48,7 +61,9 @@ async function Files({
 
   const promises: Promise<[OptimizedFileHandle, error]>[] = [];
   for (const file of files) {
-    const promise = File(optimizer, file);
+    const promise = config.isDryRun.value
+      ? File(optimizer, NOOP_WRITER, file)
+      : File(optimizer, fs, file);
     promises.push(promise);
   }
 
@@ -59,17 +74,12 @@ async function Files({
     .filter((file) => file.content !== file.optimizedContent);
   const errs = filesAndErrors.map(([, err]) => err);
 
-  let writeError: error = null;
-  if (!config.isDryRun.value) {
-    writeError = await writeFiles(fs, optimizedFiles);
-  }
-
   return [
     {
       optimizedCount: len(optimizedFiles),
       svgCount: len(promises),
     },
-    errors.Combine(...errs, writeError),
+    errors.Combine(...errs),
   ];
 }
 
