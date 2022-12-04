@@ -1,3 +1,4 @@
+import type { error } from "../../../src/errors";
 import type { FileSystem } from "../../../src/file-systems";
 
 import { when, resetAllWhenMocks } from "jest-when";
@@ -6,7 +7,7 @@ jest.mock("../../../src/errors");
 jest.mock("../../../src/file-systems");
 jest.mock("../../../src/optimize/read");
 
-import errors, { error } from "../../../src/errors";
+import errors from "../../../src/errors";
 import fileSystems from "../../../src/file-systems";
 import optimize from "../../../src/optimize/index";
 import * as read from "../../../src/optimize/read";
