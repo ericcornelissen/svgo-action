@@ -141,7 +141,7 @@ jobs:
         run: npm run lint:sh
       - name: Lint workflows
         if: ${{ always() }}
-        run: actionlint
+        run: npm run lint:ci
   test:
     name: Test - ${{ matrix.type }}
     runs-on: ubuntu-latest
