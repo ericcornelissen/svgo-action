@@ -126,16 +126,16 @@ jobs:
         id: version
         run: |
           VERSION="v$(jq -r '.version' < package.json)"
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           if [ "$(git tag --list "$VERSION")" ]; then
-            echo "released=true" >> $GITHUB_OUTPUT
+            echo 'released=true' >> "$GITHUB_OUTPUT"
           else
-            echo "released=false" >> $GITHUB_OUTPUT
-
-            # Set the `release_notes` output
-            echo 'release_notes<<EOF' >> $GITHUB_OUTPUT
-            echo "$(node script/get-release-notes.js)" >> $GITHUB_OUTPUT
-            echo 'EOF' >> $GITHUB_OUTPUT
+            echo 'released=false' >> "$GITHUB_OUTPUT"
+            {
+              echo 'release_notes<<EOF'
+              node script/get-release-notes.js
+              echo 'EOF'
+            } >> "$GITHUB_OUTPUT"
           fi
       - name: Release new version
         if: ${{ steps.version.outputs.released == 'false' }}
