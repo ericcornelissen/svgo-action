@@ -100,6 +100,7 @@ To be able to contribute you need the following tooling:
 - [Git];
 - [Node.js] v18 or higher and [npm] v8.1.2 or higher;
 - (Recommended) a code editor with [EditorConfig] support;
+- (Suggested) [actionlint];
 - (Suggested) [ShellCheck];
 - (Optional) [act] and [Docker];
 - (Optional) [curl];
@@ -151,6 +152,7 @@ Alternatively, you can use one of the following to lint using individual tools:
 
 | Category                 | Command               | Linter                 |
 | :----------------------- | :-------------------- | :--------------------- |
+| CI workflows             | `npm run lint:ci`     | [actionlint]           |
 | `Dockerfile`             | `npm run lint:docker` | [hadolint]             |
 | JavaScript (`.{cjs,js}`) | `npm run lint:js`     | [ESLint]               |
 | JSON (`.json`)           | `npm run lint:json`   | [eslint-plugin-json]   |
@@ -324,6 +326,7 @@ There are some limitations to using [act]:
 - All jobs that the end-to-end test job `needs` have to be executed as well.
 
 [act]: https://github.com/nektos/act
+[actionlint]: https://github.com/rhysd/actionlint
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines for v2]: https://github.com/ericcornelissen/svgo-action/blob/main-v2/CONTRIBUTING.md
 [curl]: https://curl.se/

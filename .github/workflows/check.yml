@@ -111,8 +111,10 @@ jobs:
             nodejs.org:443
             objects.githubusercontent.com:443
             production.cloudflare.docker.com:443
+            proxy.golang.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
+            sum.golang.org:443
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
       - name: Install Node.js
@@ -120,8 +122,14 @@ jobs:
         with:
           cache: npm
           node-version-file: .nvmrc
+      - name: Install Go
+        uses: actions/setup-go@d0a58c1c4d2b25278816e339b944508c875f3613 # v3.4.0
+        with:
+          go-version: 1.17
       - name: Install dependencies
-        run: npm ci
+        run: |
+          npm ci
+          go install github.com/rhysd/actionlint/cmd/actionlint@latest
       - name: Lint source code
         if: ${{ always() }}
         run: npm run lint
@@ -131,6 +139,9 @@ jobs:
       - name: Lint shell scripts
         if: ${{ always() }}
         run: npm run lint:sh
+      - name: Lint workflows
+        if: ${{ always() }}
+        run: npm run lint:ci
   test:
     name: Test - ${{ matrix.type }}
     runs-on: ubuntu-latest
@@ -244,21 +255,21 @@ jobs:
       - name: Get the content of SVGs
         id: original-svgs
         run: |
-          echo 'svg-one<<EOF' >> $GITHUB_OUTPUT
-          echo "$(cat test/end-to-end/not-optimized-1.svg)" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+          {
+            echo 'svg-one<<EOF'
+            cat test/end-to-end/not-optimized-1.svg
+            echo 'EOF'
 
-          echo 'svg-two<<EOF' >> $GITHUB_OUTPUT
-          echo "$(cat test/end-to-end/not-optimized-2.svg)" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+            echo 'svg-two<<EOF'
+            cat test/end-to-end/not-optimized-2.svg
+            echo 'EOF'
 
-          echo 'optimized-svg-one<<EOF' >> $GITHUB_OUTPUT
-          echo "$(cat test/end-to-end/optimized-1.svg)" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+            echo 'ignored-svg-one<<EOF'
+            cat test/end-to-end/ignore/ignored-1.svg
+            echo 'EOF'
 
-          echo 'ignored-svg-one<<EOF' >> $GITHUB_OUTPUT
-          echo "$(cat test/end-to-end/ignore/ignored-1.svg)" >> $GITHUB_OUTPUT
-          echo 'EOF' >> $GITHUB_OUTPUT
+            echo "optimized-svg-one=$(cat test/end-to-end/optimized-1.svg)"
+          } >> "$GITHUB_OUTPUT"
       - name: Run SVGO Action
         uses: ./
         id: svgo
@@ -285,39 +296,39 @@ jobs:
           fi
       - name: Check the content of newly optimized SVGs
         run: |
-          export SVG=$(cat test/end-to-end/not-optimized-1.svg)
+          SVG=$(cat test/end-to-end/not-optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.svg-one }}' = "$SVG" ]; then
             echo "=== BEFORE ==="
-            echo  '${{ steps.original-svgs.outputs.svg-one }}'
+            echo '${{ steps.original-svgs.outputs.svg-one }}'
             echo "=== AFTER ==="
             echo "$SVG"
             exit 4
           fi
 
-          export SVG=$(cat test/end-to-end/not-optimized-2.svg)
+          SVG=$(cat test/end-to-end/not-optimized-2.svg)
           if [ '${{ steps.original-svgs.outputs.svg-two }}' = "$SVG" ]; then
             echo "=== BEFORE ==="
-            echo  '${{ steps.original-svgs.outputs.svg-two }}'
+            echo '${{ steps.original-svgs.outputs.svg-two }}'
             echo "=== AFTER ==="
             echo "$SVG"
             exit 5
           fi
       - name: Check the content of already optimized SVGs
         run: |
-          export SVG=$(cat test/end-to-end/optimized-1.svg)
+          SVG=$(cat test/end-to-end/optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.optimized-svg-one }}' != "$SVG" ]; then
             echo "=== BEFORE ==="
-            echo  '${{ steps.original-svgs.outputs.optimized-svg-one }}'
+            echo '${{ steps.original-svgs.outputs.optimized-svg-one }}'
             echo "=== AFTER ==="
             echo "$SVG"
             exit 6
           fi
       - name: Check the content of ignored SVGs
         run: |
-          export SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
+          SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           if [ '${{ steps.original-svgs.outputs.ignored-svg-one }}' != "$SVG" ]; then
             echo "=== BEFORE ==="
-            echo  '${{ steps.original-svgs.outputs.ignored-svg-one }}'
+            echo '${{ steps.original-svgs.outputs.ignored-svg-one }}'
             echo "=== AFTER ==="
             echo "$SVG"
             exit 7

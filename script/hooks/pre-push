@@ -12,6 +12,9 @@ npm run license-check
 npm run lint
 npm run test:unit
 
+if command -v actionlint > /dev/null; then
+  npm run lint:ci
+fi
 if command -v docker > /dev/null; then
   npm run lint:docker
 fi
