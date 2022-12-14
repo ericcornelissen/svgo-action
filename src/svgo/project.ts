@@ -1,6 +1,6 @@
 import type { error } from "../errors";
 import type { Logger, SVGOptimizer } from "./types";
-import type { SVGO as SVGOv1 } from "./v1/types";
+import type { SVGO as SVGOv1 } from "./v1/svgo-v1";
 import type { SVGO as SVGOv2 } from "svgo-v2";
 
 import importCwd from "import-cwd";

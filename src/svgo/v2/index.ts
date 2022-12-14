@@ -1,6 +1,6 @@
 import type { error } from "../../errors";
-import type { SVGOptimizer } from "./types";
-import type { SVGO, SVGOptions } from "svgo-v2";
+import type { SVGOptimizer } from "../types";
+import type { SVGOptions } from "svgo-v2";
 
 import svgo from "svgo-v2"; // eslint-disable-line import/default
 
@@ -11,7 +11,7 @@ function New(options: SVGOptions): [SVGOptimizer, error] {
 }
 
 function NewFrom(
-  importedSvgo: SVGO,
+  importedSvgo: typeof svgo,
   options: SVGOptions,
 ): [SVGOptimizer, error] {
   return [new SvgoV2Wrapper(importedSvgo, options), null];
