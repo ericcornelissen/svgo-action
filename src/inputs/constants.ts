@@ -1,3 +1,5 @@
+import type { InputterOptions } from "./types";
+
 const DEFAULT_IGNORE_GLOBS: ReadonlyArray<string> = [];
 const DEFAULT_IS_DRY_RUN = false;
 const DEFAULT_IS_STRICT_MODE = false;
@@ -10,8 +12,12 @@ const INPUT_NAME_STRICT = "strict";
 const INPUT_NAME_SVGO_CONFIG = "svgo-config";
 const INPUT_NAME_SVGO_VERSION = "svgo-version";
 
-const INPUT_OPTIONS_NOT_REQUIRED = { required: false };
-const INPUT_OPTIONS_REQUIRED = { required: true };
+const INPUT_OPTIONS_NOT_REQUIRED: InputterOptions = {
+  required: false,
+};
+const INPUT_OPTIONS_REQUIRED: InputterOptions = {
+  required: true,
+};
 
 export {
   DEFAULT_IGNORE_GLOBS,
