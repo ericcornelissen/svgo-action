@@ -17,7 +17,7 @@ describe("package action-management", () => {
     const err = errors.New("foobar");
     const msg = "Hello world!";
 
-    let action;
+    let action: ReturnType<typeof actionManagement.New>;
 
     beforeEach(() => {
       action = actionManagement.New({ core, config });

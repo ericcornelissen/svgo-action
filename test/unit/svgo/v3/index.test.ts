@@ -1,5 +1,3 @@
-import type { SVGO } from "../../../../src/svgo/v2/types";
-
 jest.mock("svgo-v3");
 jest.mock("../../../../src/errors");
 jest.mock("../../../../src/svgo/v2/wrapper");
@@ -28,7 +26,8 @@ describe("svgo/v3/index.ts", () => {
   });
 
   describe("::NewFrom", () => {
-    const importedSvgo: SVGO = {
+    const importedSvgo: (typeof svgo) = {
+      loadConfig: jest.fn(),
       optimize: jest.fn(),
     };
 

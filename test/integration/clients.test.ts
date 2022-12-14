@@ -7,6 +7,8 @@ import * as github from "@actions/github";
 import clients from "../../src/clients";
 import inp from "../__common__/inputter.mock";
 
+type MockedOctokit = jest.MockedObjectDeep<ReturnType<typeof github.getOctokit>>; // eslint-disable-line max-len
+
 describe("package clients", () => {
   function doMockGetInputRepoToken(fn: () => string): void {
     when(inp.getInput)
@@ -45,11 +47,11 @@ describe("package clients", () => {
   });
 
   describe("Client", () => {
-    let client;
-    let octokit;
+    let client: ReturnType<typeof clients.New>[0];
+    let octokit: MockedOctokit;
 
     beforeAll(() => {
-      octokit = github.getOctokit("token");
+      octokit = github.getOctokit("token") as MockedOctokit;
     });
 
     beforeEach(() => {
@@ -72,7 +74,7 @@ describe("package clients", () => {
         ])("request success, %#", async (files) => {
           octokit.rest.repos.getCommit.mockResolvedValueOnce({
             data: { files },
-          });
+          } as never);
 
           const [result, err] = await client.commits.listFiles({
             owner,
@@ -121,7 +123,7 @@ describe("package clients", () => {
         ])("request success, %#", async (files) => {
           octokit.rest.pulls.listFiles.mockResolvedValueOnce({
             data: files,
-          });
+          } as never);
 
           const [result, err] = await client.pulls.listFiles({
             owner,

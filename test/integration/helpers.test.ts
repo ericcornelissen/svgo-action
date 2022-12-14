@@ -1,4 +1,6 @@
+import type { Config } from "../../src/helpers/filters";
 import type { Octokit } from "../../src/types";
+import type { Mutable } from "../utils";
 
 jest.dontMock("eval");
 jest.dontMock("js-yaml");
@@ -28,8 +30,8 @@ describe("package helpers", () => {
   const EVENT_WORKFLOW_DISPATCH = "workflow_dispatch";
 
   describe("::getFilters", () => {
-    let client;
-    let config;
+    let client: ReturnType<typeof clients.New>[0];
+    let config: Mutable<Config>;
 
     const fileSvg = "foobar.svg";
     const fileNotSvg = "foo.bar";

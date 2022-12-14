@@ -1,4 +1,4 @@
-import type { SVGO } from "../../../../src/svgo/v1/types";
+import type { SVGO } from "../../../../src/svgo/v1/svgo-v1";
 
 jest.mock("../../../../src/errors");
 jest.mock("../../../../src/svgo/v1/wrapper");

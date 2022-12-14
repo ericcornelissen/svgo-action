@@ -17,8 +17,10 @@ const NewPrFilesFilterMock = NewPrFilesFilter as jest.MockedFunction<typeof NewP
 const NewPushedFilesFilterMock = NewPushedFilesFilter as jest.MockedFunction<typeof NewPushedFilesFilter>; // eslint-disable-line max-len
 const NewSvgsFilterMock = NewSvgsFilter as jest.MockedFunction<typeof NewSvgsFilter>; // eslint-disable-line max-len
 
+type MockedClient = jest.MockedObjectDeep<ReturnType<typeof clients.New>[0]>;
+
 describe("filters/index.ts", () => {
-  let client;
+  let client: MockedClient;
 
   const context = {
     payload: {
@@ -34,7 +36,7 @@ describe("filters/index.ts", () => {
   };
 
   beforeAll(() => {
-    [client] = clients.New({ github, inp });
+    client = clients.New({ github, inp })[0] as MockedClient;
   });
 
   beforeEach(() => {

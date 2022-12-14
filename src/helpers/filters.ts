@@ -48,3 +48,7 @@ async function getFilters({
 export {
   getFilters,
 };
+
+export type {
+  Config,
+};

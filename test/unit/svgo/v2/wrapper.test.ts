@@ -1,4 +1,4 @@
-import type { SVGO, SVGOptions } from "../../../../src/svgo/v2/types";
+import type { SVGO, SVGOptions } from "svgo-v2";
 
 import { when, resetAllWhenMocks } from "jest-when";
 

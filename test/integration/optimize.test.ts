@@ -1,3 +1,5 @@
+import type { FileSystem } from "../../src/file-systems";
+
 import { when, resetAllWhenMocks } from "jest-when";
 
 jest.mock("../../src/file-systems");
@@ -8,7 +10,7 @@ import optimizer from "../__common__/optimizer.mock";
 
 describe("package optimize", () => {
   describe("::Files", () => {
-    let fs;
+    let fs: jest.Mocked<FileSystem>;
 
     const testCases = [
       [[
@@ -24,7 +26,7 @@ describe("package optimize", () => {
     ];
 
     beforeAll(() => {
-      fs = fileSystems.New({ filters: [] });
+      fs = fileSystems.New({ filters: [] }) as jest.Mocked<FileSystem>;
     });
 
     beforeEach(() => {
@@ -44,7 +46,7 @@ describe("package optimize", () => {
       files.forEach((file, i) => {
         when(fs.readFile)
           .calledWith(file)
-          .mockReturnValue([`<svg>${i}</svg>`, null]);
+          .mockResolvedValue([`<svg>${i}</svg>`, null]);
       });
 
       const [stats, err] = await optimize.Files({ config, fs, optimizer });

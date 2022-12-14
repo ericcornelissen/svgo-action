@@ -38,7 +38,7 @@ const outputsSet = outputs.Set as jest.MockedFunction<typeof outputs.Set>;
 const svgoNew = svgo.New as jest.MockedFunction<typeof svgo.New>;
 
 describe("main.ts", () => {
-  let action;
+  let action: ReturnType<typeof actionManagement.New>;
 
   beforeAll(() => {
     const [config] = inputs.New({ inp: core });

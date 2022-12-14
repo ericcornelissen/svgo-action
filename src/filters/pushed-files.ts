@@ -93,3 +93,7 @@ async function NewPushedFilesFilter({
 }
 
 export default NewPushedFilesFilter;
+
+export type {
+  PushContext,
+};
