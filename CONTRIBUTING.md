@@ -125,7 +125,8 @@ contributing to the project. If you have npm installation scripts disabled,
 run `npm run prepare` after installing dependencies.
 
 When making a contribution make sure your changes are [tested](#testing),
-[well-formatted](#linting), and [vetted](#vetting).
+[well-formatted](#linting), [audited](#auditing) and [vetted](#vetting). Run
+`npm run verify` to check if this is the case.
 
 #### Building
 

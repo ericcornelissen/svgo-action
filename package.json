@@ -48,6 +48,7 @@
     "test:integration": "jest test/integration",
     "test:mutation": "stryker run stryker.config.js",
     "test:unit": "jest test/unit",
+    "verify": "run-s --silent audit:prod license-check lint test:unit vet",
     "vet": "run-p --silent 'vet:*'",
     "vet:deps": "depcheck",
     "vet:imports": "unimported",
