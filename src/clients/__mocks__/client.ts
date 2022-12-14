@@ -1,4 +1,4 @@
-const files: never[] = [];
+const files: Iterable<never> = [];
 
 const Client = jest.fn()
   .mockReturnValue({

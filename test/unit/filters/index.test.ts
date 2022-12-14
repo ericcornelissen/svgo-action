@@ -36,8 +36,7 @@ describe("filters/index.ts", () => {
   };
 
   beforeAll(() => {
-    const [_client] = clients.New({ github, inp });
-    client = _client as MockedClient;
+    client = clients.New({ github, inp })[0] as MockedClient;
   });
 
   beforeEach(() => {

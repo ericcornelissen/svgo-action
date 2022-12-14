@@ -12,8 +12,7 @@ describe("clients/client.ts", () => {
   let octokit: MockedOctokit;
 
   beforeAll(() => {
-    const _octokit = github.getOctokit("token");
-    octokit = _octokit as MockedOctokit;
+    octokit = github.getOctokit("token") as MockedOctokit;
   });
 
   beforeEach(() => {

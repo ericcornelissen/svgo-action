@@ -1,4 +1,4 @@
-const filters: never[] = [];
+const filters: Iterable<never> = [];
 
 const getFilters = jest.fn()
   .mockResolvedValue([filters, null])
