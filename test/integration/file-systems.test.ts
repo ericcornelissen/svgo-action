@@ -14,7 +14,7 @@ const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFile
 const fsWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>; // eslint-disable-line max-len
 
 describe("package file-systems", () => {
-  const NO_FILTERS = [];
+  const NO_FILTERS: Iterable<never> = [];
 
   describe("::listFiles", () => {
     const lstatDir = {
