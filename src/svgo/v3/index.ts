@@ -1,6 +1,6 @@
 import type { error } from "../../errors";
 import type { SVGOptimizer } from "../types";
-import type { SVGO, SVGOptions } from "../v2/types";
+import type { SVGO, SVGOptions } from "svgo-v2";
 
 import svgo from "svgo-v3"; // eslint-disable-line import/default
 

@@ -1,4 +1,4 @@
-const DEFAULT_IGNORE_GLOBS = [];
+const DEFAULT_IGNORE_GLOBS: ReadonlyArray<string> = [];
 const DEFAULT_IS_DRY_RUN = false;
 const DEFAULT_IS_STRICT_MODE = false;
 const DEFAULT_SVGO_V2_CONFIG_PATH = "svgo.config.js";
