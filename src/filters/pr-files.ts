@@ -109,3 +109,7 @@ async function NewPrFilesFilter({
 }
 
 export default NewPrFilesFilter;
+
+export type {
+  PrContext,
+};

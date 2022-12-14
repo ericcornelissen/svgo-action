@@ -1,3 +1,6 @@
+import type { PushContext } from "../../../src/filters/pushed-files";
+import type { Mutable } from "../../utils";
+
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/errors");
@@ -10,13 +13,16 @@ import New from "../../../src/filters/pushed-files";
 import { createFilesList } from "../../__common__/generate";
 import inp from "../../__common__/inputter.mock";
 
+type MockedClient = jest.MockedObjectDeep<ReturnType<typeof clients.New>[0]>;
+
 describe("filters/pushed-files.ts", () => {
   describe("::New", () => {
-    let client;
-    let context;
+    let client: MockedClient;
+    let context: Mutable<PushContext>;
 
     beforeAll(() => {
-      [client] = clients.New({ github, inp });
+      const [_client] = clients.New({ github, inp });
+      client = _client as MockedClient;
     });
 
     beforeEach(() => {

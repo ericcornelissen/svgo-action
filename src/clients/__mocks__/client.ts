@@ -1,4 +1,4 @@
-const files = [];
+const files: never[] = [];
 
 const Client = jest.fn()
   .mockReturnValue({

@@ -5,12 +5,15 @@ import * as github from "@actions/github";
 
 import Client from "../../../src/clients/client";
 
+type MockedOctokit = jest.MockedObjectDeep<ReturnType<typeof github.getOctokit>>; // eslint-disable-line max-len
+
 describe("clients/client.ts", () => {
-  let client;
-  let octokit;
+  let client: InstanceType<typeof Client>;
+  let octokit: MockedOctokit;
 
   beforeAll(() => {
-    octokit = github.getOctokit("token");
+    const _octokit = github.getOctokit("token");
+    octokit = _octokit as MockedOctokit;
   });
 
   beforeEach(() => {
@@ -33,7 +36,7 @@ describe("clients/client.ts", () => {
 
         octokit.rest.repos.getCommit.mockResolvedValueOnce({
           data: { files },
-        });
+        } as never);
 
         const [result, err] = await client.commits.listFiles({
           owner,
@@ -90,7 +93,7 @@ describe("clients/client.ts", () => {
 
         octokit.rest.pulls.listFiles.mockResolvedValueOnce({
           data: files,
-        });
+        } as never);
 
         const [result, err] = await client.pulls.listFiles({
           owner,

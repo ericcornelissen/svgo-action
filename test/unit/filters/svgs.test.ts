@@ -2,7 +2,7 @@ import New from "../../../src/filters/svgs";
 
 describe("filters/svgs.ts", () => {
   describe("::New", () => {
-    let filter;
+    let filter: ReturnType<typeof New>;
 
     beforeEach(() => {
       filter = New();

@@ -1,3 +1,6 @@
+import type { Config } from "../../../src/helpers/filters";
+import type { Mutable } from "../../utils";
+
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/errors");
@@ -20,12 +23,11 @@ const filtersNewPushedFilesFilter = filters.NewPushedFilesFilter as jest.MockedF
 
 describe("helpers/filters.ts", () => {
   describe("::getFilters", () => {
-    let config;
-    let client;
+    let config: Mutable<Config>;
+    let client: ReturnType<typeof clients.New>[0];
 
     beforeAll(() => {
-      const [_client] = clients.New({ github, inp });
-      client = _client;
+      [client] = clients.New({ github, inp });
     });
 
     beforeEach(() => {

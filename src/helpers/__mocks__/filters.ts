@@ -1,4 +1,4 @@
-const filters = [];
+const filters: never[] = [];
 
 const getFilters = jest.fn()
   .mockResolvedValue([filters, null])

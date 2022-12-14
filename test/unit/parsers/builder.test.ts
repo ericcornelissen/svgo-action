@@ -1,3 +1,5 @@
+import type { ParseFn } from "../../../src/parsers/types";
+
 jest.mock("../../../src/errors");
 
 import {
@@ -6,7 +8,7 @@ import {
 
 describe("parsers/builder.ts", () => {
   describe("::buildSafeParser", () => {
-    let parseFn;
+    let parseFn: jest.MockedFunction<ParseFn<unknown>>;
 
     beforeAll(() => {
       parseFn = jest.fn();
