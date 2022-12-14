@@ -19,7 +19,7 @@ permissions: read-all
 jobs:
   initiate:
     name: Initiate
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'workflow_dispatch' }}
     permissions:
       contents: write # To push a commit
@@ -94,7 +94,7 @@ jobs:
           commit-message: "chore: version bump"
   release:
     name: Create Release
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     if: ${{ github.event_name == 'push' }}
     permissions:
       contents: write # To push a tag and create a GitHub Release
