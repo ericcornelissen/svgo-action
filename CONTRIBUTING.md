@@ -103,7 +103,6 @@ To be able to contribute you need the following tooling:
 - (Suggested) [actionlint];
 - (Suggested) [ShellCheck];
 - (Optional) [act] and [Docker];
-- (Optional) [curl];
 
 ### Workflow
 
@@ -330,7 +329,6 @@ There are some limitations to using [act]:
 [actionlint]: https://github.com/rhysd/actionlint
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
 [contributing guidelines for v2]: https://github.com/ericcornelissen/svgo-action/blob/main-v2/CONTRIBUTING.md
-[curl]: https://curl.se/
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/
