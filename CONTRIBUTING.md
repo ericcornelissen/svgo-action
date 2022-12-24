@@ -102,7 +102,8 @@ To be able to contribute you need the following tooling:
 - (Recommended) a code editor with [EditorConfig] support;
 - (Suggested) [actionlint];
 - (Suggested) [ShellCheck];
-- (Optional) [act] and [Docker];
+- (Optional) [act] v0.2.22 or higher;
+- (Optional) [Docker];
 
 ### Workflow
 
