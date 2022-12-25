@@ -107,6 +107,7 @@ jobs:
             api.github.com:443
             artifactcache.actions.githubusercontent.com:443
             auth.docker.io:443
+            docker.io:443
             github.com:443
             nodejs.org:443
             objects.githubusercontent.com:443
