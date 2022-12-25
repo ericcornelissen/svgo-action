@@ -45,7 +45,7 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # tag=v1.7.0
         id: release-token
         with:
@@ -121,7 +121,7 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Check if version is already released
         id: version
         run: |
