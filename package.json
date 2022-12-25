@@ -32,7 +32,7 @@
     "license-check": "licensee --errors-only",
     "lint": "run-p --silent 'lint:!(ci|sh|docker)'",
     "lint:ci": "actionlint",
-    "lint:docker": "docker run -i --rm --mount \"type=bind,source=$(pwd)/.hadolint.yml,target=/.config/hadolint.yaml\" hadolint/hadolint@sha256:9259e253a4e299b50c92006149dd3a171c7ea3c5bd36f060022b5d2c1ff0fbbe < ./.devcontainer/Dockerfile",
+    "lint:docker": "docker run -i --rm --mount \"type=bind,source=$(pwd)/.hadolint.yml,target=/.config/hadolint.yaml\" hadolint/hadolint:v2.12.0 < ./.devcontainer/Dockerfile",
     "lint:js": "npm run _eslint -- . --ext .cjs,.js",
     "lint:json": "npm run _eslint -- . --ext .json",
     "lint:md": "run-p --silent 'lint:md:*'",
