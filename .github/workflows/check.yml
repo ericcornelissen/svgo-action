@@ -130,17 +130,20 @@ jobs:
         run: |
           npm ci
           go install github.com/rhysd/actionlint/cmd/actionlint@latest
+      - name: Set setup success flag
+        id: setup
+        run: echo 'succeeded=true' >> "$GITHUB_OUTPUT"
       - name: Lint source code
-        if: ${{ always() }}
+        if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint
       - name: Lint Dockerfile
-        if: ${{ always() }}
+        if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint:docker
       - name: Lint shell scripts
-        if: ${{ always() }}
+        if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint:sh
       - name: Lint workflows
-        if: ${{ always() }}
+        if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint:ci
   test:
     name: Test - ${{ matrix.type }}
