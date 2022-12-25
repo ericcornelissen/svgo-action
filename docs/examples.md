@@ -295,7 +295,7 @@ jobs:
       # we recommend you run `npm install --save-dev svgo@v2` and commit your
       # project manifests (e.g. package.json and package-lock.json) first.
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Optimize SVGs
         uses: ericcornelissen/svgo-action@v3
         with:
