@@ -286,33 +286,33 @@ jobs:
             test/end-to-end/ignore/*
       - name: Check the output value
         run: |
-          if [ '${{ steps.svgo.outputs.DID_OPTIMIZE }}' != "true" ]; then
+          if [ '${{ steps.svgo.outputs.DID_OPTIMIZE }}' != 'true' ]; then
             exit 1
           fi
 
-          if [ '${{ steps.svgo.outputs.SVG_COUNT }}' != "3" ]; then
+          if [ '${{ steps.svgo.outputs.SVG_COUNT }}' != '3' ]; then
             exit 2
           fi
 
-          if [ '${{ steps.svgo.outputs.OPTIMIZED_COUNT }}' != "2" ]; then
+          if [ '${{ steps.svgo.outputs.OPTIMIZED_COUNT }}' != '2' ]; then
             exit 3
           fi
       - name: Check the content of newly optimized SVGs
         run: |
           SVG=$(cat test/end-to-end/not-optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.svg-one }}' = "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.svg-one }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 4
           fi
 
           SVG=$(cat test/end-to-end/not-optimized-2.svg)
           if [ '${{ steps.original-svgs.outputs.svg-two }}' = "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.svg-two }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 5
           fi
@@ -320,9 +320,9 @@ jobs:
         run: |
           SVG=$(cat test/end-to-end/optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.optimized-svg-one }}' != "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.optimized-svg-one }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 6
           fi
@@ -330,9 +330,9 @@ jobs:
         run: |
           SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           if [ '${{ steps.original-svgs.outputs.ignored-svg-one }}' != "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.ignored-svg-one }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 7
           fi

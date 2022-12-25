@@ -141,8 +141,8 @@ jobs:
         if: ${{ steps.version.outputs.released == 'false' }}
         run: |
           # Create tag for new version
-          git tag "${{ steps.version.outputs.version }}"
-          git push origin "${{ steps.version.outputs.version }}"
+          git tag '${{ steps.version.outputs.version }}'
+          git push origin '${{ steps.version.outputs.version }}'
 
           # Update what commit the v3 branch points to
           git push origin HEAD:v3
