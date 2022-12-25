@@ -134,6 +134,9 @@ jobs:
       - name: Set setup success flag
         id: setup
         run: echo 'succeeded=true' >> "$GITHUB_OUTPUT"
+      - name: Lint CI
+        if: ${{ steps.setup.outputs.succeeded }}
+        run: npm run lint:ci
       - name: Lint source code
         if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint
@@ -143,9 +146,6 @@ jobs:
       - name: Lint shell scripts
         if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint:sh
-      - name: Lint workflows
-        if: ${{ steps.setup.outputs.succeeded }}
-        run: npm run lint:ci
   test:
     name: Test - ${{ matrix.type }}
     runs-on: ubuntu-22.04
