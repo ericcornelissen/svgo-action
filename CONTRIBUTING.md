@@ -100,9 +100,10 @@ To be able to contribute you need the following tooling:
 - [Git];
 - [Node.js] v18 or higher and [npm] v8.1.2 or higher;
 - (Recommended) a code editor with [EditorConfig] support;
-- (Suggested) [actionlint];
-- (Suggested) [ShellCheck];
-- (Optional) [act] and [Docker];
+- (Suggested) [actionlint] v1.6.22;
+- (Suggested) [ShellCheck] v0.8.0;
+- (Optional) [act] v0.2.22 or higher;
+- (Optional) [Docker];
 
 ### Workflow
 
