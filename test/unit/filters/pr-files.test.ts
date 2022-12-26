@@ -1,3 +1,6 @@
+import type { PrContext } from "../../../src/filters/pr-files";
+import type { Mutable } from "../../utils";
+
 jest.mock("@actions/github");
 jest.mock("../../../src/clients");
 jest.mock("../../../src/errors");
@@ -10,15 +13,17 @@ import New from "../../../src/filters/pr-files";
 import { createFilesList } from "../../__common__/generate";
 import inp from "../../__common__/inputter.mock";
 
+type MockedClient = jest.MockedObjectDeep<ReturnType<typeof clients.New>[0]>;
+
 describe("filters/pr-files.ts", () => {
   describe("::New", () => {
-    let client;
-    let context;
+    let client: MockedClient;
+    let context: Mutable<PrContext>;
 
     const pageSize = 100;
 
     beforeAll(() => {
-      [client] = clients.New({ github, inp });
+      client = clients.New({ github, inp })[0] as MockedClient;
     });
 
     beforeEach(() => {
@@ -43,7 +48,7 @@ describe("filters/pr-files.ts", () => {
       expect(client.pulls.listFiles).toHaveBeenCalledWith({
         owner: context.repo.owner,
         repo: context.repo.repo,
-        pullNumber: context.payload.pull_request.number,
+        pullNumber: context.payload.pull_request?.number,
         perPage: pageSize,
         page: 1,
       });

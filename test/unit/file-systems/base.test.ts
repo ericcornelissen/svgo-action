@@ -19,7 +19,7 @@ const fsReadFileSync = fs.readFileSync as jest.MockedFunction<typeof fs.readFile
 const fsWriteFileSync = fs.writeFileSync as jest.MockedFunction<typeof fs.writeFileSync>; // eslint-disable-line max-len
 
 describe("file-systems/base.ts", () => {
-  let fileSystem;
+  let fileSystem: ReturnType<typeof NewBaseFileSystem>;
 
   beforeEach(() => {
     fileSystem = NewBaseFileSystem({ fs, path });
@@ -150,7 +150,7 @@ describe("file-systems/base.ts", () => {
     test("file doesn't exist", async () => {
       fsOpenSync.mockImplementationOnce(() => { throw new Error(); });
 
-      const [result, err] = await fileSystem.readFile("foo.bar");
+      const [result, err] = await fileSystem.readFile({ path: "foo.bar" });
       expect(err).not.toBeNull();
       expect(err).toContain("file not found");
       expect(result).toBe("");
@@ -160,7 +160,7 @@ describe("file-systems/base.ts", () => {
       fsOpenSync.mockReturnValueOnce(1);
       fsReadFileSync.mockImplementationOnce(() => { throw new Error(); });
 
-      const [result, err]  = await fileSystem.readFile("foo.bar");
+      const [result, err]  = await fileSystem.readFile({ path: "foo.bar" });
       expect(err).not.toBeNull();
       expect(err).toContain("cannot read file");
       expect(result).toBe("");

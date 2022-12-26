@@ -5,7 +5,7 @@ import parsers from "../../src/parsers";
 
 describe("package parsers", () => {
   describe("::NewJavaScript", () => {
-    let parseJavaScript;
+    let parseJavaScript: ReturnType<typeof parsers.NewJavaScript>;
 
     beforeEach(() => {
       parseJavaScript = parsers.NewJavaScript();
@@ -30,7 +30,7 @@ describe("package parsers", () => {
   });
 
   describe("::NewYaml", () => {
-    let parseYaml;
+    let parseYaml: ReturnType<typeof parsers.NewYaml>;
 
     beforeEach(() => {
       parseYaml = parsers.NewYaml();

@@ -1,3 +1,7 @@
+import type { PrContext } from "../../src/filters/pr-files";
+import type { PushContext } from "../../src/filters/pushed-files";
+import type { Mutable } from "../utils";
+
 jest.dontMock("minimatch");
 
 jest.mock("@actions/github");
@@ -9,7 +13,17 @@ import filters from "../../src/filters";
 import { createFilesList } from "../__common__/generate";
 import inp from "../__common__/inputter.mock";
 
+type MockedOctokit = jest.MockedObjectDeep<ReturnType<typeof github.getOctokit>>; // eslint-disable-line max-len
+
 describe("package filters", () => {
+  let client: ReturnType<typeof clients.New>[0];
+  let octokit: MockedOctokit;
+
+  beforeAll(() => {
+    [client] = clients.New({ github, inp });
+    octokit = github.getOctokit("token") as MockedOctokit;
+  });
+
   describe("::NewGlobFilter", () => {
     test("glob matches", () => {
       const glob = "*.bar";
@@ -31,22 +45,20 @@ describe("package filters", () => {
   });
 
   describe("::NewPrFilesFilter", () => {
-    let client;
-    let context;
-    let octokit;
+    let context: Mutable<PrContext>;
 
     const pageSize = 100;
 
-    beforeAll(() => {
-      [client] = clients.New({ github, inp });
-      context = github.context;
-      octokit = github.getOctokit("token");
-    });
-
     beforeEach(() => {
-      context.payload = {
-        pull_request: {
-          number: 42,
+      context = {
+        payload: {
+          pull_request: {
+            number: 42,
+          },
+        },
+        repo: {
+          owner: "pikachu",
+          repo: "pokédex",
         },
       };
     });
@@ -59,7 +71,7 @@ describe("package filters", () => {
           { filename: filepath, status: "added" },
           { filename: "hello.world", status: "removed" },
         ],
-      });
+      } as never);
 
       const [filter, err] = await filters.NewPrFilesFilter({ client, context });
       expect(err).toBeNull();
@@ -76,7 +88,7 @@ describe("package filters", () => {
           { filename: "praise/the.sun", status: "added" },
           { filename: "hello.world", status: "removed" },
         ],
-      });
+      } as never);
 
       const [filter, err] = await filters.NewPrFilesFilter({ client, context });
       expect(err).toBeNull();
@@ -91,12 +103,12 @@ describe("package filters", () => {
       const firstPageData = createFilesList(pageSize);
       octokit.rest.pulls.listFiles.mockResolvedValueOnce({
         data: firstPageData,
-      });
+      } as never);
       octokit.rest.pulls.listFiles.mockResolvedValueOnce({
         data: [
           { filename: filepath, status: "added" },
         ],
-      });
+      } as never);
 
       const [filter, err] = await filters.NewPrFilesFilter({ client, context });
       expect(err).toBeNull();
@@ -129,21 +141,19 @@ describe("package filters", () => {
   });
 
   describe("::NewPushedFilesFilter", () => {
-    let client;
-    let context;
-    let octokit;
-
-    beforeAll(() => {
-      [client] = clients.New({ github, inp });
-      context = github.context;
-      octokit = github.getOctokit("token");
-    });
+    let context: Mutable<PushContext>;
 
     beforeEach(() => {
-      context.payload = {
-        commits: [
-          { id: "commit-1" },
-        ],
+      context = {
+        payload: {
+          commits: [
+            { id: "commit-1" },
+          ],
+        },
+        repo: {
+          owner: "pikachu",
+          repo: "pokédex",
+        },
       };
     });
 
@@ -157,7 +167,7 @@ describe("package filters", () => {
             { filename: "hello.world", status: "removed" },
           ],
         },
-      });
+      } as never);
 
       const [filter, err] = await filters.NewPushedFilesFilter({
         client,
@@ -179,7 +189,7 @@ describe("package filters", () => {
             { filename: "hello.world", status: "removed" },
           ],
         },
-      });
+      } as never);
 
       const [filter, err] = await filters.NewPushedFilesFilter({
         client,

@@ -6,7 +6,7 @@ import {
 
 describe("parsers/builder.ts", () => {
   describe("::buildSafeParser", () => {
-    let parseFn;
+    let parseFn: ReturnType<typeof jest.fn>;
 
     beforeAll(() => {
       parseFn = jest.fn();

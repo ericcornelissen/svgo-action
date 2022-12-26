@@ -222,7 +222,7 @@ To use the SVGO version used by your project:
 # .github/workflows/optimize.yml
 
 - name: Install dependencies, including SVGO
-  run: npm ci
+  run: npm clean-install
 - uses: ericcornelissen/svgo-action@v3
   with:
     svgo-version: project

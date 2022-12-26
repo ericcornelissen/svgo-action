@@ -1,5 +1,7 @@
-function createFilesList(length: number): unknown[] {
-  const result: unknown[] = [];
+import type { GitFileInfo } from "../../src/clients/types";
+
+function createFilesList(length: number): Iterable<GitFileInfo> {
+  const result: GitFileInfo[] = [];
   for (let _ = 0; _ < length; _++) {
     result.push({
       status: "added",

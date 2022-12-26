@@ -1,5 +1,5 @@
 import type { error } from "../../errors";
-import type { SVGO, SVGOptions } from "./types";
+import type { SVGO, SVGOptions } from "./svgo-v1";
 
 import errors from "../../errors";
 

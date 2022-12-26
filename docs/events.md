@@ -37,24 +37,24 @@ ignored].
 
 The following [inputs] are available in the `pull_request` context.
 
-| Name           | Supported          | Required           |
-| -------------- | ------------------ | ------------------ |
-| `dry-run`      | :heavy_check_mark: | :x:                |
-| `ignore`       | :heavy_check_mark: | :x:                |
-| `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
-| `strict`       | :heavy_check_mark: | :x:                |
-| `svgo-config`  | :heavy_check_mark: | :x:                |
-| `svgo-version` | :heavy_check_mark: | :x:                |
+| Name           | Supported | Required |
+| -------------- | --------- | -------- |
+| `dry-run`      | Yes       | No       |
+| `ignore`       | Yes       | No       |
+| `repo-token`   | Yes       | Yes      |
+| `strict`       | Yes       | No       |
+| `svgo-config`  | Yes       | No       |
+| `svgo-version` | Yes       | No       |
 
 ### Outputs
 
 The following [outputs] are available in the `pull_request` context.
 
-| Name              | Outputted          |
-| ----------------- | ------------------ |
-| `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `OPTIMIZED_COUNT` | :heavy_check_mark: |
-| `SVG_COUNT`       | :heavy_check_mark: |
+| Name              | Outputted |
+| ----------------- | --------- |
+| `DID_OPTIMIZE`    | Yes       |
+| `OPTIMIZED_COUNT` | Yes       |
+| `SVG_COUNT`       | Yes       |
 
 ---
 
@@ -74,24 +74,24 @@ ignored].
 
 The following [inputs] are available in the `push` context.
 
-| Name           | Supported          | Required           |
-| -------------- | ------------------ | ------------------ |
-| `dry-run`      | :heavy_check_mark: | :x:                |
-| `ignore`       | :heavy_check_mark: | :x:                |
-| `repo-token`   | :heavy_check_mark: | :heavy_check_mark: |
-| `strict`       | :heavy_check_mark: | :x:                |
-| `svgo-config`  | :heavy_check_mark: | :x:                |
-| `svgo-version` | :heavy_check_mark: | :x:                |
+| Name           | Supported | Required |
+| -------------- | --------- | -------- |
+| `dry-run`      | Yes       | No       |
+| `ignore`       | Yes       | No       |
+| `repo-token`   | Yes       | Yes      |
+| `strict`       | Yes       | No       |
+| `svgo-config`  | Yes       | No       |
+| `svgo-version` | Yes       | No       |
 
 ### Outputs
 
 The following [outputs] are available in the `push` context.
 
-| Name              | Outputted          |
-| ----------------- | ------------------ |
-| `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `OPTIMIZED_COUNT` | :heavy_check_mark: |
-| `SVG_COUNT`       | :heavy_check_mark: |
+| Name              | Outputted |
+| ----------------- | --------- |
+| `DID_OPTIMIZE`    | Yes       |
+| `OPTIMIZED_COUNT` | Yes       |
+| `SVG_COUNT`       | Yes       |
 
 ---
 
@@ -109,24 +109,24 @@ ignored].
 
 The following [inputs] are available in the `schedule` context.
 
-| Name           | Supported          | Required           |
-| -------------- | ------------------ | ------------------ |
-| `dry-run`      | :heavy_check_mark: | :x:                |
-| `ignore`       | :heavy_check_mark: | :x:                |
-| `repo-token`   | :x:                | :x:                |
-| `strict`       | :heavy_check_mark: | :x:                |
-| `svgo-config`  | :heavy_check_mark: | :x:                |
-| `svgo-version` | :heavy_check_mark: | :x:                |
+| Name           | Supported | Required |
+| -------------- | --------- | -------- |
+| `dry-run`      | Yes       | No       |
+| `ignore`       | Yes       | No       |
+| `repo-token`   | No        | No       |
+| `strict`       | Yes       | No       |
+| `svgo-config`  | Yes       | No       |
+| `svgo-version` | Yes       | No       |
 
 ### Outputs
 
 The following [outputs] are available in the `schedule` context.
 
-| Name              | Outputted          |
-| ----------------- | ------------------ |
-| `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `OPTIMIZED_COUNT` | :heavy_check_mark: |
-| `SVG_COUNT`       | :heavy_check_mark: |
+| Name              | Outputted |
+| ----------------- | --------- |
+| `DID_OPTIMIZE`    | Yes       |
+| `OPTIMIZED_COUNT` | Yes       |
+| `SVG_COUNT`       | Yes       |
 
 ---
 
@@ -146,25 +146,25 @@ ignored].
 The following [inputs] are available in the `repository_dispatch` and
 `workflow_dispatch` contexts.
 
-| Name           | Supported          | Required           |
-| -------------- | ------------------ | ------------------ |
-| `dry-run`      | :heavy_check_mark: | :x:                |
-| `ignore`       | :heavy_check_mark: | :x:                |
-| `repo-token`   | :x:                | :x:                |
-| `strict`       | :heavy_check_mark: | :x:                |
-| `svgo-config`  | :heavy_check_mark: | :x:                |
-| `svgo-version` | :heavy_check_mark: | :x:                |
+| Name           | Supported | Required |
+| -------------- | --------- | -------- |
+| `dry-run`      | Yes       | No       |
+| `ignore`       | Yes       | No       |
+| `repo-token`   | No        | No       |
+| `strict`       | Yes       | No       |
+| `svgo-config`  | Yes       | No       |
+| `svgo-version` | Yes       | No       |
 
 ### Outputs
 
 The following [outputs] are available in the `repository_dispatch` and
 `workflow_dispatch` contexts.
 
-| Name              | Outputted          |
-| ----------------- | ------------------ |
-| `DID_OPTIMIZE`    | :heavy_check_mark: |
-| `OPTIMIZED_COUNT` | :heavy_check_mark: |
-| `SVG_COUNT`       | :heavy_check_mark: |
+| Name              | Outputted |
+| ----------------- | --------- |
+| `DID_OPTIMIZE`    | Yes       |
+| `OPTIMIZED_COUNT` | Yes       |
+| `SVG_COUNT`       | Yes       |
 
 [`pull_request` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request
 [`push` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#push

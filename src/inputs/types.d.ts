@@ -15,7 +15,7 @@ interface Inputter {
 }
 
 interface InputterOptions {
-  readonly required?: boolean;
+  readonly required: boolean;
 }
 
 interface InputValue<T> {

@@ -97,10 +97,10 @@ To be able to contribute you need the following tooling:
 - [Git];
 - [Node.js] v18 or higher and [npm] v8.1.2 or higher;
 - (Recommended) a code editor with [EditorConfig] support;
-- (Suggested) [actionlint];
-- (Suggested) [ShellCheck];
-- (Optional) [act] and [Docker];
-- (Optional) [curl];
+- (Suggested) [actionlint] v1.6.22;
+- (Suggested) [ShellCheck] v0.8.0;
+- (Optional) [act] v0.2.22 or higher;
+- (Optional) [Docker];
 
 ### Workflow
 
@@ -122,7 +122,8 @@ contributing to the project. If you have npm installation scripts disabled,
 run `npm run prepare` after installing dependencies.
 
 When making a contribution make sure your changes are [tested](#testing),
-[well-formatted](#linting), and [vetted](#vetting).
+[well-formatted](#linting), [audited](#auditing) and [vetted](#vetting). Run
+`npm run verify` to check if this is the case.
 
 #### Building
 
@@ -325,7 +326,6 @@ There are some limitations to using [act]:
 [act]: https://github.com/nektos/act
 [actionlint]: https://github.com/rhysd/actionlint
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
-[curl]: https://curl.se/
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/

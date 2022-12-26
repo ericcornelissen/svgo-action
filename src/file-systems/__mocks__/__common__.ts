@@ -1,4 +1,4 @@
-const files = [];
+const files: Iterable<never> = [];
 
 const fileSystemMock = {
   listFiles: jest.fn()

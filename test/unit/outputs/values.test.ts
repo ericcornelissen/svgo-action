@@ -10,7 +10,7 @@ describe("outputs/values.js", () => {
   };
 
   test("values for an empty list of names", () => {
-    const names = [];
+    const names: Iterable<OutputName> = [];
 
     const result = getValuesForOutputs(names, baseData);
     expect(result.size).toBe(0);

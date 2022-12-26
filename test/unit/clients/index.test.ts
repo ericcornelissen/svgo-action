@@ -1,3 +1,5 @@
+import type { GitHub } from "../../../src/clients/types";
+
 import { when, resetAllWhenMocks } from "jest-when";
 
 jest.mock("../../../src/clients/client");
@@ -9,11 +11,12 @@ import clients from "../../../src/clients/index";
 import inp from "../../__common__/inputter.mock";
 
 describe("clients/index.ts", () => {
-  let github, getOctokit;
+  let github: jest.MockedObject<GitHub>;
+  let getOctokit: jest.MockedFunction<(token: string) => unknown>;
 
   beforeAll(() => {
     getOctokit = jest.fn().mockName("getOctokit");
-    github = { getOctokit };
+    github = { getOctokit } as jest.MockedObject<GitHub>;
   });
 
   beforeEach(() => {

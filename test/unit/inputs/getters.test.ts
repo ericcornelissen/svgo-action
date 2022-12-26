@@ -56,7 +56,7 @@ describe("inputs/getters.ts", () => {
     });
 
     test("input provided but invalid", () => {
-      const defaultValue = [];
+      const defaultValue: Iterable<string> = [];
 
       when(inp.getMultilineInput)
         .calledWith(
@@ -78,7 +78,7 @@ describe("inputs/getters.ts", () => {
     });
 
     test("input not provided", () => {
-      const defaultValue = [];
+      const defaultValue: Iterable<string> = [];
 
       when(inp.getInput)
         .calledWith(

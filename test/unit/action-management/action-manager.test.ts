@@ -20,7 +20,7 @@ describe("action-management/action-manager.ts", () => {
     errors.New("foobar"),
   ];
 
-  let actionManager;
+  let actionManager: InstanceType<typeof StandardActionManager>;
 
   beforeEach(() => {
     coreSetFailed.mockClear();

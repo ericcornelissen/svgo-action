@@ -1,9 +1,9 @@
-const defaultInputs = {
+const defaultInputs: Record<string, string> = {
   "repo-token": "foobar",
-  "dry-run": false,
+  "dry-run": "false",
   "ignore": "",
   "svgo-config": "svgo.config.js",
-  "svgo-version": 2,
+  "svgo-version": "2",
 };
 
 function simulateGetInput(key: string) {
@@ -20,7 +20,7 @@ const debug = jest.fn()
 
 const getBooleanInput = jest.fn()
   .mockImplementation(simulateGetInput)
-  .mockName("core.getInput");
+  .mockName("core.getBooleanInput");
 
 const getInput = jest.fn()
   .mockImplementation(simulateGetInput)

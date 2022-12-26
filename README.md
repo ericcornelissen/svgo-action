@@ -87,31 +87,7 @@ be found in the [inputs documentation].
     svgo-version: 3
 ```
 
-### Advanced Usage
-
-#### Limit Runs
-
-Even though this Action won't do anything if a push or Pull Request does not
-touch any SVGs, you may want the Action to run only when an SVG has actually
-changed. To do this you can change the Workflow file that uses this Action to be
-triggered only when SVGs change. Update the value of `pull_request` and/or
-`push` as follows:
-
-> **Warning** This will cause the entire Workflow to be run only when an SVG
-> changes. Jobs that should run for every push or Pull Request must be specified
-> in a separate Workflow file.
-
-```yml
-on:
-  pull_request:
-    paths:
-      - "**.svg"
-  push:
-    paths:
-      - "**.svg"
-```
-
-#### Token Permissions
+### Permissions
 
 The minimum required [permissions] needed to run this Action are:
 

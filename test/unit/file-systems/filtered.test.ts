@@ -1,3 +1,5 @@
+import type { FileFilter, FileSystem } from "../../../src/file-systems/types";
+
 import { when, resetAllWhenMocks } from "jest-when";
 
 jest.mock("../../../src/errors");
@@ -6,11 +8,11 @@ import errors from "../../../src/errors";
 import NewFilteredFileSystem from "../../../src/file-systems/filtered";
 
 describe("file-systems/filtered.ts", () => {
-  let fileSystem;
-  let baseFs;
+  let fileSystem: FileSystem;
+  let baseFs: jest.MockedObject<FileSystem>;
 
-  let filter1;
-  let filter2;
+  let filter1: jest.MockedFunction<FileFilter>;
+  let filter2: jest.MockedFunction<FileFilter>;
 
   beforeAll(() => {
     filter1 = jest.fn().mockName("filter1");
@@ -171,7 +173,7 @@ describe("file-systems/filtered.ts", () => {
     });
 
     test("write error", async () => {
-      baseFs.writeFile.mockResolvedValueOnce(["", errors.New("write error")]);
+      baseFs.writeFile.mockResolvedValueOnce(errors.New("write error"));
 
       const err = await fileSystem.writeFile(file, "Hello world");
       expect(err).not.toBeNull();
