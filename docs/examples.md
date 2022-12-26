@@ -276,6 +276,9 @@ when an SVG has actually changed.
 > in a separate Workflow file.
 
 ```yml
+# .github/workflows/optimize.yml
+
+name: Optimize
 on:
   # Both `push` and `pull_request` support path
   push:
