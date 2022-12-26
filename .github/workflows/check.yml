@@ -112,10 +112,8 @@ jobs:
             nodejs.org:443
             objects.githubusercontent.com:443
             production.cloudflare.docker.com:443
-            proxy.golang.org:443
             registry-1.docker.io:443
             registry.npmjs.org:443
-            sum.golang.org:443
       - name: Checkout repository
         uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
       - name: Install Node.js
@@ -123,14 +121,10 @@ jobs:
         with:
           cache: npm
           node-version-file: .nvmrc
-      - name: Install Go
-        uses: actions/setup-go@d0a58c1c4d2b25278816e339b944508c875f3613 # v3.4.0
-        with:
-          go-version: 1.17
+      - name: Install tooling
+        uses: asdf-vm/actions/install@707e84f3ee349548310aeabdad0dd3bfcb9b69fa # v1.1.0
       - name: Install dependencies
-        run: |
-          npm clean-install
-          go install github.com/rhysd/actionlint/cmd/actionlint@v1.6.22
+        run: npm clean-install
       - name: Set setup success flag
         id: setup
         run: echo 'succeeded=true' >> "$GITHUB_OUTPUT"

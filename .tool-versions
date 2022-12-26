@@ -1,0 +1,5 @@
+# Check out asdf at: https://asdf-vm.com/
+
+act 0.2.34
+actionlint 1.6.22
+shellcheck 0.8.0
