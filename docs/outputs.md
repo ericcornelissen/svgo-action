@@ -33,7 +33,7 @@ example:
 steps:
   - uses: ericcornelissen/svgo-action@v3
     id: svgo  # <-- You need to give the SVGO Action's step a unique id
-  - name: Did any SVGs get optimized?
+  - name: Echo the svgo-action output 'DID_OPTIMIZE'
     run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
     #                   ^^^^         ^^^^^^^^^^^^
     #                   |            |
