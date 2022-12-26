@@ -8,6 +8,7 @@ SVGO Action.
 - [Scheduled Optimization Commits](#scheduled-optimization-commits)
 - [Scheduled Optimization Pull Requests](#scheduled-optimization-pull-requests)
 - [Optimize SVGs on Demand](#optimize-svgs-on-demand)
+- [Limit Runs](#limit-runs)
 - [Using Any SVGO Version](#using-any-svgo-version)
 
 Please [open an issue] if you found a mistake or if you have suggestions for how
@@ -263,6 +264,44 @@ jobs:
 
 ---
 
+## Limit Runs
+
+This example uses [path filters] to optimize SVGs only if any `.svg` file in the
+repository was changed on `push` events. Even though this Action does nothing
+if a push (or Pull Request) touches no SVGs, you may want the Action to run only
+when an SVG has actually changed.
+
+> **Warning** This will cause the entire Workflow to be run only when an SVG
+> changes. Jobs that should run for every push or Pull Request must be specified
+> in a separate Workflow file.
+
+```yml
+on:
+  # Both `push` and `pull_request` support path
+  push:
+    paths:
+      - "**.svg"
+
+# The minimum required permissions
+permissions:
+  contents: read
+
+jobs:
+  svgs:
+    name: SVGs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Optimize SVGs
+        uses: ericcornelissen/svgo-action@v3
+        with:
+          repo-token: ${{secrets.GITHUB_TOKEN}}
+      # Your steps ...
+```
+
+---
+
 ## Using Any SVGO Version
 
 This example uses [actions/checkout] and [npm] to optimize SVGs in the project
@@ -305,6 +344,7 @@ jobs:
 [actions/checkout]: https://github.com/marketplace/actions/checkout
 [npm]: https://www.npmjs.com/
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
+[path filters]: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore
 [peter-evans/create-pull-request]: https://github.com/marketplace/actions/create-pull-request
 [stefanzweifel/git-auto-commit-action]: https://github.com/marketplace/actions/git-auto-commit
 [thollander/actions-comment-pull-request]: https://github.com/marketplace/actions/comment-pull-request
