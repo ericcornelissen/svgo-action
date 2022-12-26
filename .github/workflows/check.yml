@@ -38,7 +38,7 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Build standalone JavaScript file
         run: npm run build
   codeql:
@@ -91,7 +91,7 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Check licenses
         run: npm run license-check
   lint:
@@ -107,6 +107,7 @@ jobs:
             api.github.com:443
             artifactcache.actions.githubusercontent.com:443
             auth.docker.io:443
+            docker.io:443
             github.com:443
             nodejs.org:443
             objects.githubusercontent.com:443
@@ -128,20 +129,23 @@ jobs:
           go-version: 1.17
       - name: Install dependencies
         run: |
-          npm ci
+          npm clean-install
           go install github.com/rhysd/actionlint/cmd/actionlint@v1.6.22
+      - name: Set setup success flag
+        id: setup
+        run: echo 'succeeded=true' >> "$GITHUB_OUTPUT"
+      - name: Lint CI
+        if: ${{ steps.setup.outputs.succeeded }}
+        run: npm run lint:ci
       - name: Lint source code
-        if: ${{ always() }}
+        if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint
       - name: Lint Dockerfile
-        if: ${{ always() }}
+        if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint:docker
       - name: Lint shell scripts
-        if: ${{ always() }}
+        if: ${{ steps.setup.outputs.succeeded }}
         run: npm run lint:sh
-      - name: Lint workflows
-        if: ${{ always() }}
-        run: npm run lint:ci
   test:
     name: Test - ${{ matrix.type }}
     runs-on: ubuntu-22.04
@@ -185,7 +189,7 @@ jobs:
             ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-
             ${{ runner.os }}-jest-${{ matrix.type }}-
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Run ${{ matrix.type }} tests
         env:
           CI: true
@@ -246,7 +250,7 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Install package-local SVGO
         if: ${{ matrix.test.svgo-version == 'project' }}
         run: npm install --no-save svgo@${{ matrix.test.project-svgo-version }}
@@ -283,33 +287,33 @@ jobs:
             test/end-to-end/ignore/*
       - name: Check the output value
         run: |
-          if [ '${{ steps.svgo.outputs.DID_OPTIMIZE }}' != "true" ]; then
+          if [ '${{ steps.svgo.outputs.DID_OPTIMIZE }}' != 'true' ]; then
             exit 1
           fi
 
-          if [ '${{ steps.svgo.outputs.SVG_COUNT }}' != "3" ]; then
+          if [ '${{ steps.svgo.outputs.SVG_COUNT }}' != '3' ]; then
             exit 2
           fi
 
-          if [ '${{ steps.svgo.outputs.OPTIMIZED_COUNT }}' != "2" ]; then
+          if [ '${{ steps.svgo.outputs.OPTIMIZED_COUNT }}' != '2' ]; then
             exit 3
           fi
       - name: Check the content of newly optimized SVGs
         run: |
           SVG=$(cat test/end-to-end/not-optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.svg-one }}' = "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.svg-one }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 4
           fi
 
           SVG=$(cat test/end-to-end/not-optimized-2.svg)
           if [ '${{ steps.original-svgs.outputs.svg-two }}' = "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.svg-two }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 5
           fi
@@ -317,9 +321,9 @@ jobs:
         run: |
           SVG=$(cat test/end-to-end/optimized-1.svg)
           if [ '${{ steps.original-svgs.outputs.optimized-svg-one }}' != "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.optimized-svg-one }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 6
           fi
@@ -327,9 +331,9 @@ jobs:
         run: |
           SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
           if [ '${{ steps.original-svgs.outputs.ignored-svg-one }}' != "$SVG" ]; then
-            echo "=== BEFORE ==="
+            echo '=== BEFORE ==='
             echo '${{ steps.original-svgs.outputs.ignored-svg-one }}'
-            echo "=== AFTER ==="
+            echo '=== AFTER ==='
             echo "$SVG"
             exit 7
           fi
@@ -367,7 +371,7 @@ jobs:
           restore-keys: |
             mutation-
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Run mutation tests
         env:
           CI: true
@@ -397,6 +401,6 @@ jobs:
           cache: npm
           node-version-file: .nvmrc
       - name: Install dependencies
-        run: npm ci
+        run: npm clean-install
       - name: Vet
         run: npm run vet
