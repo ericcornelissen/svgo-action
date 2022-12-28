@@ -52,7 +52,7 @@
     "vet": "run-p --silent 'vet:*'",
     "vet:deps": "depcheck",
     "vet:imports": "unimported",
-    "vet:ts": "type-coverage --at-least 100 --project tsconfig.json --strict"
+    "vet:types": "type-coverage --at-least 100 --project tsconfig.json --strict"
   },
   "repository": {
     "type": "git",

@@ -407,4 +407,4 @@ jobs:
         run: npm run vet:imports
       - name: Vet types
         if: ${{ steps.setup.outputs.succeeded }}
-        run: npm run vet:ts
+        run: npm run vet:types
