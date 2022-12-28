@@ -100,6 +100,7 @@ To be able to contribute you need the following tooling:
 - [Git];
 - [Node.js] v18 or higher and [npm] v8.1.2 or higher;
 - (Recommended) a code editor with [EditorConfig] support;
+- (Suggested) [Licensebat];
 - (Suggested) [actionlint] (see `.tool-versions` for preferred version);
 - (Suggested) [ShellCheck] (see `.tool-versions` for preferred version);
 - (Optional) [act] v0.2.22 or higher;
@@ -185,14 +186,12 @@ only production dependencies, run `npm run audit:prod`.
 
 ##### Licenses
 
-This project uses [licensee] to check for potential license violations in
-project dependencies. To validate the licenses, run `npm run license-check`.
-This will output nothing if no problems are detected, or output a list of
-packages without approved licenses and exit with a non-zero exit code if there
-is any violation.
+This project uses [Licensebat] to check for potential license violations in
+project dependencies. To validate the licenses, run `npm run license-check`,
+which will output a MarkDown report at `_reports/license-bat.md`.
 
 The configuration, including allowed licenses and exceptions, can be found in
-`.licensee.json`.
+`.licrc` (TOML format).
 
 ---
 
@@ -342,7 +341,7 @@ There are some limitations to using [act]:
 [hadolint]: https://github.com/hadolint/hadolint
 [husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
-[licensee]: https://github.com/jslicense/licensee.js
+[licensebat]: https://github.com/licensebat/licensebat
 [markdownlint]: https://github.com/DavidAnson/markdownlint
 [mocking]: https://stackoverflow.com/a/2666006
 [mutation testing]: https://en.wikipedia.org/wiki/Mutation_testing
