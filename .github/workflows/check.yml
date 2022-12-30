@@ -93,7 +93,9 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Check licenses
-        run: npm run license-check
+        run: |
+          mkdir _reports
+          npm run license-check
   lint:
     name: Lint
     runs-on: ubuntu-22.04

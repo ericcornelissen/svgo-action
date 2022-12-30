@@ -100,7 +100,7 @@ To be able to contribute you need the following tooling:
 - [Git];
 - [Node.js] v18 or higher and [npm] v8.1.2 or higher;
 - (Recommended) a code editor with [EditorConfig] support;
-- (Suggested) [Licensebat];
+- (Suggested) [Licensebat] v0.16.0 or higher;
 - (Suggested) [actionlint] (see `.tool-versions` for preferred version);
 - (Suggested) [ShellCheck] (see `.tool-versions` for preferred version);
 - (Optional) [act] v0.2.22 or higher;
