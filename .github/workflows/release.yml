@@ -52,7 +52,7 @@ jobs:
           app_id: ${{ secrets.RELEASE_APP_ID }}
           private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
       - name: Bump version
-        run: npm version ${{ github.event.inputs.update_type }} --no-git-tag-version
+        run: npm version '${{ github.event.inputs.update_type }}' --no-git-tag-version
       - name: Update CHANGELOG
         run: node script/bump-changelog.js
       - name: Build standalone JavaScript file
