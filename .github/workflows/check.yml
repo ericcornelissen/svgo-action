@@ -184,7 +184,7 @@ jobs:
       - name: Run ${{ matrix.type }} tests
         env:
           CI: true
-        run: npm run coverage:${{ matrix.type }}
+        run: npm run 'coverage:${{ matrix.type }}'
       - name: Upload code coverage
         uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70 # tag=v3.1.1
         if: ${{ always() }}
@@ -244,7 +244,7 @@ jobs:
         run: npm clean-install
       - name: Install package-local SVGO
         if: ${{ matrix.test.svgo-version == 'project' }}
-        run: npm install --no-save svgo@${{ matrix.test.project-svgo-version }}
+        run: npm install --no-save 'svgo@${{ matrix.test.project-svgo-version }}'
       - name: Build SVGO Action
         run: npm run build
       - name: Get the content of SVGs
