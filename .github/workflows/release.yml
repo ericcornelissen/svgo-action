@@ -137,15 +137,25 @@ jobs:
               echo 'EOF'
             } >> "$GITHUB_OUTPUT"
           fi
+      - name: Get major version
+        uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0 # v6.3.3
+        if: ${{ steps.version.outputs.released == 'false' }}
+        id: major-version
+        with:
+          result-encoding: string
+          script: |
+            const version = "${{ steps.version.outputs.version }}"
+            const major = version.replace(/\.\d\.\d$/, "")
+            return major
       - name: Release new version
         if: ${{ steps.version.outputs.released == 'false' }}
         run: |
-          # Create tag for new version
           git tag '${{ steps.version.outputs.version }}'
           git push origin '${{ steps.version.outputs.version }}'
-
-          # Update what commit the v3 branch points to
-          git push origin HEAD:v3
+      - name: Update major version branch
+        if: ${{ steps.version.outputs.released == 'false' }}
+        run: |
+          git push origin 'HEAD:${{ steps.major-version.outputs.result }}'
       - name: Create GitHub Release
         if: ${{ steps.version.outputs.released == 'false' }}
         uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169 # v1.11.2
