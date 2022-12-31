@@ -99,6 +99,7 @@
     "@types/node": "18.11.10",
     "@typescript-eslint/eslint-plugin": "5.45.0",
     "@typescript-eslint/parser": "5.45.0",
+    "better-npm-audit": "3.7.3",
     "depcheck": "1.4.3",
     "editorconfig-checker": "4.0.2",
     "eslint": "8.28.0",
