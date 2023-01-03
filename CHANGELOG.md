@@ -10,7 +10,7 @@ Versioning].
 - Improve performance when optimizing many SVGs. ([#696])
 - Make the documentation more readable. ([#719])
 - Move "Limit Runs" example to the examples documentation. ([#719])
-- Update dependency `minimatch`. ([#700])
+- Update dependency `minimatch`. ([#700], [#728])
 
 ## [3.1.2] - 2022-11-29
 
@@ -490,5 +490,6 @@ Versioning].
 [#696]: https://github.com/ericcornelissen/svgo-action/pull/696
 [#700]: https://github.com/ericcornelissen/svgo-action/pull/700
 [#719]: https://github.com/ericcornelissen/svgo-action/pull/719
+[#728]: https://github.com/ericcornelissen/svgo-action/pull/728
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
