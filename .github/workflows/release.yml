@@ -180,3 +180,6 @@ jobs:
           artifacts: >-
             index.cjs.cert,
             index.cjs.sign
+          draft: false
+          makeLatest: ${{ steps.major-version.outputs.result == 'v3' }}
+          prerelease: false
