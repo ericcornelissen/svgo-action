@@ -1,0 +1,16 @@
+name: Audit
+on:
+  pull_request: ~
+  push:
+    branches:
+      - main
+      - main-v2
+      - v2
+      - v3
+
+permissions: read-all
+
+jobs:
+  audit:
+    name: Audit
+    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main
