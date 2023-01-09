@@ -98,23 +98,21 @@ jobs:
     if: ${{ github.event_name == 'push' }}
     permissions:
       contents: write # To push a tag and create a GitHub Release
+      id-token: write # To perform keyless signing with cosign
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
         with:
           disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            artifactcache.actions.githubusercontent.com:443
-            github.com:443
-            nodejs.org:443
-            objects.githubusercontent.com:443
-            registry.npmjs.org:443
+          egress-policy: audit
       - name: Checkout repository
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
         with:
           fetch-depth: 0 # To obtain all tags
+      - name: Install cosign
+        uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b # v2.8.1
+        with:
+          cosign-release: v1.13.1
       - name: Install Node.js
         uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
@@ -156,6 +154,22 @@ jobs:
         if: ${{ steps.version.outputs.released == 'false' }}
         run: |
           git push origin 'HEAD:${{ steps.major-version.outputs.result }}'
+      - name: Sign Action
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: |
+          cosign sign-blob \
+            --output-certificate index.cjs.cert \
+            --output-signature index.cjs.sign \
+            lib/index.cjs
+      - name: Verify signatures
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: |
+          cosign verify-blob \
+            --certificate index.cjs.cert \
+            --signature index.cjs.sign \
+            lib/index.cjs
       - name: Create GitHub Release
         if: ${{ steps.version.outputs.released == 'false' }}
         uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e # v1.12.0
@@ -163,3 +177,6 @@ jobs:
           body: ${{ steps.version.outputs.release_notes }}
           name: Release ${{ steps.version.outputs.version }}
           tag: ${{ steps.version.outputs.version }}
+          artifacts: >-
+            index.cjs.cert,
+            index.cjs.sign
