@@ -14,6 +14,7 @@ jobs:
       released: ${{ steps.version.outputs.released }}
       release_notes: ${{ steps.version.outputs.release_notes }}
       version: ${{ steps.version.outputs.version }}
+      major_version: ${{ steps.major-version.outputs.result }}
     steps:
       - name: Harden runner
         uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
@@ -46,6 +47,15 @@ jobs:
               echo 'EOF'
             } >> "$GITHUB_OUTPUT"
           fi
+      - name: Get major version
+        uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0 # v6.3.3
+        id: major-version
+        with:
+          result-encoding: string
+          script: |
+            const version = "${{ steps.version.outputs.version }}"
+            const major = version.replace(/\.\d\.\d$/, "")
+            return major
   git:
     name: git
     runs-on: ubuntu-22.04
@@ -64,22 +74,13 @@ jobs:
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
         with:
           fetch-depth: 0 # To fetch all major version branches
-      - name: Get major version
-        uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0 # v6.3.3
-        id: major-version
-        with:
-          result-encoding: string
-          script: |
-            const version = "${{ needs.check.outputs.version }}"
-            const major = version.replace(/\.\d\.\d$/, "")
-            return major
       - name: Push release tag
         run: |
           git tag '${{ needs.check.outputs.version }}'
           git push origin '${{ needs.check.outputs.version }}'
       - name: Update major version branch
         run: |
-          git push origin 'HEAD:${{ steps.major-version.outputs.result }}'
+          git push origin 'HEAD:${{ needs.check.outputs.major_version }}'
   github:
     name: GitHub
     runs-on: ubuntu-22.04
@@ -127,3 +128,6 @@ jobs:
           artifacts: >-
             index.cjs.cert,
             index.cjs.sign
+          draft: false
+          makeLatest: ${{ needs.check.outputs.major_version == 'v3' }}
+          prerelease: false
