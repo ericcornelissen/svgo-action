@@ -111,7 +111,7 @@ jobs:
             --output-certificate index.cjs.cert \
             --output-signature index.cjs.sign \
             lib/index.cjs
-      - name: Verify signatures
+      - name: Verify signature
         env:
           COSIGN_EXPERIMENTAL: 1
         run: |
