@@ -1,0 +1,133 @@
+name: Publish
+on:
+  push:
+    branches:
+      - main
+
+permissions: read-all
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-22.04
+    outputs:
+      released: ${{ steps.version.outputs.released }}
+      release_notes: ${{ steps.version.outputs.release_notes }}
+      version: ${{ steps.version.outputs.version }}
+      major_version: ${{ steps.major-version.outputs.result }}
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: audit
+      - name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+        with:
+          fetch-depth: 0 # To obtain all tags
+      - name: Install Node.js
+        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # v3.5.1
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Check if version is already released
+        id: version
+        run: |
+          VERSION="v$(jq -r '.version' < package.json)"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          if [ "$(git tag --list "$VERSION")" ]; then
+            echo 'released=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'released=false' >> "$GITHUB_OUTPUT"
+            {
+              echo 'release_notes<<EOF'
+              node script/get-release-notes.js
+              echo 'EOF'
+            } >> "$GITHUB_OUTPUT"
+          fi
+      - name: Get major version
+        uses: actions/github-script@d556feaca394842dc55e4734bf3bb9f685482fa0 # v6.3.3
+        id: major-version
+        with:
+          result-encoding: string
+          script: |
+            const version = "${{ steps.version.outputs.version }}"
+            const major = version.replace(/\.\d\.\d$/, "")
+            return major
+  git:
+    name: git
+    runs-on: ubuntu-22.04
+    if: ${{ needs.check.outputs.released == 'false' }}
+    needs:
+      - check
+    permissions:
+      contents: write # To push a tag and a branch
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: audit
+      - name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+        with:
+          fetch-depth: 0 # To fetch all major version branches
+      - name: Push release tag
+        run: |
+          git tag '${{ needs.check.outputs.version }}'
+          git push origin '${{ needs.check.outputs.version }}'
+      - name: Update major version branch
+        run: |
+          git push origin 'HEAD:${{ needs.check.outputs.major_version }}'
+  github:
+    name: GitHub
+    runs-on: ubuntu-22.04
+    if: ${{ needs.check.outputs.released == 'false' }}
+    needs:
+      - check
+      - git
+    permissions:
+      contents: write # To create a GitHub Release
+      id-token: write # To perform keyless signing with cosign
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: audit
+      - name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - name: Install cosign
+        uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b # v2.8.1
+        with:
+          cosign-release: v1.13.1
+      - name: Sign Action
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: |
+          cosign sign-blob \
+            --output-certificate index.cjs.cert \
+            --output-signature index.cjs.sign \
+            lib/index.cjs
+      - name: Verify signature
+        env:
+          COSIGN_EXPERIMENTAL: 1
+        run: |
+          cosign verify-blob \
+            --certificate index.cjs.cert \
+            --signature index.cjs.sign \
+            lib/index.cjs
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@a2e71bdd4e7dab70ca26a852f29600c98b33153e # v1.12.0
+        with:
+          body: ${{ needs.check.outputs.release_notes }}
+          name: Release ${{ needs.check.outputs.version }}
+          tag: ${{ needs.check.outputs.version }}
+          artifacts: >-
+            index.cjs.cert,
+            index.cjs.sign
+          draft: false
+          makeLatest: ${{ needs.check.outputs.major_version == 'v3' }}
+          prerelease: false

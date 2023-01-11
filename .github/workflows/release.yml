@@ -1,8 +1,5 @@
 name: Release
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       update_type:
@@ -20,7 +17,6 @@ jobs:
   initiate:
     name: Initiate
     runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'workflow_dispatch' }}
     permissions:
       contents: write # To push a commit
       pull-requests: write # To open a Pull Request
@@ -38,7 +34,7 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
       - name: Install Node.js
         uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
         with:
@@ -46,13 +42,14 @@ jobs:
           node-version-file: .nvmrc
       - name: Install dependencies
         run: npm clean-install
-      - uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # tag=v1.7.0
+      - name: Create token to create Pull Request
+        uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # v1.7.0
         id: release-token
         with:
           app_id: ${{ secrets.RELEASE_APP_ID }}
           private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
       - name: Bump version
-        run: npm version ${{ github.event.inputs.update_type }} --no-git-tag-version
+        run: npm version '${{ github.event.inputs.update_type }}' --no-git-tag-version
       - name: Update CHANGELOG
         run: node script/bump-changelog.js
       - name: Build standalone JavaScript file
@@ -92,64 +89,3 @@ jobs:
           branch: release-${{ github.event.inputs.update_type }}
           branch-suffix: random
           commit-message: "chore: version bump"
-  release:
-    name: Create Release
-    runs-on: ubuntu-22.04
-    if: ${{ github.event_name == 'push' }}
-    permissions:
-      contents: write # To push a tag and create a GitHub Release
-    steps:
-      - name: Harden runner
-        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
-        with:
-          disable-sudo: true
-          egress-policy: block
-          allowed-endpoints: >
-            api.github.com:443
-            artifactcache.actions.githubusercontent.com:443
-            github.com:443
-            nodejs.org:443
-            objects.githubusercontent.com:443
-            registry.npmjs.org:443
-      - name: Checkout repository
-        uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8 # tag=v3.1.0
-        with:
-          fetch-depth: 0 # To obtain all tags
-      - name: Install Node.js
-        uses: actions/setup-node@8c91899e586c5b171469028077307d293428b516 # tag=v3.5.1
-        with:
-          cache: npm
-          node-version-file: .nvmrc
-      - name: Install dependencies
-        run: npm clean-install
-      - name: Check if version is already released
-        id: version
-        run: |
-          VERSION="v$(jq -r '.version' < package.json)"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          if [ "$(git tag --list "$VERSION")" ]; then
-            echo 'released=true' >> "$GITHUB_OUTPUT"
-          else
-            echo 'released=false' >> "$GITHUB_OUTPUT"
-            {
-              echo 'release_notes<<EOF'
-              node script/get-release-notes.js
-              echo 'EOF'
-            } >> "$GITHUB_OUTPUT"
-          fi
-      - name: Release new version
-        if: ${{ steps.version.outputs.released == 'false' }}
-        run: |
-          # Create tag for new version
-          git tag '${{ steps.version.outputs.version }}'
-          git push origin '${{ steps.version.outputs.version }}'
-
-          # Update what commit the v3 branch points to
-          git push origin HEAD:v3
-      - name: Create GitHub Release
-        if: ${{ steps.version.outputs.released == 'false' }}
-        uses: ncipollo/release-action@18eadf9c9b0f226f47f164f5373c6a44f0aae169 # v1.11.2
-        with:
-          body: ${{ steps.version.outputs.release_notes }}
-          name: Release ${{ steps.version.outputs.version }}
-          tag: ${{ steps.version.outputs.version }}
