@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.1.3] - 2023-01-11
+
 - Improve performance when optimizing many SVGs. ([#696])
 - Make the documentation more readable. ([#719])
 - Move "Limit Runs" example to the examples documentation. ([#719])
