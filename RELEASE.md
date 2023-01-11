@@ -140,8 +140,10 @@ For major releases, some additional steps are required. This may include:
 
 - Ensure any references to the major version in the documentation (external and
   internal) are updated.
-- Update the automated release workflow to create releases for the new major
-  version.
+- Update the continuous delivery workflow to mark only releases for the new
+  major version as `latest`.
+- Update continuous integration workflows to run on the old and new major
+  version branches (`vX` and `main-vX`).
 - Update the issue templates to align with the new major version.
 
 Make sure these additional changes are included in the release Pull Request.

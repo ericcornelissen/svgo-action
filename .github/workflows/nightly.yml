@@ -15,6 +15,5 @@ jobs:
         [
           "main",
           "v3",
-          "main-v2",
-          "v2"
+          "main-v2"
         ]
