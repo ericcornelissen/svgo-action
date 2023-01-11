@@ -11,4 +11,9 @@ jobs:
     name: Audit
     uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main
     with:
-      refs: '["main", "v3", "main-v2"]'
+      refs: >-
+        [
+          "main",
+          "v3",
+          "main-v2"
+        ]

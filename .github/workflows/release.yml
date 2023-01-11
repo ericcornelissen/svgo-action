@@ -42,7 +42,8 @@ jobs:
           node-version-file: .nvmrc
       - name: Install dependencies
         run: npm clean-install
-      - uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # tag=v1.7.0
+      - name: Create token to create Pull Request
+        uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # v1.7.0
         id: release-token
         with:
           app_id: ${{ secrets.RELEASE_APP_ID }}
