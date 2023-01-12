@@ -1,0 +1,3 @@
+# Check out ShellCheck at: https://www.shellcheck.net/
+
+disable=SC1090,SC1091,SC2155
