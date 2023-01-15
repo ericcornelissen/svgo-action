@@ -2,9 +2,9 @@
 . "$(dirname "$0")/_/husky.sh"
 . "$(dirname "$0")/common.sh"
 
-if [ ! "$(IS_MERGING)" ]; then
+if [ -z "$(IS_MERGING)" ]; then
   LIB_STAGED_COUNT=$(git diff --name-only --staged lib/ | wc -l)
-  if [ "$LIB_STAGED_COUNT" -ne "0" ]; then
+  if [ "${LIB_STAGED_COUNT}" -ne "0" ]; then
     echo "[INFO] All changes to the lib/ directory have been unstaged."
     echo "[INFO] Changes in the lib/ directory should not be committed."
     git restore --staged lib/
@@ -39,6 +39,6 @@ fi
 npm run format
 git update-index --again
 
-if [ "$(DID_STASH)" ]; then
+if [ -n "$(DID_STASH)" ]; then
   git stash pop --quiet
 fi
