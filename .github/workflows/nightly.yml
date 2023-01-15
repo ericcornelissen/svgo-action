@@ -17,3 +17,70 @@ jobs:
           "v3",
           "main-v2"
         ]
+  tooling:
+    name: Tool update ${{ matrix.tool }}
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write # To push a commit
+      pull-requests: write # To open a Pull Request
+    strategy:
+      fail-fast: false
+      matrix:
+        tool:
+          - act
+          - actionlint
+          - cosign
+          - shellcheck
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@ebacdc22ef6c2cfb85ee5ded8f2e640f4c776dd5 # v2.0.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            github.com:443
+            gitlab.com:443
+            objects.githubusercontent.com:443
+      - name: Checkout repository
+        uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - name: Install tooling
+        uses: asdf-vm/actions/install@707e84f3ee349548310aeabdad0dd3bfcb9b69fa # v1.1.0
+      - name: Create token to create Pull Request
+        uses: tibdex/github-app-token@021a2405c7f990db57f5eae5397423dcc554159c # v1.7.0
+        id: release-token
+        with:
+          app_id: ${{ secrets.RELEASE_APP_ID }}
+          private_key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+      - name: Get latest version
+        uses: nick-fields/retry@943e742917ac94714d2f408a0e8320f2d1fcafcd # v2.8.3
+        with:
+          max_attempts: 3
+          retry_wait_seconds: 120
+          timeout_seconds: 20
+          command: >-
+            LATEST_VERSION="$(asdf latest '${{ matrix.tool }}')"
+            &&
+            echo "latest=$LATEST_VERSION" >> "$GITHUB_ENV"
+      - name: Install new version
+        run: |
+          asdf install '${{ matrix.tool }}' '${{ env.latest }}'
+      - name: Apply latest version to .tool-versions
+        run: |
+          asdf local '${{ matrix.tool }}' '${{ env.latest }}'
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@2b011faafdcbc9ceb11414d64d0573f37c774b04 # v4.2.3
+        with:
+          token: ${{ steps.release-token.outputs.token }}
+          title: Update ${{ matrix.tool }} to v${{ env.latest }}
+          body: |
+            _This Pull Request was created automatically_
+
+            ---
+
+            Bump ${{ matrix.tool }} to v${{ env.latest }}
+          branch: asdf-${{ matrix.tool }}-${{ env.latest }}
+          labels: dependencies
+          commit-message: Update ${{ matrix.tool }} to ${{ env.latest }}
+          add-paths: |
+            .tool-versions
