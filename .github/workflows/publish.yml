@@ -115,10 +115,15 @@ jobs:
             uploads.github.com:443
       - name: Checkout repository
         uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b # v3.2.0
+      - name: Get cosign version
+        id: versions
+        run: |
+          COSIGN_VERSION="$(grep cosign < .tool-versions | awk '{print $2}')"
+          echo "cosign=$COSIGN_VERSION" >> "$GITHUB_OUTPUT"
       - name: Install cosign
         uses: sigstore/cosign-installer@9becc617647dfa20ae7b1151972e9b3a2c338a2b # v2.8.1
         with:
-          cosign-release: v1.13.1
+          cosign-release: v${{ steps.versions.outputs.cosign }}
       - name: Sign Action
         env:
           COSIGN_EXPERIMENTAL: 1
