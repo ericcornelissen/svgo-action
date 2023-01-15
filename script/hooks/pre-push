@@ -2,7 +2,7 @@
 . "$(dirname "$0")/_/husky.sh"
 . "$(dirname "$0")/common.sh"
 
-if [ ! "$(IS_MERGING)" ]; then
+if [ -z "$(IS_MERGING)" ]; then
   git stash push --quiet --include-untracked
 fi
 
@@ -27,6 +27,6 @@ if command -v gitleaks > /dev/null; then
   gitleaks protect
 fi
 
-if [ "$(DID_STASH)" ]; then
+if [ -n "$(DID_STASH)" ]; then
   git stash pop --quiet --index
 fi

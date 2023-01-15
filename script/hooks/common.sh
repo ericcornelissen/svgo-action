@@ -5,27 +5,27 @@ __FALSE=""
 
 _get_stash_count () {
   readonly count="$(git rev-list --walk-reflogs --count refs/stash 2> /dev/null)"
-  if [ "$count" = "" ]; then
+  if [ "${count}" = "" ]; then
     echo "0"
   else
-    echo "$count"
+    echo "${count}"
   fi
 }
 
 STASH_COUNT_BEFORE=$(_get_stash_count)
 DID_STASH () {
   readonly STASH_COUNT_AFTER="$(_get_stash_count)"
-  if [ "$STASH_COUNT_BEFORE" != "$STASH_COUNT_AFTER" ]; then
-    echo "$__TRUE"
+  if [ "${STASH_COUNT_BEFORE}" != "${STASH_COUNT_AFTER}" ]; then
+    echo "${__TRUE}"
   else
-    echo "$__FALSE"
+    echo "${__FALSE}"
   fi
 }
 
 IS_MERGING () {
   if [ -f "$(git rev-parse --git-dir)/MERGE_HEAD" ]; then
-    echo "$__TRUE"
+    echo "${__TRUE}"
   else
-    echo "$__FALSE"
+    echo "${__FALSE}"
   fi
 }
