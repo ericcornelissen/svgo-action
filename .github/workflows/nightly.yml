@@ -30,6 +30,7 @@ jobs:
           - act
           - actionlint
           - cosign
+          - hadolint
           - shellcheck
     steps:
       - name: Harden runner

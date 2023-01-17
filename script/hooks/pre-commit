@@ -23,7 +23,7 @@ npm run lint:ws
 if command -v actionlint > /dev/null; then
   npm run lint:ci
 fi
-if command -v docker > /dev/null; then
+if command -v hadolint > /dev/null; then
   npm run lint:docker
 fi
 if command -v shellcheck > /dev/null; then
