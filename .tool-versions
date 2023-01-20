@@ -1,7 +1,7 @@
 # Check out asdf at: https://asdf-vm.com/
 
 act 0.2.40
-actionlint 1.6.22
+actionlint 1.6.23
 cosign 1.13.1
 hadolint 2.12.0
 shellcheck 0.9.0
