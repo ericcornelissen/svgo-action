@@ -1,5 +1,5 @@
 * text=auto
 
 # don't diff machine generated files
-lib/index.cjs -diff
+lib/index.cjs -diff linguist-generated=true
 package-lock.json -diff
