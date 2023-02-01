@@ -47,6 +47,7 @@ module.exports = {
       functions: "always-multiline",
     }],
     "indent": ["error", 2],
+    "key-spacing": "off", // Use `@typescript-eslint/key-spacing` instead
     "max-len": ["error", {
       code: 80,
       comments: 80,
@@ -65,6 +66,7 @@ module.exports = {
 
     // @typescript-eslint
     // https://github.com/typescript-eslint/typescript-eslint#readme
+    "@typescript-eslint/key-spacing": "warn",
     "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-unused-vars": ["error", {
       argsIgnorePattern: "_+",
@@ -72,6 +74,7 @@ module.exports = {
 
     // eslint-plugin-import
     // https://github.com/import-js/eslint-plugin-import#rules
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "import/order": ["error", {
       groups: [
         "type",
@@ -98,6 +101,7 @@ module.exports = {
       ],
       "pathGroupsExcludedImportTypes": [],
     }],
+    "import/no-empty-named-blocks": ["error"],
 
     // eslint-plugin-jest
     // https://github.com/jest-community/eslint-plugin-jest#readme
