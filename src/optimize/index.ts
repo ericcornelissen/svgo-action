@@ -1,6 +1,3 @@
-/* eslint-disable security/detect-non-literal-fs-filename */
-
-import type { error } from "../errors";
 import type {
   FileHandle,
   FileSystem,
@@ -8,6 +5,7 @@ import type {
   OptimizeProjectData,
   Optimizer,
 } from "./types";
+import type { error } from "../errors";
 
 import errors from "../errors";
 import { len } from "../utils";

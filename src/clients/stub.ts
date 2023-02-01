@@ -1,9 +1,9 @@
-import type { error } from "../errors";
 import type {
   CommitsListFilesResponse,
   GitHubClient,
   PullsListFilesResponse,
 } from "./types";
+import type { error } from "../errors";
 
 import errors from "../errors";
 

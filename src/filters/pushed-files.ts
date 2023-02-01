@@ -1,8 +1,8 @@
-import type { error } from "../errors";
 import type { FilterFn } from "./types";
+import type { error } from "../errors";
 
-import errors from "../errors";
 import { STATUS_REMOVED } from "./constants";
+import errors from "../errors";
 
 interface Client {
   readonly commits: {

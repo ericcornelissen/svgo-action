@@ -1,4 +1,3 @@
-import type { error } from "../errors";
 import type {
   CommitsGetCommitParams,
   CommitsGetCommitResponse,
@@ -10,6 +9,7 @@ import type {
   PullsListFilesParams,
   PullsListFilesResponse,
 } from "./types";
+import type { error } from "../errors";
 
 import errors from "../errors";
 
