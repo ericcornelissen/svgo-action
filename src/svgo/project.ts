@@ -1,15 +1,15 @@
-import type { error } from "../errors";
 import type { Logger, SVGOptimizer } from "./types";
 import type { SVGO as SVGOv1 } from "./v1/svgo-v1";
+import type { error } from "../errors";
 import type { SVGO as SVGOv2 } from "svgo-v2";
 
 import importCwd from "import-cwd";
 
-import errors from "../errors";
 import StubSVGOptimizer from "./stub";
 import svgoV1 from "./v1";
 import svgoV2 from "./v2";
 import svgoV3 from "./v3";
+import errors from "../errors";
 
 function isSvgoV2(importedSvgo: object): boolean {
   return Object.hasOwn(

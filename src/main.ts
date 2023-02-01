@@ -44,7 +44,7 @@ async function main({ core, github }: Params): Promise<void> {
   core.debug("Initializing FileSystem to read SVGO config");
   const configFs = fileSystems.New({ filters: [] });
   core.debug(`Reading the SVGO config file at ${config.svgoConfigPath.value}`);
-  const [rawConfig, err2] = await configFs.readFile({ // eslint-disable-line security/detect-non-literal-fs-filename
+  const [rawConfig, err2] = await configFs.readFile({
     path: config.svgoConfigPath.value,
   });
   action.strictFailIf(
