@@ -1,5 +1,3 @@
-import type { IMinimatch } from "minimatch";
-
 jest.mock("minimatch");
 
 import { Minimatch } from "minimatch";
@@ -18,7 +16,7 @@ describe("filters/glob.ts", () => {
       const query = "foo/bar.svg";
 
       const match = jest.fn().mockReturnValue(true);
-      MinimatchMock.mockReturnValueOnce({ match } as unknown as IMinimatch);
+      MinimatchMock.mockReturnValueOnce({ match } as unknown as Minimatch);
 
       const  filter = New("foo/*");
 
@@ -31,7 +29,7 @@ describe("filters/glob.ts", () => {
       const query = "foobar.svg";
 
       const match = jest.fn().mockReturnValue(false);
-      MinimatchMock.mockReturnValueOnce({ match } as unknown as IMinimatch);
+      MinimatchMock.mockReturnValueOnce({ match } as unknown as Minimatch);
 
       const  filter = New("foo/*");
 

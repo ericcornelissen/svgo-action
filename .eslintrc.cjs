@@ -66,7 +66,7 @@ module.exports = {
 
     // @typescript-eslint
     // https://github.com/typescript-eslint/typescript-eslint#readme
-    "@typescript-eslint/key-spacing": "warn",
+    "@typescript-eslint/key-spacing": "error",
     "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-unused-vars": ["error", {
       argsIgnorePattern: "_+",
