@@ -1,6 +1,6 @@
 # Check out asdf at: https://asdf-vm.com/
 
-act 0.2.41
+act 0.2.42
 actionlint 1.6.23
 cosign 1.13.1
 hadolint 2.12.0
