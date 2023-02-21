@@ -1,4 +1,6 @@
-# Check out asdf at: https://asdf-vm.com/
+# Defines versions of system-level tooling. Can be used with:
+# - asdf: https://asdf-vm.com/
+# - rtx: https://github.com/jdxcode/rtx
 
 act 0.2.42
 actionlint 1.6.23
