@@ -80,8 +80,8 @@ jobs:
             ---
 
             Bump ${{ matrix.tool }} to v${{ env.latest }}
-          branch: asdf-${{ matrix.tool }}-${{ env.latest }}
+          branch: tooling-${{ matrix.tool }}-${{ env.latest }}
           labels: dependencies
-          commit-message: Update ${{ matrix.tool }} to ${{ env.latest }}
+          commit-message: "chore: update ${{ matrix.tool }} to ${{ env.latest }}"
           add-paths: |
             .tool-versions
