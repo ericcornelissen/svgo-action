@@ -125,18 +125,16 @@ jobs:
         with:
           cosign-release: v${{ steps.versions.outputs.cosign }}
       - name: Sign Action
-        env:
-          COSIGN_EXPERIMENTAL: 1
         run: |
           cosign sign-blob \
             --output-certificate index.cjs.cert \
             --output-signature index.cjs.sign \
             lib/index.cjs
       - name: Verify signature
-        env:
-          COSIGN_EXPERIMENTAL: 1
         run: |
           cosign verify-blob \
+            --certificate-identity ericornelissen@gmail.com \
+            --certificate-oidc-issuer https://github.com/login/oauth \
             --certificate index.cjs.cert \
             --signature index.cjs.sign \
             lib/index.cjs
