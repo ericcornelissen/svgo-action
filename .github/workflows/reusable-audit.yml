@@ -21,6 +21,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            actions-results-receiver-production.githubapp.com:80
             api.github.com:443
             artifactcache.actions.githubusercontent.com:443
             ghcr.io:443
