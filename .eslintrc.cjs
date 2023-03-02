@@ -143,12 +143,14 @@ module.exports = {
         project: "./tsconfig.json",
       },
       rules: {
+        "@typescript-eslint/block-spacing": ["error"],
         "@typescript-eslint/consistent-generic-constructors": [
           "error",
           "type-annotation",
         ],
         "@typescript-eslint/consistent-type-exports": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
+        "@typescript-eslint/key-spacing": ["error"],
         "@typescript-eslint/member-delimiter-style": ["error", {
           multiline: {
             delimiter: "semi",
@@ -161,6 +163,9 @@ module.exports = {
           multilineDetection: "brackets",
         }],
         "@typescript-eslint/switch-exhaustiveness-check": ["error"],
+
+        "block-spacing": "off", // use @typescript-eslint/block-spacing instead
+        "key-spacing": "off", // use @typescript-eslint/key-spacing instead
       },
     },
     { // Configuration files (JavaScript)
@@ -212,7 +217,10 @@ module.exports = {
           extension: "yml",
           caseSensitive: true,
         }],
-        "yml/indent": ["error", 2],
+        "yml/indent": ["error", 2, {
+          indentBlockSequences: true,
+          indicatorValueIndent: 2,
+        }],
         "yml/key-name-casing": "off",
         "yml/key-spacing": ["error", {
           afterColon: true,
