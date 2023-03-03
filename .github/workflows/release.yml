@@ -49,7 +49,9 @@ jobs:
           app_id: ${{ secrets.AUTOMATION_APP_ID }}
           private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
       - name: Bump version
-        run: npm version '${{ github.event.inputs.update_type }}' --no-git-tag-version
+        env:
+          UPDATE_TYPE: ${{ github.event.inputs.update_type }}
+        run: npm version "$UPDATE_TYPE" --no-git-tag-version
       - name: Update CHANGELOG
         run: node script/bump-changelog.js
       - name: Build standalone JavaScript file
