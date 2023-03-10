@@ -49,7 +49,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       - name: Install tooling
-        uses: asdf-vm/actions/install@707e84f3ee349548310aeabdad0dd3bfcb9b69fa # v1.1.0
+        uses: asdf-vm/actions/install@2368b9def7a1194d67ae0afd9cbbd01e15f658a0 # v2.0.0
       - name: Create automation token
         uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
         id: automation-token
