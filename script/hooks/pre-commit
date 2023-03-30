@@ -10,6 +10,7 @@ if [ -z "$(IS_MERGING)" ]; then
     git restore --staged lib/
   fi
 
+  npm run format
   git stash push --quiet --include-untracked --keep-index
 fi
 
