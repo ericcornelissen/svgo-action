@@ -162,6 +162,10 @@ module.exports = {
           },
           multilineDetection: "brackets",
         }],
+        "@typescript-eslint/no-duplicate-type-constituents": ["error", {
+          ignoreIntersections: false,
+          ignoreUnions: false,
+        }],
         "@typescript-eslint/switch-exhaustiveness-check": ["error"],
 
         "block-spacing": "off", // use @typescript-eslint/block-spacing instead
