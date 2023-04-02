@@ -7,7 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
-- Update dependency `minimatch`. ([#749], [#757], [#763])
+- Update dependency `minimatch`. ([#749], [#757], [#763], [#768])
 
 ## [3.1.3] - 2023-01-11
 
@@ -498,5 +498,6 @@ Versioning].
 [#749]: https://github.com/ericcornelissen/svgo-action/pull/749
 [#757]: https://github.com/ericcornelissen/svgo-action/pull/757
 [#763]: https://github.com/ericcornelissen/svgo-action/pull/763
+[#768]: https://github.com/ericcornelissen/svgo-action/pull/768
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
