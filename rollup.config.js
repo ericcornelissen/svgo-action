@@ -16,7 +16,7 @@ export default {
     typescript(),
     commonjs({ ignoreDynamicRequires: true }),
     json(),
-    nodeResolve({ preferBuiltins: true }),
+    nodeResolve({ exportConditions: ["node"], preferBuiltins: true }),
     terser(),
   ],
 };
