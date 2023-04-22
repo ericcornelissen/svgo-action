@@ -118,7 +118,7 @@ jobs:
       - name: Compare file sizes
         uses: fatton139/pr-comment-file-size@24a8cd3cd8f32e81313cb46f95d909afebd77895 # v3.1.1
         with:
-          file_glob_pattern: lib/index.cjs
+          # file_glob_pattern: lib/index.cjs
           path: ${{ github.workspace }}/head
           diff_path: ${{ github.workspace }}/base
           token: ${{ secrets.GITHUB_TOKEN }}
