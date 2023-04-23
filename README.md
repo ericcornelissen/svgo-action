@@ -87,7 +87,9 @@ be found in the [inputs documentation].
     svgo-version: 3
 ```
 
-### Permissions
+### Security
+
+#### Permissions
 
 The minimum required [permissions] needed to run this Action are:
 
@@ -103,6 +105,12 @@ Or use `read-all` to allow reading in all scopes (recommended for open source):
 ```yml
 permissions: read-all
 ```
+
+#### Network
+
+This Action requires network access to the endpoint `api.github.com:443` when
+triggered by `pull_request:` or `push:`. Otherwise it does not require any
+network access.
 
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
