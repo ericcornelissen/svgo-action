@@ -1,0 +1,24 @@
+# This file provides types for "GitHub Actions Kotlin DSL".
+# See https://github.com/krzema12/github-actions-kotlin-dsl
+
+inputs:
+  repo-token:
+    type: string
+  dry-run:
+    type: boolean
+  ignore:
+    type: string
+  strict:
+    type: boolean
+  svgo-config:
+    type: string
+  svgo-version:
+    type: string
+
+outputs:
+  DID_OPTIMIZE:
+    type: boolean
+  OPTIMIZED_COUNT:
+    type: number
+  SVG_COUNT:
+    type: number
