@@ -7,7 +7,10 @@ inputs:
   dry-run:
     type: boolean
   ignore:
-    type: string
+    type: list
+    separator: \n
+    list-item:
+      type: string
   strict:
     type: boolean
   svgo-config:
