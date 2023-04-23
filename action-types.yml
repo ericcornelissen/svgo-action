@@ -19,6 +19,6 @@ outputs:
   DID_OPTIMIZE:
     type: boolean
   OPTIMIZED_COUNT:
-    type: number
+    type: integer
   SVG_COUNT:
-    type: number
+    type: integer
