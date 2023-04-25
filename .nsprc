@@ -1,3 +1,4 @@
 {
+  "GHSA-f9xv-q969-pqx4": "Potential parsing error in the 'yaml' package through @commitlint/cli is not a security concern for this project",
   "GHSA-rp65-9cf3-cjxr": "From a transitive dependency of svgo@v1 which is a mandatory dependency of this project (removing it is a breaking change), but svgo@v1 no longer receives updates"
 }
