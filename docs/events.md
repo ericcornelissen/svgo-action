@@ -1,5 +1,8 @@
 # SVGO Action Events
 
+> :warning: Version 2 of the SVGO Action is end-of-life (EOL) since 2023-04-30.
+> No support will be provided going forward.
+
 This documentation describes the behavior of the SVGO Action for every GitHub
 Actions event that is supported. If an event is not listed here it is not
 officially supported.

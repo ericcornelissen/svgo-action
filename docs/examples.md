@@ -1,5 +1,8 @@
 # SVGO Action Examples
 
+> :warning: Version 2 of the SVGO Action is end-of-life (EOL) since 2023-04-30.
+> No support will be provided going forward.
+
 This documentation provides various example workflows of how you might use the
 SVGO Action.
 

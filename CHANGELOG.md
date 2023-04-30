@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased]
+## [2.1.10] - 2023-04-30
 
-- _No changes yet_
+- Update deprecation warning for end-of-life (EOL) of v2. ([#644])
 
 ## [2.1.9] - 2022-10-15
 
@@ -107,6 +107,14 @@ Versioning].
 ### Changes
 
 - Don't count already optimized SVGs in `OPTIMIZED_COUNT` output. ([#363])
+
+## [1.3.17] - 2022-08-31
+
+- Update deprecation warning for end-of-life (EOL) of v1. ([#599])
+
+## [1.3.16] - 2022-08-14
+
+- Update dependency `@actions/core`. ([#597])
 
 ## [1.3.15] - 2022-06-01
 
@@ -420,7 +428,10 @@ Versioning].
 [#545]: https://github.com/ericcornelissen/svgo-action/pull/545
 [#554]: https://github.com/ericcornelissen/svgo-action/pull/554
 [#555]: https://github.com/ericcornelissen/svgo-action/pull/555
+[#597]: https://github.com/ericcornelissen/svgo-action/pull/597
 [#598]: https://github.com/ericcornelissen/svgo-action/pull/598
+[#599]: https://github.com/ericcornelissen/svgo-action/pull/599
 [#633]: https://github.com/ericcornelissen/svgo-action/pull/633
+[#644]: https://github.com/ericcornelissen/svgo-action/pull/644
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
