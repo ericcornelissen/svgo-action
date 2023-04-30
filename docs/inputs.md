@@ -228,9 +228,15 @@ To use the SVGO version used by your project:
     svgo-version: project
 ```
 
+---
+
+_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
+
 [`on: pull_request`]: ./events.md#on-pull_request
 [`on: push`]: ./events.md#on-push
+[cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [glob]: https://en.wikipedia.org/wiki/Glob_(programming)
+[mit]: https://opensource.org/license/mit/
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
 [svgo v2 release notes]: https://github.com/svg/svgo/releases/tag/v2.0.0

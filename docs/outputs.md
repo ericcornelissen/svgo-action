@@ -42,4 +42,10 @@ steps:
     #                   | The id of the SVGO Action's step
 ```
 
+---
+
+_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
+
+[cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
+[mit]: https://opensource.org/license/mit/
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md

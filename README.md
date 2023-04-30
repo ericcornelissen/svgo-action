@@ -112,6 +112,10 @@ This Action requires network access to the endpoint `api.github.com:443` when
 triggered by `pull_request:` or `push:`. Otherwise it does not require any
 network access.
 
+---
+
+_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
+
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
@@ -119,10 +123,12 @@ network access.
 [mutation-url]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
 [mutation-image]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fericcornelissen%2Fsvgo-action%2Fmain
 
+[cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
-[permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
-[svgo]: https://github.com/svg/svgo
 [examples]: ./docs/examples.md
 [inputs documentation]: ./docs/inputs.md
+[mit]: https://opensource.org/license/mit/
+[permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
+[svgo]: https://github.com/svg/svgo
 [what the action does for each `on` event]: ./docs/events.md
 [what the action outputs]: ./docs/outputs.md

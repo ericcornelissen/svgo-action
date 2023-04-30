@@ -166,15 +166,21 @@ The following [outputs] are available in the `repository_dispatch` and
 | `OPTIMIZED_COUNT` | Yes       |
 | `SVG_COUNT`       | Yes       |
 
+---
+
+_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
+
 [`pull_request` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request
 [`push` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#push
 [`repository_dispatch` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#repository_dispatch
 [`schedule` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#schedule
 [`workflow_dispatch` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch
 [branch and tag filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
-[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
+[cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [inputs]: ./inputs.md
+[mit]: https://opensource.org/license/mit/
+[open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [outputs]: ./outputs.md
 [path filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestpaths
-[svgs that are ignored]: ./inputs.md#ignore
 [strict mode]: ./inputs.md#strict-mode
+[svgs that are ignored]: ./inputs.md#ignore
