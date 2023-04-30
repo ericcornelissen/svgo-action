@@ -25,9 +25,6 @@ relevant sections of this document.
   - [Integration Testing](#integration-testing)
   - [End-to-End Testing](#end-to-end-testing)
 
-> **Note**: If you want to make a contribution to v2 of the Action, please refer
-> to the [Contributing Guidelines for v2].
-
 ---
 
 ## Reporting Issues
@@ -330,7 +327,6 @@ There are some limitations to using [act]:
 [act]: https://github.com/nektos/act
 [actionlint]: https://github.com/rhysd/actionlint
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
-[contributing guidelines for v2]: https://github.com/ericcornelissen/svgo-action/blob/main-v2/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/

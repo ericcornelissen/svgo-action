@@ -14,8 +14,7 @@ jobs:
       refs: >-
         [
           "main",
-          "v3",
-          "main-v2"
+          "v3"
         ]
   tooling:
     name: Tool update ${{ matrix.tool }}

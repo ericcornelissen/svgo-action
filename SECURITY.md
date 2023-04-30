@@ -5,12 +5,12 @@
 The table below shows which versions of the _SVGO Action_ are currently
 supported with security updates.
 
-| Version | Supported | End-of-life |
-| ------: | :-------- | :---------- |
-|   3.x.x | Yes       | -           |
-|   2.x.x | Yes       | 2023-04-30  |
-|   1.x.x | No        | 2022-08-31  |
-|   0.x.x | No        | 2020-08-31  |
+| Version | End-of-life |
+| ------: | :---------- |
+|   3.x.x | -           |
+|   2.x.x | 2023-04-30  |
+|   1.x.x | 2022-08-31  |
+|   0.x.x | 2020-08-31  |
 
 ## Reporting a Vulnerability
 
