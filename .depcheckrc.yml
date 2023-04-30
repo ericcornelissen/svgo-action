@@ -8,6 +8,8 @@ ignores:
   - ts-jest
   - typescript
 ignore-path: .gitignore
+ignore-patterns:
+  - lib/
 
 parsers:
   "**/*.cjs": es6
