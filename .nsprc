@@ -1,3 +1,3 @@
 {
-  "1070415": "From a transitive dependency of svgo@v1 which is a mandatory dependency of this project (removing it is a breaking change), but svgo@v1 no longer receives updates"
+  "GHSA-rp65-9cf3-cjxr": "From a transitive dependency of svgo@v1 which is a mandatory dependency of this project (removing it is a breaking change), but svgo@v1 no longer receives updates"
 }
