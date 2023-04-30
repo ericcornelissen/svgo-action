@@ -112,6 +112,7 @@ jobs:
             rekor.sigstore.dev:443
             sigstore-tuf-root.storage.googleapis.com:443
             storage.googleapis.com:443
+            tuf-repo-cdn.sigstore.dev:443
             uploads.github.com:443
       - name: Checkout repository
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
