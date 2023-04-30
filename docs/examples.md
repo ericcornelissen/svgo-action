@@ -344,7 +344,13 @@ jobs:
           svgo-version: project
 ```
 
+---
+
+_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
+
 [actions/checkout]: https://github.com/marketplace/actions/checkout
+[cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
+[mit]: https://opensource.org/license/mit/
 [npm]: https://www.npmjs.com/
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [path filters]: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#onpushpull_requestpull_request_targetpathspaths-ignore
