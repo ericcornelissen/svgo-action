@@ -166,6 +166,7 @@ module.exports = {
           ignoreIntersections: false,
           ignoreUnions: false,
         }],
+        "@typescript-eslint/no-unsafe-enum-comparison": ["error"],
         "@typescript-eslint/switch-exhaustiveness-check": ["error"],
 
         "block-spacing": "off", // use @typescript-eslint/block-spacing instead

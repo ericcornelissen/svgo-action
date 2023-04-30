@@ -9,7 +9,7 @@ Versioning].
 
 - Add support for GitHub Actions Kotlin DSL. ([#781])
 - Specify networks access in the documentation. ([#782])
-- Update dependency `minimatch`. ([#749], [#757], [#763], [#768])
+- Update dependency `minimatch`. ([#749], [#757], [#763], [#768], [#790])
 
 ## [3.1.3] - 2023-01-11
 
@@ -528,5 +528,6 @@ Versioning].
 [#768]: https://github.com/ericcornelissen/svgo-action/pull/768
 [#781]: https://github.com/ericcornelissen/svgo-action/pull/781
 [#782]: https://github.com/ericcornelissen/svgo-action/pull/782
+[#790]: https://github.com/ericcornelissen/svgo-action/pull/790
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
