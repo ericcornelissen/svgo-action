@@ -5,13 +5,9 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [2.x.y] - 2023-04-30
+## [2.1.10] - 2023-04-30
 
 - Update deprecation warning for end-of-life (EOL) of v2. ([#644])
-
-## [Unreleased]
-
-- _No changes yet_
 
 ## [2.1.9] - 2022-10-15
 
