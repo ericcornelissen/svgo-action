@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.1.4] - 2023-04-30
+
 - Add support for GitHub Actions Kotlin DSL. ([#781])
 - Specify networks access in the documentation. ([#782])
 - Update dependency `minimatch`. ([#749], [#757], [#763], [#768], [#790])
