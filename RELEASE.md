@@ -94,7 +94,7 @@ version (using `v3.1.4` as an example):
 1. Merge the Pull Request if the changes look OK and all continuous integration
    checks are passing.
 
-   > **Note** At this point, the continuous delivery automation may pick up and
+   > **Note**: At this point, the continuous delivery automation may pick up and
    > complete the release process. Check whether or not this happens. If no, or
    > only partially, continue following the remaining steps.
 
