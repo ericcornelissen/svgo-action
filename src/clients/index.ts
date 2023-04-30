@@ -1,10 +1,10 @@
-import type { error } from "../errors";
 import type { GitHub, GitHubClient, Inputter } from "./types";
+import type { error } from "../errors";
 
-import errors from "../errors";
 import Client from "./client";
 import { INPUT_NAME_REPO_TOKEN } from "./constants";
 import StubClient from "./stub";
+import errors from "../errors";
 
 interface Params {
   readonly github: GitHub;

@@ -1,7 +1,6 @@
-import type { error } from "../errors";
 import type { Config, Inputter } from "./types";
+import type { error } from "../errors";
 
-import errors from "../errors";
 import {
   DEFAULT_IGNORE_GLOBS,
   DEFAULT_IS_DRY_RUN,
@@ -18,6 +17,7 @@ import {
 import {
   getDefaultSvgoConfigPath,
 } from "./helpers";
+import errors from "../errors";
 
 interface Params {
   readonly inp: Inputter;

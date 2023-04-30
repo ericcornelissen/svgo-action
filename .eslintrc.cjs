@@ -47,6 +47,7 @@ module.exports = {
       functions: "always-multiline",
     }],
     "indent": ["error", 2],
+    "key-spacing": "off", // Use `@typescript-eslint/key-spacing` instead
     "max-len": ["error", {
       code: 80,
       comments: 80,
@@ -65,6 +66,7 @@ module.exports = {
 
     // @typescript-eslint
     // https://github.com/typescript-eslint/typescript-eslint#readme
+    "@typescript-eslint/key-spacing": "error",
     "@typescript-eslint/no-explicit-any": ["error"],
     "@typescript-eslint/no-unused-vars": ["error", {
       argsIgnorePattern: "_+",
@@ -72,6 +74,7 @@ module.exports = {
 
     // eslint-plugin-import
     // https://github.com/import-js/eslint-plugin-import#rules
+    "import/consistent-type-specifier-style": ["error", "prefer-top-level"],
     "import/order": ["error", {
       groups: [
         "type",
@@ -98,6 +101,7 @@ module.exports = {
       ],
       "pathGroupsExcludedImportTypes": [],
     }],
+    "import/no-empty-named-blocks": ["error"],
 
     // eslint-plugin-jest
     // https://github.com/jest-community/eslint-plugin-jest#readme
@@ -139,12 +143,14 @@ module.exports = {
         project: "./tsconfig.json",
       },
       rules: {
+        "@typescript-eslint/block-spacing": ["error"],
         "@typescript-eslint/consistent-generic-constructors": [
           "error",
           "type-annotation",
         ],
         "@typescript-eslint/consistent-type-exports": ["error"],
         "@typescript-eslint/consistent-type-imports": ["error"],
+        "@typescript-eslint/key-spacing": ["error"],
         "@typescript-eslint/member-delimiter-style": ["error", {
           multiline: {
             delimiter: "semi",
@@ -156,7 +162,14 @@ module.exports = {
           },
           multilineDetection: "brackets",
         }],
+        "@typescript-eslint/no-duplicate-type-constituents": ["error", {
+          ignoreIntersections: false,
+          ignoreUnions: false,
+        }],
         "@typescript-eslint/switch-exhaustiveness-check": ["error"],
+
+        "block-spacing": "off", // use @typescript-eslint/block-spacing instead
+        "key-spacing": "off", // use @typescript-eslint/key-spacing instead
       },
     },
     { // Configuration files (JavaScript)
@@ -208,7 +221,10 @@ module.exports = {
           extension: "yml",
           caseSensitive: true,
         }],
-        "yml/indent": ["error", 2],
+        "yml/indent": ["error", 2, {
+          indentBlockSequences: true,
+          indicatorValueIndent: 2,
+        }],
         "yml/key-name-casing": "off",
         "yml/key-spacing": ["error", {
           afterColon: true,

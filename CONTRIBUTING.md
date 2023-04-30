@@ -95,9 +95,10 @@ as clearly as possible.
 To be able to contribute you need the following tooling:
 
 - [Git];
-- [Node.js] v18 or higher and [npm] v8.1.2 or higher;
+- [Node.js] v20 or higher and [npm] v8.1.2 or higher;
 - (Recommended) a code editor with [EditorConfig] support;
 - (Suggested) [actionlint] (see `.tool-versions` for preferred version);
+- (Suggested) [hadolint] (see `.tool-versions` for preferred version);
 - (Suggested) [ShellCheck] (see `.tool-versions` for preferred version);
 - (Optional) [act] v0.2.22 or higher;
 - (Optional) [Docker];

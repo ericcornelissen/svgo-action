@@ -1,8 +1,8 @@
-import type { error } from "../errors";
 import type { GitHub, GitHubClient } from "./types";
+import type { error } from "../errors";
 
-import filters from "../filters";
 import { EVENT_PULL_REQUEST, EVENT_PUSH } from "./constants";
+import filters from "../filters";
 
 interface Config {
   readonly ignoreGlobs: {

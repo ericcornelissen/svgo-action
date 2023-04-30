@@ -4,6 +4,12 @@
     ":semanticCommits",
     "group:all"
   ],
+  "enabledManagers": [
+    "dockerfile",
+    "github-actions",
+    "npm",
+    "nvm"
+  ],
 
   "packageRules": [
     {

@@ -74,7 +74,7 @@ describe("package helpers", () => {
 
     beforeEach(() => {
       config = {
-        ignoreGlobs:{
+        ignoreGlobs: {
           value: [],
         },
       };

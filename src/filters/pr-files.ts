@@ -1,9 +1,9 @@
-import type { error } from "../errors";
 import type { FilterFn } from "./types";
+import type { error } from "../errors";
 
+import { STATUS_REMOVED } from "./constants";
 import errors from "../errors";
 import { len } from "../utils";
-import { STATUS_REMOVED } from "./constants";
 
 interface Client {
   readonly pulls: {
