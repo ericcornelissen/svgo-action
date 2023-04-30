@@ -66,6 +66,25 @@ Versioning].
 
 - Update versions of recommended Actions in examples. ([#532])
 
+## [2.1.10] - 2023-04-30
+
+- Update deprecation warning for end-of-life (EOL) of v2. ([#644])
+
+## [2.1.9] - 2022-10-15
+
+- Update dependency `@actions/core`. ([#633])
+- Update dependency `@actions/github`. ([#633])
+
+## [2.1.8] - 2022-08-14
+
+- Update dependency `@actions/core`. ([#598])
+
+## [2.1.7] - 2022-06-01
+
+- Add example workflow for scheduled optimization Pull Requests. ([#545])
+- Update dependency `@actions/github`. ([#538])
+- Update deprecation warning for end-of-life (EOL) of v2. ([#555])
+
 ## [2.1.6] - 2022-03-31
 
 - Add deprecation warning recommending switching to v3 of this Action. ([#524])
@@ -472,19 +491,25 @@ Versioning].
 [#535]: https://github.com/ericcornelissen/svgo-action/pull/535
 [#536]: https://github.com/ericcornelissen/svgo-action/pull/536
 [#537]: https://github.com/ericcornelissen/svgo-action/pull/537
+[#538]: https://github.com/ericcornelissen/svgo-action/pull/538
 [#544]: https://github.com/ericcornelissen/svgo-action/pull/544
+[#545]: https://github.com/ericcornelissen/svgo-action/pull/545
 [#546]: https://github.com/ericcornelissen/svgo-action/pull/546
 [#551]: https://github.com/ericcornelissen/svgo-action/pull/551
 [#554]: https://github.com/ericcornelissen/svgo-action/pull/554
+[#555]: https://github.com/ericcornelissen/svgo-action/pull/555
 [#558]: https://github.com/ericcornelissen/svgo-action/pull/558
 [#566]: https://github.com/ericcornelissen/svgo-action/pull/566
 [#582]: https://github.com/ericcornelissen/svgo-action/pull/582
 [#592]: https://github.com/ericcornelissen/svgo-action/pull/592
 [#595]: https://github.com/ericcornelissen/svgo-action/pull/595
 [#597]: https://github.com/ericcornelissen/svgo-action/pull/597
+[#598]: https://github.com/ericcornelissen/svgo-action/pull/598
 [#599]: https://github.com/ericcornelissen/svgo-action/pull/599
 [#622]: https://github.com/ericcornelissen/svgo-action/pull/622
+[#633]: https://github.com/ericcornelissen/svgo-action/pull/633
 [#634]: https://github.com/ericcornelissen/svgo-action/pull/634
+[#644]: https://github.com/ericcornelissen/svgo-action/pull/644
 [#661]: https://github.com/ericcornelissen/svgo-action/pull/661
 [#672]: https://github.com/ericcornelissen/svgo-action/pull/672
 [#683]: https://github.com/ericcornelissen/svgo-action/pull/683
