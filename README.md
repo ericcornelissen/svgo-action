@@ -114,7 +114,7 @@ network access.
 
 ---
 
-_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
+_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT license]._
 
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
@@ -127,7 +127,7 @@ _Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [examples]: ./docs/examples.md
 [inputs documentation]: ./docs/inputs.md
-[mit]: https://opensource.org/license/mit/
+[mit license]: https://opensource.org/license/mit/
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
 [what the action does for each `on` event]: ./docs/events.md

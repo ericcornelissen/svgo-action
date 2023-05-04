@@ -168,7 +168,7 @@ The following [outputs] are available in the `repository_dispatch` and
 
 ---
 
-_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
+_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT license]._
 
 [`pull_request` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#pull_request
 [`push` events]: https://docs.github.com/en/actions/reference/events-that-trigger-workflows#push
@@ -178,7 +178,7 @@ _Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT] license._
 [branch and tag filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestbranchestags
 [cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [inputs]: ./inputs.md
-[mit]: https://opensource.org/license/mit/
+[mit license]: https://opensource.org/license/mit/
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [outputs]: ./outputs.md
 [path filters]: https://docs.github.com/en/actions/reference/workflow-syntax-for-github-actions#onpushpull_requestpaths
