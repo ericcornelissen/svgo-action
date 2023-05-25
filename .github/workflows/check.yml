@@ -101,7 +101,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - name: Perform DevSkim analysis
-        uses: microsoft/DevSkim-Action@a8a9e06bab570db990fe7351ae9d4d444b9489ca # v1.0.5
+        uses: microsoft/DevSkim-Action@068952be6217a6b5f73edaca2764b5e131938da2 # v1.0.6
       - name: Upload DevSkim report to GitHub
         uses: github/codeql-action/upload-sarif@f3feb00acb00f31a6f60280e6ace9ca31d91c76a # v2.3.2
         if: ${{ failure() || success() }}
