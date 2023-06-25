@@ -1,2 +1,6 @@
 {
+  "GHSA-c2qf-rxjj-qqgw": {
+    "active": true,
+    "notes": "ReDoS in various devDependency trees with limited impact. Updates should come in over time."
+  }
 }
