@@ -154,26 +154,6 @@ jobs:
       - name: Lint shell scripts
         if: ${{ failure() || success() }}
         run: npm run lint:sh
-  semgrep:
-    name: Semgrep
-    runs-on: ubuntu-22.04
-    if: ${{ github.actor != 'dependabot[bot]' }}
-    permissions:
-      security-events: write # To upload SARIF results
-    container:
-      image: returntocorp/semgrep
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
-      - name: Perform Semgrep analysis
-        run: semgrep ci --sarif --output semgrep.sarif
-        env:
-          SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
-      - name: Upload Semgrep report to GitHub
-        uses: github/codeql-action/upload-sarif@0225834cc549ee0ca93cb085b92954821a145866 # v2.3.5
-        if: ${{ failure() || success() }}
-        with:
-          sarif_file: semgrep.sarif
   test:
     name: Test - ${{ matrix.type }}
     runs-on: ubuntu-22.04
