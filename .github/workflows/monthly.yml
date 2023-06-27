@@ -1,0 +1,56 @@
+name: Monthly
+on:
+  schedule:
+    - cron: "0 2 23 * *"
+  workflow_dispatch: ~
+
+permissions: read-all
+
+jobs:
+  npm-deps:
+    name: Update transitive dependencies
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write # To push a commit
+      pull-requests: write # To open a Pull Request
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        with:
+          egress-policy: audit
+      - name: Checkout repository
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - name: Install Node.js
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3.6.0
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Create automation token
+        uses: tibdex/github-app-token@b62528385c34dbc9f38e5f4225ac829252d1ea92 # v1.8.0
+        id: automation-token
+        with:
+          app_id: ${{ secrets.AUTOMATION_APP_ID }}
+          private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Update dependencies
+        run: npm update
+      - name: Deduplicate dependencies
+        run: npm dedupe
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@284f54f989303d2699d373481a0cfa13ad5a6666 # v5.0.1
+        with:
+          token: ${{ steps.automation-token.outputs.token }}
+          title: Update transitive dependencies
+          body: |
+            _This Pull Request was created automatically_
+
+            ---
+
+            Update all transitive dependencies using `npm update` and `npm dedupe`.
+          labels: dependencies
+          branch: npm-update-transitive-deps
+          commit-message: "chore(deps): update transitive dependencies"
+          add-paths: |
+            package.json
+            package-lock.json
