@@ -9,12 +9,12 @@ max_line_length = 80
 trim_trailing_whitespace = true
 
 [*.{js,cjs}]
-indent_style = space
 indent_size = 2
+indent_style = space
 
 [*.json]
-indent_style = space
 indent_size = 2
+indent_style = space
 max_line_length = unset
 
 [*.md]
@@ -23,20 +23,20 @@ indent_style = space
 max_line_length = unset # Handled by markdownlint
 
 [*.sh]
-indent_style = space
 indent_size = 2
+indent_style = space
 
 [*.svg]
-indent_style = space
 indent_size = 2
+indent_style = space
 
-[*.{ts}]
-indent_style = space
+[*.ts]
 indent_size = 2
+indent_style = space
 
 [*.{yaml,yml}]
-indent_style = space
 indent_size = 2
+indent_style = space
 max_line_length = unset
 
 [lib/*]
