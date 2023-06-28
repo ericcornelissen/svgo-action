@@ -4,23 +4,49 @@ root = true
 
 [*]
 charset = utf-8
-indent_style = space
-indent_size = 2
 insert_final_newline = true
 max_line_length = 80
 trim_trailing_whitespace = true
 
-[*.yml]
-indent_style = space
+[*.{js,cjs}]
 indent_size = 2
+indent_style = space
+
+[*.json]
+indent_size = 2
+indent_style = space
 max_line_length = unset
 
 [*.md]
-indent_size = unset # Irregular indentation needed for, e.g., numbered lists
+indent_size = unset
+indent_style = space
 max_line_length = unset # Handled by markdownlint
 
+[*.sh]
+indent_size = 2
+indent_style = space
+
+[*.svg]
+indent_size = 2
+indent_style = space
+
+[*.ts]
+indent_size = 2
+indent_style = space
+
+[*.{yaml,yml}]
+indent_size = 2
+indent_style = space
+max_line_length = unset
+
 [lib/*]
-max_line_length = unset # Irrelevant for generated files
+indent_size = unset
+indent_style = space
+max_line_length = unset
 
 [Dockerfile]
 indent_style = tab
+
+[LICENSE]
+indent_size = unset
+indent_style = space
