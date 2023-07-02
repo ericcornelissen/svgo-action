@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@128a63446a954579617e875aaab7d2978154e969 # v2.4.0
+        uses: step-security/harden-runner@55d479fb1c5bcad5a4f9099a5d9f37c8857b2845 # v2.4.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -27,6 +27,6 @@ jobs:
             codecov.io:443
             github.com:443
       - name: Checkout repository
-        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       - name: Validate Codecov configuration
-        uses: ericcornelissen/codecov-config-validator-action@79ec876b95be6b652c76279cd8f8f47c68559d3b # v1.0.1
+        uses: ericcornelissen/codecov-config-validator-action@bbb3f8ef45de6f6ce57ea8d566940bdd78b4814a # v1.0.2
