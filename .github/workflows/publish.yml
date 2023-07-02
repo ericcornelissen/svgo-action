@@ -106,6 +106,7 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            *.githubusercontent.com:443
             api.github.com:443
             fulcio.sigstore.dev:443
             github.com:443
