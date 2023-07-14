@@ -33,7 +33,6 @@ interface GitHub {
 type Octokit = InstanceType<typeof _GitHub>;
 
 export type {
-  Context,
   Core,
   GitHub,
   Octokit,

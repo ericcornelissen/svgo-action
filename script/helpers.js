@@ -29,7 +29,7 @@ export function getCurrentVersionHeader() {
  *
  * @returns {Record<string, any>} The manifest as a JavaScript.
  */
-export function getManifest() {
+function getManifest() {
   const manifestFilePath = getPathTo("package.json");
   const manifestRaw = readFile(manifestFilePath);
   const manifest = JSON.parse(manifestRaw);
