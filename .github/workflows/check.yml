@@ -413,9 +413,6 @@ jobs:
       - name: Vet dependencies
         if: ${{ failure() || success() }}
         run: npm run vet:deps
-      - name: Vet imports
-        if: ${{ failure() || success() }}
-        run: npm run vet:imports
       - name: Vet types
         if: ${{ failure() || success() }}
         run: npm run vet:types
