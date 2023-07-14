@@ -1,0 +1,9 @@
+// Check out knip at: https://github.com/webpro/knip
+
+{
+  "$schema": "./node_modules/knip/schema.json",
+  "entry": ["lib/index.cjs", "src/index.ts"],
+  "ignore": ["script/", "**/__mocks__"],
+  "ignoreBinaries": ["act", "actionlint", "cosign", "hadolint", "shellcheck"],
+  "ignoreDependencies": ["@commitlint/cli", "svgo"]
+}
