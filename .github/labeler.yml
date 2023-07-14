@@ -1,0 +1,43 @@
+# Check out Labeler at: https://github.com/actions/labeler
+
+ci/cd:
+  - .github/workflows/*
+  - .github/codecov.yml
+  - .github/labeler.yml
+  - .github/renovate.json
+
+dependencies:
+  - .tool-versions
+  - .nvmrc
+  - package-lock.json
+
+documentation:
+  - docs/*
+  - README.md
+
+meta:
+  - .github/ISSUE_TEMPLATE/*
+  - .github/dependabot.yml
+  - .github/labeler.yml
+  - .github/pull_request_template.md
+  - .editorconfig
+  - .eslintrc.cjs
+  - .gitattributes
+  - .gitignore
+  - .hadolint.yml
+  - .knip.jsonc
+  - .licensee.json
+  - .markdownlint.yml
+  - .npmrc
+  - .shellcheckrc
+  - commitlint.config.cjs
+
+test:
+  - test/**
+  - test/**/*
+  - jest.config.js
+  - stryker.config.js
+
+security:
+  - .github/codeql-config.yml
+  - .nsprc
