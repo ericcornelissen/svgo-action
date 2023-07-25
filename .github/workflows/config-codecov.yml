@@ -1,14 +1,14 @@
-name: Config
+name: Config Codecov
 on:
   pull_request:
     paths:
-      - .github/workflows/check-configs.yml
+      - .github/workflows/config-codecov.yml
       - .github/codecov.yml
   push:
     branches:
       - main
     paths:
-      - .github/workflows/check-configs.yml
+      - .github/workflows/config-codecov.yml
       - .github/codecov.yml
 
 permissions: read-all
@@ -24,6 +24,8 @@ jobs:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
+            actions-results-receiver-production.githubapp.com:443
+            api.github.com:443
             codecov.io:443
             github.com:443
       - name: Checkout repository
