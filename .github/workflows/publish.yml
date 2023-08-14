@@ -56,10 +56,12 @@ jobs:
       - name: Get major version
         uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6.4.1
         id: major-version
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         with:
           result-encoding: string
           script: |
-            const version = "${{ steps.version.outputs.version }}"
+            const version = `${process.env.VERSION}`
             const major = version.replace(/\.\d\.\d$/, "")
             return major
   git:
@@ -83,12 +85,16 @@ jobs:
         with:
           fetch-depth: 0 # To fetch all major version branches
       - name: Push release tag
+        env:
+          VERSION: ${{ needs.check.outputs.version }}
         run: |
-          git tag '${{ needs.check.outputs.version }}'
-          git push origin '${{ needs.check.outputs.version }}'
+          git tag "${VERSION}"
+          git push origin "${VERSION}"
       - name: Update major version branch
+        env:
+          MAJOR_VERSION: ${{ needs.check.outputs.major_version }}
         run: |
-          git push origin 'HEAD:${{ needs.check.outputs.major_version }}'
+          git push origin "HEAD:${MAJOR_VERSION}"
   github:
     name: GitHub
     runs-on: ubuntu-22.04
