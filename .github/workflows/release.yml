@@ -51,7 +51,7 @@ jobs:
       - name: Bump version
         env:
           UPDATE_TYPE: ${{ github.event.inputs.update_type }}
-        run: npm version "$UPDATE_TYPE" --no-git-tag-version
+        run: npm version "${UPDATE_TYPE}" --no-git-tag-version
       - name: Update CHANGELOG
         run: node script/bump-changelog.js
       - name: Build standalone JavaScript file
