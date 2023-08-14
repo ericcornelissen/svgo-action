@@ -201,7 +201,8 @@ jobs:
       - name: Run ${{ matrix.type }} tests
         env:
           CI: true
-        run: npm run 'coverage:${{ matrix.type }}'
+          TYPE: ${{ matrix.type }}
+        run: npm run "coverage:${TYPE}"
       - name: Upload code coverage
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         if: ${{ always() }}
@@ -261,7 +262,9 @@ jobs:
         run: npm clean-install
       - name: Install package-local SVGO
         if: ${{ matrix.test.svgo-version == 'project' }}
-        run: npm install --no-save 'svgo@${{ matrix.test.project-svgo-version }}'
+        env:
+          SVGO_VERSION: ${{ matrix.test.project-svgo-version }}
+        run: npm install --no-save "svgo@${SVGO_VERSION}"
       - name: Build SVGO Action
         run: npm run build
       - name: Get the content of SVGs
@@ -281,7 +284,7 @@ jobs:
             echo 'EOF'
 
             echo "optimized-svg-one=$(cat test/end-to-end/optimized-1.svg)"
-          } >> "$GITHUB_OUTPUT"
+          } >>"${GITHUB_OUTPUT}"
       - name: Run SVGO Action
         uses: ./
         id: svgo
@@ -294,55 +297,66 @@ jobs:
           ignore: |
             test/end-to-end/ignore/*
       - name: Check the output value
+        env:
+          DID_OPTIMIZE: ${{ steps.svgo.outputs.DID_OPTIMIZE }}
+          OPTIMIZED_COUNT: ${{ steps.svgo.outputs.OPTIMIZED_COUNT }}
+          SVG_COUNT: ${{ steps.svgo.outputs.SVG_COUNT }}
         run: |
-          if [ '${{ steps.svgo.outputs.DID_OPTIMIZE }}' != 'true' ]; then
+          if [ "${DID_OPTIMIZE}" != 'true' ]; then
             exit 1
           fi
 
-          if [ '${{ steps.svgo.outputs.SVG_COUNT }}' != '3' ]; then
+          if [ "${SVG_COUNT}" != '3' ]; then
             exit 2
           fi
 
-          if [ '${{ steps.svgo.outputs.OPTIMIZED_COUNT }}' != '2' ]; then
+          if [ "${OPTIMIZED_COUNT}" != '2' ]; then
             exit 3
           fi
       - name: Check the content of newly optimized SVGs
+        env:
+          SVG_ONE: ${{ steps.original-svgs.outputs.svg-one }}
+          SVG_TWO: ${{ steps.original-svgs.outputs.svg-two }}
         run: |
           SVG=$(cat test/end-to-end/not-optimized-1.svg)
-          if [ '${{ steps.original-svgs.outputs.svg-one }}' = "$SVG" ]; then
+          if [ "${SVG_ONE}" = "${SVG}" ]; then
             echo '=== BEFORE ==='
-            echo '${{ steps.original-svgs.outputs.svg-one }}'
+            echo "${SVG_ONE}"
             echo '=== AFTER ==='
-            echo "$SVG"
+            echo "${SVG}"
             exit 4
           fi
 
           SVG=$(cat test/end-to-end/not-optimized-2.svg)
-          if [ '${{ steps.original-svgs.outputs.svg-two }}' = "$SVG" ]; then
+          if [ "${SVG_TWO}" = "${SVG}" ]; then
             echo '=== BEFORE ==='
-            echo '${{ steps.original-svgs.outputs.svg-two }}'
+            echo "${SVG_TWO}"
             echo '=== AFTER ==='
-            echo "$SVG"
+            echo "${SVG}"
             exit 5
           fi
       - name: Check the content of already optimized SVGs
+        env:
+          SVG_ONE: ${{ steps.original-svgs.outputs.optimized-svg-one }}
         run: |
           SVG=$(cat test/end-to-end/optimized-1.svg)
-          if [ '${{ steps.original-svgs.outputs.optimized-svg-one }}' != "$SVG" ]; then
+          if [ "${SVG_ONE}" != "${SVG}" ]; then
             echo '=== BEFORE ==='
-            echo '${{ steps.original-svgs.outputs.optimized-svg-one }}'
+            echo "${SVG_ONE}"
             echo '=== AFTER ==='
-            echo "$SVG"
+            echo "${SVG}"
             exit 6
           fi
       - name: Check the content of ignored SVGs
+        env:
+          SVG_ONE: ${{ steps.original-svgs.outputs.ignored-svg-one }}
         run: |
           SVG=$(cat test/end-to-end/ignore/ignored-1.svg)
-          if [ '${{ steps.original-svgs.outputs.ignored-svg-one }}' != "$SVG" ]; then
+          if [ "${SVG_ONE}" != "${SVG}" ]; then
             echo '=== BEFORE ==='
-            echo '${{ steps.original-svgs.outputs.ignored-svg-one }}'
+            echo "${SVG_ONE}"
             echo '=== AFTER ==='
-            echo "$SVG"
+            echo "${SVG}"
             exit 7
           fi
   test-mutation:
