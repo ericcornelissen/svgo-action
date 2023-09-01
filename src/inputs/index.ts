@@ -49,6 +49,5 @@ export default {
 };
 
 export type {
-  Config,
   Inputter,
 };

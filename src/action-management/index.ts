@@ -21,7 +21,3 @@ function New({ core, config }: Params): ActionManager {
 export default {
   New,
 };
-
-export type {
-  ActionManager,
-};

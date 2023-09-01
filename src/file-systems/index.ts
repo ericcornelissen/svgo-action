@@ -1,4 +1,4 @@
-import type { FileFilter, FileHandle, FileSystem } from "./types";
+import type { FileFilter, FileSystem } from "./types";
 
 import * as fs from "node:fs";
 import * as path from "node:path";
@@ -21,6 +21,5 @@ export default {
 };
 
 export type {
-  FileHandle,
   FileSystem,
 };
