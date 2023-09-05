@@ -3,7 +3,7 @@ const defaultInputs: Record<string, string> = {
   "dry-run": "false",
   "ignore": "",
   "svgo-config": "svgo.config.js",
-  "svgo-version": "2",
+  "svgo-version": "3",
 };
 
 function simulateGetInput(key: string) {

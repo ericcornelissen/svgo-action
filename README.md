@@ -83,8 +83,8 @@ be found in the [inputs documentation].
 
     # The version of SVGO to use for optimizing.
     #
-    # Default: 2
-    svgo-version: 3
+    # Default: 3
+    svgo-version: 2
 ```
 
 ### Security

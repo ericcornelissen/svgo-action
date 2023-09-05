@@ -4,7 +4,7 @@ const DEFAULT_IGNORE_GLOBS: ReadonlyArray<string> = [];
 const DEFAULT_IS_DRY_RUN = false;
 const DEFAULT_IS_STRICT_MODE = false;
 const DEFAULT_SVGO_V2_CONFIG_PATH = "svgo.config.js";
-const DEFAULT_SVGO_VERSION = "2";
+const DEFAULT_SVGO_VERSION = "3";
 
 const INPUT_NAME_DRY_RUN = "dry-run";
 const INPUT_NAME_IGNORE = "ignore";

@@ -12,7 +12,7 @@ describe("package inputs", () => {
   const DEFAULT_IGNORE: Iterable<string> = [];
   const DEFAULT_DRY_RUN = false;
   const DEFAULT_SVGO_CONFIG = "svgo.config.js";
-  const DEFAULT_SVGO_VERSION = "2";
+  const DEFAULT_SVGO_VERSION = "3";
 
   beforeEach(() => {
     inp.getBooleanInput.mockReset();

@@ -17,7 +17,7 @@ const defaultConfig = {
   },
   svgoVersion: {
     provided: true,
-    value: "2",
+    value: "3",
   },
 };
 
