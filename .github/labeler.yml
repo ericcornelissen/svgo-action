@@ -11,7 +11,7 @@ dependencies:
   - .nvmrc
   - package-lock.json
 
-documentation:
+docs:
   - docs/*
   - README.md
 
