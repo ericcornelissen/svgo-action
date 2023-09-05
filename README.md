@@ -112,9 +112,11 @@ This Action requires network access to the endpoint `api.github.com:443` when
 triggered by `pull_request:` or `push:`. Otherwise it does not require any
 network access.
 
----
+## License
 
-_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT license]._
+The source code is licensed under the `MIT` license, see [LICENSE] for the full
+license text. The documentation text is licensed under [CC BY-SA 4.0]; code
+snippets under the [MIT license].
 
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
@@ -127,6 +129,7 @@ _Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT license]._
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [examples]: ./docs/examples.md
 [inputs documentation]: ./docs/inputs.md
+[license]: ./LICENSE
 [mit license]: https://opensource.org/license/mit/
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
