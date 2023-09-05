@@ -226,9 +226,6 @@ jobs:
           - description: built-in, v3
             svgo-version: 3
             svgo-config: test/end-to-end/svgo.config.cjs
-          - description: project, v1
-            svgo-version: project
-            svgo-config: test/end-to-end/.svgo.yml
             project-svgo-version: ^1.0.0
           - description: project, v2
             svgo-version: project

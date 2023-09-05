@@ -1,9 +1,5 @@
 import type { error } from "../errors";
 
-interface Logger {
-  readonly warning: (msg: string) => void;
-}
-
 type SupportedSvgoVersions =
   "2" |
   "3" |
@@ -14,7 +10,6 @@ interface SVGOptimizer {
 }
 
 export type {
-  Logger,
   SupportedSvgoVersions,
   SVGOptimizer,
 };
