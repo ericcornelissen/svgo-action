@@ -21,10 +21,10 @@ on:
   # Comment the next line if you don't want the Action to run on Pull Requests.
   pull_request: ~
   # Uncomment the next line if you want the Action to run on pushes.
-  #   push:
+  #   push: ~
   # Uncomment the next 2 lines if you want the Action to run on a schedule.
   #   schedule:
-  #   - cron:  '0 * * * 1'  # See https://crontab.guru/
+  #     - cron:  '0 * * * 1'  # See https://crontab.guru/
   # Uncomment 1 of the next 2 lines if you want to manually trigger the Action.
   #   repository_dispatch:
   #   workflow_dispatch:
