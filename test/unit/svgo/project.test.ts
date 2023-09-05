@@ -28,6 +28,8 @@ describe("svgo/project.ts", () => {
       multipass: false,
     };
 
+    class svgoV1Export { }
+
     beforeEach(() => {
       coreWarning.mockClear();
 
@@ -44,15 +46,6 @@ describe("svgo/project.ts", () => {
       expect(importCwdSilent).toHaveBeenCalledWith("svgo");
     });
 
-    test.each([null, undefined])("unsuccessful import (%s)", (v) => {
-      importCwdSilent.mockReturnValue(v);
-
-      const [result, err] = createSvgoOptimizerForProject(undefined);
-      expect(result).not.toBeNull();
-      expect(err).not.toBeNull();
-      expect(err).toBe("package-local SVGO not found");
-    });
-
     test("unexpected import", () => {
       importCwdSilent.mockReturnValue(3.14);
 
@@ -60,6 +53,35 @@ describe("svgo/project.ts", () => {
       expect(result).not.toBeNull();
       expect(err).not.toBeNull();
       expect(err).toMatch(/^unexpected SVGO import/);
+    });
+
+    describe("unsuccessful import", () => {
+      test("with config, SVGO v1", () => {
+        importCwdSilent.mockReturnValue(svgoV1Export);
+
+        const [result, err] = createSvgoOptimizerForProject(svgoConfig);
+        expect(result).not.toBeNull();
+        expect(err).not.toBeNull();
+        expect(err).toBe("SVGO v1 detected, not supported");
+      });
+
+      test("without config, SVGO v1", () => {
+        importCwdSilent.mockReturnValue(svgoV1Export);
+
+        const [result, err] = createSvgoOptimizerForProject(undefined);
+        expect(result).not.toBeNull();
+        expect(err).not.toBeNull();
+        expect(err).toBe("SVGO v1 detected, not supported");
+      });
+
+      test.each([null, undefined])("%s", (v) => {
+        importCwdSilent.mockReturnValue(v);
+
+        const [result, err] = createSvgoOptimizerForProject(undefined);
+        expect(result).not.toBeNull();
+        expect(err).not.toBeNull();
+        expect(err).toBe("package-local SVGO not found");
+      });
     });
 
     describe("successful import", () => {

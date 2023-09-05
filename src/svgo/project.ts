@@ -48,7 +48,10 @@ function createSvgoOptimizerForProject(
     const instance = svgo as SVGOv2; // type-coverage:ignore-line
     return svgoV3.NewFrom(instance, options);
   } else {
-    throw new Error("SVGO v1 is not supported");
+    return [
+      StubSVGOptimizer,
+      errors.New("SVGO v1 detected, not supported"),
+    ];
   }
 }
 
