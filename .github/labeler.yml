@@ -7,17 +7,16 @@ ci/cd:
   - .github/renovate.json
 
 dependencies:
-  - .tool-versions
   - .nvmrc
+  - .tool-versions
   - package-lock.json
 
-documentation:
+docs:
   - docs/*
   - README.md
 
 meta:
   - .github/ISSUE_TEMPLATE/*
-  - .github/dependabot.yml
   - .github/labeler.yml
   - .github/pull_request_template.md
   - .editorconfig
@@ -32,12 +31,12 @@ meta:
   - .shellcheckrc
   - commitlint.config.cjs
 
+security:
+  - .github/codeql-config.yml
+  - .nsprc
+
 test:
   - test/**
   - test/**/*
   - jest.config.js
   - stryker.config.js
-
-security:
-  - .github/codeql-config.yml
-  - .nsprc
