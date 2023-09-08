@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
         uses: ericcornelissen/svgo-action@v3
         id: svgo
@@ -93,7 +93,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
         uses: ericcornelissen/svgo-action@v3
         id: svgo
@@ -143,7 +143,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
         uses: ericcornelissen/svgo-action@v3
         id: svgo
@@ -187,7 +187,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
         uses: ericcornelissen/svgo-action@v3
         id: svgo
@@ -251,7 +251,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
         uses: ericcornelissen/svgo-action@v3
         id: svgo
@@ -295,7 +295,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
         uses: ericcornelissen/svgo-action@v3
         with:
@@ -331,7 +331,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # If SVGO is a (dev)dependency of your project you can just install your
       # dependencies as usual. If SVGO is not yet a dependency of your project,
       # we recommend you run `npm install --save-dev svgo@v2` and commit your
