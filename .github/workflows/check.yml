@@ -200,7 +200,6 @@ jobs:
         run: npm clean-install
       - name: Run ${{ matrix.type }} tests
         env:
-          CI: true
           TYPE: ${{ matrix.type }}
         run: npm run "coverage:${TYPE}"
       - name: Upload code coverage
@@ -396,7 +395,6 @@ jobs:
         run: npm clean-install
       - name: Run mutation tests
         env:
-          CI: true
           STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_TOKEN }}
         run: npm run test:mutation
   vet:
