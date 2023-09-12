@@ -150,9 +150,8 @@ To enable strict mode:
 | `svgo-config` | `"svgo.config.js"` |
 
 The `svgo-config` input allows you to specify the location of the config file
-for [SVGO]. The configuration file must be a JavaScript or a [YAML] file. If the
-specified file is not found the Action will fall back on SVGO's default
-configuration.
+for [SVGO]. The configuration file must be a JavaScript. If the specified file
+is not found the Action will fall back on SVGO's default configuration.
 
 ### Examples
 

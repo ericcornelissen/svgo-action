@@ -10,9 +10,11 @@ Versioning].
 ### Breaking changes
 
 - Drop support for SVGO v1 with `svgo-version: project`. ([#841])
+- Drop support for YAML-based configuration files. ([#841])
 
 ### Changes
 
+- Drop dependency `js-yaml`. ([#841])
 - Update dependency `minimatch`. ([#802], [#821], [#830])
 
 ## [3.1.4] - 2023-04-30

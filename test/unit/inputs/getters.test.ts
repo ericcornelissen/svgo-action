@@ -227,7 +227,6 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
-      ".svgo.yml",
       "svgo.config.js",
     ])("can get input ('%s')", (configuredValue) => {
       when(inp.getInput)
