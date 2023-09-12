@@ -200,7 +200,6 @@ jobs:
         run: npm clean-install
       - name: Run ${{ matrix.type }} tests
         env:
-          CI: true
           TYPE: ${{ matrix.type }}
         run: npm run "coverage:${TYPE}"
       - name: Upload code coverage
@@ -393,8 +392,6 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Run mutation tests
-        env:
-          CI: true
         run: npm run test:mutation
   vet:
     name: Vet
