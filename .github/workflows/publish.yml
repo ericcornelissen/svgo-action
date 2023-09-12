@@ -157,5 +157,5 @@ jobs:
             index.cjs.cert,
             index.cjs.sign
           draft: false
-          makeLatest: ${{ needs.check.outputs.major_version == 'v3' }}
+          makeLatest: ${{ needs.check.outputs.major_version == 'v4' }}
           prerelease: false

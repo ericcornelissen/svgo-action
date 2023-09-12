@@ -22,7 +22,7 @@ To release a new version follow these steps:
 
 If it's not possible to use automated releases, or if something goes wrong with
 the automatic release process, you can follow these steps to release a new
-version (using `v3.1.4` as an example):
+version (using `v4.3.2` as an example):
 
 1. Make sure that your local copy of the repository is up-to-date. Either sync:
 
@@ -46,7 +46,7 @@ version (using `v3.1.4` as an example):
 1. Update the version number in the package manifest and lockfile:
 
    ```shell
-   npm version --no-git-tag-version v3.1.4
+   npm version --no-git-tag-version v4.3.2
    ```
 
    If that fails, change the value of the version field in `package.json` to the
@@ -108,20 +108,20 @@ version (using `v3.1.4` as an example):
 1. Create a [git tag] for the new version:
 
    ```shell
-   git tag v3.1.4
+   git tag v4.3.2
    ```
 
-1. Update the `v3` branch to point to the same commit as the new tag:
+1. Update the `v4` branch to point to the same commit as the new tag:
 
    ```shell
-   git checkout v3
+   git checkout v4
    git merge main
    ```
 
-1. Push the `v3` branch and new tag:
+1. Push the `v4` branch and new tag:
 
    ```shell
-   git push origin v3 v3.1.4
+   git push origin v4 v4.3.2
    ```
 
 1. [Create a GitHub Release].
@@ -129,7 +129,7 @@ version (using `v3.1.4` as an example):
 ## Creating a GitHub Release
 
 Create a new [GitHub Release] for the [git tag] of the new release. The release
-title should be "Release {_version_}" (e.g. "Release v3.1.4"). The release text
+title should be "Release {_version_}" (e.g. "Release v4.3.2"). The release text
 should be the changes from the [changelog] for the version (including links).
 
 Ensure the version is published to the [GitHub Marketplace] as well.
@@ -143,8 +143,10 @@ For major releases, some additional steps are required. This may include:
 - Update the continuous delivery workflow to mark only releases for the new
   major version as `latest`.
 - Update continuous integration workflows to run on the old and new major
-  version branches (`vX` and `main-vX`).
+  version branches (`vX`, `main-vX`, `v(X-1)`, and `main-v(X-1)`).
 - Update the issue templates to align with the new major version.
+- Update the release Pull Request template title and body for the new major
+  version.
 
 Make sure these additional changes are included in the release Pull Request.
 

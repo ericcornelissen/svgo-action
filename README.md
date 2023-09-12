@@ -37,7 +37,7 @@ jobs:
       # Uncomment the next 2 lines to select a branch for schedule or dispatch.
       #   with:
       #     ref: main
-      - uses: ericcornelissen/svgo-action@v3
+      - uses: ericcornelissen/svgo-action@v4
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -51,7 +51,7 @@ The following inputs are available when using the SVGO Action. More details can
 be found in the [inputs documentation].
 
 ```yml
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     # Prevent the Action from writing changes.
     #
