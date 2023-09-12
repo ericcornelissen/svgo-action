@@ -30,7 +30,6 @@ export default {
 
   reporters: [
     "clear-text",
-    "dashboard",
     "html",
     "progress",
   ],

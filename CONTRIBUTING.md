@@ -259,8 +259,7 @@ mutation testing framework [StrykerJS]. Use the command `npm run test:mutation`
 to run the mutation tests.
 
 After running the mutation tests, a mutation report is available in HTML format
-at `_reports/mutation/index.html`. Alternatively, you can find a report for the
-`main` branch online as a [Stryker Dashboard].
+at `_reports/mutation/index.html`.
 
 By default the mutation tests run on all the source code using all the unit
 tests. The first time you run the mutation tests can be rather slow. However,
@@ -351,4 +350,3 @@ There are some limitations to using [act]:
 [security policy]: ./SECURITY.md
 [shellcheck]: https://github.com/koalaman/shellcheck
 [strykerjs]: https://stryker-mutator.io/
-[stryker dashboard]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
