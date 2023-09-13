@@ -27,7 +27,9 @@ async function getFilters({
   const event = context.eventName;
 
   const result = [
-    ...Array.from(config.ignoreGlobs.value).map(filters.NewGlobFilter),
+    ...(await Promise.all(
+      Array.from(config.ignoreGlobs.value).map(filters.NewGlobFilter),
+    )),
     filters.NewSvgsFilter(),
   ];
 

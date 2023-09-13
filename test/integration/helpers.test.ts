@@ -4,12 +4,13 @@ import type { Mutable } from "../utils";
 
 jest.dontMock("eval");
 jest.dontMock("js-yaml");
-jest.dontMock("minimatch");
 
 jest.mock("@actions/core");
 jest.mock("@actions/github");
+jest.mock("@actions/glob");
 
 import * as github from "@actions/github";
+import * as glob from "@actions/glob";
 
 import clients from "../../src/clients";
 import {
@@ -21,6 +22,7 @@ import {
 import inp from "../__common__/inputter.mock";
 
 const githubGetOctokit = github.getOctokit as jest.MockedFunction<typeof github.getOctokit>; // eslint-disable-line max-len
+const globCreateMock = glob.create as jest.MockedFunction<typeof glob.create>;
 
 describe("package helpers", () => {
   const EVENT_PULL_REQUEST = "pull_request";
@@ -121,6 +123,13 @@ describe("package helpers", () => {
     ])("filters out ignored files ('%s')", async (eventName) => {
       github.context.eventName = eventName;
       config.ignoreGlobs.value = ["foo/*"];
+
+      const globber = {
+        glob: jest.fn().mockResolvedValue([fileSvgInFolderFoo]),
+        getSearchPaths: jest.fn(),
+        globGenerator: jest.fn(),
+      };
+      globCreateMock.mockResolvedValue(globber);
 
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
