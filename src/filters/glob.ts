@@ -4,9 +4,9 @@ import { create } from "@actions/glob";
 
 async function NewGlobFilter(glob: string): Promise<FilterFn> {
   const globber = await create(glob, { followSymbolicLinks: false });
-  const ignoreMatcher = await globber.glob();
+  const matchedFiles = await globber.glob();
   return (filepath: string): boolean => {
-    return !ignoreMatcher.includes(filepath);
+    return !matchedFiles.some((matchedFile) => matchedFile.endsWith(filepath));
   };
 }
 
