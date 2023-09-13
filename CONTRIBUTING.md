@@ -1,5 +1,9 @@
 # Contributing Guidelines
 
+> **Note** This document covers contributing to v3 of this project. If you want
+> to make a contribution to the latest version of the project check out the
+> [Contributing Guidelines on `main`].
+
 The _SVGO Action_ project welcomes contributions and corrections of all forms.
 This includes improvements to the documentation or code base, new tests, bug
 fixes, and implementations of new features. We recommend you [open an issue]
@@ -108,10 +112,10 @@ To be able to contribute you need the following tooling:
 If you decide to make a contribution, please use the following workflow:
 
 - Fork the repository.
-- Create a new branch from the latest `main`.
+- Create a new branch from the latest `main-v3`.
 - Make your changes on the new branch.
 - Commit to the new branch and push the commit(s).
-- Open a Pull Request against `main`.
+- Open a Pull Request against `main-v3`.
 
 ### Development Details
 
@@ -326,6 +330,7 @@ There are some limitations to using [act]:
 [act]: https://github.com/nektos/act
 [actionlint]: https://github.com/rhysd/actionlint
 [bug report]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=bug&template=bug_report.md
+[contributing guidelines on `main`]: https://github.com/ericcornelissen/svgo-action/blob/main/CONTRIBUTING.md
 [debug logging]: https://docs.github.com/en/actions/managing-workflow-runs/enabling-debug-logging
 [docker]: https://www.docker.com/
 [editorconfig]: https://editorconfig.org/
