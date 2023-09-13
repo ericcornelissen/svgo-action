@@ -7,7 +7,9 @@ Versioning].
 
 ## [Unreleased]
 
-- Update dependency `minimatch`. ([#802], [#821], [#830])
+### Breaking changes
+
+- Replace `minimatch` by `@actions/glob`. ([#850])
 
 ## [3.1.4] - 2023-04-30
 
@@ -538,8 +540,6 @@ Versioning].
 [#781]: https://github.com/ericcornelissen/svgo-action/pull/781
 [#782]: https://github.com/ericcornelissen/svgo-action/pull/782
 [#790]: https://github.com/ericcornelissen/svgo-action/pull/790
-[#802]: https://github.com/ericcornelissen/svgo-action/pull/802
-[#821]: https://github.com/ericcornelissen/svgo-action/pull/821
-[#830]: https://github.com/ericcornelissen/svgo-action/pull/830
+[#850]: https://github.com/ericcornelissen/svgo-action/pull/850
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
