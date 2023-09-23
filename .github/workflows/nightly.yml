@@ -14,7 +14,9 @@ jobs:
       refs: >-
         [
           "main",
-          "v3"
+          "main-v3",
+          "v3",
+          "v4"
         ]
   tooling:
     name: Update tooling

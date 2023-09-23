@@ -44,9 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -93,9 +93,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -143,9 +143,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Commit optimizations
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -187,9 +187,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Create Pull Request for optimized SVGs
         uses: peter-evans/create-pull-request@v5
@@ -251,9 +251,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Commit optimizations
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -295,9 +295,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
       # Your steps ...
@@ -331,7 +331,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # If SVGO is a (dev)dependency of your project you can just install your
       # dependencies as usual. If SVGO is not yet a dependency of your project,
       # we recommend you run `npm install --save-dev svgo@v2` and commit your
@@ -339,7 +339,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         with:
           svgo-version: project
 ```

@@ -1,5 +1,4 @@
 jest.dontMock("eval");
-jest.dontMock("js-yaml");
 
 import parsers from "../../src/parsers";
 
@@ -24,39 +23,6 @@ describe("package parsers", () => {
       const [, err] = parseJavaScript(`
         module--exports: { multipass = true };
       `);
-
-      expect(err).not.toBeNull();
-    });
-  });
-
-  describe("::NewYaml", () => {
-    let parseYaml: ReturnType<typeof parsers.NewYaml>;
-
-    beforeEach(() => {
-      parseYaml = parsers.NewYaml();
-    });
-
-    test("valid YAML", () => {
-      const [result, err] = parseYaml([
-        "multipass: true",
-        "plugins:",
-        "  - removeDoctype",
-      ].join("\n"));
-
-      expect(err).toBeNull();
-      expect(result).toEqual({
-        multipass: true,
-        plugins: [
-          "removeDoctype",
-        ],
-      });
-    });
-
-    test("invalid YAML", () => {
-      const [, err] = parseYaml([
-        "- removeDoctype",
-        "plugins:",
-      ].join("\n"));
 
       expect(err).not.toBeNull();
     });

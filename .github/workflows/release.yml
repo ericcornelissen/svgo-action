@@ -60,7 +60,7 @@ jobs:
         uses: peter-evans/create-pull-request@153407881ec5c347639a548ade7d8ad1d6740e38 # v5.0.2
         with:
           token: ${{ steps.automation-token.outputs.token }}
-          title: New ${{ github.event.inputs.update_type }} release for v3
+          title: New ${{ github.event.inputs.update_type }} release for v4
           body: |
             _This Pull Request was created automatically_
 
@@ -80,7 +80,7 @@ jobs:
             ### Post-merge checklist
 
             - [ ] Verify a git tag for the new release is created.[^1]
-            - [ ] Verify the `v3` branch is updated.[^1]
+            - [ ] Verify the `v4` branch is updated.[^1]
             - [ ] Verify a GitHub release is created.[^1]
 
             [^1]: It may take a few minutes for this to happen.

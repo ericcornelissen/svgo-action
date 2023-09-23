@@ -3,7 +3,6 @@ import type { Octokit } from "../../src/types";
 import type { Mutable } from "../utils";
 
 jest.dontMock("eval");
-jest.dontMock("js-yaml");
 
 jest.mock("@actions/core");
 jest.mock("@actions/github");
@@ -174,27 +173,6 @@ describe("package helpers", () => {
   });
 
   describe("::parseRawSvgoConfig", () => {
-    describe("YAML configuration file", () => {
-      const config = {
-        svgoConfigPath: { value: ".svgo.yml" },
-      };
-
-      test("valid configuration", () => {
-        const rawConfig = "multipass: true";
-
-        const [svgoConfig, err] = parseRawSvgoConfig({ config, rawConfig });
-        expect(err).toBeNull();
-        expect(svgoConfig).not.toBeNull();
-      });
-
-      test("invalid configuration", () => {
-        const rawConfig = "-\nthis isn't valid YAML";
-
-        const [, err] = parseRawSvgoConfig({ config, rawConfig });
-        expect(err).not.toBeNull();
-      });
-    });
-
     describe("JavaScript configuration", () => {
       const config = {
         svgoConfigPath: { value: "svgo.config.js" },

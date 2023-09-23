@@ -376,7 +376,7 @@ describe("main.ts", () => {
     const svgoConfig = { };
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
-    const [optimizer] = svgo.New({ config, log: core, svgoConfig });
+    const [optimizer] = svgo.New({ config, svgoConfig });
 
     const err = errors.New("SVGO error");
     svgoNew.mockReturnValueOnce([optimizer, err]);
@@ -409,7 +409,7 @@ describe("main.ts", () => {
     const [config] = inputs.New({ inp: core });
     const action = actionManagement.New({ core, config });
     const fs = fileSystems.New({ filters: [] });
-    const [optimizer] = svgo.New({ config, log: core, svgoConfig });
+    const [optimizer] = svgo.New({ config, svgoConfig });
     const [data] = await optimize.Files({ config, fs, optimizer });
 
     const err = errors.New("Optimization error");
