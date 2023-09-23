@@ -34,7 +34,7 @@ To enable dry runs:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     dry-run: true
 ```
@@ -62,7 +62,7 @@ To ignore all files in a specific folder:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     ignore: not/optimized/*
 ```
@@ -72,7 +72,7 @@ To ignore all files in a specific folder and all its subfolders:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     ignore: not/optimized/**/
 ```
@@ -82,7 +82,7 @@ To have multiple ignore globs, use a [YAML] multiline string:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     ignore: |
       folder1/*
@@ -108,7 +108,7 @@ To set the `repo-token` you will typically want to use:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -136,7 +136,7 @@ To enable strict mode:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     strict: true
 ```
@@ -160,7 +160,7 @@ To use an SVGO config file with a non-standard name:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     svgo-config: my-svgo-config.js
 ```
@@ -170,7 +170,7 @@ To use an SVGO config file in a folder:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     svgo-config: path/to/svgo.config.js
 ```
@@ -195,7 +195,7 @@ To use the SVGO version 2:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     svgo-version: 2
 ```
@@ -207,7 +207,7 @@ To use the SVGO version used by your project:
 
 - name: Install dependencies, including SVGO
   run: npm clean-install
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     svgo-version: project
 ```

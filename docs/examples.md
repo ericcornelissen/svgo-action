@@ -46,7 +46,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -95,7 +95,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -145,7 +145,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Commit optimizations
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -189,7 +189,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Create Pull Request for optimized SVGs
         uses: peter-evans/create-pull-request@v5
@@ -253,7 +253,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Commit optimizations
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -297,7 +297,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
       # Your steps ...
@@ -339,7 +339,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         with:
           svgo-version: project
 ```

@@ -12,12 +12,13 @@ security updates.
 
 | Version | End-of-life |
 | ------: | :---------- |
-|   3.x.x | -           |
+|   4.x.x | -           |
+|   3.x.x | 2023-12-31  |
 |   2.x.x | 2023-04-30  |
 |   1.x.x | 2022-08-31  |
 |   0.x.x | 2020-08-31  |
 
-_This table only includes information on versions `<4.0.0`._
+_This table only includes information on versions `<5.0.0`._
 
 ## Reporting a Vulnerability
 
