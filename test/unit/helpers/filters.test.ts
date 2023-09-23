@@ -54,7 +54,7 @@ describe("helpers/filters.ts", () => {
         config.ignoreGlobs.value = [];
 
         const globFilter = jest.fn();
-        filtersNewGlobFilter.mockReturnValue(globFilter);
+        filtersNewGlobFilter.mockResolvedValue(globFilter);
 
         const [, err] = await getFilters({ client, config, github });
         expect(err).toBeNull();
@@ -65,7 +65,7 @@ describe("helpers/filters.ts", () => {
         config.ignoreGlobs.value = ["foobar/**"];
 
         const globFilter = jest.fn();
-        filtersNewGlobFilter.mockReturnValue(globFilter);
+        filtersNewGlobFilter.mockResolvedValue(globFilter);
 
         const [result, err] = await getFilters({ client, config, github });
         expect(err).toBeNull();
@@ -81,8 +81,8 @@ describe("helpers/filters.ts", () => {
 
         const globFilter1 = jest.fn();
         const globFilter2 = jest.fn();
-        filtersNewGlobFilter.mockReturnValueOnce(globFilter1);
-        filtersNewGlobFilter.mockReturnValueOnce(globFilter2);
+        filtersNewGlobFilter.mockResolvedValueOnce(globFilter1);
+        filtersNewGlobFilter.mockResolvedValueOnce(globFilter2);
 
         const [result, err] = await getFilters({ client, config, github });
         expect(err).toBeNull();

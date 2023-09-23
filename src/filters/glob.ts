@@ -1,11 +1,12 @@
 import type { FilterFn } from "./types";
 
-import { Minimatch } from "minimatch";
+import { create } from "@actions/glob";
 
-function NewGlobFilter(glob: string): FilterFn {
-  const ignoreMatcher = new Minimatch(glob);
+async function NewGlobFilter(glob: string): Promise<FilterFn> {
+  const globber = await create(glob, { followSymbolicLinks: false });
+  const matchedFiles = await globber.glob();
   return (filepath: string): boolean => {
-    return !ignoreMatcher.match(filepath);
+    return !matchedFiles.some((matchedFile) => matchedFile.endsWith(filepath));
   };
 }
 

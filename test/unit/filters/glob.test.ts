@@ -1,41 +1,61 @@
-jest.mock("minimatch");
+jest.mock("@actions/glob");
 
-import { Minimatch } from "minimatch";
+import { create } from "@actions/glob";
 
 import New from "../../../src/filters/glob";
 
-const MinimatchMock = Minimatch as jest.MockedClass<typeof Minimatch>;
+const globCreateMock = create as jest.MockedFunction<typeof create>;
 
 describe("filters/glob.ts", () => {
   describe("::New", () => {
-    beforeEach(() => {
-      MinimatchMock.mockClear();
+    let getSearchPaths: jest.Mock;
+    let globGenerator: jest.Mock;
+
+    beforeAll(() => {
+      getSearchPaths = jest.fn();
+      globGenerator = jest.fn();
     });
 
-    test("a file matching the glob", () => {
+    beforeEach(() => {
+      globCreateMock.mockClear();
+    });
+
+    test("a file matching the glob", async () => {
       const query = "foo/bar.svg";
 
-      const match = jest.fn().mockReturnValue(true);
-      MinimatchMock.mockReturnValueOnce({ match } as unknown as Minimatch);
+      const glob = jest.fn().mockReturnValue(["foo/bar.svg"]);
+      const globber = { glob, globGenerator, getSearchPaths };
+      globCreateMock.mockResolvedValueOnce(globber);
 
-      const  filter = New("foo/*");
+      const filter = await New("foo/*");
 
       const result = filter(query);
       expect(result).toBe(false);
-      expect(match).toHaveBeenCalledWith(query);
     });
 
-    test("a file not matching the glob", () => {
+    test("a file not matching the glob", async () => {
       const query = "foobar.svg";
 
-      const match = jest.fn().mockReturnValue(false);
-      MinimatchMock.mockReturnValueOnce({ match } as unknown as Minimatch);
+      const glob = jest.fn().mockReturnValue([]);
+      const globber = { glob, globGenerator, getSearchPaths };
+      globCreateMock.mockResolvedValueOnce(globber);
 
-      const  filter = New("foo/*");
+      const filter = await New("foo/*");
 
       const result = filter(query);
       expect(result).toBe(true);
-      expect(match).toHaveBeenCalledWith(query);
+    });
+
+    test("globber configuration", async () => {
+      const glob = "foo/*";
+
+      const globber = { glob: jest.fn(), globGenerator, getSearchPaths };
+      globCreateMock.mockResolvedValueOnce(globber);
+
+      await New(glob);
+      expect(globCreateMock).toHaveBeenCalledWith(glob, {
+        followSymbolicLinks: false,
+      });
     });
   });
 });
