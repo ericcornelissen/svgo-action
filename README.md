@@ -120,7 +120,7 @@ snippets under the [MIT license].
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
-[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
+[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main-v3/graph/badge.svg
 
 [cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow

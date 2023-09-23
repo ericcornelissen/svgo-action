@@ -1,5 +1,9 @@
 # Release Guidelines
 
+> **Note** This document covers releasing a v3 release of this project. If you
+> want to make a release for the latest version of the project check out the
+> [Release Guidelines on `main`].
+
 If you need to release a new version of the _SVGO Action_, follow the guidelines
 found in this document.
 
@@ -13,7 +17,7 @@ found in this document.
 
 To release a new version follow these steps:
 
-1. [Manually trigger] the [release workflow] from the `main` branch; Use an
+1. [Manually trigger] the [release workflow] from the `main-v3` branch; Use an
    update type in accordance with [Semantic Versioning]. This will create a Pull
    Request that start the release process.
 1. Follow the instructions in the description of the created Pull Request.
@@ -27,8 +31,8 @@ version (using `v3.1.4` as an example):
 1. Make sure that your local copy of the repository is up-to-date. Either sync:
 
    ```shell
-   git checkout main
-   git pull origin main
+   git checkout main-v3
+   git pull origin main-v3
    ```
 
    Or use a fresh clone:
@@ -89,7 +93,7 @@ version (using `v3.1.4` as an example):
 
    The `--no-verify` option is required to commit the changes in `lib/`.
 
-1. Create a Pull Request to merge the release branch into `main`.
+1. Create a Pull Request to merge the release branch into `main-v3`.
 
 1. Merge the Pull Request if the changes look OK and all continuous integration
    checks are passing.
@@ -98,11 +102,11 @@ version (using `v3.1.4` as an example):
    > complete the release process. Check whether or not this happens. If no, or
    > only partially, continue following the remaining steps.
 
-1. Immediately after the Pull Request is merged, sync the `main` branch:
+1. Immediately after the Pull Request is merged, sync the `main-v3` branch:
 
    ```shell
-   git checkout main
-   git pull origin main
+   git checkout main-v3
+   git pull origin main-v3
    ```
 
 1. Create a [git tag] for the new version:
@@ -115,7 +119,7 @@ version (using `v3.1.4` as an example):
 
    ```shell
    git checkout v3
-   git merge main
+   git merge main-v3
    ```
 
 1. Push the `v3` branch and new tag:
@@ -151,7 +155,7 @@ Make sure these additional changes are included in the release Pull Request.
 ## Non-current Releases
 
 When releasing an older version of the project, refer to the Release Guidelines
-(`RELEASE.md`) of the respective main branch instead.
+(`RELEASE.md`) of the respective maintenance branch instead.
 
 [changelog]: ./CHANGELOG.md
 [create a gitHub release]: #creating-a-github-release
@@ -159,5 +163,6 @@ When releasing an older version of the project, refer to the Release Guidelines
 [github marketplace]: https://github.com/marketplace
 [github release]: https://github.com/ericcornelissen/svgo-action/releases
 [manually trigger]: https://docs.github.com/en/actions/managing-workflow-runs/manually-running-a-workflow
+[release guidelines on `main`]: https://github.com/ericcornelissen/svgo-action/blob/main/RELEASE.md
 [release workflow]: ./.github/workflows/release.yml
 [semantic versioning]: https://semver.org/spec/v2.0.0.html
