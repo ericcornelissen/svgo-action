@@ -2,7 +2,6 @@
 
 [![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
-[![Mutation Report][mutation-image]][mutation-url]
 
 Automatically run [SVGO] with GitHub Actions.
 
@@ -21,10 +20,10 @@ on:
   # Comment the next line if you don't want the Action to run on Pull Requests.
   pull_request: ~
   # Uncomment the next line if you want the Action to run on pushes.
-  #   push:
+  #   push: ~
   # Uncomment the next 2 lines if you want the Action to run on a schedule.
   #   schedule:
-  #   - cron:  '0 * * * 1'  # See https://crontab.guru/
+  #     - cron:  '0 * * * 1'  # See https://crontab.guru/
   # Uncomment 1 of the next 2 lines if you want to manually trigger the Action.
   #   repository_dispatch:
   #   workflow_dispatch:
@@ -112,21 +111,22 @@ This Action requires network access to the endpoint `api.github.com:443` when
 triggered by `pull_request:` or `push:`. Otherwise it does not require any
 network access.
 
----
+## License
 
-_Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT license]._
+The source code is licensed under the `MIT` license, see [LICENSE] for the full
+license text. The documentation text is licensed under [CC BY-SA 4.0]; code
+snippets under the [MIT license].
 
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
-[mutation-url]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
-[mutation-image]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fericcornelissen%2Fsvgo-action%2Fmain
 
 [cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [examples]: ./docs/examples.md
 [inputs documentation]: ./docs/inputs.md
+[license]: ./LICENSE
 [mit license]: https://opensource.org/license/mit/
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
