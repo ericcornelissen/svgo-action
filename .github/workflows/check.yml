@@ -200,14 +200,12 @@ jobs:
         run: npm clean-install
       - name: Run ${{ matrix.type }} tests
         env:
-          CI: true
           TYPE: ${{ matrix.type }}
         run: npm run "coverage:${TYPE}"
       - name: Upload code coverage
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
         if: ${{ always() }}
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
           file: ./_reports/coverage/${{ matrix.type }}/lcov.info
           flags: ${{ matrix.type }}
   test-e2e:
@@ -226,9 +224,6 @@ jobs:
           - description: built-in, v3
             svgo-version: 3
             svgo-config: test/end-to-end/svgo.config.cjs
-          - description: project, v1
-            svgo-version: project
-            svgo-config: test/end-to-end/.svgo.yml
             project-svgo-version: ^1.0.0
           - description: project, v2
             svgo-version: project
@@ -373,7 +368,6 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
             artifactcache.actions.githubusercontent.com:443
-            dashboard.stryker-mutator.io:443
             github.com:443
             nodejs.org:443
             objects.githubusercontent.com:443
@@ -395,9 +389,6 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Run mutation tests
-        env:
-          CI: true
-          STRYKER_DASHBOARD_API_KEY: ${{ secrets.STRYKER_DASHBOARD_TOKEN }}
         run: npm run test:mutation
   vet:
     name: Vet

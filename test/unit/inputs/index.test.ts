@@ -194,7 +194,6 @@ describe("inputs/index.ts", () => {
       });
 
       test.each([
-        ["1", ".svgo.yml"],
         ["2", "svgo.config.js"],
       ])("default value", (svgoVersion, svgoConfigPath) => {
         gettersGetSvgoVersion.mockReturnValueOnce([

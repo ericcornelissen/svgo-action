@@ -1,5 +1,4 @@
 import _jsEval from "eval";
-import * as yaml from "js-yaml";
 
 function jsEval(raw: string) {
   // Parsing JavaScript code with the "eval" package when no filename is
@@ -11,11 +10,6 @@ function jsEval(raw: string) {
   return _jsEval(raw, jsEvalFilename);
 }
 
-function yamlEval(raw: string) {
-  return yaml.load(raw);
-}
-
 export {
   jsEval,
-  yamlEval,
 };

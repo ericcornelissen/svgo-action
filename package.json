@@ -76,7 +76,6 @@
     "encoding": "0.1.13",
     "eval": "0.1.8",
     "import-cwd": "3.0.0",
-    "js-yaml": "4.1.0",
     "minimatch": "9.0.3",
     "svgo-v2": "npm:svgo@2.8.0",
     "svgo-v3": "npm:svgo@3.0.2"
@@ -94,7 +93,6 @@
     "@stryker-mutator/typescript-checker": "7.1.1",
     "@types/jest": "29.5.4",
     "@types/jest-when": "3.5.2",
-    "@types/js-yaml": "4.0.5",
     "@types/minimatch": "5.1.2",
     "@types/node": "18.17.12",
     "@typescript-eslint/eslint-plugin": "6.5.0",

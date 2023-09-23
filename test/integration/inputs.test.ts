@@ -115,7 +115,6 @@ describe("package inputs", () => {
 
     test.each([
       "svgo.config.js",
-      ".svgo.yml",
     ])("configured to '%s'", async (value) => {
       doMockSvgoConfigInput(() => value);
 

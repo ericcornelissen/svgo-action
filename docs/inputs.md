@@ -150,9 +150,8 @@ To enable strict mode:
 | `svgo-config` | `"svgo.config.js"` |
 
 The `svgo-config` input allows you to specify the location of the config file
-for [SVGO]. The configuration file must be a JavaScript or a [YAML] file. If the
-specified file is not found the Action will fall back on SVGO's default
-configuration.
+for [SVGO]. The configuration file must be a JavaScript. If the specified file
+is not found the Action will fall back on SVGO's default configuration.
 
 ### Examples
 
@@ -176,16 +175,6 @@ To use an SVGO config file in a folder:
     svgo-config: path/to/svgo.config.js
 ```
 
-To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
-
-```yml
-# .github/workflows/optimize.yml
-
-- uses: ericcornelissen/svgo-action@v3
-  with:
-    svgo-config: .svgo.yml
-```
-
 ---
 
 ## SVGO Version
@@ -197,12 +186,7 @@ To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
 The `svgo-version` input allows you to specify the version of [SVGO] that you
 want to use. This can be either `3` for the latest v3 release, `2` for the
 latest v2 release, or the string `"project"` for the version of SVGO installed
-for your project. For `"project"` SVGO v2 and v3 are supported, v1 support is
-deprecated.
-
-> **Warning**: SVGO v1 has been deprecated, we strongly recommend upgrading to
-> SVGO v3 or v2. For more information see the [SVGO v3 release notes] or [SVGO
-> v2 release notes].
+for your project. For `"project"` only SVGO v2 and v3 are supported.
 
 ### Examples
 
@@ -239,6 +223,4 @@ _Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT license]._
 [mit license]: https://opensource.org/license/mit/
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
-[svgo v2 release notes]: https://github.com/svg/svgo/releases/tag/v2.0.0
-[svgo v3 release notes]: https://github.com/svg/svgo/releases/tag/v3.0.0
 [yaml]: https://yaml.org/
