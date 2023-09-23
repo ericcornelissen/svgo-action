@@ -33,6 +33,9 @@ const getMultilineInput = jest.fn()
 const info = jest.fn()
   .mockName("core.info");
 
+const notice = jest.fn()
+  .mockName("core.notice");
+
 const setFailed = jest.fn()
   .mockName("core.setFailed");
 
@@ -48,6 +51,7 @@ export {
   getInput,
   getMultilineInput,
   info,
+  notice,
   setFailed,
   setOutput,
   warning,

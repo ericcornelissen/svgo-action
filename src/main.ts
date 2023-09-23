@@ -4,6 +4,7 @@ import actionManagement from "./action-management";
 import clients from "./clients";
 import fileSystems from "./file-systems";
 import {
+  deprecationWarnings,
   getFilters,
   isClientRequired,
   isEventSupported,
@@ -20,6 +21,8 @@ interface Params {
 }
 
 async function main({ core, github }: Params): Promise<void> {
+  deprecationWarnings({ core });
+
   core.debug("Getting input");
   const [config, err0] = inputs.New({ inp: core });
 
