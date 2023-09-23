@@ -4,11 +4,8 @@ jest.mock("@actions/core");
 jest.mock("../../../src/errors");
 jest.mock("../../../src/svgo/project");
 jest.mock("../../../src/svgo/stub");
-jest.mock("../../../src/svgo/v1");
 jest.mock("../../../src/svgo/v2");
 jest.mock("../../../src/svgo/v3");
-
-import * as core from "@actions/core";
 
 import errors from "../../../src/errors";
 import svgo from "../../../src/svgo/index";
@@ -38,7 +35,7 @@ describe("svgo/index.ts", () => {
           },
         };
 
-        const [result, err] = svgo.New({ config, log: core, svgoConfig });
+        const [result, err] = svgo.New({ config, svgoConfig });
         expect(err).toBeNull();
         expect(result).not.toBeNull();
         expect(svgoV2.New).toHaveBeenCalledWith(svgoConfig);
@@ -57,7 +54,7 @@ describe("svgo/index.ts", () => {
           },
         };
 
-        const [result, err] = svgo.New({ config, log: core, svgoConfig });
+        const [result, err] = svgo.New({ config, svgoConfig });
         expect(err).toBeNull();
         expect(result).not.toBeNull();
         expect(svgoV3.New).toHaveBeenCalledWith(svgoConfig);
@@ -80,31 +77,25 @@ describe("svgo/index.ts", () => {
       });
 
       test("no error", () => {
-        const [svgOptimizer] = createSvgoOptimizerForProject({ }, core);
+        const [svgOptimizer] = createSvgoOptimizerForProject({ });
         createSvgoOptimizerForProject.mockReturnValueOnce([svgOptimizer, null]);
 
-        const [result, err] = svgo.New({ config, log: core, svgoConfig });
+        const [result, err] = svgo.New({ config, svgoConfig });
         expect(err).toBeNull();
         expect(result).not.toBeNull();
-        expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(
-          svgoConfig,
-          core,
-        );
+        expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(svgoConfig);
       });
 
       test("an error", () => {
-        const [svgOptimizer] = createSvgoOptimizerForProject({ }, core);
+        const [svgOptimizer] = createSvgoOptimizerForProject({ });
         createSvgoOptimizerForProject.mockReturnValueOnce([
           svgOptimizer,
           errors.New("failed to import the project's svgo"),
         ]);
 
-        const [, err] = svgo.New({ config, log: core, svgoConfig });
+        const [, err] = svgo.New({ config, svgoConfig });
         expect(err).not.toBeNull();
-        expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(
-          svgoConfig,
-          core,
-        );
+        expect(createSvgoOptimizerForProject).toHaveBeenCalledWith(svgoConfig);
       });
     });
   });

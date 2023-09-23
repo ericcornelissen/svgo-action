@@ -33,7 +33,7 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # Uncomment the next 2 lines to select a branch for schedule or dispatch.
       #   with:
       #     ref: main
@@ -82,8 +82,8 @@ be found in the [inputs documentation].
 
     # The version of SVGO to use for optimizing.
     #
-    # Default: 2
-    svgo-version: 3
+    # Default: 3
+    svgo-version: 2
 ```
 
 ### Security

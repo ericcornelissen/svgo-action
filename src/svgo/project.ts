@@ -1,12 +1,10 @@
-import type { Logger, SVGOptimizer } from "./types";
-import type { SVGO as SVGOv1 } from "./v1/svgo-v1";
+import type { SVGOptimizer } from "./types";
 import type { error } from "../errors";
 import type { SVGO as SVGOv2 } from "svgo-v2";
 
 import importCwd from "import-cwd";
 
 import StubSVGOptimizer from "./stub";
-import svgoV1 from "./v1";
 import svgoV2 from "./v2";
 import svgoV3 from "./v3";
 import errors from "../errors";
@@ -27,7 +25,6 @@ function isSvgoV3(importedSvgo: object): boolean {
 
 function createSvgoOptimizerForProject(
   options: unknown = { },
-  log: Logger,
 ): [SVGOptimizer, error] {
   const svgo = importCwd.silent("svgo");
   if (svgo === undefined || svgo === null) {
@@ -51,12 +48,10 @@ function createSvgoOptimizerForProject(
     const instance = svgo as SVGOv2; // type-coverage:ignore-line
     return svgoV3.NewFrom(instance, options);
   } else {
-    log.warning(
-      "Support for SVGO v1 has been deprecated and will be removed in the " +
-      "next major version",
-    );
-    const instance = svgo as SVGOv1; // type-coverage:ignore-line
-    return svgoV1.NewFrom(instance, options);
+    return [
+      StubSVGOptimizer,
+      errors.New("SVGO v1 detected, not supported"),
+    ];
   }
 }
 
