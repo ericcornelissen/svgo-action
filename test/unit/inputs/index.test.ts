@@ -250,7 +250,7 @@ describe("inputs/index.ts", () => {
         const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
-        expect(getters.getSvgoVersion).toHaveBeenCalledWith(inp, "2");
+        expect(getters.getSvgoVersion).toHaveBeenCalledWith(inp, "3");
       });
     });
   });

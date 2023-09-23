@@ -181,7 +181,7 @@ To use an SVGO config file in a folder:
 
 | Name           | Default value |
 | -------------- | ------------- |
-| `svgo-version` | `2`           |
+| `svgo-version` | `3`           |
 
 The `svgo-version` input allows you to specify the version of [SVGO] that you
 want to use. This can be either `3` for the latest v3 release, `2` for the
@@ -190,14 +190,14 @@ for your project. For `"project"` only SVGO v2 and v3 are supported.
 
 ### Examples
 
-To use the SVGO version 3:
+To use the SVGO version 2:
 
 ```yml
 # .github/workflows/optimize.yml
 
 - uses: ericcornelissen/svgo-action@v3
   with:
-    svgo-version: 3
+    svgo-version: 2
 ```
 
 To use the SVGO version used by your project:
