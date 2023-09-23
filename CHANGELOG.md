@@ -18,6 +18,7 @@ Versioning].
 
 - Drop dependency `js-yaml`. ([#841])
 - Update dependency `minimatch`. ([#802], [#821], [#830])
+- Update recommended action versions in the documentation. ([#844])
 
 ## [3.1.4] - 2023-04-30
 
@@ -554,5 +555,6 @@ Versioning].
 [#837]: https://github.com/ericcornelissen/svgo-action/pull/837
 [#838]: https://github.com/ericcornelissen/svgo-action/pull/838
 [#841]: https://github.com/ericcornelissen/svgo-action/pull/841
+[#844]: https://github.com/ericcornelissen/svgo-action/pull/844
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
