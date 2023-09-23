@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.1.5] - 2023-09-23
+
 - Update dependency `minimatch`. ([#802], [#821], [#830])
 - Update deprecation notice to recommend switching to v4. ([#854])
 
