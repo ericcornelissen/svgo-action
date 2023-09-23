@@ -105,7 +105,7 @@ jobs:
         with:
           commit_message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)
       - name: Comment on Pull Request
-        uses: thollander/actions-comment-pull-request@v1
+        uses: thollander/actions-comment-pull-request@v2
         if: ${{steps.svgo.outputs.DID_OPTIMIZE && github.event_name == 'pull_request'}}
         with:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
@@ -192,7 +192,7 @@ jobs:
         uses: ericcornelissen/svgo-action@v3
         id: svgo
       - name: Create Pull Request for optimized SVGs
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         if: ${{steps.svgo.outputs.DID_OPTIMIZE}}
         with:
           commit-message: Optimize ${{steps.svgo.outputs.OPTIMIZED_COUNT}} SVG(s)

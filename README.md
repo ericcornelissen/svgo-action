@@ -2,7 +2,6 @@
 
 [![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
-[![Mutation Report][mutation-image]][mutation-url]
 
 Automatically run [SVGO] with GitHub Actions.
 
@@ -83,8 +82,8 @@ be found in the [inputs documentation].
 
     # The version of SVGO to use for optimizing.
     #
-    # Default: 2
-    svgo-version: 3
+    # Default: 3
+    svgo-version: 2
 ```
 
 ### Security
@@ -122,8 +121,6 @@ snippets under the [MIT license].
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
 [coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
-[mutation-url]: https://dashboard.stryker-mutator.io/reports/github.com/ericcornelissen/svgo-action/main
-[mutation-image]: https://img.shields.io/endpoint?style=flat&url=https%3A%2F%2Fbadge-api.stryker-mutator.io%2Fgithub.com%2Fericcornelissen%2Fsvgo-action%2Fmain
 
 [cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
