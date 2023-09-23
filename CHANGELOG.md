@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [4.0.0] - 2023-09-23
+
 ### Breaking changes
 
 - Bump the default SVGO version from v2 to v3. ([#838])
