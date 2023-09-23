@@ -48,5 +48,6 @@ jobs:
       - name: Update tooling
         uses: ericcornelissen/tool-versions-update-action/pr@9c4504b41601cf1457decd293d6590e2a3ee2f81 # v0.3.5
         with:
+          commit-message: "chore: update tooling"
           max: 1
           token: ${{ steps.automation-token.outputs.token }}
