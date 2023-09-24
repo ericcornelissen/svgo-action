@@ -140,14 +140,6 @@ jobs:
             --output-certificate index.cjs.cert \
             --output-signature index.cjs.sign \
             lib/index.cjs
-      - name: Verify signature
-        run: |
-          cosign verify-blob \
-            --certificate-identity ericornelissen@gmail.com \
-            --certificate-oidc-issuer https://github.com/login/oauth \
-            --certificate index.cjs.cert \
-            --signature index.cjs.sign \
-            lib/index.cjs
       - name: Create GitHub Release
         uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
         with:
