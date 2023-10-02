@@ -1,2 +1,6 @@
 {
+  "GHSA-m95q-7qp3-xv42": {
+    "active": true,
+    "notes": "ReDoS in the devDependency tree without mitigation available. Mitigation should come in when available through automation."
+  }
 }
