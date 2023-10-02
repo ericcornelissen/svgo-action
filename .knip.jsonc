@@ -11,11 +11,12 @@
 
     // Necessary for svgo-v2 to have types. I'm not sure what is tripping up
     // knip here, feel free to submit a patch if you know how to fix this.
-    "src/svgo/v2/svgo-v2.d.ts",
+    "src/svgo/v2/svgo-v2.d.ts"
   ],
   "ignoreBinaries": ["act", "actionlint", "cosign", "hadolint", "shellcheck"],
   "ignoreDependencies": [
     "@commitlint/cli",
+    "@types/jest",
     "svgo",
 
     // Imported in `src/svgo/v2/index.ts`.
