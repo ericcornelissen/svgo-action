@@ -44,7 +44,7 @@
     "lint:yml": "npm run _eslint -- . --ext .yml",
     "test": "npm run test:all",
     "test:all": "jest",
-    "test:e2e": "act --job test-e2e",
+    "test:e2e": "act --job test-e2e --workflows .github/workflows/check.yml",
     "test:integration": "jest test/integration",
     "test:mutation": "stryker run stryker.config.js",
     "test:unit": "jest test/unit",
