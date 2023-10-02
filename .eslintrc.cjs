@@ -114,6 +114,7 @@ module.exports = {
     }],
     "jest/no-alias-methods": ["error"],
     "jest/no-conditional-in-test": ["error"],
+    "jest/no-confusing-set-timeout": ["error"],
     "jest/no-duplicate-hooks": "off",
     "jest/prefer-comparison-matcher": ["error"],
     "jest/prefer-each": ["error"],
