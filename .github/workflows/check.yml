@@ -23,7 +23,7 @@ jobs:
           allowed-endpoints: >
             github.com:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Validate Action Types
         uses: krzema12/github-actions-typing@be99fa6195eeeec5aee1e87acca69087de0353ce # v1.0.1
   build:
@@ -43,7 +43,7 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install Node.js
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
@@ -73,14 +73,14 @@ jobs:
             pkg-containers.githubusercontent.com:443
             uploads.github.com:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@00e563ead9f72a8461b24876bee2d0c2e8bd2ee8 # v2.21.5
+        uses: github/codeql-action/init@ddccb873888234080b77e9bc2d4764d5ccaaccf9 # v2.21.9
         with:
           config-file: ./.github/codeql-config.yml
           languages: javascript
       - name: Perform CodeQL analysis
-        uses: github/codeql-action/analyze@00e563ead9f72a8461b24876bee2d0c2e8bd2ee8 # v2.21.5
+        uses: github/codeql-action/analyze@ddccb873888234080b77e9bc2d4764d5ccaaccf9 # v2.21.9
   licenses:
     name: Licenses
     runs-on: ubuntu-22.04
@@ -98,7 +98,7 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install Node.js
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
@@ -134,7 +134,7 @@ jobs:
             sigstore-tuf-root.storage.googleapis.com:443
             tuf-repo-cdn.sigstore.dev:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install Node.js
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
@@ -184,14 +184,14 @@ jobs:
             storage.googleapis.com:443
             uploader.codecov.io:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install Node.js
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
           cache: npm
           node-version-file: .nvmrc
       - name: Cache Jest
-        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           path: .cache/jest
           key: ${{ runner.os }}-jest-${{ matrix.type }}-${{ hashFiles('package-lock.json') }}-${{ github.run_number }}
@@ -249,7 +249,7 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install Node.js
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
@@ -375,14 +375,14 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install Node.js
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:
           cache: npm
           node-version-file: .nvmrc
       - name: Cache Stryker incremental report
-        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3.3.1
+        uses: actions/cache@704facf57e6136b1bc63b828d79edcd491f0ee84 # v3.3.2
         with:
           path: .cache/stryker/incremental.json
           key: mutation-${{ github.run_number }}
@@ -409,7 +409,7 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
-        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
+        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
       - name: Install Node.js
         uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
         with:

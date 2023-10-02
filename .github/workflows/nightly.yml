@@ -40,13 +40,13 @@ jobs:
             sigstore-tuf-root.storage.googleapis.com:443
             tuf-repo-cdn.sigstore.dev:443
       - name: Create automation token
-        uses: tibdex/github-app-token@0d49dd721133f900ebd5e0dff2810704e8defbc6 # v1.8.2
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
         id: automation-token
         with:
           app_id: ${{ secrets.AUTOMATION_APP_ID }}
           private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
       - name: Update tooling
-        uses: ericcornelissen/tool-versions-update-action/pr@9c4504b41601cf1457decd293d6590e2a3ee2f81 # v0.3.5
+        uses: ericcornelissen/tool-versions-update-action/pr@6106f1bd307e174bcbd4a7e04367fc80d00dce0d # v0.3.6
         with:
           commit-message: "chore: update tooling"
           max: 1
