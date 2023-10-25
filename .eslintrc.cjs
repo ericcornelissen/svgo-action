@@ -286,10 +286,11 @@ module.exports = {
     },
   ],
   ignorePatterns: [
-    "node_modules/",
     ".idea/",
     ".npm/",
     ".vscode/",
+    "node_modules/",
+    "script/maybe-run.js",
 
     // Generated & temporary
     ".cache/",
