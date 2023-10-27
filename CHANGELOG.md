@@ -7,12 +7,12 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update deprecation notice to a warning. ([#872])
 
 ## [3.1.5] - 2023-09-23
 
 - Update dependency `minimatch`. ([#802], [#821], [#830])
-- Update deprecation notice to recommend switching to v4. ([#854])
+- Add deprecation notice recommending switching to v4 of this Action. ([#854])
 
 ## [3.1.4] - 2023-04-30
 
@@ -547,5 +547,6 @@ Versioning].
 [#821]: https://github.com/ericcornelissen/svgo-action/pull/821
 [#830]: https://github.com/ericcornelissen/svgo-action/pull/830
 [#854]: https://github.com/ericcornelissen/svgo-action/pull/854
+[#872]: https://github.com/ericcornelissen/svgo-action/pull/872
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
