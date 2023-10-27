@@ -71,7 +71,7 @@
     "svgo"
   ],
   "dependencies": {
-    "@actions/core": "1.10.0",
+    "@actions/core": "1.10.1",
     "@actions/github": "5.1.1",
     "encoding": "0.1.13",
     "eval": "0.1.8",
