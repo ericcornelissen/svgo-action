@@ -26,7 +26,7 @@ jobs:
       pull-requests: write # To open a Pull Request
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -46,7 +46,7 @@ jobs:
           app_id: ${{ secrets.AUTOMATION_APP_ID }}
           private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
       - name: Update tooling
-        uses: ericcornelissen/tool-versions-update-action/pr@6106f1bd307e174bcbd4a7e04367fc80d00dce0d # v0.3.6
+        uses: ericcornelissen/tool-versions-update-action/pr@80dab8d99cefefdcfcc6ad4adbb6bc7a07c39e7f # v0.3.7
         with:
           commit-message: "chore: update tooling"
           max: 1
