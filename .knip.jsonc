@@ -5,6 +5,7 @@
   "entry": ["lib/index.cjs", "src/index.ts"],
   "ignore": [
     "**/__mocks__",
+    "test/end-to-end/**",
 
     // Used in `.github/workflows/publish.yml`.
     "script/get-release-notes.js",
