@@ -18,7 +18,7 @@ jobs:
       major_version: ${{ steps.major-version.outputs.result }}
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -29,11 +29,11 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
       - name: Checkout repository
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0 # To obtain all tags
       - name: Install Node.js
-        uses: actions/setup-node@5e21ff4d9bc1a8cf6de233a3057d20ec6b3fb69d # v3.8.1
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -75,14 +75,14 @@ jobs:
       contents: write # To push a tag and a branch
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
         with:
           disable-sudo: true
           egress-policy: block
           allowed-endpoints: >
             github.com:443
       - name: Checkout repository
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
         with:
           fetch-depth: 0 # To fetch all major version branches
       - name: Push release tag
@@ -108,7 +108,7 @@ jobs:
       id-token: write # To perform keyless signing with cosign
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -123,7 +123,7 @@ jobs:
             tuf-repo-cdn.sigstore.dev:443
             uploads.github.com:443
       - name: Checkout repository
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - name: Get cosign version
         id: versions
         run: |
