@@ -8,6 +8,7 @@ Versioning].
 ## [Unreleased]
 
 - Update dependency `@actions/core`. ([#873])
+- Update dependency `@actions/github`. ([#876])
 
 ## [3.1.5] - 2023-09-23
 
@@ -548,5 +549,6 @@ Versioning].
 [#830]: https://github.com/ericcornelissen/svgo-action/pull/830
 [#854]: https://github.com/ericcornelissen/svgo-action/pull/854
 [#873]: https://github.com/ericcornelissen/svgo-action/pull/873
+[#876]: https://github.com/ericcornelissen/svgo-action/pull/876
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
