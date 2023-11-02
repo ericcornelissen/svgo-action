@@ -18,7 +18,7 @@ interface Params {
     };
     openSync(path: string, flags: "r" | "w"): number;
     readdirSync(path: string): Iterable<string>;
-    readFileSync(handle: number): Buffer;
+    readFileSync(handle: number): Uint8Array;
     writeFileSync(handle: number, content: string): void;
   };
   readonly path: {
