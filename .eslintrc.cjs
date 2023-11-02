@@ -60,6 +60,24 @@ module.exports = {
       ignoreTrailingComments: true,
     }],
     "no-console": ["error"],
+    "no-restricted-globals": [
+      "error",
+      {
+        name: "Buffer",
+        message: "Use Uint8Array instead.",
+      },
+    ],
+    "no-restricted-imports": [
+      "error",
+      {
+        name: "buffer",
+        message: "Use Uint8Array instead.",
+      },
+      {
+        name: "node:buffer",
+        message: "Use Uint8Array instead.",
+      },
+    ],
     "object-curly-spacing": ["error", "always"],
     "quotes": ["error", "double"],
     "semi": ["error", "always"],
@@ -144,6 +162,17 @@ module.exports = {
         project: "./tsconfig.json",
       },
       rules: {
+        "@typescript-eslint/ban-types": [
+          "error",
+          {
+            types: {
+              Buffer: {
+                message: "Use Uint8Array instead.",
+                suggest: ["Uint8Array"],
+              },
+            },
+          },
+        ],
         "@typescript-eslint/block-spacing": ["error"],
         "@typescript-eslint/consistent-generic-constructors": [
           "error",
