@@ -156,6 +156,35 @@ jobs:
       - name: Lint shell scripts
         if: ${{ failure() || success() }}
         run: npm run lint:sh
+  reproducible:
+    name: Reproducible build
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@1b05615854632b887b69ae1be8cbefe72d3ae423 # v2.6.0
+        with:
+          egress-policy: audit
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Install Node.js
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Build
+        run: npm run build
+      - name: Compute checksum
+        run: shasum lib/index.cjs | tee checksums.txt
+      - name: Reset to a clean state
+        run: |
+          npm run clean
+          git restore lib/index.cjs
+      - name: Rebuild
+        run: npm run build
+      - name: Verify checksum
+        run: shasum --check checksums.txt --strict
   test:
     name: Test - ${{ matrix.type }}
     runs-on: ubuntu-22.04
