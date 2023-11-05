@@ -144,18 +144,8 @@ jobs:
         uses: asdf-vm/actions/install@05e0d2ed97b598bfce82fd30daf324ae0c4570e6 # v3.0.2
       - name: Install dependencies
         run: npm clean-install
-      - name: Lint CI
-        if: ${{ failure() || success() }}
-        run: npm run lint:ci
-      - name: Lint source code
-        if: ${{ failure() || success() }}
+      - name: Lint
         run: npm run lint
-      - name: Lint Dockerfile
-        if: ${{ failure() || success() }}
-        run: npm run lint:docker
-      - name: Lint shell scripts
-        if: ${{ failure() || success() }}
-        run: npm run lint:sh
   reproducible:
     name: Reproducible build
     runs-on: ubuntu-22.04
