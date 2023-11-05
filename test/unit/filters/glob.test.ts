@@ -23,7 +23,7 @@ describe("filters/glob.ts", () => {
     test("a file matching the glob", async () => {
       const query = "foo/bar.svg";
 
-      const glob = jest.fn().mockReturnValue(["foo/bar.svg"]);
+      const glob = jest.fn().mockReturnValue(["path/to/foo/bar.svg"]);
       const globber = { glob, globGenerator, getSearchPaths };
       globCreateMock.mockResolvedValueOnce(globber);
 
