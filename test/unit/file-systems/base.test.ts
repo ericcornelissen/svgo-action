@@ -6,6 +6,7 @@ jest.mock("node:fs", () => require("../../__common__/node-fs.mock.ts"));
 jest.mock("node:path", () => require("../../__common__/node-path.mock.ts"));
 jest.mock("../../../src/errors");
 
+import { Buffer } from "node:buffer"; // eslint-disable-line no-restricted-imports
 import * as fs from "node:fs";
 import * as path from "node:path";
 
