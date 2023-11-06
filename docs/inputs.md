@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+
 # SVGO Action Inputs
 
 This documentation describes all the inputs of the SVGO Action.
