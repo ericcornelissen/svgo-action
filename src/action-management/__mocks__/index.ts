@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import ActionManager from "./action-manager";
 
 const actionManager = new ActionManager();

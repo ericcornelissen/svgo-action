@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Config } from "../../../src/helpers/filters";
 import type { Mutable } from "../../utils";
 

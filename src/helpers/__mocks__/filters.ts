@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const filters: Iterable<never> = [];
 
 const getFilters = jest.fn()

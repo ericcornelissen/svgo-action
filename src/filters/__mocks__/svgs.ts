@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { filter } from "./__common__";
 
 const NewSvgsFilter = jest.fn()

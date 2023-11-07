@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const isNull = (msg: string) => msg !== null;
 
 const Combine = jest.fn()

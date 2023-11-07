@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.mock("../../../src/helpers/events");
 jest.mock("../../../src/helpers/filters");
 jest.mock("../../../src/helpers/svgo-config");

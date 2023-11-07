@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const svgoConfig = { };
 
 const parseRawSvgoConfig = jest.fn()

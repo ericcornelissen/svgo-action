@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Dirent, Stats } from "node:fs";
 
 import { when, resetAllWhenMocks } from "jest-when";

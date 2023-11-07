@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import Client from "./client";
 
 const client = new Client();

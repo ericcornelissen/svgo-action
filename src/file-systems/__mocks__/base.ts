@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { fileSystemMock } from "./__common__";
 
 const NewBaseFileSystemMock = jest.fn()

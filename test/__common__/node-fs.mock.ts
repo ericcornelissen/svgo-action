@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 // https://nodejs.org/api/fs.html#fs_fs_existssync_path
 const existsSync = jest.fn()
   .mockReturnValue(false)

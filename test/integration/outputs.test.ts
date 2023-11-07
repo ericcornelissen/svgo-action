@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import outputs from "../../src/outputs";
 import out from "../__common__/outputter.mock";
 

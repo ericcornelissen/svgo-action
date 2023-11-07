@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.mock("../../../src/parsers/builder");
 jest.mock("../../../src/parsers/eval");
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const defaultConfig = {
   ignoreGlobs: {
     provided: true,

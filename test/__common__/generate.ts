@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { GitFileInfo } from "../../src/clients/types";
 
 function createFilesList(length: number): Iterable<GitFileInfo> {
