@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.mock("@actions/glob");
 
 import { create } from "@actions/glob";

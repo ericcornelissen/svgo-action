@@ -1,6 +1,6 @@
-/* eslint-disable jest/no-mocks-import */
+// SPDX-License-Identifier: MIT
 
-import { optimizer } from "../../__mocks__/__common__";
+import { optimizer } from "../../__mocks__/__common__"; // eslint-disable-line jest/no-mocks-import
 
 const New = jest.fn()
   .mockReturnValue([optimizer, null])

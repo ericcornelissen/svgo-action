@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Inputter } from "../../src/inputs";
 
 type InputterMock = jest.Mocked<Inputter>;

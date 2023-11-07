@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import errors from "../../src/errors";
 
 describe("errors.ts", () => {

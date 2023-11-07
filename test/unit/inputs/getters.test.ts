@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { when, resetAllWhenMocks } from "jest-when";
 
 jest.mock("../../../src/errors");

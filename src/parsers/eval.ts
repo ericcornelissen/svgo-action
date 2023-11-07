@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import _jsEval from "eval";
 
 function jsEval(raw: string) {

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const optimizedSvgData = {
   data: "<svg></svg>",
 };

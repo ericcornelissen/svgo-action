@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+
 # SVGO Action Events
 
 This documentation describes the behavior of the SVGO Action for every GitHub

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { SupportedSvgoVersions } from "../../src/svgo";
 
 jest.dontMock("svgo-v2");

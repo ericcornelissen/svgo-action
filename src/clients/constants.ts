@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const INPUT_NAME_REPO_TOKEN = "repo-token";
 
 export {

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const defaultInputs: Record<string, string> = {
   "repo-token": "foobar",
   "dry-run": "false",

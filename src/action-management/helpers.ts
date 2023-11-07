@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Condition } from "./types";
 
 function runIf(condition: Condition, fn: () => void): void {

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.mock("../../../src/errors");
 
 import StubSVGOptimizer from "../../../src/svgo/stub";

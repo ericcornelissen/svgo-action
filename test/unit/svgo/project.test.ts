@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.dontMock("svgo-v2");
 jest.dontMock("svgo-v3");
 

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const parsedContent = { };
 
 const jsEval = jest.fn()

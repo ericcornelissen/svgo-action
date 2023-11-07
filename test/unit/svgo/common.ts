@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const invalidSvg = "<svg";
 
 const optimizedSvg = "<svg></svg>";

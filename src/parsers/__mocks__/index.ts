@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { parser } from "./__common__";
 
 const NewJavaScript = jest.fn()

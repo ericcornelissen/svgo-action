@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import New from "../../../src/filters/svgs";
 
 describe("filters/svgs.ts", () => {

@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
+
 # SVGO Action Examples
 
 This documentation provides various example workflows of how you might use the

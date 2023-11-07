@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const failIf = jest.fn()
   .mockName("action-management.StandardActionManager.failIf");
 

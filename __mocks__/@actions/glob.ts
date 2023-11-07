@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const create = jest.fn()
   .mockReturnValue({
     glob: jest.fn()

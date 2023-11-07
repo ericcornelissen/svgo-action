@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+
 ARG NODE_VERSION
 ARG IMAGE_VARIANT
 

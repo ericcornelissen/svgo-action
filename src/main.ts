@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Core, GitHub } from "./types";
 
 import actionManagement from "./action-management";

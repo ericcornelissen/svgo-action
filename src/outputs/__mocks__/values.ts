@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const valuesMap = new Map();
 
 const getValuesForOutputs = jest.fn()

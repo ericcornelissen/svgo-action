@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 export type Mutable<T> =
   T extends (undefined | null | boolean | string | number) ? T :
   T extends Array<infer U> ? U[] :

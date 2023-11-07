@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { SVGOptimizer } from "./types";
 import type { error } from "../errors";
 import type { SVGO as SVGOv2 } from "svgo-v2";

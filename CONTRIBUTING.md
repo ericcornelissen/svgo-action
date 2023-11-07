@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
 # Contributing Guidelines
 
 The _SVGO Action_ project welcomes contributions and corrections of all forms.

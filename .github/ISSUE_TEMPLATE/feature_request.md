@@ -4,6 +4,8 @@ about: Request a feature for the SVGO Action.
 labels: enhancement
 ---
 
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
 # Feature Request
 
 <!-- The version of the Action you're using -->

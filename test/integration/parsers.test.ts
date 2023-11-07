@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.dontMock("eval");
 
 import parsers from "../../src/parsers";

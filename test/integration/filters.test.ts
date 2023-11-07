@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { PrContext } from "../../src/filters/pr-files";
 import type { PushContext } from "../../src/filters/pushed-files";
 import type { Mutable } from "../utils";

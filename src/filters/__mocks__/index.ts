@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import NewGlobFilter from "./glob";
 import NewPrFilesFilter from "./pr-files";
 import NewPushedFilesFilter from "./pushed-files";

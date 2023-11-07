@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { optimizer } from "./__common__";
 
 const New = jest.fn()

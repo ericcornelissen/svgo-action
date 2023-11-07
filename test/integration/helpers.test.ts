@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Config } from "../../src/helpers/filters";
 import type { Octokit } from "../../src/types";
 import type { Mutable } from "../utils";

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import {
   EVENT_PULL_REQUEST,
   EVENT_PUSH,
