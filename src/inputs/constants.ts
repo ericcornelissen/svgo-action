@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { InputterOptions } from "./types";
 
 const DEFAULT_IGNORE_GLOBS: ReadonlyArray<string> = [];

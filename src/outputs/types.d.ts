@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 interface OptimizedProjectStats {
   readonly optimizedCount: number;
   readonly svgCount: number;

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { error } from "../errors";
 
 type ParseFn<OutType> = (raw: string) => OutType;

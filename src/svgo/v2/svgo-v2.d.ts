@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 declare module "svgo-v2" {
   interface SVGO {
     optimize(svg: string, options: SVGOptions): {

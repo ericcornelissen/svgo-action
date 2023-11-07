@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { error } from "../errors";
 
 import parsers from "../parsers";

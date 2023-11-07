@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Inputter } from "./inputs";
 import type { Outputter } from "./outputs";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { ActionManager, Core } from "./types";
 
 import StandardActionManager from "./action-manager";

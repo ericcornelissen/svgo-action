@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { OptimizedProjectStats } from "./types";
 
 import { OutputName } from "./names";

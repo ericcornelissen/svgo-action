@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { error } from "../errors";
 import type { GitHub } from "../types";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";

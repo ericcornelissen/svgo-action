@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { ActionManager, Condition, Core } from "./types";
 
 import { runIf } from "./helpers";

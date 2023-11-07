@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { FilterFn } from "./types";
 
 const SVG_FILE_EXTENSION = ".svg";

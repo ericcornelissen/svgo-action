@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import {
   DEFAULT_SVGO_V2_CONFIG_PATH,
 } from "./constants";
