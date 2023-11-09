@@ -4,8 +4,6 @@ about: Report problems with SVGO Action's documentation.
 labels: docs
 ---
 
-<!-- SPDX-License-Identifier: CC0-1.0 -->
-
 # Documentation
 
 ## Description
