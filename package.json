@@ -78,7 +78,7 @@
     "eval": "0.1.8",
     "import-cwd": "3.0.0",
     "svgo-v2": "npm:svgo@2.8.0",
-    "svgo-v3": "npm:svgo@3.0.2"
+    "svgo-v3": "npm:svgo@3.0.3"
   },
   "devDependencies": {
     "@commitlint/cli": "18.2.0",
