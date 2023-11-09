@@ -4,8 +4,6 @@ about: Ask a question about the SVGO Action.
 labels: question
 ---
 
-<!-- SPDX-License-Identifier: CC0-1.0 -->
-
 # Question
 
 <!-- The version of the Action you're using -->

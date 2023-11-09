@@ -4,8 +4,6 @@ about: Report a problem with the SVGO Action.
 labels: bug
 ---
 
-<!-- SPDX-License-Identifier: CC0-1.0 -->
-
 # Bug Report
 
 <!-- The version of the Action you're using -->
