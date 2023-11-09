@@ -9,6 +9,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [4.0.1] - 2023-11-09
+
 - Update dependency `@actions/core`. ([#861])
 - Update dependency `@actions/github`. ([#874])
 - Update SVGO v3 to `v3.0.3`. ([#885])
