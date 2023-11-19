@@ -79,7 +79,7 @@
     "js-yaml": "4.1.0",
     "minimatch": "9.0.3",
     "svgo-v2": "npm:svgo@2.8.0",
-    "svgo-v3": "npm:svgo@3.0.3"
+    "svgo-v3": "npm:svgo@3.0.4"
   },
   "devDependencies": {
     "@commitlint/cli": "17.7.1",
