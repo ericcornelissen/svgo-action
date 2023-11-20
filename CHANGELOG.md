@@ -9,12 +9,13 @@ Versioning].
 
 - Update dependency `@actions/core`. ([#873])
 - Update dependency `@actions/github`. ([#876])
-- Update SVGO v3 to `v3.0.3`. ([#888], [#892])
+- Update deprecation notice to a warning. ([#872])
+- Update SVGO v3 to `v3.0.4`. ([#888], [#892])
 
 ## [3.1.5] - 2023-09-23
 
 - Update dependency `minimatch`. ([#802], [#821], [#830])
-- Update deprecation notice to recommend switching to v4. ([#854])
+- Add deprecation notice recommending switching to v4 of this Action. ([#854])
 
 ## [3.1.4] - 2023-04-30
 
@@ -549,6 +550,7 @@ Versioning].
 [#821]: https://github.com/ericcornelissen/svgo-action/pull/821
 [#830]: https://github.com/ericcornelissen/svgo-action/pull/830
 [#854]: https://github.com/ericcornelissen/svgo-action/pull/854
+[#872]: https://github.com/ericcornelissen/svgo-action/pull/872
 [#873]: https://github.com/ericcornelissen/svgo-action/pull/873
 [#876]: https://github.com/ericcornelissen/svgo-action/pull/876
 [#888]: https://github.com/ericcornelissen/svgo-action/pull/888
