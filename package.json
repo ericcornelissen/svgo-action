@@ -1,6 +1,6 @@
 {
   "name": "svgo-action",
-  "version": "3.1.5",
+  "version": "3.1.6",
   "private": true,
   "description": "Automatically run SVGO with GitHub Actions",
   "homepage": "https://github.com/marketplace/actions/svgo-action",
@@ -73,7 +73,6 @@
   "dependencies": {
     "@actions/core": "1.10.1",
     "@actions/github": "6.0.0",
-    "encoding": "0.1.13",
     "eval": "0.1.8",
     "import-cwd": "3.0.0",
     "js-yaml": "4.1.0",
