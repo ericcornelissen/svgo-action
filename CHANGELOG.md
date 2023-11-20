@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.1.6] - 2023-11-20
+
 - Update dependency `@actions/core`. ([#873])
 - Update dependency `@actions/github`. ([#876])
 - Update deprecation notice to a warning. ([#872])
