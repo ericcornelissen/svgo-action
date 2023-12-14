@@ -27,8 +27,9 @@ relevant sections of this document.
   - [Integration Testing](#integration-testing)
   - [End-to-End Testing](#end-to-end-testing)
 
-> **Note** If you want to make a contribution to v3 of the project, please refer
-> to the [Contributing Guidelines for v3].
+> [!NOTE]
+> If you want to make a contribution to v3 of the project, please refer to the
+> [Contributing Guidelines for v3].
 
 ---
 
@@ -90,10 +91,11 @@ When you open a Pull Request that implements an issue make sure to link to that
 issue in the Pull Request description and explain how you implemented the issue
 as clearly as possible.
 
-> **Note**: If you, for whatever reason, can not continue your work, please
-> share this in the issue or your Pull Request. This gives others an opportunity
-> to work on it. If we don't hear from you for an extended period of time we may
-> decide to allow others to work on the issue you were assigned to.
+> [!NOTE]
+> If you, for whatever reason, can not continue your work, please share this in
+> the issue or your Pull Request. This gives others an opportunity to work on
+> it. If we don't hear from you for an extended period of time we may decide to
+> allow others to work on the issue you were assigned to.
 
 ### Prerequisites
 
@@ -170,9 +172,10 @@ If you want to improve the code style, update the configuration file for the
 respective linter accordingly. If you need an extra package to be able to
 enforce your style, add it as a `devDependency`.
 
-> **Note**: Keep in mind that the developers of the project determine the code
-> style as they see fit. For this reason, take the time to explain why you think
-> your changes improve the project.
+> [!NOTE]
+> Keep in mind that the developers of the project determine the code style as
+> they see fit. For this reason, take the time to explain why you think your
+> changes improve the project.
 
 #### Vetting
 
