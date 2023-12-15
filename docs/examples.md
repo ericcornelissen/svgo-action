@@ -72,8 +72,9 @@ there are no changes, nothing will be committed or commented.
 Check out [what the Action outputs] to customize the commit message and Pull
 Request comment to your liking.
 
-> **Warning**: This does not work for Pull Requests from forks. This is because
-> GitHub Actions do not have permission to alter forked repositories.
+> [!WARNING]
+> This does not work for Pull Requests from forks. This is because GitHub
+> Actions do not have permission to alter forked repositories.
 
 ```yml
 # .github/workflows/optimize.yml
@@ -273,9 +274,10 @@ repository was changed on `push` events. Even though this Action does nothing
 if a push (or Pull Request) touches no SVGs, you may want the Action to run only
 when an SVG has actually changed.
 
-> **Warning**: This will cause the entire Workflow to be run only when an SVG
-> changes. Jobs that should run for every push or Pull Request must be specified
-> in a separate Workflow file.
+> [!IMPORTANT]
+> This will cause the entire Workflow to be run only when an SVG changes. Jobs
+> that should run for every push or Pull Request must be specified in a separate
+> Workflow file.
 
 ```yml
 # .github/workflows/optimize.yml

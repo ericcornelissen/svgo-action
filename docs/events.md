@@ -17,9 +17,9 @@ to improve the documentation.
 
 ---
 
-> **Warning**: The Action will run on any event if [strict mode] is not enabled.
-> However, this is not officially supported so you may encounter unexpected
-> behaviour.
+> [!IMPORTANT]
+> The Action will run on any event if [strict mode] is not enabled. However,
+> this is not officially supported so you may encounter unexpected behaviour.
 
 ---
 
