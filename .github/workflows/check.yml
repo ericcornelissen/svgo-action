@@ -235,7 +235,7 @@ jobs:
         run: npm run "coverage:${TYPE}"
       - name: Upload code coverage
         uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d # v3.1.4
-        if: ${{ always() }}
+        if: ${{ failure() || success() }}
         with:
           file: ./_reports/coverage/${{ matrix.type }}/lcov.info
           flags: ${{ matrix.type }}
