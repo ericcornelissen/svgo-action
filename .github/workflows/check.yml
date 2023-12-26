@@ -279,7 +279,7 @@ jobs:
         uses: ./
         id: svgo
         env:
-          SVGO_ACTION_E2E_TEST: true
+          SVGO_ACTION_CI_TEST: true
   test-e2e:
     name: Test - end-to-end (${{ matrix.test.description }})
     runs-on: ubuntu-22.04
@@ -356,7 +356,7 @@ jobs:
         uses: ./
         id: svgo
         env:
-          SVGO_ACTION_E2E_TEST: true
+          SVGO_ACTION_CI_TEST: true
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           svgo-config: ${{ matrix.test.svgo-config }}
