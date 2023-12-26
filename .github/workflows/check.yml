@@ -239,6 +239,47 @@ jobs:
         with:
           file: ./_reports/coverage/${{ matrix.type }}/lcov.info
           flags: ${{ matrix.type }}
+  test-compatibility:
+    name: Test - compatibility (${{ matrix.runs-on }})
+    runs-on: ${{ matrix.runs-on }}
+    needs:
+      - build
+      - test-e2e
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+          - ubuntu-20.04
+          - ubuntu-22.04
+    steps:
+      - name: Harden runner
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.github.com:443
+            artifactcache.actions.githubusercontent.com:443
+            github.com:443
+            nodejs.org:443
+            objects.githubusercontent.com:443
+            registry.npmjs.org:443
+      - name: Checkout repository
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
+      - name: Install Node.js
+        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        with:
+          cache: npm
+          node-version-file: .nvmrc
+      - name: Install dependencies
+        run: npm clean-install
+      - name: Build SVGO Action
+        run: npm run build
+      - name: Run SVGO Action
+        uses: ./
+        id: svgo
+        env:
+          SVGO_ACTION_CI_TEST: true
   test-e2e:
     name: Test - end-to-end (${{ matrix.test.description }})
     runs-on: ubuntu-22.04
@@ -315,7 +356,7 @@ jobs:
         uses: ./
         id: svgo
         env:
-          SVGO_ACTION_E2E_TEST: true
+          SVGO_ACTION_CI_TEST: true
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           svgo-config: ${{ matrix.test.svgo-config }}
