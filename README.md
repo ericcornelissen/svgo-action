@@ -88,6 +88,11 @@ be found in the [inputs documentation].
     svgo-version: 2
 ```
 
+### Runners
+
+This Action is tested on the official [ubuntu-20.04] and [ubuntu-22.04] runner
+images. It is recommended to use one of these images when using this Action.
+
 ### Security
 
 #### Permissions
@@ -132,5 +137,7 @@ snippets under the [MIT license].
 [mit license]: https://opensource.org/license/mit/
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
+[ubuntu-20.04]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2004-Readme.md
+[ubuntu-22.04]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
 [what the action does for each `on` event]: ./docs/events.md
 [what the action outputs]: ./docs/outputs.md
