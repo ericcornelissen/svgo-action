@@ -49,8 +49,9 @@
     "test:mutation": "stryker run stryker.config.js",
     "test:unit": "jest test/unit",
     "verify": "npm run license-check && npm run lint && npm run test:unit && npm run vet",
-    "vet": "npm run vet:deps && npm run vet:types",
+    "vet": "npm run vet:deps && npm run vet:package-lock.json && npm run vet:types",
     "vet:deps": "knip --config .knip.jsonc",
+    "vet:package-lock.json": "lockfile-lint --path package-lock.json --allowed-hosts npm --validate-https",
     "vet:types": "type-coverage --at-least 100 --project tsconfig.json --strict"
   },
   "repository": {
@@ -111,6 +112,7 @@
     "jest-when": "3.6.0",
     "knip": "3.3.5",
     "licensee": "10.0.0",
+    "lockfile-lint": "4.12.1",
     "markdownlint-cli": "0.37.0",
     "rollup": "4.6.1",
     "ts-jest": "29.1.1",
