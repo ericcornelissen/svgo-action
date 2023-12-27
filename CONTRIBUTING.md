@@ -125,9 +125,10 @@ If you decide to make a contribution, please use the following workflow:
 Before you start making changes you should run `npm install`. This ensures your
 local development environment is setup and ready to go.
 
-[husky] is used to automatically install git hooks. Please enable it when
-contributing to the project. If you have npm installation scripts disabled,
-run `npm run prepare` after installing dependencies.
+This project has a set of default git hooks. These aim to ensure every commit is
+as correct as possible. If you want to use them you can run `npm run prepare`
+after installing the dependencies. If they get in the way you can use git's
+`--no-verify` flag to disable them for a particular git command.
 
 When making a contribution make sure your changes are [tested](#testing),
 [well-formatted](#linting), [audited](#auditing) and [vetted](#vetting). Run
@@ -345,7 +346,6 @@ There are some limitations to using [act]:
 [feature request]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=enhancement&template=feature_request.md
 [git]: https://git-scm.com/
 [hadolint]: https://github.com/hadolint/hadolint
-[husky]: https://typicode.github.io/husky/#/
 [jest]: https://jestjs.io/
 [licensee]: https://github.com/jslicense/licensee.js
 [markdownlint]: https://github.com/DavidAnson/markdownlint
