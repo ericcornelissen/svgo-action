@@ -122,7 +122,8 @@ network access.
 
 The source code is licensed under the `MIT` license, see [LICENSE] for the full
 license text. The documentation text is licensed under [CC BY-SA 4.0]; code
-snippets under the [MIT license].
+snippets under the [MIT license]. Supporting code, such a scripts and tests, is
+licensed under the [MIT license] or the [MIT-0 license].
 
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
@@ -135,6 +136,7 @@ snippets under the [MIT license].
 [inputs documentation]: ./docs/inputs.md
 [license]: ./LICENSE
 [mit license]: https://opensource.org/license/mit/
+[mit-0 license]: https://opensource.org/license/mit-0/
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
 [ubuntu-20.04]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2004-Readme.md
