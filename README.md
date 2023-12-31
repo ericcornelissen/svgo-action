@@ -1,5 +1,8 @@
 # SVGO Action
 
+> **Warning**: Version 3 of the SVGO Action is end-of-life (EOL) since
+> 2023-12-31. No support will be provided going forward.
+
 [![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
 
