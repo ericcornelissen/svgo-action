@@ -7,6 +7,7 @@ Versioning].
 
 ## [Unreleased]
 
+- Update deprecation warning for end-of-life (EOL) of v2. ([#916])
 - Update SVGO v3 to `v3.1.0`. ([#901], [#906])
 
 ## [3.1.6] - 2023-11-20
@@ -561,5 +562,6 @@ Versioning].
 [#892]: https://github.com/ericcornelissen/svgo-action/pull/892
 [#901]: https://github.com/ericcornelissen/svgo-action/pull/901
 [#906]: https://github.com/ericcornelissen/svgo-action/pull/906
+[#916]: https://github.com/ericcornelissen/svgo-action/pull/916
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
