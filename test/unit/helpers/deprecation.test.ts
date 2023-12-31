@@ -16,9 +16,8 @@ describe("helpers/deprecation.ts", () => {
   test("deprecation warning for v3 of the Action", () => {
     deprecationWarnings({ core });
     expect(core.warning).toHaveBeenCalledWith(
-      "General support for SVGO Action v3 ended 2023-09-23. Security " +
-      "updates will be supported until 2023-12-31. Please upgrade to SVGO " +
-      "Action v4 as soon as possible.",
+      "Support for SVGO Action v3 ended 2023-12-31. Please upgrade to the " +
+      "latest version as soon as possible",
     );
   });
 });
