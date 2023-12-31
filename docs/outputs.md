@@ -1,5 +1,8 @@
 # SVGO Action Outputs
 
+> **Warning**: Version 3 of the SVGO Action is end-of-life (EOL) since
+> 2023-12-31. No support will be provided going forward.
+
 This documentation describes all values outputted by the SVGO Action. These
 values can be used in the steps that follow it to, for example, run a step only
 if any SVGs were optimized or to build a message describing how many SVGs were
