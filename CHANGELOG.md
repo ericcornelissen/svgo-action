@@ -7,6 +7,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [3.1.7] - 2023-12-31
+
 - Update deprecation warning for end-of-life (EOL) of v2. ([#916])
 - Update SVGO v3 to `v3.1.0`. ([#901], [#906])
 
