@@ -14,8 +14,6 @@ jobs:
       refs: >-
         [
           "main",
-          "main-v3",
-          "v3",
           "v4"
         ]
   tooling:

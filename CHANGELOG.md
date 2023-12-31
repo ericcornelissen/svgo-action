@@ -44,6 +44,23 @@ Versioning].
 - Drop dependency `js-yaml`. ([#841])
 - Update recommended action versions in the documentation. ([#844])
 
+## [3.1.7] - 2023-12-31
+
+- Update deprecation warning for end-of-life (EOL) of v3. ([#916])
+- Update SVGO v3 to `v3.1.0`. ([#901], [#906])
+
+## [3.1.6] - 2023-11-20
+
+- Update dependency `@actions/core`. ([#873])
+- Update dependency `@actions/github`. ([#876])
+- Update deprecation notice to a warning. ([#872])
+- Update SVGO v3 to `v3.0.4`. ([#888], [#892])
+
+## [3.1.5] - 2023-09-23
+
+- Update dependency `minimatch`. ([#802], [#821], [#830])
+- Add deprecation notice recommending switching to v4 of this Action. ([#854])
+
 ## [3.1.4] - 2023-04-30
 
 - Add support for GitHub Actions Kotlin DSL. ([#781])
@@ -573,16 +590,28 @@ Versioning].
 [#781]: https://github.com/ericcornelissen/svgo-action/pull/781
 [#782]: https://github.com/ericcornelissen/svgo-action/pull/782
 [#790]: https://github.com/ericcornelissen/svgo-action/pull/790
+[#802]: https://github.com/ericcornelissen/svgo-action/pull/802
+[#821]: https://github.com/ericcornelissen/svgo-action/pull/821
+[#830]: https://github.com/ericcornelissen/svgo-action/pull/830
 [#837]: https://github.com/ericcornelissen/svgo-action/pull/837
 [#838]: https://github.com/ericcornelissen/svgo-action/pull/838
 [#841]: https://github.com/ericcornelissen/svgo-action/pull/841
 [#844]: https://github.com/ericcornelissen/svgo-action/pull/844
 [#850]: https://github.com/ericcornelissen/svgo-action/pull/850
+[#854]: https://github.com/ericcornelissen/svgo-action/pull/854
 [#861]: https://github.com/ericcornelissen/svgo-action/pull/861
+[#872]: https://github.com/ericcornelissen/svgo-action/pull/872
+[#873]: https://github.com/ericcornelissen/svgo-action/pull/873
 [#874]: https://github.com/ericcornelissen/svgo-action/pull/874
+[#876]: https://github.com/ericcornelissen/svgo-action/pull/876
 [#885]: https://github.com/ericcornelissen/svgo-action/pull/885
+[#888]: https://github.com/ericcornelissen/svgo-action/pull/888
 [#891]: https://github.com/ericcornelissen/svgo-action/pull/891
+[#892]: https://github.com/ericcornelissen/svgo-action/pull/892
 [#897]: https://github.com/ericcornelissen/svgo-action/pull/897
+[#901]: https://github.com/ericcornelissen/svgo-action/pull/901
 [#904]: https://github.com/ericcornelissen/svgo-action/pull/904
+[#906]: https://github.com/ericcornelissen/svgo-action/pull/906
+[#916]: https://github.com/ericcornelissen/svgo-action/pull/916
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
