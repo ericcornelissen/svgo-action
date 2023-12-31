@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT-0
+
 import process from "node:process";
 
 import {

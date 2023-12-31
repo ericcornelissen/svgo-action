@@ -1,15 +1,17 @@
+// SPDX-License-Identifier: MIT
+
 import type { Config } from "../../src/helpers/filters";
 import type { Octokit } from "../../src/types";
 import type { Mutable } from "../utils";
 
 jest.dontMock("eval");
-jest.dontMock("js-yaml");
-jest.dontMock("minimatch");
 
 jest.mock("@actions/core");
 jest.mock("@actions/github");
+jest.mock("@actions/glob");
 
 import * as github from "@actions/github";
+import * as glob from "@actions/glob";
 
 import clients from "../../src/clients";
 import {
@@ -21,6 +23,7 @@ import {
 import inp from "../__common__/inputter.mock";
 
 const githubGetOctokit = github.getOctokit as jest.MockedFunction<typeof github.getOctokit>; // eslint-disable-line max-len
+const globCreateMock = glob.create as jest.MockedFunction<typeof glob.create>;
 
 describe("package helpers", () => {
   const EVENT_PULL_REQUEST = "pull_request";
@@ -122,6 +125,13 @@ describe("package helpers", () => {
       github.context.eventName = eventName;
       config.ignoreGlobs.value = ["foo/*"];
 
+      const globber = {
+        glob: jest.fn().mockResolvedValue([fileSvgInFolderFoo]),
+        getSearchPaths: jest.fn(),
+        globGenerator: jest.fn(),
+      };
+      globCreateMock.mockResolvedValue(globber);
+
       const [filters, err] = await getFilters({ client, config, github });
       expect(err).toBeNull();
 
@@ -165,27 +175,6 @@ describe("package helpers", () => {
   });
 
   describe("::parseRawSvgoConfig", () => {
-    describe("YAML configuration file", () => {
-      const config = {
-        svgoConfigPath: { value: ".svgo.yml" },
-      };
-
-      test("valid configuration", () => {
-        const rawConfig = "multipass: true";
-
-        const [svgoConfig, err] = parseRawSvgoConfig({ config, rawConfig });
-        expect(err).toBeNull();
-        expect(svgoConfig).not.toBeNull();
-      });
-
-      test("invalid configuration", () => {
-        const rawConfig = "-\nthis isn't valid YAML";
-
-        const [, err] = parseRawSvgoConfig({ config, rawConfig });
-        expect(err).not.toBeNull();
-      });
-    });
-
     describe("JavaScript configuration", () => {
       const config = {
         svgoConfigPath: { value: "svgo.config.js" },

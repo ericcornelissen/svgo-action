@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Outputter } from "../../src/outputs";
 
 type OutputterMock = jest.Mocked<Outputter>;

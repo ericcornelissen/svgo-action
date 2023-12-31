@@ -1,9 +1,11 @@
+// SPDX-License-Identifier: MIT
+
 const defaultInputs: Record<string, string> = {
   "repo-token": "foobar",
   "dry-run": "false",
   "ignore": "",
   "svgo-config": "svgo.config.js",
-  "svgo-version": "2",
+  "svgo-version": "3",
 };
 
 function simulateGetInput(key: string) {
@@ -33,9 +35,6 @@ const getMultilineInput = jest.fn()
 const info = jest.fn()
   .mockName("core.info");
 
-const notice = jest.fn()
-  .mockName("core.notice");
-
 const setFailed = jest.fn()
   .mockName("core.setFailed");
 
@@ -51,7 +50,6 @@ export {
   getInput,
   getMultilineInput,
   info,
-  notice,
   setFailed,
   setOutput,
   warning,

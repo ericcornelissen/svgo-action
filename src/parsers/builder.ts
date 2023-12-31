@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { ParseFn, SafeParseFn } from "./types";
 import type { error } from "../errors";
 

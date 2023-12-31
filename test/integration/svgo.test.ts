@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { SupportedSvgoVersions } from "../../src/svgo";
 
 jest.dontMock("svgo-v2");
@@ -6,7 +8,6 @@ jest.dontMock("svgo-v3");
 jest.mock("@actions/core");
 jest.mock("import-cwd");
 
-import * as core from "@actions/core";
 import importCwd from "import-cwd";
 import svgoV2 from "svgo-v2"; // eslint-disable-line import/default
 import svgoV3 from "svgo-v3"; // eslint-disable-line import/default
@@ -31,18 +32,12 @@ describe("package svgo", () => {
     }
   }
 
-  beforeAll(() => {
-    // prevent SVGO v1 from outputting an error
-    console.error = () => void 0; // eslint-disable-line no-console
-  });
-
   describe("::New", () => {
     const svgoConfig = { };
 
     describe.each([
       ["2", undefined],
       ["3", undefined],
-      ["project", svgoV1Mock],
       ["project", svgoV2],
       ["project", svgoV3],
     ])("::optimize (%s, %s)", (svgoVersion, svgoImport) => {
@@ -57,7 +52,7 @@ describe("package svgo", () => {
       });
 
       test("valid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config, log: core, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, svgoConfig });
         expect(err0).toBeNull();
 
         const [result, err1] = await svgo.optimize(validSvg);
@@ -66,7 +61,7 @@ describe("package svgo", () => {
       });
 
       test("invalid SVG", async () => {
-        const [svgo, err0] = SVGO.New({ config, log: core, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(invalidSvg);
@@ -81,7 +76,7 @@ describe("package svgo", () => {
           ],
         };
 
-        const [svgo, err0] = SVGO.New({ config, log: core, svgoConfig });
+        const [svgo, err0] = SVGO.New({ config, svgoConfig });
         expect(err0).toBeNull();
 
         const [, err1] = await svgo.optimize(validSvg);
@@ -94,6 +89,19 @@ describe("package svgo", () => {
     describe("initialization fails", () => {
       const svgoConfig = { };
 
+      test("project-level SVGO is v1", () => {
+        importCwdSilent.mockReturnValue(svgoV1Mock);
+
+        const config = {
+          svgoVersion: {
+            value: "project" as SupportedSvgoVersions,
+          },
+        };
+
+        const [, err] = SVGO.New({ config, svgoConfig });
+        expect(err).not.toBeNull();
+      });
+
       test("project-level SVGO missing", () => {
         importCwdSilent.mockReturnValueOnce(undefined);
 
@@ -103,7 +111,7 @@ describe("package svgo", () => {
           },
         };
 
-        const [, err] = SVGO.New({ config, log: core, svgoConfig });
+        const [, err] = SVGO.New({ config, svgoConfig });
         expect(err).not.toBeNull();
       });
     });

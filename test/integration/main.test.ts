@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Dirent } from "node:fs";
 
 jest.mock("@actions/core");

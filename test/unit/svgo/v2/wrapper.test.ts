@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { SVGO, SVGOptions } from "svgo-v2";
 
 import { when, resetAllWhenMocks } from "jest-when";

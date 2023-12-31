@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+
 # Changelog
 
 All notable changes to the _SVGO Action_ will be documented in this file.
@@ -5,9 +7,46 @@ All notable changes to the _SVGO Action_ will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
+## [Unreleased]
+
+- _No changes yet_
+
+## [4.0.4] - 2023-12-13
+
+- Update SVGO v3 to `v3.1.0`. ([#904])
+
+## [4.0.3] - 2023-12-01
+
+- Update SVGO v3 to `v3.0.5`. ([#897])
+
+## [4.0.2] - 2023-11-19
+
+- Update SVGO v3 to `v3.0.4`. ([#891])
+
+## [4.0.1] - 2023-11-09
+
+- Update dependency `@actions/core`. ([#861])
+- Update dependency `@actions/github`. ([#874])
+- Update SVGO v3 to `v3.0.3`. ([#885])
+
+## [4.0.0] - 2023-09-23
+
+### Breaking changes
+
+- Bump the default SVGO version from v2 to v3. ([#838])
+- Drop support for SVGO v1 with `svgo-version: project`. ([#841])
+- Drop support for YAML-based configuration files. ([#841])
+- Replace `minimatch` by `@actions/glob`. ([#850])
+- Update Node.js runtime to v20. ([#837])
+
+### Changes
+
+- Drop dependency `js-yaml`. ([#841])
+- Update recommended action versions in the documentation. ([#844])
+
 ## [3.1.7] - 2023-12-31
 
-- Update deprecation warning for end-of-life (EOL) of v2. ([#916])
+- Update deprecation warning for end-of-life (EOL) of v3. ([#916])
 - Update SVGO v3 to `v3.1.0`. ([#901], [#906])
 
 ## [3.1.6] - 2023-11-20
@@ -554,13 +593,24 @@ Versioning].
 [#802]: https://github.com/ericcornelissen/svgo-action/pull/802
 [#821]: https://github.com/ericcornelissen/svgo-action/pull/821
 [#830]: https://github.com/ericcornelissen/svgo-action/pull/830
+[#837]: https://github.com/ericcornelissen/svgo-action/pull/837
+[#838]: https://github.com/ericcornelissen/svgo-action/pull/838
+[#841]: https://github.com/ericcornelissen/svgo-action/pull/841
+[#844]: https://github.com/ericcornelissen/svgo-action/pull/844
+[#850]: https://github.com/ericcornelissen/svgo-action/pull/850
 [#854]: https://github.com/ericcornelissen/svgo-action/pull/854
+[#861]: https://github.com/ericcornelissen/svgo-action/pull/861
 [#872]: https://github.com/ericcornelissen/svgo-action/pull/872
 [#873]: https://github.com/ericcornelissen/svgo-action/pull/873
+[#874]: https://github.com/ericcornelissen/svgo-action/pull/874
 [#876]: https://github.com/ericcornelissen/svgo-action/pull/876
+[#885]: https://github.com/ericcornelissen/svgo-action/pull/885
 [#888]: https://github.com/ericcornelissen/svgo-action/pull/888
+[#891]: https://github.com/ericcornelissen/svgo-action/pull/891
 [#892]: https://github.com/ericcornelissen/svgo-action/pull/892
+[#897]: https://github.com/ericcornelissen/svgo-action/pull/897
 [#901]: https://github.com/ericcornelissen/svgo-action/pull/901
+[#904]: https://github.com/ericcornelissen/svgo-action/pull/904
 [#906]: https://github.com/ericcornelissen/svgo-action/pull/906
 [#916]: https://github.com/ericcornelissen/svgo-action/pull/916
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690

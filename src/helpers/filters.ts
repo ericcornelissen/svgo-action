@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { GitHub, GitHubClient } from "./types";
 import type { error } from "../errors";
 
@@ -27,7 +29,9 @@ async function getFilters({
   const event = context.eventName;
 
   const result = [
-    ...Array.from(config.ignoreGlobs.value).map(filters.NewGlobFilter),
+    ...(await Promise.all(
+      Array.from(config.ignoreGlobs.value).map(filters.NewGlobFilter),
+    )),
     filters.NewSvgsFilter(),
   ];
 

@@ -1,7 +1,6 @@
-# SVGO Action Examples
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 
-> **Warning**: Version 3 of the SVGO Action is end-of-life (EOL) since
-> 2023-12-31. No support will be provided going forward.
+# SVGO Action Examples
 
 This documentation provides various example workflows of how you might use the
 SVGO Action.
@@ -47,9 +46,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -73,8 +72,9 @@ there are no changes, nothing will be committed or commented.
 Check out [what the Action outputs] to customize the commit message and Pull
 Request comment to your liking.
 
-> **Warning**: This does not work for Pull Requests from forks. This is because
-> GitHub Actions do not have permission to alter forked repositories.
+> [!WARNING]
+> This does not work for Pull Requests from forks. This is because GitHub
+> Actions do not have permission to alter forked repositories.
 
 ```yml
 # .github/workflows/optimize.yml
@@ -96,9 +96,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
@@ -146,9 +146,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Commit optimizations
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -190,9 +190,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Create Pull Request for optimized SVGs
         uses: peter-evans/create-pull-request@v5
@@ -254,9 +254,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         id: svgo
       - name: Commit optimizations
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -274,9 +274,10 @@ repository was changed on `push` events. Even though this Action does nothing
 if a push (or Pull Request) touches no SVGs, you may want the Action to run only
 when an SVG has actually changed.
 
-> **Warning**: This will cause the entire Workflow to be run only when an SVG
-> changes. Jobs that should run for every push or Pull Request must be specified
-> in a separate Workflow file.
+> [!IMPORTANT]
+> This will cause the entire Workflow to be run only when an SVG changes. Jobs
+> that should run for every push or Pull Request must be specified in a separate
+> Workflow file.
 
 ```yml
 # .github/workflows/optimize.yml
@@ -298,9 +299,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         with:
           repo-token: ${{secrets.GITHUB_TOKEN}}
       # Your steps ...
@@ -334,7 +335,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       # If SVGO is a (dev)dependency of your project you can just install your
       # dependencies as usual. If SVGO is not yet a dependency of your project,
       # we recommend you run `npm install --save-dev svgo@v2` and commit your
@@ -342,7 +343,7 @@ jobs:
       - name: Install dependencies
         run: npm clean-install
       - name: Optimize SVGs
-        uses: ericcornelissen/svgo-action@v3
+        uses: ericcornelissen/svgo-action@v4
         with:
           svgo-version: project
 ```

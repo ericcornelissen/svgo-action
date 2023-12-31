@@ -1,7 +1,6 @@
-# SVGO Action
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 
-> **Warning**: Version 3 of the SVGO Action is end-of-life (EOL) since
-> 2023-12-31. No support will be provided going forward.
+# SVGO Action
 
 [![Build status][ci-image]][ci-url]
 [![Coverage Report][coverage-image]][coverage-url]
@@ -36,11 +35,11 @@ jobs:
     name: SVGs
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       # Uncomment the next 2 lines to select a branch for schedule or dispatch.
       #   with:
       #     ref: main
-      - uses: ericcornelissen/svgo-action@v3
+      - uses: ericcornelissen/svgo-action@v4
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -54,7 +53,7 @@ The following inputs are available when using the SVGO Action. More details can
 be found in the [inputs documentation].
 
 ```yml
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     # Prevent the Action from writing changes.
     #
@@ -85,9 +84,14 @@ be found in the [inputs documentation].
 
     # The version of SVGO to use for optimizing.
     #
-    # Default: 2
-    svgo-version: 3
+    # Default: 3
+    svgo-version: 2
 ```
+
+### Runners
+
+This Action is tested on the official [ubuntu-20.04] and [ubuntu-22.04] runner
+images. It is recommended to use one of these images when using this Action.
 
 ### Security
 
@@ -118,12 +122,13 @@ network access.
 
 The source code is licensed under the `MIT` license, see [LICENSE] for the full
 license text. The documentation text is licensed under [CC BY-SA 4.0]; code
-snippets under the [MIT license].
+snippets under the [MIT license]. Supporting code, such a scripts and tests, is
+licensed under the [MIT license] or the [MIT-0 license].
 
 [ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
 [ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
 [coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
-[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main-v3/graph/badge.svg
+[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
 
 [cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
@@ -131,7 +136,10 @@ snippets under the [MIT license].
 [inputs documentation]: ./docs/inputs.md
 [license]: ./LICENSE
 [mit license]: https://opensource.org/license/mit/
+[mit-0 license]: https://opensource.org/license/mit-0/
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
 [svgo]: https://github.com/svg/svgo
+[ubuntu-20.04]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2004-Readme.md
+[ubuntu-22.04]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
 [what the action does for each `on` event]: ./docs/events.md
 [what the action outputs]: ./docs/outputs.md

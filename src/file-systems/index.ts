@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { FileFilter, FileSystem } from "./types";
 
 import * as fs from "node:fs";

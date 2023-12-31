@@ -1,10 +1,11 @@
+// SPDX-License-Identifier: MIT
+
 import type { Core, GitHub } from "./types";
 
 import actionManagement from "./action-management";
 import clients from "./clients";
 import fileSystems from "./file-systems";
 import {
-  deprecationWarnings,
   getFilters,
   isClientRequired,
   isEventSupported,
@@ -21,8 +22,6 @@ interface Params {
 }
 
 async function main({ core, github }: Params): Promise<void> {
-  deprecationWarnings({ core });
-
   core.debug("Getting input");
   const [config, err0] = inputs.New({ inp: core });
 
@@ -63,7 +62,7 @@ async function main({ core, github }: Params): Promise<void> {
   );
 
   core.debug("Initializing SVGO");
-  const [optimizer, err4] = svgo.New({ config, log: core, svgoConfig });
+  const [optimizer, err4] = svgo.New({ config, svgoConfig });
   action.failIf(err4, "Could not initialize SVGO");
 
   core.debug("Initializing optimization filters");

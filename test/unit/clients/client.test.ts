@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.mock("@actions/github");
 jest.mock("../../../src/errors");
 

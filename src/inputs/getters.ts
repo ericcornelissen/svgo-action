@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Inputter, InputterOptions, InputValue } from "./types";
 import type { error } from "../errors";
 import type { SupportedSvgoVersions } from "../svgo";

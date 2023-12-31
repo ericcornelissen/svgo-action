@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-      - main-v3
-      - v3
       - v4
 
 permissions: read-all
@@ -13,4 +11,4 @@ permissions: read-all
 jobs:
   audit:
     name: Audit
-    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main-v3
+    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main

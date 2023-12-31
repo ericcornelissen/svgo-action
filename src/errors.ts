@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 type error = string | null;
 
 function isNotNullError(err: error): boolean {

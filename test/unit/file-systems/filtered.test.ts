@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { FileFilter, FileSystem } from "../../../src/file-systems/types";
 
 import { when, resetAllWhenMocks } from "jest-when";

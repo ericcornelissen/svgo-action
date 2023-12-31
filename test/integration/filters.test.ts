@@ -1,12 +1,14 @@
+// SPDX-License-Identifier: MIT
+
 import type { PrContext } from "../../src/filters/pr-files";
 import type { PushContext } from "../../src/filters/pushed-files";
 import type { Mutable } from "../utils";
 
-jest.dontMock("minimatch");
-
 jest.mock("@actions/github");
+jest.mock("@actions/glob");
 
 import * as github from "@actions/github";
+import * as glob from "@actions/glob";
 
 import clients from "../../src/clients";
 import filters from "../../src/filters";
@@ -14,6 +16,8 @@ import { createFilesList } from "../__common__/generate";
 import inp from "../__common__/inputter.mock";
 
 type MockedOctokit = jest.MockedObjectDeep<ReturnType<typeof github.getOctokit>>; // eslint-disable-line max-len
+
+const globCreateMock = glob.create as jest.MockedFunction<typeof glob.create>;
 
 describe("package filters", () => {
   let client: ReturnType<typeof clients.New>[0];
@@ -25,20 +29,35 @@ describe("package filters", () => {
   });
 
   describe("::NewGlobFilter", () => {
-    test("glob matches", () => {
+    beforeAll(() => {
+      const globMatches = [
+        "foo.bar",
+        "foobar.html",
+      ];
+
+      const globber = {
+        glob: jest.fn().mockResolvedValue(globMatches),
+        getSearchPaths: jest.fn(),
+        globGenerator: jest.fn(),
+      };
+
+      globCreateMock.mockResolvedValue(globber);
+    });
+
+    test("glob matches", async () => {
       const glob = "*.bar";
       const filepath = "foo.bar";
 
-      const filter = filters.NewGlobFilter(glob);
+      const filter = await filters.NewGlobFilter(glob);
       const result = filter(filepath);
       expect(result).toBe(false);
     });
 
-    test("glob does not match", () => {
+    test("glob does not match", async () => {
       const glob = "*.html";
       const filepath = "foobar.svg";
 
-      const filter = filters.NewGlobFilter(glob);
+      const filter = await filters.NewGlobFilter(glob);
       const result = filter(filepath);
       expect(result).toBe(true);
     });

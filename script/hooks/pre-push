@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: MIT-0
 . "$(dirname "$0")/_/husky.sh"
 . "$(dirname "$0")/common.sh"
 
@@ -11,16 +12,6 @@ npm run vet
 npm run license-check
 npm run lint
 npm run test:unit
-
-if command -v actionlint > /dev/null; then
-  npm run lint:ci
-fi
-if command -v hadolint > /dev/null; then
-  npm run lint:docker
-fi
-if command -v shellcheck > /dev/null; then
-  npm run lint:sh
-fi
 
 # Scan for secrets (if tool is installed)
 if command -v gitleaks > /dev/null; then

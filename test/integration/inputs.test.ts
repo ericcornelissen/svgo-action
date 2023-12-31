@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { when, resetAllWhenMocks } from "jest-when";
 
 import inputs from "../../src/inputs";
@@ -12,7 +14,7 @@ describe("package inputs", () => {
   const DEFAULT_IGNORE: Iterable<string> = [];
   const DEFAULT_DRY_RUN = false;
   const DEFAULT_SVGO_CONFIG = "svgo.config.js";
-  const DEFAULT_SVGO_VERSION = "2";
+  const DEFAULT_SVGO_VERSION = "3";
 
   beforeEach(() => {
     inp.getBooleanInput.mockReset();
@@ -115,7 +117,6 @@ describe("package inputs", () => {
 
     test.each([
       "svgo.config.js",
-      ".svgo.yml",
     ])("configured to '%s'", async (value) => {
       doMockSvgoConfigInput(() => value);
 

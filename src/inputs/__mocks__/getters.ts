@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { defaultConfig } from "./__common__";
 
 const getIgnoreGlobs = jest.fn()

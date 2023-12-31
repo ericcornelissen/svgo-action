@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { OutputName } from "../../../src/outputs/names";
 import {
   getValuesForOutputs,

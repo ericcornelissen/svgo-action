@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.mock("../../../src/errors");
 jest.mock("../../../src/parsers");
 
@@ -7,7 +9,6 @@ import {
 } from "../../../src/helpers/svgo-config";
 import parsers from "../../../src/parsers";
 
-const parsersNewYaml = parsers.NewYaml as jest.MockedFunction<typeof parsers.NewYaml>; // eslint-disable-line max-len
 const parsersNewJavaScript = parsers.NewJavaScript as jest.MockedFunction<typeof parsers.NewJavaScript>; // eslint-disable-line max-len
 
 describe("helpers/svgo-config.ts", () => {
@@ -31,46 +32,6 @@ describe("helpers/svgo-config.ts", () => {
     beforeEach(() => {
       successParser.mockClear();
       errorParser.mockClear();
-    });
-
-    describe("YAML configuration", () => {
-      const svgoConfigPaths: string[] = [
-        ".svgo.yml",
-        "svgo.yaml",
-      ];
-
-      beforeEach(() => {
-        parsersNewYaml.mockClear();
-      });
-
-      test.each(svgoConfigPaths)("parse success (%s)", (svgoConfigPath) => {
-        const config = Object.assign({ }, baseConfig, {
-          svgoConfigPath: { value: svgoConfigPath },
-        });
-
-        parsersNewYaml.mockReturnValue(successParser);
-
-        const [result, err] = parseRawSvgoConfig({ config, rawConfig });
-        expect(err).toBeNull();
-        expect(result).toEqual(parseOutput);
-
-        expect(parsers.NewYaml).toHaveBeenCalledTimes(1);
-        expect(successParser).toHaveBeenCalledTimes(1);
-      });
-
-      test.each(svgoConfigPaths)("parse error (%s)", (svgoConfigPath) => {
-        const config = Object.assign({ }, baseConfig, {
-          svgoConfigPath: { value: svgoConfigPath },
-        });
-
-        parsersNewYaml.mockReturnValue(errorParser);
-
-        const [, err] = parseRawSvgoConfig({ config, rawConfig });
-        expect(err).not.toBeNull();
-
-        expect(parsers.NewYaml).toHaveBeenCalledTimes(1);
-        expect(errorParser).toHaveBeenCalledTimes(1);
-      });
     });
 
     describe("JavaScript configuration", () => {

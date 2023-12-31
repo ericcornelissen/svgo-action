@@ -1,8 +1,6 @@
-import type { error } from "../errors";
+// SPDX-License-Identifier: MIT
 
-interface Logger {
-  readonly warning: (msg: string) => void;
-}
+import type { error } from "../errors";
 
 type SupportedSvgoVersions =
   "2" |
@@ -14,7 +12,6 @@ interface SVGOptimizer {
 }
 
 export type {
-  Logger,
   SupportedSvgoVersions,
   SVGOptimizer,
 };

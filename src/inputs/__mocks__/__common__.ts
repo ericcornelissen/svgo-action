@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const defaultConfig = {
   ignoreGlobs: {
     provided: true,
@@ -17,7 +19,7 @@ const defaultConfig = {
   },
   svgoVersion: {
     provided: true,
-    value: "2",
+    value: "3",
   },
 };
 

@@ -1,6 +1,7 @@
 .cache/
 .temp/
 _reports/
+checksums.txt
 
 # ESLint
 .eslintcache

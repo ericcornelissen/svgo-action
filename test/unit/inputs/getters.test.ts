@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import { when, resetAllWhenMocks } from "jest-when";
 
 jest.mock("../../../src/errors");
@@ -227,7 +229,6 @@ describe("inputs/getters.ts", () => {
     });
 
     test.each([
-      ".svgo.yml",
       "svgo.config.js",
     ])("can get input ('%s')", (configuredValue) => {
       when(inp.getInput)

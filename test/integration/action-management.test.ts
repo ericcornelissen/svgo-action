@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 jest.mock("@actions/core");
 
 import * as core from "@actions/core";

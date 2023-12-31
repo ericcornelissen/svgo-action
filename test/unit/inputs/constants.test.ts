@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import {
   INPUT_OPTIONS_NOT_REQUIRED,
   INPUT_OPTIONS_REQUIRED,

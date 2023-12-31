@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { SupportedSvgoVersions } from "../../../src/svgo";
 
 jest.mock("../../../src/errors");
@@ -194,7 +196,6 @@ describe("inputs/index.ts", () => {
       });
 
       test.each([
-        ["1", ".svgo.yml"],
         ["2", "svgo.config.js"],
       ])("default value", (svgoVersion, svgoConfigPath) => {
         gettersGetSvgoVersion.mockReturnValueOnce([
@@ -251,7 +252,7 @@ describe("inputs/index.ts", () => {
         const [, err] = inputs.New({ inp });
 
         expect(err).toBeNull();
-        expect(getters.getSvgoVersion).toHaveBeenCalledWith(inp, "2");
+        expect(getters.getSvgoVersion).toHaveBeenCalledWith(inp, "3");
       });
     });
   });

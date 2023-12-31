@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 // https://nodejs.org/api/fs.html#fs_fs_existssync_path
 const existsSync = jest.fn()
   .mockReturnValue(false)
@@ -22,7 +24,7 @@ const readdirSync = jest.fn()
 
 // https://nodejs.org/api/fs.html#fs_fs_readfilesync_path_options
 const readFileSync = jest.fn()
-  .mockReturnValue(Buffer.from(""))
+  .mockReturnValue(Uint8Array.from([]))
   .mockName("fs.readFileSync");
 
 // https://nodejs.org/api/fs.html#fs_fs_writefilesync_file_data_options

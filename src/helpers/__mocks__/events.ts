@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const event = "push";
 
 const isClientRequired = jest.fn()

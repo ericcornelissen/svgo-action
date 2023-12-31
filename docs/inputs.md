@@ -1,7 +1,6 @@
-# SVGO Action Inputs
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 
-> **Warning**: Version 3 of the SVGO Action is end-of-life (EOL) since
-> 2023-12-31. No support will be provided going forward.
+# SVGO Action Inputs
 
 This documentation describes all the inputs of the SVGO Action.
 
@@ -27,8 +26,9 @@ The `dry-run` input can be used to run the Action without having it write any
 changes. This can be useful for debugging or when you just want to give the
 Action a try.
 
-> **Warning**: If you misconfigure this input the Action assumes you wanted to
-> enable it and set `dry-run` to `true`.
+> [!NOTE]
+> If you misconfigure this input the Action assumes you wanted to enable it and
+> set `dry-run` to `true`.
 
 ### Examples
 
@@ -37,7 +37,7 @@ To enable dry runs:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     dry-run: true
 ```
@@ -55,8 +55,9 @@ Action. By default, no files are ignored. The value is interpreted as a [glob],
 if there are multiple lines each line is interpreted as a [glob]. Any file that
 matches (any of) the configured glob(s) will **not** be optimized by the Action.
 
-> **Note**: Regardless of the value of this input, the Action will only consider
-> files with the `.svg` file extension.
+> [!NOTE]
+> Regardless of the value of this input, the Action will only consider files
+> with the `.svg` file extension.
 
 ### Examples
 
@@ -65,7 +66,7 @@ To ignore all files in a specific folder:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     ignore: not/optimized/*
 ```
@@ -75,7 +76,7 @@ To ignore all files in a specific folder and all its subfolders:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     ignore: not/optimized/**/
 ```
@@ -85,7 +86,7 @@ To have multiple ignore globs, use a [YAML] multiline string:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     ignore: |
       folder1/*
@@ -111,7 +112,7 @@ To set the `repo-token` you will typically want to use:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     repo-token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -128,9 +129,10 @@ The `strict` input can be used to enable _strict mode_. In strict mode, the
 Action will fail in the event of a non-critical error (instead of just in the
 event of a critical error).
 
-> **Warning**: If you misconfigure this input the Action assumes you wanted to
-> enable it and set `strict` to `true`. This in turn results in the Action
-> failing due to an invalid input.
+> [!NOTE]
+> If you misconfigure this input the Action assumes you wanted to enable it and
+> set `strict` to `true`. This in turn results in the Action failing due to an
+> invalid input.
 
 ### Examples
 
@@ -139,7 +141,7 @@ To enable strict mode:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     strict: true
 ```
@@ -153,9 +155,8 @@ To enable strict mode:
 | `svgo-config` | `"svgo.config.js"` |
 
 The `svgo-config` input allows you to specify the location of the config file
-for [SVGO]. The configuration file must be a JavaScript or a [YAML] file. If the
-specified file is not found the Action will fall back on SVGO's default
-configuration.
+for [SVGO]. The configuration file must be a JavaScript. If the specified file
+is not found the Action will fall back on SVGO's default configuration.
 
 ### Examples
 
@@ -164,7 +165,7 @@ To use an SVGO config file with a non-standard name:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     svgo-config: my-svgo-config.js
 ```
@@ -174,19 +175,9 @@ To use an SVGO config file in a folder:
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     svgo-config: path/to/svgo.config.js
-```
-
-To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
-
-```yml
-# .github/workflows/optimize.yml
-
-- uses: ericcornelissen/svgo-action@v3
-  with:
-    svgo-config: .svgo.yml
 ```
 
 ---
@@ -195,28 +186,23 @@ To use an SVGO config file in the YAML format (e.g. if you're using SVGO v1):
 
 | Name           | Default value |
 | -------------- | ------------- |
-| `svgo-version` | `2`           |
+| `svgo-version` | `3`           |
 
 The `svgo-version` input allows you to specify the version of [SVGO] that you
 want to use. This can be either `3` for the latest v3 release, `2` for the
 latest v2 release, or the string `"project"` for the version of SVGO installed
-for your project. For `"project"` SVGO v2 and v3 are supported, v1 support is
-deprecated.
-
-> **Warning**: SVGO v1 has been deprecated, we strongly recommend upgrading to
-> SVGO v3 or v2. For more information see the [SVGO v3 release notes] or [SVGO
-> v2 release notes].
+for your project. For `"project"` only SVGO v2 and v3 are supported.
 
 ### Examples
 
-To use the SVGO version 3:
+To use the SVGO version 2:
 
 ```yml
 # .github/workflows/optimize.yml
 
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
-    svgo-version: 3
+    svgo-version: 2
 ```
 
 To use the SVGO version used by your project:
@@ -226,7 +212,7 @@ To use the SVGO version used by your project:
 
 - name: Install dependencies, including SVGO
   run: npm clean-install
-- uses: ericcornelissen/svgo-action@v3
+- uses: ericcornelissen/svgo-action@v4
   with:
     svgo-version: project
 ```
@@ -242,6 +228,4 @@ _Content licensed under [CC BY-SA 4.0]; Code snippets under the [MIT license]._
 [mit license]: https://opensource.org/license/mit/
 [open an issue]: https://github.com/ericcornelissen/svgo-action/issues/new?labels=docs&template=documentation.md
 [svgo]: https://github.com/svg/svgo
-[svgo v2 release notes]: https://github.com/svg/svgo/releases/tag/v2.0.0
-[svgo v3 release notes]: https://github.com/svg/svgo/releases/tag/v3.0.0
 [yaml]: https://yaml.org/

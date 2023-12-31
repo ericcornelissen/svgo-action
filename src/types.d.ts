@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { Inputter } from "./inputs";
 import type { Outputter } from "./outputs";
 import type { GitHub as _GitHub } from "@actions/github/lib/utils";
@@ -21,7 +23,6 @@ interface Context {
 interface Core extends Inputter, Outputter {
   debug(message: string): void;
   info(message: string): void;
-  notice(message: string): void;
   setFailed(message: string | Error): void;
   warning(message: string | Error): void;
 }

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const EVENT_PULL_REQUEST = "pull_request";
 const EVENT_PUSH = "push";
 const EVENT_REPOSITORY_DISPATCH = "repository_dispatch";

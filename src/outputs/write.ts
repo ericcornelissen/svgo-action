@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 import type { OutputName } from "./names";
 import type { Outputter } from "./types";
 

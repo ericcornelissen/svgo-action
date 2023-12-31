@@ -9,13 +9,11 @@ permissions: read-all
 jobs:
   audit:
     name: Audit
-    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main-v3
+    uses: ericcornelissen/svgo-action/.github/workflows/reusable-audit.yml@main
     with:
       refs: >-
         [
           "main",
-          "main-v3",
-          "v3",
           "v4"
         ]
   tooling:
@@ -26,7 +24,7 @@ jobs:
       pull-requests: write # To open a Pull Request
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@8ca2b8b2ece13480cda6dacd3511b49857a23c09 # v2.5.1
+        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -40,13 +38,14 @@ jobs:
             sigstore-tuf-root.storage.googleapis.com:443
             tuf-repo-cdn.sigstore.dev:443
       - name: Create automation token
-        uses: tibdex/github-app-token@0d49dd721133f900ebd5e0dff2810704e8defbc6 # v1.8.2
+        uses: tibdex/github-app-token@3beb63f4bd073e61482598c45c71c1019b59b73a # v2.1.0
         id: automation-token
         with:
           app_id: ${{ secrets.AUTOMATION_APP_ID }}
           private_key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
       - name: Update tooling
-        uses: ericcornelissen/tool-versions-update-action/pr@9c4504b41601cf1457decd293d6590e2a3ee2f81 # v0.3.5
+        uses: ericcornelissen/tool-versions-update-action/pr@2715cb27cff62adebe45e950bf087efc78d3a8bd # v0.3.9
         with:
+          commit-message: "chore: update tooling"
           max: 1
           token: ${{ steps.automation-token.outputs.token }}

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MIT
+
 const files: Iterable<never> = [];
 
 const Client = jest.fn()

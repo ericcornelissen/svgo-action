@@ -1,7 +1,6 @@
-# SVGO Action Outputs
+<!-- SPDX-License-Identifier: CC-BY-SA-4.0 -->
 
-> **Warning**: Version 3 of the SVGO Action is end-of-life (EOL) since
-> 2023-12-31. No support will be provided going forward.
+# SVGO Action Outputs
 
 This documentation describes all values outputted by the SVGO Action. These
 values can be used in the steps that follow it to, for example, run a step only
@@ -34,7 +33,7 @@ example:
 # .github/workflows/optimize.yml
 
 steps:
-  - uses: ericcornelissen/svgo-action@v3
+  - uses: ericcornelissen/svgo-action@v4
     id: svgo  # <-- You need to give the SVGO Action's step a unique id
   - name: Echo the svgo-action output 'DID_OPTIMIZE'
     run: echo ${{ steps.svgo.outputs.DID_OPTIMIZE }}
