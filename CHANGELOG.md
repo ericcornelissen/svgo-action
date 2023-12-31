@@ -5,10 +5,6 @@ All notable changes to the _SVGO Action_ will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased]
-
-- _No changes yet_
-
 ## [3.1.7] - 2023-12-31
 
 - Update deprecation warning for end-of-life (EOL) of v2. ([#916])
