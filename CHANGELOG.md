@@ -9,6 +9,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [4.0.5] - 2024-01-01
+
 - Add deprecation notice for general end of life of this Action. ([#920])
 
 ## [4.0.4] - 2023-12-13
