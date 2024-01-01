@@ -1,42 +1,54 @@
 # Check out Labeler at: https://github.com/actions/labeler
 
 ci/cd:
-  - .github/workflows/*
-  - .github/codecov.yml
-  - .github/labeler.yml
-  - .github/renovate.json
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/workflows/*
+          - .github/codecov.yml
+          - .github/labeler.yml
+          - .github/renovate.json
 
 dependencies:
-  - .nvmrc
-  - .tool-versions
-  - package-lock.json
+  - changed-files:
+      - any-glob-to-any-file:
+          - .nvmrc
+          - .tool-versions
+          - package-lock.json
 
 docs:
-  - docs/*
-  - README.md
+  - changed-files:
+      - any-glob-to-any-file:
+          - docs/*
+          - README.md
 
 meta:
-  - .github/ISSUE_TEMPLATE/*
-  - .github/labeler.yml
-  - .github/pull_request_template.md
-  - .editorconfig
-  - .eslintrc.cjs
-  - .gitattributes
-  - .gitignore
-  - .hadolint.yml
-  - .knip.jsonc
-  - .licensee.json
-  - .markdownlint.yml
-  - .npmrc
-  - .shellcheckrc
-  - commitlint.config.cjs
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/ISSUE_TEMPLATE/*
+          - .github/labeler.yml
+          - .github/pull_request_template.md
+          - .editorconfig
+          - .eslintrc.cjs
+          - .gitattributes
+          - .gitignore
+          - .hadolint.yml
+          - .knip.jsonc
+          - .licensee.json
+          - .markdownlint.yml
+          - .npmrc
+          - .shellcheckrc
+          - commitlint.config.cjs
 
 security:
-  - .github/codeql-config.yml
-  - .nsprc
+  - changed-files:
+      - any-glob-to-any-file:
+          - .github/codeql-config.yml
+          - .nsprc
 
 test:
-  - test/**
-  - test/**/*
-  - jest.config.js
-  - stryker.config.js
+  - changed-files:
+      - any-glob-to-any-file:
+          - test/**
+          - test/**/*
+          - jest.config.js
+          - stryker.config.js

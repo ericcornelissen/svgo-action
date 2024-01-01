@@ -17,7 +17,7 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:import/typescript",
     "plugin:jest/recommended",
-    "plugin:security/recommended",
+    "plugin:security/recommended-legacy",
   ],
 
   globals: {

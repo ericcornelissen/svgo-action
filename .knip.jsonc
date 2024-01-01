@@ -14,7 +14,7 @@
     // knip here, feel free to submit a patch if you know how to fix this.
     "src/svgo/v2/svgo-v2.d.ts"
   ],
-  "ignoreBinaries": ["act", "actionlint", "cosign", "hadolint", "shellcheck"],
+  "ignoreBinaries": ["act"],
   "ignoreDependencies": [
     "@commitlint/cli",
     "@types/jest",
