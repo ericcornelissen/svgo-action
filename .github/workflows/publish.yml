@@ -32,7 +32,7 @@ jobs:
         with:
           fetch-depth: 0 # To obtain all tags
       - name: Install Node.js
-        uses: actions/setup-node@8f152de45cc393bb48ce5d89d36b731f54556e65 # v4.0.0
+        uses: actions/setup-node@b39b52d1213e96004bfcb1c61a8a6fa8ab84f3e8 # v4.0.1
         with:
           cache: npm
           node-version-file: .nvmrc
@@ -129,7 +129,7 @@ jobs:
           COSIGN_VERSION="$(grep cosign < .tool-versions | awk '{print $2}')"
           echo "cosign=${COSIGN_VERSION}" >>"${GITHUB_OUTPUT}"
       - name: Install cosign
-        uses: sigstore/cosign-installer@1fc5bd396d372bee37d608f955b336615edf79c8 # v3.2.0
+        uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 # v3.3.0
         with:
           cosign-release: v${{ steps.versions.outputs.cosign }}
       - name: Sign Action
