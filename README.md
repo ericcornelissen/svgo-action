@@ -11,6 +11,10 @@ Automatically run [SVGO] with GitHub Actions.
 
 ### Install the Action
 
+> [!NOTE]
+> Support for SVGO Action, in general, will end 2024-04-30. We recommend finding
+> an alternative before then and to stop using this Action.
+
 Create a Workflow file (e.g.: `.github/workflows/optimize.yml`, see [Creating a
 Workflow file]) with the workflow below - or check out the [examples] for
 various complete workflows. You can also check [what the Action does for each
