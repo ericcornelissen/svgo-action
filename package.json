@@ -51,7 +51,7 @@
     "verify": "npm run license-check && npm run lint && npm run test:unit && npm run vet",
     "vet": "npm run vet:deps && npm run vet:package-lock.json && npm run vet:types",
     "vet:deps": "knip --config .knip.jsonc",
-    "vet:package-lock.json": "lockfile-lint --path package-lock.json --allowed-hosts npm --validate-https",
+    "vet:package-lock.json": "lockfile-lint",
     "vet:types": "type-coverage --at-least 100 --project tsconfig.json --strict"
   },
   "repository": {
