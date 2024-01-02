@@ -3,3 +3,4 @@
 path: package-lock.json
 allowedHosts: npm
 validateHttps: true
+validateIntegrity: true
