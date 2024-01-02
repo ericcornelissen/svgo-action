@@ -34,6 +34,7 @@ meta:
           - .hadolint.yml
           - .knip.jsonc
           - .licensee.json
+          - .lockfile-lintrc.yml
           - .markdownlint.yml
           - .npmrc
           - .shellcheckrc

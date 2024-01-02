@@ -1,0 +1,6 @@
+# Check out lockfile-lint at: https://github.com/lirantal/lockfile-lint
+
+path: package-lock.json
+allowedHosts: npm
+validateHttps: true
+validateIntegrity: true
