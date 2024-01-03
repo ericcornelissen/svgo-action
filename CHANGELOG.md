@@ -9,6 +9,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [4.0.6] - 2024-01-03
+
 - Update SVGO v3 to `v3.2.0`. ([#926])
 
 ## [4.0.5] - 2024-01-01
