@@ -9,7 +9,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update SVGO v3 to `v3.2.0`. ([#926])
 
 ## [4.0.5] - 2024-01-01
 
@@ -618,5 +618,6 @@ Versioning].
 [#906]: https://github.com/ericcornelissen/svgo-action/pull/906
 [#916]: https://github.com/ericcornelissen/svgo-action/pull/916
 [#920]: https://github.com/ericcornelissen/svgo-action/pull/920
+[#926]: https://github.com/ericcornelissen/svgo-action/pull/926
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
