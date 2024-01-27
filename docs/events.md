@@ -2,6 +2,10 @@
 
 # SVGO Action Events
 
+> [!WARNING]
+> Support for SVGO Action, in general, will end 2024-04-30. We recommend finding
+> an alternative before then and to stop using this Action.
+
 This documentation describes the behavior of the SVGO Action for every GitHub
 Actions event that is supported. If an event is not listed here it is not
 officially supported.
