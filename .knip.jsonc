@@ -4,7 +4,7 @@
   "$schema": "./node_modules/knip/schema.json",
   "entry": ["lib/index.cjs", "src/index.ts"],
   "ignore": [
-    "**/__mocks__",
+    "**/__mocks__/**",
     "test/end-to-end/**",
 
     // Used in `.github/workflows/publish.yml`.
@@ -17,10 +17,6 @@
   "ignoreBinaries": ["act"],
   "ignoreDependencies": [
     "@commitlint/cli",
-    "@types/jest",
-    "svgo",
-
-    // Imported in `src/svgo/v2/index.ts`.
-    "svgo-v2"
+    "@types/jest"
   ]
 }

@@ -17,7 +17,7 @@ jobs:
       major_version: ${{ steps.major-version.outputs.result }}
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -74,7 +74,7 @@ jobs:
       contents: write # To push a tag and a branch
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -107,7 +107,7 @@ jobs:
       id-token: write # To perform keyless signing with cosign
     steps:
       - name: Harden runner
-        uses: step-security/harden-runner@eb238b55efaa70779f274895e782ed17c84f2895 # v2.6.1
+        uses: step-security/harden-runner@63c24ba6bd7ba022e95695ff85de572c04a18142 # v2.7.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -129,7 +129,7 @@ jobs:
           COSIGN_VERSION="$(grep cosign < .tool-versions | awk '{print $2}')"
           echo "cosign=${COSIGN_VERSION}" >>"${GITHUB_OUTPUT}"
       - name: Install cosign
-        uses: sigstore/cosign-installer@9614fae9e5c5eddabb09f90a270fcb487c9f7149 # v3.3.0
+        uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4 # v3.4.0
         with:
           cosign-release: v${{ steps.versions.outputs.cosign }}
       - name: Sign Action

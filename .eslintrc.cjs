@@ -192,15 +192,18 @@ module.exports = {
           },
           multilineDetection: "brackets",
         }],
+        "@typescript-eslint/no-array-delete": ["error"],
         "@typescript-eslint/no-duplicate-type-constituents": ["error", {
           ignoreIntersections: false,
           ignoreUnions: false,
         }],
         "@typescript-eslint/no-unsafe-enum-comparison": ["error"],
+        "@typescript-eslint/prefer-promise-reject-errors": ["error"],
         "@typescript-eslint/switch-exhaustiveness-check": ["error"],
 
         "block-spacing": "off", // use @typescript-eslint/block-spacing instead
         "key-spacing": "off", // use @typescript-eslint/key-spacing instead
+        "prefer-promise-reject-errors": "off", // use @typescript-eslint/prefer-promise-reject-errors instead
       },
     },
     { // Configuration files (JavaScript)
