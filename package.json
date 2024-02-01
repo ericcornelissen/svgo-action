@@ -8,7 +8,7 @@
   "type": "module",
   "main": "lib/index.cjs",
   "scripts": {
-    "prepare": "is-ci || husky install script/hooks",
+    "prepare": "husky script/hooks",
     "_clean": "git clean --force -X",
     "_eslint": "eslint --report-unused-disable-directives",
     "audit": "better-npm-audit audit",
