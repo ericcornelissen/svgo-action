@@ -9,7 +9,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Change the deprecation notice to a deprecation warning. ([#930])
 
 ## [4.0.6] - 2024-01-03
 
@@ -623,5 +623,6 @@ Versioning].
 [#916]: https://github.com/ericcornelissen/svgo-action/pull/916
 [#920]: https://github.com/ericcornelissen/svgo-action/pull/920
 [#926]: https://github.com/ericcornelissen/svgo-action/pull/926
+[#930]: https://github.com/ericcornelissen/svgo-action/pull/930
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3

@@ -2,6 +2,10 @@
 
 # SVGO Action Outputs
 
+> [!WARNING]
+> Support for SVGO Action, in general, will end 2024-04-30. We recommend finding
+> an alternative before then and to stop using this Action.
+
 This documentation describes all values outputted by the SVGO Action. These
 values can be used in the steps that follow it to, for example, run a step only
 if any SVGs were optimized or to build a message describing how many SVGs were
