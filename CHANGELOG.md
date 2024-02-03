@@ -9,6 +9,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [4.0.7] - 2024-02-03
+
 - Change the deprecation notice to a deprecation warning. ([#930])
 
 ## [4.0.6] - 2024-01-03
