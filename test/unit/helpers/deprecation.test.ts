@@ -19,7 +19,7 @@ describe("helpers/deprecation.ts", () => {
     deprecationWarnings({ core });
     expect(core.warning).toHaveBeenCalledWith(
       "Support for SVGO Action, in general, will end 2024-04-30. We recommend" +
-      "finding an alternative before then and to stop using this Action.",
+      " finding an alternative before then and to stop using this Action.",
     );
   });
 });

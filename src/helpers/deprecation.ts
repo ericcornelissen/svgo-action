@@ -12,7 +12,7 @@ function deprecationWarnings({
   core,
 }: Params): void {
   core.warning(
-    "Support for SVGO Action, in general, will end 2024-04-30. We recommend" +
+    "Support for SVGO Action, in general, will end 2024-04-30. We recommend " +
     "finding an alternative before then and to stop using this Action.",
   );
 }
