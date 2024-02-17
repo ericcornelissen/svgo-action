@@ -9,6 +9,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [4.0.8] - 2024-02-17
+
 - Update transitive dependency `undici`. ([#937])
 
 ## [4.0.7] - 2024-02-03
