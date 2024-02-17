@@ -1,6 +1,10 @@
 name: Audit
 on:
-  pull_request: ~
+  pull_request:
+    paths:
+      - .github/workflows/audit.yml
+      - .nsprc
+      - package-lock.json
   push:
     branches:
       - main
