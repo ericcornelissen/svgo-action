@@ -146,6 +146,7 @@ module.exports = {
 
     // eslint-plugin-mocha
     // https://github.com/lo1tuma/eslint-plugin-mocha
+    "mocha/consistent-spacing-between-blocks": ["error"],
     "mocha/valid-test-description": ["error", {
       // Test description should NOT start with a capital letter
       pattern: "^((?![A-Z])).*",
