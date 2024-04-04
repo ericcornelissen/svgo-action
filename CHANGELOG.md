@@ -9,7 +9,7 @@ Versioning].
 
 ## [Unreleased]
 
-- _No changes yet_
+- Update transitive dependency `undici`. ([#948])
 
 ## [4.0.8] - 2024-02-17
 
@@ -635,5 +635,6 @@ Versioning].
 [#930]: https://github.com/ericcornelissen/svgo-action/pull/930
 [#936]: https://github.com/ericcornelissen/svgo-action/pull/936
 [#937]: https://github.com/ericcornelissen/svgo-action/pull/937
+[#948]: https://github.com/ericcornelissen/svgo-action/pull/948
 [64d0e89]: https://github.com/ericcornelissen/svgo-action/commit/64d0e8958d462695b3939588707815182ecc3690
 [8d8f516]: https://github.com/ericcornelissen/svgo-action/commit/8d8f516583b4340f692e2ea80e1855e5a1211bd3
