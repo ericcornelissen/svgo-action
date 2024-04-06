@@ -2,18 +2,13 @@
 
 # SVGO Action
 
-[![Build status][ci-image]][ci-url]
-[![Coverage Report][coverage-image]][coverage-url]
-
-Automatically run [SVGO] with GitHub Actions.
+> [!WARNING]
+> Support for SVGO Action ended 2024-04-30. We recommend finding an alternative
+> and to not start nor continue using this Action.
 
 ## Usage
 
 ### Install the Action
-
-> [!WARNING]
-> Support for SVGO Action, in general, will end 2024-04-30. We recommend finding
-> an alternative before then and to stop using this Action.
 
 Create a Workflow file (e.g.: `.github/workflows/optimize.yml`, see [Creating a
 Workflow file]) with the workflow below - or check out the [examples] for
@@ -129,10 +124,6 @@ license text. The documentation text is licensed under [CC BY-SA 4.0]; code
 snippets under the [MIT license]. Supporting code, such a scripts and tests, is
 licensed under the [MIT license] or the [MIT-0 license].
 
-[ci-url]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml
-[ci-image]: https://github.com/ericcornelissen/svgo-action/actions/workflows/check.yml/badge.svg
-[coverage-url]: https://codecov.io/gh/ericcornelissen/svgo-action
-[coverage-image]: https://codecov.io/gh/ericcornelissen/svgo-action/branch/main/graph/badge.svg
 
 [cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
@@ -142,7 +133,6 @@ licensed under the [MIT license] or the [MIT-0 license].
 [mit license]: https://opensource.org/license/mit/
 [mit-0 license]: https://opensource.org/license/mit-0/
 [permissions]: https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#permissions
-[svgo]: https://github.com/svg/svgo
 [ubuntu-20.04]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2004-Readme.md
 [ubuntu-22.04]: https://github.com/actions/runner-images/blob/main/images/ubuntu/Ubuntu2204-Readme.md
 [what the action does for each `on` event]: ./docs/events.md
