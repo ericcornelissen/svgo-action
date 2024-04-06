@@ -20,6 +20,9 @@ function simulateGetInput(key: string) {
 const debug = jest.fn()
   .mockName("core.debug");
 
+const error = jest.fn()
+  .mockName("core.error");
+
 const getBooleanInput = jest.fn()
   .mockImplementation(simulateGetInput)
   .mockName("core.getBooleanInput");
@@ -49,6 +52,7 @@ const warning = jest.fn()
 
 export {
   debug,
+  error,
   getBooleanInput,
   getInput,
   getMultilineInput,

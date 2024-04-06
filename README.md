@@ -124,7 +124,6 @@ license text. The documentation text is licensed under [CC BY-SA 4.0]; code
 snippets under the [MIT license]. Supporting code, such a scripts and tests, is
 licensed under the [MIT license] or the [MIT-0 license].
 
-
 [cc by-sa 4.0]: https://creativecommons.org/licenses/by-sa/4.0/
 [creating a workflow file]: https://docs.github.com/en/actions/learn-github-actions/introduction-to-github-actions#create-an-example-workflow
 [examples]: ./docs/examples.md
