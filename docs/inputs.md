@@ -3,8 +3,8 @@
 # SVGO Action Inputs
 
 > [!WARNING]
-> Support for SVGO Action, in general, will end 2024-04-30. We recommend finding
-> an alternative before then and to stop using this Action.
+> Support for SVGO Action ended 2024-04-30. We recommend finding an alternative
+> and to not start nor continue using this Action.
 
 This documentation describes all the inputs of the SVGO Action.
 

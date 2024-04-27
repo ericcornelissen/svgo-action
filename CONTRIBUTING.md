@@ -2,6 +2,10 @@
 
 # Contributing Guidelines
 
+> [!WARNING]
+> Support for SVGO Action ended 2024-04-30. No further contributions will be
+> accepted.
+
 The _SVGO Action_ project welcomes contributions and corrections of all forms.
 This includes improvements to the documentation or code base, new tests, bug
 fixes, and implementations of new features. We recommend you [open an issue]

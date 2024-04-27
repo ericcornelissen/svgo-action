@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 interface Core {
-  warning(msg: string): void;
+  error(msg: string): void;
 }
 
 interface Params {
@@ -11,9 +11,9 @@ interface Params {
 function deprecationWarnings({
   core,
 }: Params): void {
-  core.warning(
-    "Support for SVGO Action, in general, will end 2024-04-30. We recommend " +
-    "finding an alternative before then and to stop using this Action.",
+  core.error(
+    "Support for SVGO Action ended 2024-04-30. We recommend finding an " +
+    "alternative and to not start nor continue using this Action.",
   );
 }
 
