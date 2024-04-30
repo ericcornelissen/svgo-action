@@ -7,10 +7,6 @@ All notable changes to the _SVGO Action_ will be documented in this file.
 The format is based on [Keep a Changelog], and this project adheres to [Semantic
 Versioning].
 
-## [Unreleased]
-
-- _No changes yet_
-
 ## [4.0.9] - 2024-04-30
 
 - Change the deprecation warning to a deprecation error. ([#949])
