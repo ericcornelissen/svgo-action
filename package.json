@@ -1,6 +1,6 @@
 {
   "name": "svgo-action",
-  "version": "4.0.8",
+  "version": "4.0.9",
   "private": true,
   "description": "Automatically run SVGO with GitHub Actions",
   "homepage": "https://github.com/marketplace/actions/svgo-action",

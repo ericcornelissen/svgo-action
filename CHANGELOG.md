@@ -9,6 +9,10 @@ Versioning].
 
 ## [Unreleased]
 
+- _No changes yet_
+
+## [4.0.9] - 2024-04-30
+
 - Change the deprecation warning to a deprecation error. ([#949])
 - Update transitive dependency `undici`. ([#948])
 
